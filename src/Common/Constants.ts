@@ -1,0 +1,35 @@
+export namespace CoreFieldRefNames {
+    export const AreaId = "System.AreaId";
+    export const AreaPath = "System.AreaPath";
+    export const AssignedTo = "System.AssignedTo";
+    export const AttachedFileCount = "System.AttachedFileCount";
+    export const AuthorizedAs = "System.AuthorizedAs";
+    export const BoardColumn = "System.BoardColumn";
+    export const BoardColumnDone = "System.BoardColumnDone";
+    export const BoardLane = "System.BoardLane";
+    export const ChangedBy = "System.ChangedBy";
+    export const ChangedDate = "System.ChangedDate";
+    export const CreatedBy = "System.CreatedBy";
+    export const CreatedDate = "System.CreatedDate";
+    export const Description = "System.Description";
+    export const ExternalLinkCount = "System.ExternalLinkCount";
+    export const History = "System.History";
+    export const HyperLinkCount = "System.HyperLinkCount";
+    export const Id = "System.Id";
+    export const IterationId = "System.IterationId";
+    export const IterationPath = "System.IterationPath";
+    export const LinkType = "System.Links.LinkType";
+    export const NodeName = "System.NodeName";
+    export const Reason = "System.Reason";
+    export const RelatedLinkCount = "System.RelatedLinkCount";
+    export const Rev = "System.Rev";
+    export const RevisedDate = "System.RevisedDate";
+    export const State = "System.State";
+    export const AuthorizedDate = "System.AuthorizedDate";
+    export const TeamProject = "System.TeamProject";
+    export const Tags = "System.Tags";
+    export const Title = "System.Title";
+    export const WorkItemType = "System.WorkItemType";
+    export const Watermark = "System.Watermark";
+    export const IsDeleted = "System.IsDeleted";
+}

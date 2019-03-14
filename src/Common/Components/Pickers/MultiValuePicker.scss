@@ -1,0 +1,11 @@
+@import "_CommonStyles.scss";
+
+.multi-value-picker {
+    .bolt-labelgroup-addButton {
+        margin: 0;
+    }
+
+    .bolt-labelgroup--editableWrapper {
+        padding-left: 0;
+    }
+}

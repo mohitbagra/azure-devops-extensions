@@ -1,0 +1,25 @@
+@import "_CommonStyles.scss";
+
+.date-time-picker-dropdown {
+    .date-time-picker-input-container {
+        @include box-hover-focus-styles();
+
+        .date-time-picker-input {
+            border: 1px solid transparent;
+            outline: none;
+            padding-left: 10px;
+            padding-right: 2px;
+            color: inherit;
+            background-color: inherit;
+
+            &.disabled-input {
+                cursor: pointer;
+            }
+        }
+
+        .date-time-picker-icon {
+            padding: 7px 8px;
+            background: inherit;
+        }
+    }
+}

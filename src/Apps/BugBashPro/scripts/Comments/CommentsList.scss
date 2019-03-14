@@ -1,0 +1,26 @@
+@import "_CommonStyles.scss";
+
+.comments-container {
+    .comment-item {
+        margin-bottom: 10px;
+        border-bottom: 1px solid $neutral-8;
+        padding-bottom: 10px;
+
+        .comment-content {
+            padding: 0 8px;
+
+            .comment-created-by {
+                margin-right: 5px;
+            }
+
+            .comment-created-date {
+                font-style: italic;
+                color: $neutral-80;
+            }
+
+            .comment-text {
+                margin-top: 5px;
+            }
+        }
+    }
+}

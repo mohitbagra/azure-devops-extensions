@@ -1,0 +1,209 @@
+@import "_CommonStyles.scss";
+
+$buttonHeight: 40px;
+$roosterMinHeight: 80px;
+$editorMinHeight: $roosterMinHeight + $buttonHeight;
+$roosterMaxHeight: 300px;
+$editorMaxHeight: $roosterMaxHeight + $buttonHeight;
+
+.html-editor {
+    &.auto-grow {
+        .rooster-wrapper {
+            max-height: $editorMaxHeight;
+            min-height: $editorMinHeight;
+
+            .rooster-editor {
+                min-height: $roosterMinHeight;
+                max-height: $roosterMaxHeight;
+            }
+        }
+    }
+
+    .rooster-wrapper {
+        flex-basis: auto; // IE11
+        padding: 1px;
+
+        @include box-hover-focus-styles();
+
+        .rooster-editor {
+            flex-basis: auto; // IE11
+            background-color: $backgroundColor;
+
+            &.readonly {
+                color: $disabled-text;
+                background-color: $neutral-4;
+            }
+
+            // reset VSS's default styles:
+            ul,
+            ol {
+                padding-left: 40px;
+            }
+
+            li {
+                list-style: inherit;
+            }
+
+            a {
+                text-decoration: underline;
+            }
+
+            pre {
+                background-color: $neutral-8;
+                display: inline-block;
+            }
+
+            button {
+                height: auto;
+            }
+        }
+    }
+
+    &.full-screen {
+        position: absolute;
+        left: 4px;
+        right: 0;
+        bottom: 5px;
+        top: 46px;
+
+        .rooster-wrapper {
+            &,
+            .rooster-editor {
+                height: 100%;
+                max-height: 100%;
+            }
+        }
+    }
+
+    .rooster-command-bar .html-command-bar-base {
+        background: $backgroundColor;
+    }
+
+    .rooster-command-bar .rooster-command-bar-icon,
+    .rooster-command-bar button:hover:not([disabled]) .rooster-command-bar-icon {
+        color: $neutral-80;
+    }
+
+    .html-command-bar-button {
+        &:active,
+        &.is-checked {
+            background: $neutral-10;
+        }
+    }
+
+    .rooster-command-bar {
+        button:not(:hover):not(:active):not(:focus):not(.is-checked) {
+            background: $backgroundColor;
+        }
+    }
+}
+
+.rooster-callout {
+    .rooster-command-bar-overflow {
+        button:not(:hover):not(:active):not(:focus):not(.is-checked) {
+            background: $backgroundColor;
+        }
+    }
+
+    .rooster-command-bar-overflow .rooster-command-bar-icon,
+    .rooster-command-bar-overflow button:hover:not([disabled]) .rooster-command-bar-icon {
+        color: $neutral-80;
+    }
+
+    .rooster-command-bar-color-container,
+    .rooster-command-bar-color-item {
+        background: $backgroundColor;
+    }
+
+    .rooster-command-bar-color-item button:before {
+        border: 2px solid $backgroundColor;
+    }
+
+    .html-command-bar-button {
+        &:active,
+        &.is-checked {
+            background: $neutral-10;
+        }
+    }
+}
+
+.rooster-emoji-callout {
+    button {
+        // sync up the emoji selections with VSS's font family
+        font-family: $fontFamily;
+        padding: 0;
+    }
+
+    .rooster-emoji-pane {
+        .rooster-emoji-navbar {
+            background: $backgroundColor;
+        }
+
+        .rooster-emoji-navbar-button {
+            background: $backgroundColor;
+            border-bottom: solid 1px $neutral-10;
+
+            &:hover {
+                background-color: $neutral-8;
+            }
+        }
+
+        .rooster-emoji-navbar-selected {
+            border-bottom: solid 2px $communication-background;
+        }
+
+        .rooster-emoji-navbar-icon {
+            color: $neutral-80;
+        }
+
+        .rooster-emoji-status-bar {
+            background: $backgroundColor;
+            border-top: solid 1px $neutral-10;
+        }
+
+        .rooster-emoji-icon {
+            padding: 0;
+            background: $backgroundColor;
+        }
+
+        .rooster-emoji-selected {
+            background-color: $neutral-8;
+        }
+    }
+}
+
+.rooster-emoji-button {
+    // sync up the 🙂 button with VSS's font family
+    font-family: $fontFamily;
+}
+
+.custom-hash-tag-icon:before {
+    content: "#";
+    font-style: normal;
+}
+
+// override VSS's override styling of Fabric's callout and context menu item for the
+// Rooster's color picker and header menu (which uses the default Fabric styling)
+body {
+    .is-focusVisible .ms-Callout-container .rooster-callout {
+        .ms-ContextualMenu-item button:focus {
+            background: $neutral-8;
+        }
+    }
+
+    .ms-Callout-container .rooster-callout {
+        .ms-Callout-main {
+            padding: 0;
+        }
+
+        .ms-ContextualMenu-item,
+        .ms-ContextualMenu-link,
+        .ms-ContextualMenu-itemText {
+            line-height: 32px;
+        }
+
+        .rooster-command-bar-color-item {
+            display: inline-block;
+        }
+    }
+}

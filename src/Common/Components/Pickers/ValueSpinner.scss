@@ -1,0 +1,20 @@
+@import "_CommonStyles.scss";
+
+.value-spinner {
+    width: 20px;
+
+    .spinner-up,
+    .spinner-down {
+        background-color: $backgroundColor;
+        padding: 7px;
+
+        &:hover {
+            background-color: $neutral-20;
+        }
+    }
+
+    .spinner-value {
+        @include UserSelectNone();
+        margin: 10px 0;
+    }
+}

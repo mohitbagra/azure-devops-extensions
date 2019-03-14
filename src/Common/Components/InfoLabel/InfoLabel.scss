@@ -1,0 +1,15 @@
+@import "_CommonStyles.scss";
+
+.info-label {
+    .info-icon {
+        color: $communication-foreground;
+        cursor: help;
+        vertical-align: text-top;
+    }
+
+    .info-label-text {
+        padding: 0;
+        margin: 0 3px 0 0;
+        color: $primary-text;
+    }
+}

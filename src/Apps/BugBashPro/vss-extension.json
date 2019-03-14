@@ -1,0 +1,57 @@
+{
+    "manifestVersion": 1,
+    "id": "bugbashpro",
+    "version": "4.1.2",
+    "name": "Bug Bash Pro",
+    "description": "Easier way to manage bug bashes",
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "scopes": ["vso.work", "vso.work_write", "vso.profile", "vso.code", "vso.code_write"],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        },
+        {
+            "id": "Microsoft.TeamFoundation.Server",
+            "version": "[17.0,)"
+        }
+    ],
+    "tags": ["Work Item", "Collaborate", "Bug", "Bug bash"],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/azdev-extensions"
+    },
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "categories": ["Azure Boards"],
+    "contributions": [
+        {
+            "id": "bugbash-hub",
+            "type": "ms.vss-web.hub",
+            "description": "Bug bash manager work item hub",
+            "targets": ["ms.vss-work-web.work-hub-group"],
+            "includes": [
+                "ms.vss-tfs-web.tfs-page-data-service",
+                "ms.vss-features.extension-data-service",
+                "ms.vss-features.host-navigation-service",
+                "ms.vss-tfs-web.tfs-global-toast-service"
+            ],
+            "properties": {
+                "name": "Bug Bash Pro",
+                "uri": "html/index.html",
+                "icon": {
+                    "light": "asset://images/hublogo.png",
+                    "dark": "asset://images/hublogo_dark.png"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "public": false,
+    "publisher": "mohitbagra-dev",
+    "baseUri": "https://localhost:8888",
+    "files": [
+        {
+            "path": "../dist/images",
+            "addressable": true
+        },
+        {
+            "path": "../dist/README.md",
+            "addressable": true
+        }
+    ]
+}

@@ -1,0 +1,35 @@
+@import "_CommonStyles.scss";
+
+.bugbash-editor-panel {
+    .bugbash-editor-panel--header {
+        .bugbash-editor-panel--header-title {
+            margin-bottom: 10px;
+        }
+
+        .bugbash-edit-error {
+            margin-top: 10px;
+        }
+    }
+
+    .bugbash-editor-panel-contents {
+        padding: 0 0 10px 0;
+
+        .section-row {
+            margin-top: 20px;
+
+            .bugbash-control {
+                flex: 1;
+
+                &:first-child {
+                    margin-right: 15px;
+                }
+            }
+        }
+    }
+
+    .footer-buttons {
+        .footer-button {
+            margin-left: 10px;
+        }
+    }
+}

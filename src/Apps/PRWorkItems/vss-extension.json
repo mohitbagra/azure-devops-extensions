@@ -1,0 +1,46 @@
+{
+    "manifestVersion": 1,
+    "id": "pr-workitems",
+    "version": "2.0.4",
+    "name": "PR workitems",
+    "description": "A pull request menu extension to create a new workitem and associate it with current pull request",
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "scopes": ["vso.work", "vso.work_write"],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        },
+        {
+            "id": "Microsoft.TeamFoundation.Server",
+            "version": "[17.0,)"
+        }
+    ],
+    "tags": ["Work Item", "Pull Requests"],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/azdev-extensions"
+    },
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "categories": ["Azure Repos"],
+    "contributions": [
+        {
+            "id": "context-menu",
+            "type": "ms.vss-web.action",
+            "targets": ["ms.vss-code-web.pull-request-action-menu"],
+            "properties": {
+                "registeredObjectId": "pr-workitems-menu",
+                "uri": "html/index.html"
+            }
+        }
+    ]
+}

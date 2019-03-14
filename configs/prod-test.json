@@ -1,0 +1,26 @@
+{
+    "public": false,
+    "publisher": "mohitbagra-debug",
+    "files": [
+        {
+            "path": "../dist/scripts",
+            "addressable": true
+        },
+        {
+            "path": "../dist/3rdParty",
+            "addressable": true
+        },
+        {
+            "path": "../dist/images",
+            "addressable": true
+        },
+        {
+            "path": "../dist/html",
+            "addressable": true
+        },
+        {
+            "path": "../dist/README.md",
+            "addressable": true
+        }
+    ]
+}

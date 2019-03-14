@@ -1,0 +1,45 @@
+{
+    "manifestVersion": 1,
+    "id": "examples-app",
+    "version": "1.1.5",
+    "name": "Examples App",
+    "description": "Examples App",
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "scopes": ["vso.work", "vso.work_write", "vso.profile", "vso.code", "vso.code_write"],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        }
+    ],
+    "tags": ["Examples"],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/azdev-extensions"
+    },
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "categories": ["Azure Boards"],
+    "contributions": [
+        {
+            "id": "examples-app-hub",
+            "type": "ms.vss-web.hub",
+            "description": "Examples App",
+            "targets": ["ms.vss-work-web.work-hub-group"],
+            "includes": ["ms.vss-tfs-web.tfs-page-data-service", "ms.vss-features.extension-data-service", "ms.vss-features.location-service"],
+            "properties": {
+                "name": "Examples App",
+                "uri": "html/index.html",
+                "icon": "asset://images/logo.png"
+            }
+        }
+    ]
+}

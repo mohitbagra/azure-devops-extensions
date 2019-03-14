@@ -1,0 +1,22 @@
+.bugbash-page.bugbash-view-page {
+    .bugbash-view-page-header {
+        padding-left: 15px;
+
+        .header-breadcrumb {
+            .header-breadcrumb-button {
+                padding: 0 4px;
+                border: none;
+                font-size: 21px;
+            }
+
+            .seperator {
+                margin: 0 8px 0 4px;
+            }
+
+            .bugbash-header-status {
+                margin-left: 20px;
+                margin-top: 3px;
+            }
+        }
+    }
+}

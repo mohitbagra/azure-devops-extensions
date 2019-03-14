@@ -1,0 +1,64 @@
+@import "_CommonStyles.scss";
+
+#ext-container {
+    overflow: auto;
+
+    .page-container {
+        height: 100%;
+
+        .bugbash-page {
+            .bugbash-page-tabbar {
+                border-bottom: 1px solid $neutral-8;
+            }
+
+            .bugbash-page-contents {
+                padding: 10px 32px 10px 24px;
+                background-color: $neutral-2;
+                overflow: auto;
+
+                .bugbash-page-card {
+                    background-color: $backgroundColor;
+                    color: $textColor;
+                }
+            }
+        }
+    }
+}
+
+.communication-foreground {
+    color: $communication-foreground;
+}
+
+.error-text {
+    color: $error-text;
+}
+
+.success-text {
+    color: $status-success-foreground;
+}
+
+.status-view {
+    background-color: $status-success-foreground;
+
+    &.success {
+        background-color: $status-success-foreground;
+    }
+
+    &.failed {
+        background-color: $status-error-foreground;
+    }
+
+    &.warning {
+        background-color: $status-warning-foreground;
+    }
+
+    &.active {
+        background-color: $status-info-foreground;
+    }
+
+    &.neutral {
+        background-color: $neutral-60;
+    }
+}
+
+@include scrollbars(11px, 2px);

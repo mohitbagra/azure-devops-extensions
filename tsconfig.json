@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "charset": "utf8",
+        "module": "amd",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "target": "es5",
+        "lib": ["es5", "es6", "dom", "es2015.promise"],
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "allowJs": true,
+        "noEmitHelpers": true,
+        "importHelpers": true,
+        "skipDefaultLibCheck": true,
+        "skipLibCheck": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false,
+        "noErrorTruncation": false,
+        "paths": {
+            "OfficeFabric/*": ["node_modules/office-ui-fabric-react/lib/*"],
+            "Common/*": ["src/Common/*"],
+            "BugBashPro/*": ["src/Apps/BugBashPro/scripts/*"]
+        },
+        "types": ["react", "react-dom"],
+        "plugins": [
+            {
+                "name": "typescript-tslint-plugin",
+                "ignoreDefinitionFiles": false,
+                "configFile": "./tslint.json",
+                "suppressWhileTypeErrorsPresent": false,
+                "mockTypeScriptVersion": false
+            }
+        ]
+    }
+}

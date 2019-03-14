@@ -1,0 +1,9 @@
+@import "_CommonStyles.scss";
+
+.team-view {
+    max-width: 100%;
+
+    &.error {
+        color: $error-text;
+    }
+}

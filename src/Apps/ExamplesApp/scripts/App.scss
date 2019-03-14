@@ -1,0 +1,24 @@
+@import "_CommonStyles.scss";
+
+#ext-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    .fabric-container {
+        height: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        box-sizing: border-box;
+
+        .nav-item-container {
+            flex: 1;
+            border-left: 1px solid #ccc;
+            padding-left: 10px;
+            padding-top: 20px;
+        }
+    }
+}

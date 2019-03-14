@@ -1,0 +1,13 @@
+@import "_CommonStyles.scss";
+
+.identity-view {
+    max-width: 100%;
+
+    .identity-avatar {
+        margin-right: 4px;
+    }
+
+    .identity-display-name {
+        color: $primary-text;
+    }
+}
