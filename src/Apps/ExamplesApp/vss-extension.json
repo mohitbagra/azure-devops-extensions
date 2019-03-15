@@ -21,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "uri": "https://github.com/mohitbagra/azdev-extensions"
+        "uri": "https://github.com/mohitbagra/azure-devops-extensions"
     },
     "branding": {
         "color": "#106ebe",
