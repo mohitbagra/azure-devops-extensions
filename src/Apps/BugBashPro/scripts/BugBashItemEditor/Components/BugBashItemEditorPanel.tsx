@@ -29,6 +29,7 @@ import { TextField } from "Common/Components/TextField";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import { useThrottle } from "Common/Hooks/useThrottle";
 import { getTeamFieldModule } from "Common/Redux/TeamFields/Module";
+import { ITeamAwareState } from "Common/Redux/Teams";
 import { getWorkItemTemplateModule } from "Common/Redux/WorkItemTemplates/Module";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { getCurrentUser } from "Common/Utilities/Identity";
@@ -67,7 +68,7 @@ const Actions = {
 function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) {
     const { onDismiss, bugBashItemId, bugBash } = props;
     const mapStateToProps = React.useCallback(
-        (state: IBugBashItemEditorAwareState): IBugBashItemEditorPanelStateProps => {
+        (state: IBugBashItemEditorAwareState & ITeamAwareState): IBugBashItemEditorPanelStateProps => {
             return {
                 draftBugBashItem: getDraftBugBashItem(state, bugBashItemId),
                 draftComment: getDraftComment(state, bugBashItemId),

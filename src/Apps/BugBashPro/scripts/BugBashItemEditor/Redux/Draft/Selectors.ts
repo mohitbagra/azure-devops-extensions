@@ -1,5 +1,6 @@
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
+import { ITeamAwareState } from "Common/Redux/Teams/Contracts";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import { createSelector } from "reselect";
 import { isBugBashItemDirty, isBugBashItemValid } from "../../Helpers";
@@ -64,12 +65,14 @@ export const getDraftComment = (state: IBugBashItemEditorAwareState, bugBashItem
     );
 };
 
-export const isDraftValid = createSelector(
-    getDraftBugBashItem,
-    draft => {
-        return !!(draft && isBugBashItemValid(draft));
+export function isDraftValid(state: IBugBashItemEditorAwareState & ITeamAwareState, bugBashItemId: string | undefined): boolean {
+    const draft = getDraftBugBashItem(state, bugBashItemId);
+    if (!draft) {
+        return false;
     }
-);
+    return isBugBashItemValid(state, draft);
+}
+
 export const isDraftDirty = createSelector(
     getDraftBugBashItem,
     getOriginalBugBashItem,
