@@ -1,5 +1,8 @@
 {
     "defaultSeverity": "warning",
+    "linterOptions": {
+        "exclude": ["node_modules/**"]
+    },
     "rules": {
         "member-access": [true, "check-accessor", "check-parameter-property"],
         "member-ordering": [
