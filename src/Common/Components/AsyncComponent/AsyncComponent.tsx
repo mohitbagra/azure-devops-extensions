@@ -1,6 +1,6 @@
-import * as React from "react";
 import { InputError } from "Common/Components/InputError";
 import { Loading } from "Common/Components/Loading";
+import * as React from "react";
 
 interface IAsyncComponentProps<T> {
     loader: () => Promise<T>;

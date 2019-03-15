@@ -1,5 +1,5 @@
-import * as React from "react";
 import { readSetting, writeSetting } from "Common/ServiceWrappers/ExtensionDataManager";
+import * as React from "react";
 import { ChangelogMajorVersion } from "../Constants";
 
 export function useChangeVersion(): [string | undefined, () => void] {

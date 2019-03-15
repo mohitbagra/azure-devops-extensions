@@ -41,9 +41,9 @@ export class Color {
             throw new Error("color must be defined");
         }
         if (typeof color === "string") {
-            this.convertStringColorToRgb(<string>color);
+            this.convertStringColorToRgb(color);
         } else if (color instanceof Rgb) {
-            this._value = <Rgb>color;
+            this._value = color;
         } else {
             throw new Error("color not in a known type");
         }
@@ -186,7 +186,7 @@ export class AccessibilityColor extends Color {
         if (color instanceof Color) {
             colorCode = color.asHex();
         } else {
-            colorCode = <string | Rgb>color;
+            colorCode = color;
         }
         super(colorCode);
     }

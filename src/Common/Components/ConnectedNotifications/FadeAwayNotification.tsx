@@ -1,4 +1,3 @@
-import * as React from "react";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { FadeAway } from "Common/Components/FadeAway";
@@ -6,6 +5,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import {
     getKeyValue, getKeyValurPairModule, IKeyValurPairAwareState, KeyValurPairActions
 } from "Common/Redux/KeyValuePair";
+import * as React from "react";
 
 interface IFadeAwayNotificationOwnProps extends IBaseProps {
     notificationKey: string;

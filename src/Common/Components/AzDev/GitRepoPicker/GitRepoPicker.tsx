@@ -1,4 +1,3 @@
-import * as React from "react";
 import { GitRepository } from "azure-devops-extension-api/Git";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -8,6 +7,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import {
     areGitReposLoading, getGitRepoModule, getGitRepos, GitRepoActions, IGitRepoAwareState
 } from "Common/Redux/GitRepos";
+import * as React from "react";
 
 interface IGitRepoPickerStateProps {
     gitRepos?: GitRepository[];

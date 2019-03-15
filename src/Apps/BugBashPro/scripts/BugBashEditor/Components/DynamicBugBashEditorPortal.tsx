@@ -1,5 +1,5 @@
-import * as React from "react";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import * as React from "react";
 import {
     BugBashEditorPortalActions, getEditBugBashId, IBugBashEditorPortalAwareState,
     isBugBashEditorPortalOpen

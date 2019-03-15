@@ -1,4 +1,3 @@
-import * as React from "react";
 import { css } from "azure-devops-ui/Util";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -8,6 +7,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import {
     areTagsLoading, getTagModule, getTags, ITagAwareState, TagActions
 } from "Common/Redux/Tags";
+import * as React from "react";
 
 interface IWorkItemTagPickerStateProps {
     tags?: string[];

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WebApiTeam } from "azure-devops-extension-api/Core";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -8,6 +7,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import {
     areTeamsLoading, getTeamModule, getTeams, ITeamAwareState, TeamActions
 } from "Common/Redux/Teams";
+import * as React from "react";
 
 interface ITeamPickerStateProps {
     teams?: WebApiTeam[];

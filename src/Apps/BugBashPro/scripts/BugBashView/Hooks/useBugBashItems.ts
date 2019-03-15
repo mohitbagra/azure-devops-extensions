@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import {
     BugBashItemsActions, getBugBashItemsStatus, getResolvedWorkItemsMap, IBugBashItemsAwareState
 } from "BugBashPro/Redux/BugBashItems";
 import { IBugBashItem, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { useEffect } from "react";
 import {
     BugBashItemsFilterData, getBugBashViewFilterData, getFilteredBugBashItems,
     IBugBashViewAwareState

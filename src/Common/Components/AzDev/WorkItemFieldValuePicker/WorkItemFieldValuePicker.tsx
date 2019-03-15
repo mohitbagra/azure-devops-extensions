@@ -1,6 +1,5 @@
 import "./WorkItemFieldValuePicker.scss";
 
-import * as React from "react";
 import {
     FieldType, WorkItemField, WorkItemTypeFieldWithReferences
 } from "azure-devops-extension-api/WorkItemTracking";
@@ -25,6 +24,7 @@ import {
 } from "Common/Redux/Fields";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
+import * as React from "react";
 
 interface IWorkItemFieldValuePickerOwnProps extends ILabelledComponentProps, IInputComponentProps<any> {
     fieldRefName: string;

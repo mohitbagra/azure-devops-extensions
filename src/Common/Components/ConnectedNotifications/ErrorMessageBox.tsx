@@ -1,4 +1,3 @@
-import * as React from "react";
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
@@ -8,6 +7,7 @@ import {
     getKeyValue, getKeyValurPairModule, IKeyValurPairAwareState, KeyValurPairActions
 } from "Common/Redux/KeyValuePair";
 import { isNullOrEmpty } from "Common/Utilities/String";
+import * as React from "react";
 
 interface IErrorMessageBoxOwnProps extends IBaseProps {
     errorKey: string;

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -9,6 +8,7 @@ import {
     areWorkItemTypesLoading, getWorkItemTypeModule, getWorkItemTypes, IWorkItemTypeAwareState,
     WorkItemTypeActions
 } from "Common/Redux/WorkItemTypes";
+import * as React from "react";
 
 interface IWorkItemTypePickerStateProps {
     workItemTypes?: WorkItemType[];

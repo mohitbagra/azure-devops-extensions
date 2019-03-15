@@ -1,5 +1,5 @@
-import * as React from "react";
 import { Context } from "Common/Redux";
+import * as React from "react";
 import { IModule } from "redux-dynamic-modules";
 import { IParentComponentProps } from "../Contracts";
 

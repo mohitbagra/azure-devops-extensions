@@ -3,11 +3,11 @@ import { RestClientBase } from "azure-devops-extension-api/Common/RestClientBase
 import { WebApiCreateTagRequestData, WebApiTagDefinition } from "azure-devops-extension-api/Core";
 
 export class TaggingRestClient extends RestClientBase {
+    public static readonly RESOURCE_AREA_ID = "1F131D7F-CFBB-4EC9-B358-FB4E8341CE59";
+
     constructor(options: IVssRestClientOptions) {
         super(options);
     }
-
-    public static readonly RESOURCE_AREA_ID = "1F131D7F-CFBB-4EC9-B358-FB4E8341CE59";
 
     public async createTagDefinition(tagData: WebApiCreateTagRequestData, scopeId: string, tagId?: string): Promise<WebApiTagDefinition> {
         return this.beginRequest<WebApiTagDefinition>({

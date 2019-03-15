@@ -1,4 +1,3 @@
-import * as React from "react";
 import { getClient } from "azure-devops-extension-api";
 import {
     GitPush, GitRestClient, ItemContentType, VersionControlChangeType
@@ -15,6 +14,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import { KeyValurPairActions } from "Common/Redux/KeyValuePair";
 import { getProjectUrlAsync } from "Common/Utilities/UrlHelper";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
+import * as React from "react";
 import { IProjectSetting, LoadStatus } from "../Contracts";
 
 interface IBugBashRichEditorStateProps {

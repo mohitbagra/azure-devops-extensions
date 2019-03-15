@@ -30,18 +30,18 @@ export function copyToClipboard(data: string, options?: IClipboardOptions): bool
 }
 
 export function supportsNativeCopy(): boolean {
-    return document.queryCommandSupported("copy") || (<any>window).clipboardData !== undefined;
+    return document.queryCommandSupported("copy") || (window as any).clipboardData !== undefined;
 }
 
 export function supportsNativeHtmlCopy(): boolean {
-    return (<any>document.body).createTextRange !== undefined || (document.queryCommandSupported("copy") && document.createRange !== undefined);
+    return (document.body as any).createTextRange !== undefined || (document.queryCommandSupported("copy") && document.createRange !== undefined);
 }
 
 function nativeCopy(data: string, copyAsHtml: boolean): boolean {
     let success = false;
 
-    if (!copyAsHtml && (<any>window).clipboardData !== undefined) {
-        (<any>window).clipboardData.setData("text", data);
+    if (!copyAsHtml && (window as any).clipboardData !== undefined) {
+        (window as any).clipboardData.setData("text", data);
         success = true;
     } else {
         let range;
@@ -61,11 +61,11 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
                 copyContent.textContent = data;
             }
 
-            if ((<any>document.body).createTextRange) {
+            if ((document.body as any).createTextRange) {
                 const body = document.getElementsByTagName("body")[0];
                 body.insertBefore(copyContent, body.firstChild);
 
-                range = (<any>document.body).createTextRange();
+                range = (document.body as any).createTextRange();
                 range.moveToElementText(document.getElementById(copyDivId));
                 range.select();
                 success = range.execCommand("copy");
@@ -79,7 +79,7 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
 
                 range.selectNodeContents(copyContent);
                 sel.addRange(range);
-                success = (<any>document).execCommand("copy");
+                success = (document as any).execCommand("copy");
             }
         } finally {
             // Remove the content from the dom.

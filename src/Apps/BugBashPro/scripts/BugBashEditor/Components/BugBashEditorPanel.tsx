@@ -1,6 +1,5 @@
 import "./BugBashEditor.scss";
 
-import * as React from "react";
 import { WebApiTeam } from "azure-devops-extension-api/Core";
 import {
     FieldType, WorkItemField, WorkItemTemplate, WorkItemType
@@ -38,6 +37,7 @@ import { IWorkItemTemplateAwareState } from "Common/Redux/WorkItemTemplates/Cont
 import { IWorkItemTypeAwareState } from "Common/Redux/WorkItemTypes/Contracts";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { defaultDateComparer } from "Common/Utilities/Date";
+import * as React from "react";
 import {
     BugBashEditorErrorKey, BugBashEditorNotificationKey, TitleFieldMaxLength
 } from "../Constants";

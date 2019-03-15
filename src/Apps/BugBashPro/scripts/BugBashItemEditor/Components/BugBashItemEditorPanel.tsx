@@ -1,6 +1,5 @@
 import "./BugBashItemEditor.scss";
 
-import * as React from "react";
 import { WebApiTeam } from "azure-devops-extension-api/Core";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
@@ -34,6 +33,7 @@ import { getWorkItemTemplateModule } from "Common/Redux/WorkItemTemplates/Module
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
+import * as React from "react";
 import {
     BugBashItemEditorErrorKey, BugBashItemEditorNotificationKey, TitleFieldMaxLength
 } from "../Constants";

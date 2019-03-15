@@ -1,6 +1,5 @@
 import "./MultiValuePicker.scss";
 
-import * as React from "react";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import {
     EditableLabelGroup, ILabelModel, LabelGroup, WrappingBehavior
@@ -11,6 +10,7 @@ import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { contains, findIndex } from "Common/Utilities/Array";
 import { ignoreCaseEquals, isNullOrWhiteSpace } from "Common/Utilities/String";
+import * as React from "react";
 
 export interface IMultiValuePickerProps extends ILabelledComponentProps, IInputComponentProps<string[]> {
     allValues?: string[];

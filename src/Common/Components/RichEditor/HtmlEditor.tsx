@@ -1,8 +1,8 @@
 import "./HtmlEditor.scss";
 
-import * as React from "react";
 import { TimerManagement } from "azure-devops-ui/Core/TimerManagement";
 import { css } from "azure-devops-ui/Util";
+import * as React from "react";
 import {
     Browser, ContentChangedPlugin, DoubleClickImagePlugin, EditorPlugin, EditorViewState,
     EmojiPaneProps, EmojiPlugin, EmojiPluginOptions, FocusEventHandler, FocusOutShell, fromHtml,

@@ -1,6 +1,5 @@
 import "./ColorPicker.scss";
 
-import * as React from "react";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { css } from "azure-devops-ui/Util";
@@ -10,6 +9,7 @@ import { useControlledState } from "Common/Hooks/useControlledState";
 import { AccessibilityColor } from "Common/Utilities/Color";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import { Callout } from "OfficeFabric/Callout";
+import * as React from "react";
 
 type IColorPickerProps = ILabelledComponentProps & IInputComponentProps<string>;
 

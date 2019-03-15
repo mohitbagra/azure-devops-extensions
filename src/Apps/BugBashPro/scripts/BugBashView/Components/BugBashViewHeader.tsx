@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "azure-devops-ui/Button";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { IStatusProps, Status, Statuses, StatusSize } from "azure-devops-ui/Status";
@@ -9,6 +8,7 @@ import { Resources } from "BugBashPro/Resources";
 import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { useActionCreators } from "Common/Hooks/Redux";
+import * as React from "react";
 import { BugBashViewHeaderCommands } from "../Constants";
 import { useBugBashItems } from "../Hooks/useBugBashItems";
 import { IBugBashViewBaseProps } from "../Interfaces";

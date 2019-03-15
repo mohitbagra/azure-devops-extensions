@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
@@ -10,6 +9,7 @@ import { IUserSetting, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { TeamPicker } from "Common/Components/AzDev/TeamPicker";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import { useControlledState } from "Common/Hooks/useControlledState";
+import * as React from "react";
 
 interface IUserSettingsEditorStateProps {
     userSetting?: IUserSetting;

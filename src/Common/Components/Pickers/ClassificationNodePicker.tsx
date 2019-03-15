@@ -1,6 +1,5 @@
 import "./ClassificationNodePicker.scss";
 
-import * as React from "react";
 import { ComboBox } from "azure-devops-ui/ComboBox";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ITreeItem, Tree, TreeItemProvider } from "azure-devops-ui/Tree";
@@ -11,6 +10,7 @@ import { useControlledState } from "Common/Hooks/useControlledState";
 import { IClassificationNode } from "Common/Redux/ClassificationNodes";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import { IComboBox } from "OfficeFabric/components/ComboBox/ComboBox.types";
+import * as React from "react";
 
 export type IClassificationNodePickerSharedProps = ILabelledComponentProps & IInputComponentProps<string>;
 

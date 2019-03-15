@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Icon } from "azure-devops-ui/Icon";
 import { ITableColumn, SimpleTableCell } from "azure-devops-ui/Table";
@@ -12,6 +11,7 @@ import { WorkItemStateView } from "Common/Components/AzDev/WorkItemStateView";
 import { WorkItemTitleView } from "Common/Components/AzDev/WorkItemTitleView";
 import { IdentityView } from "Common/Components/IdentityView";
 import * as format from "date-fns/format";
+import * as React from "react";
 import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "../Constants";
 import { isBugBashItemAccepted, isBugBashItemRejected, isWorkItemFieldName } from "../Helpers";
 

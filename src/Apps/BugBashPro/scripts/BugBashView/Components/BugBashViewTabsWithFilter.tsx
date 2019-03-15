@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { ObservableValue } from "azure-devops-ui/Core/Observable";
@@ -17,6 +16,7 @@ import { useMappedState } from "Common/Hooks/Redux";
 import { getTeamsMap, ITeamAwareState } from "Common/Redux/Teams";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { SelectionMode } from "office-ui-fabric-react/lib/utilities/selection/interfaces";
+import * as React from "react";
 import {
     BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewPagePivotKeys, WorkItemFieldNames
 } from "../Constants";

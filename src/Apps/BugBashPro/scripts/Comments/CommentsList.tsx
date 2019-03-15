@@ -1,6 +1,5 @@
 import "./CommentsList.scss";
 
-import * as React from "react";
 import { ago } from "azure-devops-ui/Utilities/Date";
 import {
     CommentActions, getComments, getCommentsStatus, ICommentsAwareState
@@ -9,6 +8,7 @@ import { IBugBashItemComment, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { IdentityView } from "Common/Components/IdentityView";
 import { Loading } from "Common/Components/Loading";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import * as React from "react";
 
 interface ICommentsListProps {
     bugBashItemId: string;

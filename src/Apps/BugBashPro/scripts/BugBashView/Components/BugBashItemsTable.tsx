@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
 import { ZeroData } from "azure-devops-ui/ZeroData";
@@ -11,6 +10,7 @@ import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
 import { useActionCreators } from "Common/Hooks/Redux";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
+import * as React from "react";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "../Constants";
 import { useBugBashItems } from "../Hooks/useBugBashItems";
 import { useBugBashItemsSort } from "../Hooks/useBugBashItemsSort";

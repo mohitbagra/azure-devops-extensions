@@ -1,7 +1,7 @@
 import "./Loading.scss";
 
-import * as React from "react";
 import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
+import * as React from "react";
 
 export function Loading() {
     return (

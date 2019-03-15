@@ -1,6 +1,5 @@
 import "./DateTimePickerDropdown.scss";
 
-import * as React from "react";
 import { Button } from "azure-devops-ui/Button";
 import { css } from "azure-devops-ui/Util";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
@@ -11,6 +10,7 @@ import { isNullOrEmpty } from "Common/Utilities/String";
 import * as format from "date-fns/format";
 import * as parse from "date-fns/parse";
 import { Callout } from "OfficeFabric/Callout";
+import * as React from "react";
 import { DateTimePicker } from "./DateTimePicker";
 
 interface IDateTimePickerDropdownOwnProps {

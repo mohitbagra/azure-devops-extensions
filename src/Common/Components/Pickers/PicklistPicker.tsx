@@ -1,12 +1,12 @@
 import "./PicklistPicker.scss";
 
-import * as React from "react";
 import { IPickListItem, IPickListSelection, PickListDropdown } from "azure-devops-ui/PickList";
 import { css } from "azure-devops-ui/Util";
 import { ILabelledComponentProps } from "Common/Components/Contracts";
 import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { isNullOrEmpty } from "Common/Utilities/String";
+import * as React from "react";
 
 export interface IPicklistPickerSharedProps<T> extends ILabelledComponentProps {
     disabled?: boolean;

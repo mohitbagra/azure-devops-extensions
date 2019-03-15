@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
     ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableCell, SortOrder
 } from "azure-devops-ui/Table";
@@ -16,6 +15,7 @@ import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
 import { useActionCreators } from "Common/Hooks/Redux";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as format from "date-fns/format";
+import * as React from "react";
 import { BugBashFieldNames } from "../Constants";
 import { useBugBashes } from "../Hooks/useBugBashes";
 import { useBugBashesSort } from "../Hooks/useBugBashesSort";

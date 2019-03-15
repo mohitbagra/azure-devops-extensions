@@ -133,7 +133,7 @@ function matcher(item: IBugBashItemWithWorkItem, filter: IFilterState): boolean 
 function comparer(item1: IBugBashItemWithWorkItem, item2: IBugBashItemWithWorkItem, sortState: ISortState): number {
     const sortKey = sortState.sortKey as BugBashItemFieldNames | WorkItemFieldNames;
     const isSortedDescending = sortState.isSortedDescending;
-    let compareValue: number = 0;
+    let compareValue = 0;
     if (sortKey === BugBashItemFieldNames.Status) {
         return 0;
     }

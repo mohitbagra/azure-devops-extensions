@@ -1,4 +1,3 @@
-import * as React from "react";
 import { IdentityRef } from "azure-devops-extension-api/WebApi";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking";
 import { WorkItemStateView } from "Common/Components/AzDev/WorkItemStateView";
@@ -12,6 +11,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import {
     areWorkItemsLoaded, getWorkItemModule, getWorkItems, IWorkItemAwareState, WorkItemActions
 } from "Common/Redux/WorkItems";
+import * as React from "react";
 
 interface IWorkItemTableOwnProps {
     ids: number[];

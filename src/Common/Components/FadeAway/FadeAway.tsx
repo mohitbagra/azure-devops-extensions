@@ -1,7 +1,7 @@
 import "./FadeAway.scss";
 
-import * as React from "react";
 import { css } from "azure-devops-ui/Util";
+import * as React from "react";
 import { IBaseProps } from "../Contracts";
 
 interface IFadeAwayProps extends IBaseProps {

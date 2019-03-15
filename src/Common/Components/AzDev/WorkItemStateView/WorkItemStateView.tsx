@@ -1,6 +1,5 @@
 import "./WorkItemStateView.scss";
 
-import * as React from "react";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
@@ -10,6 +9,7 @@ import {
     getWorkItemTypeStateColor, getWorkItemTypeStateModule, IWorkItemTypeStateAwareState,
     WorkItemTypeStateActions
 } from "Common/Redux/WorkItemTypeStates";
+import * as React from "react";
 
 interface IWorkItemStateViewOwnProps extends IBaseProps {
     stateName: string;

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -9,6 +8,7 @@ import {
     getTeamTemplates, getWorkItemTemplateModule, ITeamTemplates, IWorkItemTemplateAwareState,
     TeamTemplatesActions
 } from "Common/Redux/WorkItemTemplates";
+import * as React from "react";
 
 interface IWorkItemTemplatePickerOwnProps extends IPicklistPickerSharedProps<WorkItemTemplateReference> {
     teamId?: string;

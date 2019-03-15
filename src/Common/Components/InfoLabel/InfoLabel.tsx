@@ -1,9 +1,9 @@
 import "./InfoLabel.scss";
 
-import * as React from "react";
 import { Icon } from "azure-devops-ui/Icon";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
+import * as React from "react";
 import { IBaseProps } from "../Contracts";
 
 interface IInfoLabelProps extends IBaseProps {

@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
     FieldType, WorkItemField, WorkItemTypeFieldWithReferences
 } from "azure-devops-extension-api/WorkItemTracking";
@@ -13,6 +12,7 @@ import {
     getWorkItemTypeFields, IFieldAwareState, WorkItemTypeFieldActions
 } from "Common/Redux/Fields";
 import { contains } from "Common/Utilities/Array";
+import * as React from "react";
 
 interface IWorkItemFieldPickerStateProps {
     allFields?: WorkItemField[];

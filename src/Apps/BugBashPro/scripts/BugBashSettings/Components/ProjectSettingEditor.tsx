@@ -1,4 +1,3 @@
-import * as React from "react";
 import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
@@ -10,6 +9,7 @@ import { IProjectSetting, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { GitRepoPicker } from "Common/Components/AzDev/GitRepoPicker";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import { useControlledState } from "Common/Hooks/useControlledState";
+import * as React from "react";
 
 interface IProjectSettingsEditorStateProps {
     projectSetting?: IProjectSetting;

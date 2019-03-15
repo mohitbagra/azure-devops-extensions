@@ -1,11 +1,11 @@
 import "./SettingsEditor.scss";
 
-import * as React from "react";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { Panel } from "azure-devops-ui/Panel";
 import { getBugBashSettingsModule } from "BugBashPro/Redux/Settings";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import * as React from "react";
 import {
     BugBashSettingsPortalActions, IBugBashSettingsPortalAwareState, isSettingsPortalOpen
 } from "../Redux/Portal";

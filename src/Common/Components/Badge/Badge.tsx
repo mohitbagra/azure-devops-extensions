@@ -1,9 +1,9 @@
 import "./Badge.scss";
 
-import * as React from "react";
 import { css } from "azure-devops-ui/Util";
 import { IParentComponentProps } from "Common/Components/Contracts";
 import { Callout, DirectionalHint } from "OfficeFabric/Callout";
+import * as React from "react";
 
 interface IBadgeProps extends IParentComponentProps {
     badgeCount: number;

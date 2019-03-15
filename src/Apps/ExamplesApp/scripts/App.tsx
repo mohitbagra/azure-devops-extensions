@@ -1,7 +1,5 @@
 import "./App.scss";
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
 import * as SDK from "azure-devops-extension-sdk";
 import { Icon } from "azure-devops-ui/Icon";
 import { WrappingBehavior } from "azure-devops-ui/Label";
@@ -34,6 +32,8 @@ import { TextField } from "Common/Components/TextField";
 import { ReduxHooksStoreProvider } from "Common/Redux";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { INavLink, Nav } from "OfficeFabric/Nav";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { createStore, IModuleStore } from "redux-dynamic-modules";
 import { getSagaExtension } from "redux-dynamic-modules-saga";
 

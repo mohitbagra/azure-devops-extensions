@@ -1,12 +1,12 @@
 import "./FileUploadDialog.scss";
 
-import * as React from "react";
 import { Button } from "azure-devops-ui/Button";
 import {
     FileInput, FileInputContentType, FileInputResult, FileInputUpdateEventData
 } from "azure-devops-ui/FileInput";
 import { css } from "azure-devops-ui/Util";
 import { Dialog, DialogFooter, DialogType } from "OfficeFabric/Dialog";
+import * as React from "react";
 
 interface IFileInputDialogProps {
     className?: string;

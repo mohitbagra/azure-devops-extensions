@@ -88,7 +88,7 @@ function matcher(bugBash: IBugBash, filter: IFilterState): boolean {
 function comparer(bugBash1: IBugBash, bugBash2: IBugBash, sortState: ISortState): number {
     const sortKey = sortState.sortKey as keyof IBugBash;
     const isSortedDescending = sortState.isSortedDescending;
-    let compareValue: number = 0;
+    let compareValue = 0;
 
     if (BugBashKeyTypes[sortKey] === "string") {
         const v1 = bugBash1[sortKey] as string;

@@ -1,6 +1,5 @@
 import "./BugBashView.scss";
 
-import * as React from "react";
 import { Card } from "azure-devops-ui/Card";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { Page } from "azure-devops-ui/Page";
@@ -21,6 +20,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { emptyRenderer } from "Common/Components/Renderers";
 import { getKeyValurPairModule } from "Common/Redux/KeyValuePair";
+import * as React from "react";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { useBugBash } from "../Hooks/useBugBash";
 import { getBugBashViewModule } from "../Redux";

@@ -1,6 +1,6 @@
-import * as React from "react";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import * as React from "react";
 import {
     BugBashItemEditorPortalActions, getEditBugBashItemBugBash, getEditBugBashItemId,
     IBugBashItemEditorPortalAwareState, isBugBashItemEditorPortalOpen

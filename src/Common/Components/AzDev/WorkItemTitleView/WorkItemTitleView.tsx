@@ -1,6 +1,5 @@
 import "./WorkItemTitleView.scss";
 
-import * as React from "react";
 import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
 import { Image } from "azure-devops-ui/Image";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
@@ -13,6 +12,7 @@ import {
     getWorkItemType, getWorkItemTypeModule, IWorkItemTypeAwareState, WorkItemTypeActions
 } from "Common/Redux/WorkItemTypes";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
+import * as React from "react";
 
 interface IWorkItemTitleViewOwnProps extends IBaseProps {
     linkClassName?: string;

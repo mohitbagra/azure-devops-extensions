@@ -1,6 +1,5 @@
 import "./TeamView.scss";
 
-import * as React from "react";
 import { WebApiTeam } from "azure-devops-extension-api/Core";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
@@ -10,6 +9,7 @@ import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import {
     areTeamsLoading, getTeam, getTeamModule, getTeams, ITeamAwareState, TeamActions
 } from "Common/Redux/Teams";
+import * as React from "react";
 
 interface ITeamViewOwnProps extends IBaseProps {
     teamId: string;

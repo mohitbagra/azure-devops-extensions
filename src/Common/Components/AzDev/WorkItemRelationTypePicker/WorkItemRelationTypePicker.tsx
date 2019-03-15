@@ -1,4 +1,3 @@
-import * as React from "react";
 import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -9,6 +8,7 @@ import {
     areWorkItemRelationTypesLoading, getWorkItemRelationTypeModule, getWorkItemRelationTypes,
     IWorkItemRelationTypeAwareState, WorkItemRelationTypeActions
 } from "Common/Redux/WorkItemRelationTypes";
+import * as React from "react";
 
 interface IWorkItemRelationTypePickerStateProps {
     workItemRelationTypes?: WorkItemRelationType[];

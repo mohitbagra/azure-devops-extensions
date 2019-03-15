@@ -1,9 +1,9 @@
 import "./TagsList.scss";
 
-import * as React from "react";
 import { LabelGroup } from "azure-devops-ui/Components/LabelGroup/LabelGroup";
 import { WrappingBehavior } from "azure-devops-ui/Label";
 import { css } from "azure-devops-ui/Util";
+import * as React from "react";
 
 interface ITagsListProps {
     className?: string;

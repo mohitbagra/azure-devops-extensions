@@ -15,7 +15,7 @@ export const fetchTeams = memoizePromise(
 
 async function getTeams(): Promise<WebApiTeam[]> {
     const teams: WebApiTeam[] = [];
-    const top: number = 300;
+    const top = 300;
     const client = await getClient(CoreRestClient);
     const projectId = await getCurrentProjectId();
 

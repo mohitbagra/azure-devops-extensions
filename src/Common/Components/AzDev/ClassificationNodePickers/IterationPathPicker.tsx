@@ -1,4 +1,3 @@
-import * as React from "react";
 import { css } from "azure-devops-ui/Util";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -9,6 +8,7 @@ import {
     areIterationPathsLoading, getClassificationNodeModule, getIterationPathRootNode,
     IClassificationNode, IClassificationNodeAwareState, IterationPathActions
 } from "Common/Redux/ClassificationNodes";
+import * as React from "react";
 
 interface IIterationPathPickerStateProps {
     rootNode?: IClassificationNode;
