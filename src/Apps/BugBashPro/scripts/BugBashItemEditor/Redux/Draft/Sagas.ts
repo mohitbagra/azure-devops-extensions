@@ -1,7 +1,5 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import {
-    BugBashItemsActions, BugBashItemsActionTypes, getBugBashItem
-} from "BugBashPro/Redux/BugBashItems";
+import { BugBashItemsActions, BugBashItemsActionTypes, getBugBashItem } from "BugBashPro/Redux/BugBashItems";
 import { CommentActions, CommentActionTypes } from "BugBashPro/Redux/Comments";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
@@ -18,9 +16,7 @@ import { all, call, put, race, select, take, takeEvery } from "redux-saga/effect
 import { BugBashItemEditorErrorKey, BugBashItemEditorNotificationKey } from "../../Constants";
 import { BugBashItemEditorPortalActions } from "../Portal";
 import { BugBashItemEditorActions, BugBashItemEditorActionTypes } from "./Actions";
-import {
-    getDraftBugBashItem, getDraftComment, isDraftDirty, isDraftSaving, isDraftValid
-} from "./Selectors";
+import { getDraftBugBashItem, getDraftComment, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 
 export function* bugBashItemEditorSaga(): SagaIterator {
     yield takeEvery(BugBashItemEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
@@ -97,29 +93,36 @@ function* requestDraftSave(action: ActionsOfType<BugBashItemEditorActions, BugBa
 function* requestDraftCreate(draftBugBashItem: IBugBashItem, draftComment: string | undefined) {
     yield put(BugBashItemsActions.bugBashItemCreateRequested(draftBugBashItem));
 
-    const itemCreatedAction: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemCreated> = yield take(
-        (action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemCreated>): boolean => {
-            return action.type === BugBashItemsActionTypes.BugBashItemCreated;
+    const itemCreatedAction: ActionsOfType<
+        BugBashItemsActions,
+        BugBashItemsActionTypes.BugBashItemCreated | BugBashItemsActionTypes.BugBashItemCreateFailed
+    > = yield take(
+        (
+            action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemCreated | BugBashItemsActionTypes.BugBashItemCreateFailed>
+        ): boolean => {
+            return action.type === BugBashItemsActionTypes.BugBashItemCreated || action.type === BugBashItemsActionTypes.BugBashItemCreateFailed;
         }
     );
 
-    const { bugBashItem: createdBugBashItem } = itemCreatedAction.payload;
+    if (itemCreatedAction.type === BugBashItemsActionTypes.BugBashItemCreated) {
+        const { bugBashItem: createdBugBashItem } = itemCreatedAction.payload;
 
-    if (draftComment) {
-        yield put(CommentActions.commentCreateRequested(createdBugBashItem.id!, draftComment));
-        yield race([take(CommentActionTypes.CommentCreated), take(CommentActionTypes.CommentCreateFailed)]);
-    }
-
-    yield call(addToast, {
-        message: Resources.BugBashItemCreatedMessage,
-        callToAction: Resources.View,
-        duration: 5000,
-        forceOverrideExisting: true,
-        onCallToActionClick: () => {
-            navigateToBugBashItem(createdBugBashItem.bugBashId, createdBugBashItem.id!);
+        if (draftComment) {
+            yield put(CommentActions.commentCreateRequested(createdBugBashItem.id!, draftComment));
+            yield race([take(CommentActionTypes.CommentCreated), take(CommentActionTypes.CommentCreateFailed)]);
         }
-    });
-    yield put(BugBashItemEditorPortalActions.dismissPortal());
+
+        yield call(addToast, {
+            message: Resources.BugBashItemCreatedMessage,
+            callToAction: Resources.View,
+            duration: 5000,
+            forceOverrideExisting: true,
+            onCallToActionClick: () => {
+                navigateToBugBashItem(createdBugBashItem.bugBashId, createdBugBashItem.id!);
+            }
+        });
+        yield put(BugBashItemEditorPortalActions.dismissPortal());
+    }
 }
 
 function* requestDraftUpdate(draftBugBashItem: IBugBashItem, draftComment: string | undefined) {

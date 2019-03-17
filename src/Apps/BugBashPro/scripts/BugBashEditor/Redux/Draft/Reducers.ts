@@ -37,17 +37,7 @@ export function bugBashEditorReducer(state: IBugBashEditorState | undefined, act
                 break;
             }
 
-            case BugBashesActionTypes.BeginCreateBugBash:
-            case BugBashesActionTypes.BeginUpdateBugBash: {
-                const bugBash = action.payload;
-                const id = resolveNullableMapKey(bugBash.id);
-                if (draft.draftBugBashMap[id]) {
-                    draft.draftBugBashMap[id].isSaving = true;
-                }
-                break;
-            }
-
-            case BugBashesActionTypes.BugBashUpdated: {
+            case BugBashEditorActionTypes.DraftSaveSucceeded: {
                 const updatedBugBash = action.payload;
                 const id = resolveNullableMapKey(updatedBugBash.id);
                 if (draft.draftBugBashMap[id]) {
@@ -56,6 +46,17 @@ export function bugBashEditorReducer(state: IBugBashEditorState | undefined, act
                         draftValue: { ...updatedBugBash },
                         isSaving: false
                     };
+                }
+
+                break;
+            }
+
+            case BugBashesActionTypes.BeginCreateBugBash:
+            case BugBashesActionTypes.BeginUpdateBugBash: {
+                const bugBash = action.payload;
+                const id = resolveNullableMapKey(bugBash.id);
+                if (draft.draftBugBashMap[id]) {
+                    draft.draftBugBashMap[id].isSaving = true;
                 }
             }
         }

@@ -10,6 +10,7 @@
         "postbuild": "node ./scripts/package"
     },
     "devDependencies": {
+        "@types/mousetrap": "1.6.1",
         "@types/react": "16.8.8",
         "@types/react-dom": "16.8.2",
         "@types/react-redux": "7.0.3",
@@ -40,6 +41,7 @@
         "es6-promise": "4.2.6",
         "immer": "2.1.2",
         "markdown-it": "8.4.2",
+        "mousetrap": "1.6.3",
         "office-ui-fabric-react": "^5.112.1004",
         "q": "1.5.1",
         "react": "16.8.4",

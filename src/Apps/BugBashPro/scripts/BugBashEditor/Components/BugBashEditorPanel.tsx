@@ -1,19 +1,14 @@
 import "./BugBashEditor.scss";
 
 import { WebApiTeam } from "azure-devops-extension-api/Core";
-import {
-    FieldType, WorkItemField, WorkItemTemplate, WorkItemType
-} from "azure-devops-extension-api/WorkItemTracking";
+import { FieldType, WorkItemField, WorkItemTemplate, WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { CustomHeader, HeaderTitleArea } from "azure-devops-ui/Header";
-import {
-    CustomPanel, Panel, PanelCloseButton, PanelContent, PanelFooter
-} from "azure-devops-ui/Panel";
+import { CustomPanel, Panel, PanelCloseButton, PanelContent, PanelFooter } from "azure-devops-ui/Panel";
 import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { ZeroData } from "azure-devops-ui/ZeroData";
-import { BugBashesActions } from "BugBashPro/Redux/BugBashes";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { TeamPicker } from "Common/Components/AzDev/TeamPicker";
@@ -21,12 +16,11 @@ import { WorkItemFieldPicker } from "Common/Components/AzDev/WorkItemFieldPicker
 import { WorkItemTemplatePicker } from "Common/Components/AzDev/WorkItemTemplatePicker";
 import { WorkItemTypePicker } from "Common/Components/AzDev/WorkItemTypePicker";
 import { ErrorMessageBox } from "Common/Components/ConnectedNotifications/ErrorMessageBox";
-import {
-    FadeAwayNotification
-} from "Common/Components/ConnectedNotifications/FadeAwayNotification";
+import { FadeAwayNotification } from "Common/Components/ConnectedNotifications/FadeAwayNotification";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { InfoLabel } from "Common/Components/InfoLabel";
 import { Loading } from "Common/Components/Loading";
+import { Mousetrapped } from "Common/Components/Mousetrapped";
 import { DateTimePickerDropdown } from "Common/Components/Pickers/DateTimePickerDropdown";
 import { TextField } from "Common/Components/TextField";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
@@ -38,12 +32,16 @@ import { IWorkItemTypeAwareState } from "Common/Redux/WorkItemTypes/Contracts";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import * as React from "react";
+import { BugBashEditorErrorKey, BugBashEditorNotificationKey, TitleFieldMaxLength } from "../Constants";
 import {
-    BugBashEditorErrorKey, BugBashEditorNotificationKey, TitleFieldMaxLength
-} from "../Constants";
-import {
-    BugBashEditorActions, getBugBashEditorModule, getDraftBugBash, getDraftInitializeError,
-    IBugBashEditorAwareState, isDraftDirty, isDraftSaving, isDraftValid
+    BugBashEditorActions,
+    getBugBashEditorModule,
+    getDraftBugBash,
+    getDraftInitializeError,
+    IBugBashEditorAwareState,
+    isDraftDirty,
+    isDraftSaving,
+    isDraftValid
 } from "../Redux/Draft";
 
 interface IBugBashEditorPanelOwnProps {
@@ -60,8 +58,7 @@ interface IBugBashEditorPanelStateProps {
 }
 
 const Actions = {
-    createBugBash: BugBashesActions.bugBashCreateRequested,
-    updateBugBash: BugBashesActions.bugBashUpdateRequested,
+    requestDraftSave: BugBashEditorActions.requestDraftSave,
     updateDraft: BugBashEditorActions.updateDraft,
     requestDraftInitialize: BugBashEditorActions.requestDraftInitialize
 };
@@ -83,7 +80,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
         [bugBashId]
     );
     const { draftBugBash, isValid, isDirty, isSaving, draftInitializeError } = useMappedState(mapStateToProps);
-    const { createBugBash, updateBugBash, updateDraft, requestDraftInitialize } = useActionCreators(Actions);
+    const { requestDraftSave, updateDraft, requestDraftInitialize } = useActionCreators(Actions);
 
     const throttledOnDraftChanged = useThrottle(updateDraft, 200);
     React.useEffect(() => {
@@ -141,14 +138,9 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
         updateDraft({ ...draftBugBash, acceptTemplateId: option ? option.id : value || "" });
 
     const saveBugBash = () => {
-        if (isValid && isDirty && !isSaving) {
-            if (draftBugBash.id) {
-                updateBugBash(draftBugBash);
-            } else {
-                createBugBash(draftBugBash);
-            }
-        }
+        requestDraftSave(bugBashId);
     };
+
     const getDatesError = () => {
         const { startTime, endTime } = draftBugBash;
         if (startTime && endTime && defaultDateComparer(startTime, endTime) >= 0) {
@@ -158,133 +150,143 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
     };
 
     return (
-        <CustomPanel
-            blurDismiss={false}
-            className="bugbash-editor-panel"
-            size={ContentSize.Large}
-            onDismiss={dismissPanel}
-            defaultActiveElement=".bugbash-title-input"
+        <Mousetrapped
+            shortcuts={[
+                {
+                    combos: ["ctrl+s", "meta+s"],
+                    action: saveBugBash,
+                    preventDefault: true
+                }
+            ]}
         >
-            <CustomHeader className="bugbash-editor-panel--header" separator={true}>
-                <HeaderTitleArea>
-                    <div className="bugbash-editor-panel--header-title flex-row flex-center">
-                        <div className="flex-grow fontSizeL">{panelTitle}</div>
-                        <PanelCloseButton className="bugbash-editor-panel--closeButton" onDismiss={dismissPanel} />
-                    </div>
-                    <TextField
-                        autoFocus={true}
-                        disabled={isSaving}
-                        placeholder="Enter Title"
-                        className="bugbash-title-input"
-                        onChange={updateTitle}
-                        required={true}
-                        value={draftBugBash.title}
-                        maxLength={TitleFieldMaxLength}
-                    />
-                    <ErrorMessageBox className="bugbash-edit-error" errorKey={BugBashEditorErrorKey} />
-                </HeaderTitleArea>
-            </CustomHeader>
-            <PanelContent>
-                <div className="bugbash-editor-panel-contents flex-grow flex-column scroll-auto">
-                    <div className="section-row flex-row flex-noshrink">
-                        <DateTimePickerDropdown
-                            className="bugbash-control"
-                            placeholder="Select Start Time"
-                            value={draftBugBash.startTime}
-                            disableInput={true}
+            <CustomPanel
+                blurDismiss={false}
+                className="bugbash-editor-panel"
+                size={ContentSize.Large}
+                onDismiss={dismissPanel}
+                defaultActiveElement=".bugbash-title-input"
+            >
+                <CustomHeader className="bugbash-editor-panel--header" separator={true}>
+                    <HeaderTitleArea>
+                        <div className="bugbash-editor-panel--header-title flex-row flex-center">
+                            <div className="flex-grow fontSizeL">{panelTitle}</div>
+                            <PanelCloseButton className="bugbash-editor-panel--closeButton" onDismiss={dismissPanel} />
+                        </div>
+                        <TextField
+                            autoFocus={true}
                             disabled={isSaving}
-                            onChange={onStartTimeChange}
-                            label={Resources.StartTime_Label}
-                            getErrorMessage={getDatesError}
-                        />
-                        <DateTimePickerDropdown
-                            className="bugbash-control"
-                            placeholder="Select Finish Time"
-                            disableInput={true}
-                            disabled={isSaving}
-                            value={draftBugBash.endTime}
-                            onChange={onEndTimeChange}
-                            label={Resources.EndTime_Label}
-                        />
-                    </div>
-                    <div className="section-row flex-row flex-noshrink">
-                        <WorkItemTypePicker
-                            className="bugbash-control"
-                            selectedValue={draftBugBash.workItemType || ""}
-                            onChange={onWorkItemTypeChange}
-                            disabled={isSaving}
-                            label={Resources.WorkItemType_Label}
-                            info={Resources.WorkItemType_LabelInfo}
+                            placeholder="Enter Title"
+                            className="bugbash-title-input"
+                            onChange={updateTitle}
                             required={true}
+                            value={draftBugBash.title}
+                            maxLength={TitleFieldMaxLength}
                         />
-                        <WorkItemFieldPicker
-                            className="bugbash-control"
-                            workItemType={draftBugBash.workItemType}
-                            allowedFieldTypes={[FieldType.Html]}
-                            selectedValue={draftBugBash.itemDescriptionField || ""}
-                            onChange={onDescriptionFieldChange}
-                            disabled={isSaving}
-                            label={Resources.DescriptionField_Label}
-                            info={Resources.DescriptionField_LabelInfo}
-                            required={true}
-                        />
-                    </div>
-                    <div className="section-row flex-row flex-noshrink">
-                        <TeamPicker
-                            className="bugbash-control"
-                            selectedValue={draftBugBash.acceptTemplateTeam || ""}
-                            onChange={onTemplateTeamChange}
-                            disabled={isSaving}
-                            label={Resources.TemplateTeam_Label}
-                            info={Resources.TemplateTeam_LabelInfo}
-                        />
-                        <WorkItemTemplatePicker
-                            className="bugbash-control"
-                            workItemType={draftBugBash.workItemType}
-                            teamId={draftBugBash.acceptTemplateTeam}
-                            selectedValue={draftBugBash.acceptTemplateId}
-                            onChange={onTemplateChange}
-                            disabled={isSaving}
-                            label={Resources.Template_Label}
-                            info={Resources.Template_LabelInfo}
-                        />
-                    </div>
-                    <div className="section-row flex-row flex-noshrink">
-                        <TeamPicker
-                            className="bugbash-control"
-                            selectedValue={draftBugBash.defaultTeam || ""}
-                            onChange={onDefaultTeamChange}
-                            label={Resources.DefaultTeam_Label}
-                            disabled={isSaving}
-                            info={Resources.DefaultTeam_LabelInfo}
-                        />
-                        <div className="bugbash-control flex-row flex-center">
-                            <Checkbox
-                                className="auto-accept"
+                        <ErrorMessageBox className="bugbash-edit-error" errorKey={BugBashEditorErrorKey} />
+                    </HeaderTitleArea>
+                </CustomHeader>
+                <PanelContent>
+                    <div className="bugbash-editor-panel-contents flex-grow flex-column scroll-auto">
+                        <div className="section-row flex-row flex-noshrink">
+                            <DateTimePickerDropdown
+                                className="bugbash-control"
+                                placeholder="Select Start Time"
+                                value={draftBugBash.startTime}
+                                disableInput={true}
                                 disabled={isSaving}
-                                label=""
-                                checked={draftBugBash.autoAccept}
-                                onChange={onAutoAcceptChange}
+                                onChange={onStartTimeChange}
+                                label={Resources.StartTime_Label}
+                                getErrorMessage={getDatesError}
                             />
-                            <InfoLabel label="Auto Accept?" info={Resources.AutoAccept_LabelInfo} />
+                            <DateTimePickerDropdown
+                                className="bugbash-control"
+                                placeholder="Select Finish Time"
+                                disableInput={true}
+                                disabled={isSaving}
+                                value={draftBugBash.endTime}
+                                onChange={onEndTimeChange}
+                                label={Resources.EndTime_Label}
+                            />
+                        </div>
+                        <div className="section-row flex-row flex-noshrink">
+                            <WorkItemTypePicker
+                                className="bugbash-control"
+                                selectedValue={draftBugBash.workItemType || ""}
+                                onChange={onWorkItemTypeChange}
+                                disabled={isSaving}
+                                label={Resources.WorkItemType_Label}
+                                info={Resources.WorkItemType_LabelInfo}
+                                required={true}
+                            />
+                            <WorkItemFieldPicker
+                                className="bugbash-control"
+                                workItemType={draftBugBash.workItemType}
+                                allowedFieldTypes={[FieldType.Html]}
+                                selectedValue={draftBugBash.itemDescriptionField || ""}
+                                onChange={onDescriptionFieldChange}
+                                disabled={isSaving}
+                                label={Resources.DescriptionField_Label}
+                                info={Resources.DescriptionField_LabelInfo}
+                                required={true}
+                            />
+                        </div>
+                        <div className="section-row flex-row flex-noshrink">
+                            <TeamPicker
+                                className="bugbash-control"
+                                selectedValue={draftBugBash.acceptTemplateTeam || ""}
+                                onChange={onTemplateTeamChange}
+                                disabled={isSaving}
+                                label={Resources.TemplateTeam_Label}
+                                info={Resources.TemplateTeam_LabelInfo}
+                            />
+                            <WorkItemTemplatePicker
+                                className="bugbash-control"
+                                workItemType={draftBugBash.workItemType}
+                                teamId={draftBugBash.acceptTemplateTeam}
+                                selectedValue={draftBugBash.acceptTemplateId}
+                                onChange={onTemplateChange}
+                                disabled={isSaving}
+                                label={Resources.Template_Label}
+                                info={Resources.Template_LabelInfo}
+                            />
+                        </div>
+                        <div className="section-row flex-row flex-noshrink">
+                            <TeamPicker
+                                className="bugbash-control"
+                                selectedValue={draftBugBash.defaultTeam || ""}
+                                onChange={onDefaultTeamChange}
+                                label={Resources.DefaultTeam_Label}
+                                disabled={isSaving}
+                                info={Resources.DefaultTeam_LabelInfo}
+                            />
+                            <div className="bugbash-control flex-row flex-center">
+                                <Checkbox
+                                    className="auto-accept"
+                                    disabled={isSaving}
+                                    label=""
+                                    checked={draftBugBash.autoAccept}
+                                    onChange={onAutoAcceptChange}
+                                />
+                                <InfoLabel label="Auto Accept?" info={Resources.AutoAccept_LabelInfo} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </PanelContent>
-            <PanelFooter showSeparator={true}>
-                <div className="footer-buttons flex-row justify-end">
-                    <FadeAwayNotification duration={3000} notificationKey={BugBashEditorNotificationKey}>
-                        {(notification: string) => <Status {...Statuses.Success} text={notification} size={StatusSize.xl} animated={false} />}
-                    </FadeAwayNotification>
-                    <Button className="footer-button" onClick={dismissPanel}>
-                        Cancel
-                    </Button>
-                    <Button className="footer-button" primary={true} onClick={saveBugBash} disabled={!isValid || !isDirty || isSaving}>
-                        Save
-                    </Button>
-                </div>
-            </PanelFooter>
-        </CustomPanel>
+                </PanelContent>
+                <PanelFooter showSeparator={true}>
+                    <div className="footer-buttons flex-row justify-end">
+                        <FadeAwayNotification duration={3000} notificationKey={BugBashEditorNotificationKey}>
+                            {(notification: string) => <Status {...Statuses.Success} text={notification} size={StatusSize.xl} animated={false} />}
+                        </FadeAwayNotification>
+                        <Button className="footer-button" onClick={dismissPanel}>
+                            Cancel
+                        </Button>
+                        <Button className="footer-button" primary={true} onClick={saveBugBash} disabled={!isValid || !isDirty || isSaving}>
+                            Save
+                        </Button>
+                    </div>
+                </PanelFooter>
+            </CustomPanel>
+        </Mousetrapped>
     );
 }
 

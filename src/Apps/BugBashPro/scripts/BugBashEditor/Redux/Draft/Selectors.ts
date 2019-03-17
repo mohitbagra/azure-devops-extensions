@@ -4,6 +4,7 @@ import { IFieldAwareState } from "Common/Redux/Fields/Contracts";
 import { ITeamAwareState } from "Common/Redux/Teams/Contracts";
 import { IWorkItemTemplateAwareState } from "Common/Redux/WorkItemTemplates/Contracts";
 import { IWorkItemTypeAwareState } from "Common/Redux/WorkItemTypes/Contracts";
+import { createSelector } from "reselect";
 import { isBugBashDirty, isBugBashValid } from "../../Helpers";
 import { IBugBashEditorAwareState, IBugBashEditorState } from "./Contracts";
 
@@ -11,7 +12,7 @@ export function getBugBashEditorState(state: IBugBashEditorAwareState): IBugBash
     return state.bugBashEditorState;
 }
 
-export function getDraftBugBash(state: IBugBashEditorAwareState, bugBashId?: string): IBugBash | undefined {
+export const getDraftBugBash = (state: IBugBashEditorAwareState, bugBashId: string | undefined): IBugBash | undefined => {
     const bugBashEditorState = getBugBashEditorState(state);
     const id = resolveNullableMapKey(bugBashId);
     return (
@@ -20,9 +21,9 @@ export function getDraftBugBash(state: IBugBashEditorAwareState, bugBashId?: str
         bugBashEditorState.draftBugBashMap[id] &&
         bugBashEditorState.draftBugBashMap[id].draftValue
     );
-}
+};
 
-export function getOriginalBugBash(state: IBugBashEditorAwareState, bugBashId?: string): IBugBash | undefined {
+export const getOriginalBugBash = (state: IBugBashEditorAwareState, bugBashId: string | undefined): IBugBash | undefined => {
     const bugBashEditorState = getBugBashEditorState(state);
     const id = resolveNullableMapKey(bugBashId);
     return (
@@ -31,9 +32,9 @@ export function getOriginalBugBash(state: IBugBashEditorAwareState, bugBashId?: 
         bugBashEditorState.draftBugBashMap[id] &&
         bugBashEditorState.draftBugBashMap[id].originalValue
     );
-}
+};
 
-export function isDraftSaving(state: IBugBashEditorAwareState, bugBashId?: string): boolean {
+export const isDraftSaving = (state: IBugBashEditorAwareState, bugBashId?: string): boolean => {
     const bugBashEditorState = getBugBashEditorState(state);
     const id = resolveNullableMapKey(bugBashId);
     return !!(
@@ -42,9 +43,9 @@ export function isDraftSaving(state: IBugBashEditorAwareState, bugBashId?: strin
         bugBashEditorState.draftBugBashMap[id] &&
         bugBashEditorState.draftBugBashMap[id].isSaving
     );
-}
+};
 
-export function getDraftInitializeError(state: IBugBashEditorAwareState, bugBashId?: string): string | undefined {
+export const getDraftInitializeError = (state: IBugBashEditorAwareState, bugBashId?: string): string | undefined => {
     const bugBashEditorState = getBugBashEditorState(state);
     const id = resolveNullableMapKey(bugBashId);
     return (
@@ -53,17 +54,13 @@ export function getDraftInitializeError(state: IBugBashEditorAwareState, bugBash
         bugBashEditorState.draftBugBashMap[id] &&
         bugBashEditorState.draftBugBashMap[id].initializeError
     );
-}
+};
 
-export function isDraftDirty(state: IBugBashEditorAwareState, bugBashId?: string): boolean {
-    const draft = getDraftBugBash(state, bugBashId);
-    const original = getOriginalBugBash(state, bugBashId);
-
-    if (!draft || !original) {
-        return false;
-    }
-    return isBugBashDirty(original, draft);
-}
+export const isDraftDirty = createSelector(
+    getDraftBugBash,
+    getOriginalBugBash,
+    (draft, original) => !!(draft && original && isBugBashDirty(original, draft))
+);
 
 export function isDraftValid(
     state: IBugBashEditorAwareState & ITeamAwareState & IFieldAwareState & IWorkItemTypeAwareState & IWorkItemTemplateAwareState,

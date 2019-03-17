@@ -7,17 +7,18 @@ import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { ActionsOfType } from "Common/Redux/Helpers";
 import { KeyValurPairActions } from "Common/Redux/KeyValuePair";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
+import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, take, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashEditorErrorKey, BugBashEditorNotificationKey } from "../../Constants";
 import { BugBashEditorPortalActions } from "../Portal";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
+import { getDraftBugBash, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 
 export function* bugBashEditorSaga(): SagaIterator {
     yield takeEvery(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
+    yield takeEvery(BugBashEditorActionTypes.RequestDraftSave, requestDraftSave);
 
-    yield takeEvery(BugBashesActionTypes.BugBashCreated, bugBashCreated);
-    yield takeEvery(BugBashesActionTypes.BugBashUpdated, bugBashUpdated);
     yield takeEvery(BugBashesActionTypes.BugBashCreateFailed, bugBashCreateAndUpdateFailed);
     yield takeEvery(BugBashesActionTypes.BugBashUpdateFailed, bugBashCreateAndUpdateFailed);
 }
@@ -58,22 +59,73 @@ function* requestDraftInitialize(action: ActionsOfType<BugBashEditorActions, Bug
     }
 }
 
-function* bugBashCreated(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashCreated>): SagaIterator {
-    const createdBugBash = action.payload;
-    yield call(addToast, {
-        message: Resources.BugBashCreatedMessage,
-        callToAction: Resources.View,
-        duration: 5000,
-        forceOverrideExisting: true,
-        onCallToActionClick: () => {
-            navigateToBugBashItemsList(createdBugBash.id!);
+function* requestDraftSave(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftSave>): SagaIterator {
+    const bugBashId = action.payload;
+    const [isDirty, isValid, isSaving, draftBugBash] = yield all([
+        select(isDraftDirty, bugBashId),
+        select(isDraftValid, bugBashId),
+        select(isDraftSaving, bugBashId),
+        select(getDraftBugBash, bugBashId)
+    ]);
+
+    if (isValid && isDirty && !isSaving) {
+        if (isNullOrWhiteSpace(bugBashId)) {
+            yield call(requestDraftCreate, draftBugBash);
+        } else {
+            yield call(requestDraftUpdate, draftBugBash);
         }
-    });
-    yield put(BugBashEditorPortalActions.dismissPortal());
+    }
 }
 
-function* bugBashUpdated(): SagaIterator {
-    yield put(KeyValurPairActions.pushEntry(BugBashEditorNotificationKey, "Saved"));
+function* requestDraftCreate(draftBugBash: IBugBash) {
+    yield put(BugBashesActions.bugBashCreateRequested(draftBugBash));
+
+    const itemCreatedAction: ActionsOfType<
+        BugBashesActions,
+        BugBashesActionTypes.BugBashCreated | BugBashesActionTypes.BugBashCreateFailed
+    > = yield take(
+        (action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashCreated | BugBashesActionTypes.BugBashCreateFailed>): boolean => {
+            return action.type === BugBashesActionTypes.BugBashCreated || action.type === BugBashesActionTypes.BugBashCreateFailed;
+        }
+    );
+
+    if (itemCreatedAction.type === BugBashesActionTypes.BugBashCreated) {
+        const createdBugBash = itemCreatedAction.payload;
+        yield call(addToast, {
+            message: Resources.BugBashCreatedMessage,
+            callToAction: Resources.View,
+            duration: 5000,
+            forceOverrideExisting: true,
+            onCallToActionClick: () => {
+                navigateToBugBashItemsList(createdBugBash.id!);
+            }
+        });
+        yield put(BugBashEditorPortalActions.dismissPortal());
+    }
+}
+
+function* requestDraftUpdate(draftBugBash: IBugBash) {
+    yield put(BugBashesActions.bugBashUpdateRequested(draftBugBash));
+
+    const itemUpdatedAction: ActionsOfType<
+        BugBashesActions,
+        BugBashesActionTypes.BugBashUpdated | BugBashesActionTypes.BugBashUpdateFailed
+    > = yield take(
+        (action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashUpdated | BugBashesActionTypes.BugBashUpdateFailed>): boolean => {
+            if (action.type === BugBashesActionTypes.BugBashUpdated) {
+                return equals(action.payload.id!, draftBugBash.id!, true);
+            } else if (action.type === BugBashesActionTypes.BugBashUpdateFailed) {
+                return equals(action.payload.bugBash.id!, draftBugBash.id!, true);
+            }
+
+            return false;
+        }
+    );
+
+    if (itemUpdatedAction.type === BugBashesActionTypes.BugBashUpdated) {
+        yield put(BugBashEditorActions.draftSaveSucceeded(itemUpdatedAction.payload));
+        yield put(KeyValurPairActions.pushEntry(BugBashEditorNotificationKey, "Saved"));
+    }
 }
 
 function* bugBashCreateAndUpdateFailed(

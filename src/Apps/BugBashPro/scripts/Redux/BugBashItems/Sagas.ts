@@ -281,7 +281,10 @@ function getAcceptFieldValues(
     const fieldValues = acceptTemplate ? { ...acceptTemplate.fields } : {};
     fieldValues[CoreFieldRefNames.Title] = bugBashItem.title;
     fieldValues[itemDescriptionField] = bugBashItem.description || "";
-    fieldValues[teamFieldValue.field.referenceName] = teamFieldValue.defaultValue;
+
+    if (teamFieldValue.defaultValue) {
+        fieldValues[teamFieldValue.field.referenceName] = teamFieldValue.defaultValue;
+    }
 
     if (fieldValues["System.Tags-Add"]) {
         fieldValues["System.Tags"] = fieldValues["System.Tags-Add"];
