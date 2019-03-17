@@ -1,18 +1,19 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core";
+import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { TeamActions, TeamActionTypes } from "./Actions";
 import { fetchTeams } from "./DataSource";
-import { areTeamsLoading, getTeams } from "./Selectors";
+import { getTeamsStatus } from "./Selectors";
 
 export function* teamsSaga(): SagaIterator {
     yield takeEvery(TeamActionTypes.LoadRequested, loadTeams);
 }
 
 function* loadTeams(): SagaIterator {
-    const teams: WebApiTeam[] | undefined = yield select(getTeams);
-    const areLoading: boolean = yield select(areTeamsLoading);
-    if (!teams && !areLoading) {
+    const status: LoadStatus = yield select(getTeamsStatus);
+
+    if (status === LoadStatus.NotLoaded) {
         yield put(TeamActions.beginLoad());
         try {
             const data: WebApiTeam[] = yield call(fetchTeams);

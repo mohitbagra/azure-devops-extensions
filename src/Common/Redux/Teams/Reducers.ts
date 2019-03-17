@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { TeamActions, TeamActionTypes } from "Common/Redux/Teams/Actions";
 import { defaultState, ITeamState } from "Common/Redux/Teams/Contracts";
 import { produce } from "immer";
@@ -6,7 +7,7 @@ export function teamReducer(state: ITeamState | undefined, action: TeamActions):
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case TeamActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.teams = undefined;
                 draft.teamsMap = undefined;
                 draft.error = undefined;
@@ -17,7 +18,7 @@ export function teamReducer(state: ITeamState | undefined, action: TeamActions):
                 draft.error = action.payload;
                 draft.teams = undefined;
                 draft.teamsMap = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
@@ -29,7 +30,7 @@ export function teamReducer(state: ITeamState | undefined, action: TeamActions):
                     draft.teamsMap[team.id.toLowerCase()] = team;
                     draft.teamsMap[team.name.toLowerCase()] = team;
                 }
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }

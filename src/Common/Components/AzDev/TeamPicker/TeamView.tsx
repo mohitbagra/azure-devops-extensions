@@ -1,53 +1,23 @@
 import "./TeamView.scss";
 
-import { WebApiTeam } from "azure-devops-extension-api/Core";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
-import {
-    areTeamsLoading, getTeam, getTeamModule, getTeams, ITeamAwareState, TeamActions
-} from "Common/Redux/Teams";
+import { LoadStatus } from "Common/Contracts";
+import { useTeam } from "Common/Hooks/AzDev/Teams";
+import { getTeamModule } from "Common/Redux/Teams";
 import * as React from "react";
 
 interface ITeamViewOwnProps extends IBaseProps {
     teamId: string;
 }
 
-interface ITeamViewStateProps {
-    teams?: WebApiTeam[];
-    team?: WebApiTeam;
-    loading: boolean;
-}
-
-const Actions = {
-    loadTeams: TeamActions.loadRequested
-};
-
 function TeamViewInternal(props: ITeamViewOwnProps) {
     const { teamId, className } = props;
-    const mapStateToProps = React.useCallback(
-        (state: ITeamAwareState): ITeamViewStateProps => {
-            return {
-                teams: getTeams(state),
-                team: getTeam(state, teamId),
-                loading: areTeamsLoading(state)
-            };
-        },
-        [teamId]
-    );
+    const { team, status } = useTeam(teamId);
 
-    const { teams, team, loading } = useMappedState(mapStateToProps);
-    const { loadTeams } = useActionCreators(Actions);
-
-    React.useEffect(() => {
-        if (!teams && !loading) {
-            loadTeams();
-        }
-    }, []);
-
-    if (!teams || loading) {
+    if (status === LoadStatus.Loading || status === LoadStatus.NotLoaded) {
         return null;
     }
 
