@@ -1,36 +1,31 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
-import { ZeroData } from "azure-devops-ui/ZeroData";
 import { BugBashItemEditorPortalActions } from "BugBashPro/BugBashItemEditor/Redux/Portal";
+import { BugBashItemsActions } from "BugBashPro/Redux/BugBashItems";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
-import { Loading } from "Common/Components/Loading";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
 import { useActionCreators } from "Common/Hooks/Redux";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as React from "react";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "../Constants";
-import { useBugBashItems } from "../Hooks/useBugBashItems";
 import { useBugBashItemsSort } from "../Hooks/useBugBashItemsSort";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
+import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../Interfaces";
 import { BugBashViewMode } from "../Redux";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
-interface IBugBashItemsTableOwnProps {
-    bugBash: IBugBash;
-}
-
 const Actions = {
-    openEditorPanel: BugBashItemEditorPortalActions.openPortal
+    openEditorPanel: BugBashItemEditorPortalActions.openPortal,
+    deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
-export function BugBashItemsTable(props: IBugBashItemsTableOwnProps) {
-    const { bugBash } = props;
-    const { openEditorPanel } = useActionCreators(Actions);
+export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
+    const { bugBash, filteredBugBashItems, workItemsMap } = props;
+    const { openEditorPanel, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
-    const { filteredBugBashItems, workItemsMap, deleteBugBashItem } = useBugBashItems(bugBash.id!);
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
 
     const sortingBehavior = React.useMemo(
@@ -48,14 +43,10 @@ export function BugBashItemsTable(props: IBugBashItemsTableOwnProps) {
         [viewMode]
     );
 
-    if (!filteredBugBashItems) {
-        return <Loading />;
-    }
-    if (filteredBugBashItems.length === 0) {
-        return <ZeroData className="flex-grow" imagePath="../images/nodata.png" imageAltText="" primaryText={Resources.ZeroDataText} />;
-    }
-
-    const columns = getColumns(bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel, deleteBugBashItem);
+    const columns = React.useMemo(
+        () => getColumns(bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel, deleteBugBashItem),
+        [bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending]
+    );
 
     return (
         <Table<IBugBashItem>

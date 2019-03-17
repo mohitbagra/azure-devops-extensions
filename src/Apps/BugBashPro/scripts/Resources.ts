@@ -9,6 +9,7 @@ export namespace Resources {
     export const Completed = "Completed";
     export const List = "List";
     export const Charts = "Charts";
+    export const Board = "Board";
     export const EditBugBashPanelTitle = "Edit Bug Bash";
     export const CreateBugBashPanelTitle = "Create Bug Bash";
     export const EditBugBashItemPanelTitle = "Edit Bug Bash Item";

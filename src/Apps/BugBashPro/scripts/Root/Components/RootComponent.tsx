@@ -41,6 +41,7 @@ export function RootComponent() {
                 break;
             case AppView.ACTION_LIST:
             case AppView.ACTION_CHARTS:
+            case AppView.ACTION_BOARD:
                 view = (
                     <AsyncComponent loader={bugBashViewLoader} key="bugbashview">
                         {(m: typeof BugBashView_Async) => <m.BugBashView bugBashId={hashParams.bugBashId!} view={hashParams.view} />}

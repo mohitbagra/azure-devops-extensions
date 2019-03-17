@@ -1,18 +1,13 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
-import {
-    BugBashItemsActions, getBugBashItemsStatus, getResolvedWorkItemsMap, IBugBashItemsAwareState
-} from "BugBashPro/Redux/BugBashItems";
+import { BugBashItemsActions, getBugBashItemsStatus, getResolvedWorkItemsMap, IBugBashItemsAwareState } from "BugBashPro/Redux/BugBashItems";
 import { IBugBashItem, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
 import { useEffect } from "react";
-import {
-    BugBashItemsFilterData, getBugBashViewFilterData, getFilteredBugBashItems,
-    IBugBashViewAwareState
-} from "../Redux";
+import { BugBashItemsFilterData, getBugBashViewFilterData, getFilteredBugBashItems, IBugBashViewAwareState } from "../Redux";
 
-export function useBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedState & typeof Actions {
+export function useBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedState {
     const { filteredBugBashItems, workItemsMap, filterData, status } = useMappedState(mapStateToProps);
-    const { loadBugBashItems, deleteBugBashItem } = useActionCreators(Actions);
+    const { loadBugBashItems } = useActionCreators(Actions);
 
     useEffect(() => {
         if (status === LoadStatus.NotLoaded) {
@@ -20,12 +15,11 @@ export function useBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedSt
         }
     }, [bugBashId]);
 
-    return { filteredBugBashItems, workItemsMap, filterData, status, loadBugBashItems, deleteBugBashItem };
+    return { filteredBugBashItems, workItemsMap, filterData, status };
 }
 
 const Actions = {
-    loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested,
-    deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
+    loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
 function mapStateToProps(state: IBugBashViewAwareState & IBugBashItemsAwareState): IUseBugBashItemsHookMappedState {

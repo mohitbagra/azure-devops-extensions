@@ -10,16 +10,14 @@ import { Filter, FILTER_CHANGE_EVENT } from "azure-devops-ui/Utilities/Filter";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { LoadStatus } from "BugBashPro/Shared/Contracts";
-import { navigateToBugBashItemsList, navigateToCharts } from "BugBashPro/Shared/NavHelpers";
+import { navigateToBugBashItemsBoard, navigateToBugBashItemsCharts, navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { TeamView } from "Common/Components/AzDev/TeamPicker/TeamView";
 import { useMappedState } from "Common/Hooks/Redux";
 import { getTeamsMap, ITeamAwareState } from "Common/Redux/Teams";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { SelectionMode } from "office-ui-fabric-react/lib/utilities/selection/interfaces";
 import * as React from "react";
-import {
-    BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewPagePivotKeys, WorkItemFieldNames
-} from "../Constants";
+import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
 import { useBugBashItems } from "../Hooks/useBugBashItems";
 import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
@@ -135,6 +133,7 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterOwnPr
                 renderAdditionalContent={renderTabBarCommands}
             >
                 <Tab name={Resources.List} id={BugBashViewPagePivotKeys.List} />
+                <Tab name={Resources.Board} id={BugBashViewPagePivotKeys.Board} />
                 <Tab name={Resources.Charts} id={BugBashViewPagePivotKeys.Charts} />
             </TabBar>
             <ConditionalChildren renderChildren={filterToggledRef.current}>
@@ -157,8 +156,10 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterOwnPr
 function onTabSelect(newTabId: string, bugBashId: string) {
     if (newTabId === BugBashViewPagePivotKeys.List) {
         navigateToBugBashItemsList(bugBashId);
+    } else if (newTabId === BugBashViewPagePivotKeys.Board) {
+        navigateToBugBashItemsBoard(bugBashId);
     } else {
-        navigateToCharts(bugBashId);
+        navigateToBugBashItemsCharts(bugBashId);
     }
 }
 

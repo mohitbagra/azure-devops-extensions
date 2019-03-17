@@ -27,7 +27,10 @@ export function useHashParams(): IHashParams | undefined {
                 bugBashId: queryParams.bugBashId,
                 bugBashItemId: queryParams.bugBashItemId
             });
-        } else if ((viewMode === AppView.ACTION_LIST || viewMode === AppView.ACTION_CHARTS) && !isNullOrWhiteSpace(queryParams.id)) {
+        } else if (
+            (viewMode === AppView.ACTION_LIST || viewMode === AppView.ACTION_CHARTS || viewMode === AppView.ACTION_BOARD) &&
+            !isNullOrWhiteSpace(queryParams.id)
+        ) {
             setHashParams({
                 view: viewMode,
                 bugBashId: queryParams.id

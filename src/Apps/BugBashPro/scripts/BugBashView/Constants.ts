@@ -1,13 +1,12 @@
-import {
-    IHeaderCommandBarItem
-} from "azure-devops-ui/Components/HeaderCommandBar/HeaderCommandBar.Props";
+import { IHeaderCommandBarItem } from "azure-devops-ui/Components/HeaderCommandBar/HeaderCommandBar.Props";
 import { Resources } from "BugBashPro/Resources";
 
 export const BugBashViewPageErrorKey = "BugBashView/PageError";
 
 export const enum BugBashViewPagePivotKeys {
     List = "list",
-    Charts = "charts"
+    Charts = "charts",
+    Board = "board"
 }
 
 export const enum BugBashItemFieldNames {

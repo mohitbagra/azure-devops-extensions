@@ -4,6 +4,7 @@ import { IStatusProps, Status, Statuses, StatusSize } from "azure-devops-ui/Stat
 import { isBugBashCompleted, isBugBashInProgress } from "BugBashPro/BugBashDirectory/Helpers";
 import { BugBashEditorPortalActions } from "BugBashPro/BugBashEditor/Redux/Portal";
 import { BugBashItemEditorPortalActions } from "BugBashPro/BugBashItemEditor/Redux/Portal";
+import { BugBashItemsActions } from "BugBashPro/Redux/BugBashItems";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
@@ -15,13 +16,14 @@ import { IBugBashViewBaseProps } from "../Interfaces";
 
 const Actions = {
     openBugBashEditorPanel: BugBashEditorPortalActions.openPortal,
-    openNewBugBashItemPanel: BugBashItemEditorPortalActions.openPortal
+    openNewBugBashItemPanel: BugBashItemEditorPortalActions.openPortal,
+    loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
 export function BugBashViewHeader(props: IBugBashViewBaseProps) {
     const { bugBash } = props;
-    const { status, loadBugBashItems } = useBugBashItems(bugBash.id!);
-    const { openNewBugBashItemPanel, openBugBashEditorPanel } = useActionCreators(Actions);
+    const { status } = useBugBashItems(bugBash.id!);
+    const { openNewBugBashItemPanel, openBugBashEditorPanel, loadBugBashItems } = useActionCreators(Actions);
 
     const renderHeaderTitle = React.useMemo(() => onRenderHeaderTitle(bugBash), [bugBash]);
     const isLoading = status !== LoadStatus.Ready;

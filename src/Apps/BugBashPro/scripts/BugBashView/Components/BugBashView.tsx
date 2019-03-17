@@ -23,8 +23,11 @@ import { getKeyValurPairModule } from "Common/Redux/KeyValuePair";
 import * as React from "react";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { useBugBash } from "../Hooks/useBugBash";
+import { IBugBashItemProviderParams } from "../Interfaces";
 import { getBugBashViewModule } from "../Redux";
-import * as BugBashCharts_Async from "./BugBashCharts";
+import * as BugBashItemsBoard_Async from "./BugBashItemsBoard";
+import * as BugBashItemsCharts_Async from "./BugBashItemsCharts";
+import { BugBashItemProvider } from "./BugBashItemsProvider";
 import * as BugBashItemsTable_Async from "./BugBashItemsTable";
 import { BugBashViewHeader } from "./BugBashViewHeader";
 import { BugBashViewTabsWithFilter } from "./BugBashViewTabsWithFilter";
@@ -36,8 +39,9 @@ interface IBugBashViewProps {
 
 const bugBashEditorPanelLoader = async () => import("BugBashPro/BugBashEditor/Components");
 const bugBashItemEditorPanelLoader = async () => import("BugBashPro/BugBashItemEditor/Components");
-const chartsViewLoader = async () => import("./BugBashCharts");
+const chartsViewLoader = async () => import("./BugBashItemsCharts");
 const listViewLoader = async () => import("./BugBashItemsTable");
+const boardViewLoader = async () => import("./BugBashItemsBoard");
 
 function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
     const { bugBashId, view } = props;
@@ -75,16 +79,30 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
             <TabContent>
                 <div className="bugbash-page-contents flex-grow flex-column">
                     <Card className="flex-grow bolt-card-no-vertical-padding flex-column bugbash-page-card" contentProps={{ contentPadding: false }}>
-                        <ConditionalChildren renderChildren={view === AppView.ACTION_LIST}>
-                            <AsyncComponent loader={listViewLoader}>
-                                {(m: typeof BugBashItemsTable_Async) => <m.BugBashItemsTable bugBash={bugBash} />}
-                            </AsyncComponent>
-                        </ConditionalChildren>
-                        <ConditionalChildren renderChildren={view === AppView.ACTION_CHARTS}>
-                            <AsyncComponent loader={chartsViewLoader}>
-                                {(m: typeof BugBashCharts_Async) => <m.BugBashCharts bugBashId={bugBashId} />}
-                            </AsyncComponent>
-                        </ConditionalChildren>
+                        <BugBashItemProvider bugBash={bugBash}>
+                            {(providerParams: IBugBashItemProviderParams) => {
+                                const innerViewProps = { ...providerParams, bugBash };
+                                return (
+                                    <>
+                                        <ConditionalChildren renderChildren={view === AppView.ACTION_LIST}>
+                                            <AsyncComponent loader={listViewLoader}>
+                                                {(m: typeof BugBashItemsTable_Async) => <m.BugBashItemsTable {...innerViewProps} />}
+                                            </AsyncComponent>
+                                        </ConditionalChildren>
+                                        <ConditionalChildren renderChildren={view === AppView.ACTION_BOARD}>
+                                            <AsyncComponent loader={boardViewLoader}>
+                                                {(m: typeof BugBashItemsBoard_Async) => <m.BugBashItemsBoard {...innerViewProps} />}
+                                            </AsyncComponent>
+                                        </ConditionalChildren>
+                                        <ConditionalChildren renderChildren={view === AppView.ACTION_CHARTS}>
+                                            <AsyncComponent loader={chartsViewLoader}>
+                                                {(m: typeof BugBashItemsCharts_Async) => <m.BugBashItemsCharts {...innerViewProps} />}
+                                            </AsyncComponent>
+                                        </ConditionalChildren>
+                                    </>
+                                );
+                            }}
+                        </BugBashItemProvider>
                     </Card>
                 </div>
             </TabContent>
