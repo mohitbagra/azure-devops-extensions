@@ -1,4 +1,5 @@
 import { TreeNodeStructureType } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from 'Common/Contracts';
 
 export interface IClassificationNodeAwareState {
     areaPathState: IClassificationNodeState;
@@ -9,12 +10,12 @@ export interface IClassificationNodeState {
     rootNode?: IClassificationNode;
     nodeMapById?: { [id: number]: IClassificationNode };
     nodeMapByPath?: { [path: string]: IClassificationNode };
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
 }
 
 export const defaultState: IClassificationNodeState = {
-    loading: false
+    status: LoadStatus.NotLoaded
 };
 
 export interface IClassificationNode {

@@ -4,7 +4,7 @@ import { ComboBox } from "azure-devops-ui/ComboBox";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ITreeItem, Tree, TreeItemProvider } from "azure-devops-ui/Tree";
 import { css } from "azure-devops-ui/Util";
-import { IClassificationNode } from "Common/AzDev/ClassificationNodes/Redux";
+import { IClassificationNode } from "Common/AzDev/ClassificationNodes/Redux/Contracts";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
 import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";

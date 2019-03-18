@@ -1,4 +1,5 @@
 import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { AreaPathActions, AreaPathActionTypes, IterationPathActions, IterationPathActionTypes } from "./Actions";
 import { defaultState, IClassificationNode, IClassificationNodeState } from "./Contracts";
@@ -7,7 +8,7 @@ export function areaPathReducer(state: IClassificationNodeState | undefined, act
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case AreaPathActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.nodeMapById = undefined;
                 draft.nodeMapById = undefined;
                 draft.rootNode = undefined;
@@ -20,7 +21,7 @@ export function areaPathReducer(state: IClassificationNodeState | undefined, act
                 draft.nodeMapById = undefined;
                 draft.nodeMapById = undefined;
                 draft.rootNode = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
@@ -29,7 +30,7 @@ export function areaPathReducer(state: IClassificationNodeState | undefined, act
                 draft.nodeMapById = {};
                 draft.nodeMapByPath = {};
                 populateNodeData(rootNode, null, draft);
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }
@@ -40,7 +41,7 @@ export function iterationPathReducer(state: IClassificationNodeState | undefined
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case IterationPathActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.nodeMapById = undefined;
                 draft.nodeMapById = undefined;
                 draft.rootNode = undefined;
@@ -53,14 +54,14 @@ export function iterationPathReducer(state: IClassificationNodeState | undefined
                 draft.nodeMapById = undefined;
                 draft.nodeMapById = undefined;
                 draft.rootNode = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
             case IterationPathActionTypes.LoadSucceeded: {
                 const rootNode = action.payload;
                 populateNodeData(rootNode, null, draft);
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }

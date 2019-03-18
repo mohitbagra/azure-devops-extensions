@@ -1,14 +1,10 @@
 import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
-import {
-    AreaPathActions, AreaPathActionTypes, IterationPathActions, IterationPathActionTypes
-} from "./Actions";
-import { IClassificationNode } from "./Contracts";
+import { AreaPathActions, AreaPathActionTypes, IterationPathActions, IterationPathActionTypes } from "./Actions";
 import { fetchAreaPaths, fetchIterationPaths } from "./DataSource";
-import {
-    areAreaPathsLoading, areIterationPathsLoading, getAreaPathRootNode, getIterationPathRootNode
-} from "./Selectors";
+import { getAreaPathStatus, getIterationPathStatus } from "./Selectors";
 
 export function* classificationNodesSaga(): SagaIterator {
     yield takeEvery(AreaPathActionTypes.LoadRequested, loadAreaPaths);
@@ -16,9 +12,9 @@ export function* classificationNodesSaga(): SagaIterator {
 }
 
 function* loadAreaPaths(): SagaIterator {
-    const rootNode: IClassificationNode | undefined = yield select(getAreaPathRootNode);
-    const areLoading: boolean = yield select(areAreaPathsLoading);
-    if (!rootNode && !areLoading) {
+    const status: LoadStatus = yield select(getAreaPathStatus);
+
+    if (status === LoadStatus.NotLoaded) {
         yield put(AreaPathActions.beginLoad());
         try {
             const data: WorkItemClassificationNode = yield call(fetchAreaPaths);
@@ -30,9 +26,9 @@ function* loadAreaPaths(): SagaIterator {
 }
 
 function* loadIterationPaths(): SagaIterator {
-    const rootNode: IClassificationNode | undefined = yield select(getIterationPathRootNode);
-    const areLoading: boolean = yield select(areIterationPathsLoading);
-    if (!rootNode && !areLoading) {
+    const status: LoadStatus = yield select(getIterationPathStatus);
+
+    if (status === LoadStatus.NotLoaded) {
         yield put(IterationPathActions.beginLoad());
         try {
             const data: WorkItemClassificationNode = yield call(fetchIterationPaths);
