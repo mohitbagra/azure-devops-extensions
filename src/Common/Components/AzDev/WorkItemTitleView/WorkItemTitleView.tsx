@@ -1,20 +1,17 @@
 import "./WorkItemTitleView.scss";
 
-import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
 import { Image } from "azure-devops-ui/Image";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
-import {
-    getWorkItemType, getWorkItemTypeModule, IWorkItemTypeAwareState, WorkItemTypeActions
-} from "Common/Redux/WorkItemTypes";
+import { useWorkItemType } from "Common/Hooks/AzDev/WorkItemTypes/useWorkItemType";
+import { getWorkItemTypeModule } from "Common/Redux/WorkItemTypes";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 
-interface IWorkItemTitleViewOwnProps extends IBaseProps {
+interface IWorkItemTitleViewProps extends IBaseProps {
     linkClassName?: string;
     workItemId: number;
     title: string;
@@ -23,30 +20,9 @@ interface IWorkItemTitleViewOwnProps extends IBaseProps {
     onClick?(e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>): void;
 }
 
-interface IWorkItemTitleViewStateProps {
-    workItemType?: WorkItemType;
-}
-
-const Actions = { loadWorkItemTypes: WorkItemTypeActions.loadRequested };
-
-function WorkItemTitleViewInternal(props: IWorkItemTitleViewOwnProps) {
+function WorkItemTitleViewInternal(props: IWorkItemTitleViewProps) {
     const { workItemId, title, workItemTypeName, showId, className, linkClassName, onClick } = props;
-    const mapStateToProps = React.useCallback(
-        (state: IWorkItemTypeAwareState): IWorkItemTitleViewStateProps => {
-            return {
-                workItemType: getWorkItemType(state, workItemTypeName)
-            };
-        },
-        [workItemTypeName]
-    );
-    const { workItemType } = useMappedState(mapStateToProps);
-    const { loadWorkItemTypes } = useActionCreators(Actions);
-
-    React.useEffect(() => {
-        if (!workItemType) {
-            loadWorkItemTypes();
-        }
-    }, []);
+    const { workItemType } = useWorkItemType(workItemTypeName);
 
     const witIcon = workItemType ? workItemType.icon : null;
     const witIconUrl = witIcon && witIcon.id ? witIcon.url : null;
@@ -86,7 +62,7 @@ function onLinkClick(onClick: (ev: React.MouseEvent<HTMLAnchorElement> | React.K
     };
 }
 
-export function WorkItemTitleView(props: IWorkItemTitleViewOwnProps) {
+export function WorkItemTitleView(props: IWorkItemTitleViewProps) {
     return (
         <DynamicModuleLoader modules={[getWorkItemTypeModule()]}>
             <WorkItemTitleViewInternal {...props} />

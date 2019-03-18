@@ -1,18 +1,19 @@
 import { GitRepository } from "azure-devops-extension-api/Git";
+import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { GitRepoActions, GitRepoActionTypes } from "./Actions";
 import { fetchGitRepos } from "./DataSource";
-import { areGitReposLoading, getGitRepos } from "./Selectors";
+import { getGitReposStatus } from "./Selectors";
 
 export function* gitReposSaga(): SagaIterator {
     yield takeEvery(GitRepoActionTypes.LoadRequested, loadGitRepos);
 }
 
 function* loadGitRepos(): SagaIterator {
-    const gitRepos: GitRepository[] | undefined = yield select(getGitRepos);
-    const areLoading: boolean = yield select(areGitReposLoading);
-    if (!gitRepos && !areLoading) {
+    const status: LoadStatus = yield select(getGitReposStatus);
+
+    if (status === LoadStatus.NotLoaded) {
         yield put(GitRepoActions.beginLoad());
         try {
             const data: GitRepository[] = yield call(fetchGitRepos);

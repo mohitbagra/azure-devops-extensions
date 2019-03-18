@@ -1,4 +1,5 @@
 import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IWorkItemRelationTypeAwareState {
     workItemRelationTypeState: IWorkItemRelationTypeState;
@@ -7,10 +8,10 @@ export interface IWorkItemRelationTypeAwareState {
 export interface IWorkItemRelationTypeState {
     relationTypes?: WorkItemRelationType[];
     relationTypesMap?: { [nameOrRefName: string]: WorkItemRelationType };
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
 }
 
 export const defaultState: IWorkItemRelationTypeState = {
-    loading: false
+    status: LoadStatus.NotLoaded
 };

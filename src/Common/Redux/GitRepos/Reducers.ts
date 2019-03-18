@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { GitRepoActions, GitRepoActionTypes } from "Common/Redux/GitRepos/Actions";
 import { defaultState, IGitRepoState } from "Common/Redux/GitRepos/Contracts";
 import { produce } from "immer";
@@ -6,7 +7,7 @@ export function gitRepoReducer(state: IGitRepoState | undefined, action: GitRepo
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case GitRepoActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.gitRepos = undefined;
                 draft.gitReposMap = undefined;
                 draft.error = undefined;
@@ -17,7 +18,7 @@ export function gitRepoReducer(state: IGitRepoState | undefined, action: GitRepo
                 draft.error = action.payload;
                 draft.gitRepos = undefined;
                 draft.gitReposMap = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
@@ -29,7 +30,7 @@ export function gitRepoReducer(state: IGitRepoState | undefined, action: GitRepo
                     draft.gitReposMap[gitRepo.id.toLowerCase()] = gitRepo;
                     draft.gitReposMap[gitRepo.name.toLowerCase()] = gitRepo;
                 }
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }

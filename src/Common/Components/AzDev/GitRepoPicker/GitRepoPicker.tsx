@@ -1,40 +1,13 @@
-import { GitRepository } from "azure-devops-extension-api/Git";
+import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import {
-    IPicklistPickerSharedProps, picklistRenderer
-} from "Common/Components/Pickers/PicklistPicker";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
-import {
-    areGitReposLoading, getGitRepoModule, getGitRepos, GitRepoActions, IGitRepoAwareState
-} from "Common/Redux/GitRepos";
+import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
+import { useGitRepos } from "Common/Hooks/AzDev/GitRepos/useGitRepos";
+import { getGitRepoModule } from "Common/Redux/GitRepos";
 import * as React from "react";
-
-interface IGitRepoPickerStateProps {
-    gitRepos?: GitRepository[];
-    loading: boolean;
-}
-
-function mapStateToProps(state: IGitRepoAwareState): IGitRepoPickerStateProps {
-    return {
-        gitRepos: getGitRepos(state),
-        loading: areGitReposLoading(state)
-    };
-}
-
-const Actions = {
-    loadGitRepos: GitRepoActions.loadRequested
-};
 
 function GitRepoPickerInternal(props: IPicklistPickerSharedProps<GitRepository>) {
     const { placeholder } = props;
-    const { gitRepos, loading } = useMappedState(mapStateToProps);
-    const { loadGitRepos } = useActionCreators(Actions);
-
-    React.useEffect(() => {
-        if (!gitRepos && !loading) {
-            loadGitRepos();
-        }
-    }, []);
+    const { gitRepos } = useGitRepos();
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a git repo" }, gitRepos, (repo: GitRepository) => ({
         key: repo.id,

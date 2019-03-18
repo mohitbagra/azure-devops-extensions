@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { WorkItemTypeActions, WorkItemTypeActionTypes } from "Common/Redux/WorkItemTypes/Actions";
 import { defaultState, IWorkItemTypeState } from "Common/Redux/WorkItemTypes/Contracts";
 import { toDictionary } from "Common/Utilities/Array";
@@ -7,7 +8,7 @@ export function workItemTypeReducer(state: IWorkItemTypeState | undefined, actio
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case WorkItemTypeActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.workItemTypes = undefined;
                 draft.workItemTypesMap = undefined;
                 draft.error = undefined;
@@ -18,7 +19,7 @@ export function workItemTypeReducer(state: IWorkItemTypeState | undefined, actio
                 draft.error = action.payload;
                 draft.workItemTypes = undefined;
                 draft.workItemTypesMap = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
@@ -26,7 +27,7 @@ export function workItemTypeReducer(state: IWorkItemTypeState | undefined, actio
                 const workItemTypes = action.payload;
                 draft.workItemTypes = workItemTypes;
                 draft.workItemTypesMap = toDictionary(workItemTypes, w => w.name.toLowerCase(), w => w);
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }

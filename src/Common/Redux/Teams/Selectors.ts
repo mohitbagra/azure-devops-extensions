@@ -12,11 +12,6 @@ export const getTeamsMap = createSelector(
     (state: ITeamState | undefined) => state && state.teamsMap
 );
 
-export function getTeam(state: ITeamAwareState, teamIdOrName: string): WebApiTeam | undefined {
-    const teamsMap = getTeamsMap(state);
-    return teamsMap && teamsMap[teamIdOrName.toLowerCase()];
-}
-
 export const getTeams = createSelector(
     getTeamState,
     (state: ITeamState | undefined) => state && state.teams
@@ -31,3 +26,8 @@ export const getTeamsError = createSelector(
     getTeamState,
     (state: ITeamState | undefined) => state && state.error
 );
+
+export function getTeam(state: ITeamAwareState, teamIdOrName: string): WebApiTeam | undefined {
+    const teamsMap = getTeamsMap(state);
+    return teamsMap && teamsMap[teamIdOrName.toLowerCase()];
+}

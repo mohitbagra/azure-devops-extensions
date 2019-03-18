@@ -1,4 +1,5 @@
 import { GitRepository } from "azure-devops-extension-api/Git";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IGitRepoAwareState {
     gitRepoState: IGitRepoState;
@@ -7,10 +8,10 @@ export interface IGitRepoAwareState {
 export interface IGitRepoState {
     gitRepos?: GitRepository[];
     gitReposMap?: { [idOrName: string]: GitRepository };
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
 }
 
 export const defaultState: IGitRepoState = {
-    loading: false
+    status: LoadStatus.NotLoaded
 };

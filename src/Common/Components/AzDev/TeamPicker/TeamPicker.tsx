@@ -1,7 +1,7 @@
-import { WebApiTeam } from "azure-devops-extension-api/Core";
+import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
-import { useTeams } from "Common/Hooks/AzDev/Teams";
+import { useTeams } from "Common/Hooks/AzDev/Teams/useTeams";
 import { getTeamModule } from "Common/Redux/Teams";
 import * as React from "react";
 

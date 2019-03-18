@@ -1,9 +1,6 @@
-import {
-    WorkItemRelationTypeActions, WorkItemRelationTypeActionTypes
-} from "Common/Redux/WorkItemRelationTypes/Actions";
-import {
-    defaultState, IWorkItemRelationTypeState
-} from "Common/Redux/WorkItemRelationTypes/Contracts";
+import { LoadStatus } from "Common/Contracts";
+import { WorkItemRelationTypeActions, WorkItemRelationTypeActionTypes } from "Common/Redux/WorkItemRelationTypes/Actions";
+import { defaultState, IWorkItemRelationTypeState } from "Common/Redux/WorkItemRelationTypes/Contracts";
 import { produce } from "immer";
 
 export function workItemRelationTypeReducer(
@@ -13,7 +10,7 @@ export function workItemRelationTypeReducer(
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case WorkItemRelationTypeActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.relationTypes = undefined;
                 draft.relationTypesMap = undefined;
                 draft.error = undefined;
@@ -24,7 +21,7 @@ export function workItemRelationTypeReducer(
                 draft.error = action.payload;
                 draft.relationTypes = undefined;
                 draft.relationTypesMap = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
@@ -36,7 +33,7 @@ export function workItemRelationTypeReducer(
                     draft.relationTypesMap[relationType.name.toLowerCase()] = relationType;
                     draft.relationTypesMap[relationType.referenceName.toLowerCase()] = relationType;
                 }
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }

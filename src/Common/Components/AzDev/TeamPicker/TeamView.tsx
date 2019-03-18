@@ -5,7 +5,7 @@ import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { LoadStatus } from "Common/Contracts";
-import { useTeam } from "Common/Hooks/AzDev/Teams";
+import { useTeam } from "Common/Hooks/AzDev/Teams/useTeam";
 import { getTeamModule } from "Common/Redux/Teams";
 import * as React from "react";
 

@@ -1,7 +1,6 @@
 import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking";
-import {
-    IWorkItemRelationTypeAwareState, IWorkItemRelationTypeState
-} from "Common/Redux/WorkItemRelationTypes/Contracts";
+import { LoadStatus } from "Common/Contracts";
+import { IWorkItemRelationTypeAwareState, IWorkItemRelationTypeState } from "Common/Redux/WorkItemRelationTypes/Contracts";
 import { createSelector } from "reselect";
 
 export function getWorkItemRelationTypeState(state: IWorkItemRelationTypeAwareState): IWorkItemRelationTypeState | undefined {
@@ -22,7 +21,17 @@ export const getWorkItemRelationTypes = createSelector(
     (state: IWorkItemRelationTypeState | undefined) => state && state.relationTypes
 );
 
-export const areWorkItemRelationTypesLoading = createSelector(
+export const getWorkItemRelationTypesMap = createSelector(
     getWorkItemRelationTypeState,
-    (state: IWorkItemRelationTypeState | undefined) => !!(state && state.loading)
+    (state: IWorkItemRelationTypeState | undefined) => state && state.relationTypesMap
+);
+
+export const getWorkItemRelationTypesStatus = createSelector(
+    getWorkItemRelationTypeState,
+    (state: IWorkItemRelationTypeState | undefined) => (state && state.status) || LoadStatus.NotLoaded
+);
+
+export const getWorkItemRelationTypesError = createSelector(
+    getWorkItemRelationTypeState,
+    (state: IWorkItemRelationTypeState | undefined) => state && state.error
 );
