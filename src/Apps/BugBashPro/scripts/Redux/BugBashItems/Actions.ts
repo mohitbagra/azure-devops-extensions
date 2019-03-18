@@ -1,6 +1,6 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { ActionsUnion, createAction } from "Common/Redux/Helpers";
+import { ActionsUnion, createAction } from "Common/Redux";
 
 export const BugBashItemsActions = {
     initialize: () => createAction(BugBashItemsActionTypes.Initialize),

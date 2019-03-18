@@ -2,11 +2,11 @@ import "./DateTimePicker.scss";
 
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
-import { TimePicker } from "Common/Components/Pickers/TimePicker";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { Calendar } from "OfficeFabric/Calendar";
 import { IDatePickerStrings } from "OfficeFabric/components/DatePicker/DatePicker.types";
 import * as React from "react";
+import { TimePicker } from "./TimePicker";
 
 interface IDateTimePickerProps extends IBaseProps {
     value?: Date;

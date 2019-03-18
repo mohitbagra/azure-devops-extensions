@@ -1,5 +1,5 @@
 import { Context } from "Common/Redux";
-import * as React from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { IModule } from "redux-dynamic-modules";
 import { IParentComponentProps } from "../Contracts";
 
@@ -11,13 +11,13 @@ interface IDynamicModuleLoaderProps extends IParentComponentProps {
 
 export function DynamicModuleLoader(props: IDynamicModuleLoaderProps) {
     const { modules, cleanOnUnmount, children } = props;
-    const store = React.useContext(Context);
+    const store = useContext(Context);
     if (!store) {
         throw new Error("Redux store is required to be passed through context via the <StoreProvider>");
     }
-    const modulesRef = React.useMemo(() => store.addModules(modules), []);
+    const modulesRef = useMemo(() => store.addModules(modules), []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             if (cleanOnUnmount) {
                 modulesRef.remove();

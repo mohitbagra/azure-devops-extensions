@@ -1,16 +1,16 @@
 import * as SDK from "azure-devops-extension-sdk";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 const WIDTH_DELTA = 10;
 
 export function useAutoResize() {
-    const [width, setWidth] = React.useState(window.innerWidth);
+    const [width, setWidth] = useState(window.innerWidth);
 
-    React.useEffect(() => {
+    useEffect(() => {
         fillBodyHeight();
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         let timeout: number;
         const handleResize = () => {
             if (Math.abs(width - window.innerWidth) > WIDTH_DELTA) {

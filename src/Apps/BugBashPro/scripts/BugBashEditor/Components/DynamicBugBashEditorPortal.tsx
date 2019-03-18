@@ -1,9 +1,7 @@
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
-import {
-    BugBashEditorPortalActions, getEditBugBashId, IBugBashEditorPortalAwareState,
-    isBugBashEditorPortalOpen
-} from "../Redux/Portal";
+import { BugBashEditorPortalActions, getEditBugBashId, IBugBashEditorPortalAwareState, isBugBashEditorPortalOpen } from "../Redux/Portal";
 import { BugBashEditorPanel } from "./BugBashEditorPanel";
 
 interface IDynamicBugBashEditorPortalStateProps {

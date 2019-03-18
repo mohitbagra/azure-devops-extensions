@@ -1,4 +1,5 @@
-import { IProjectSetting, IUserSetting, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IProjectSetting, IUserSetting } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IBugBashSettingsAwareState {
     userSettingState: IUserSettingState;

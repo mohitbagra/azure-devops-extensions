@@ -1,9 +1,13 @@
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 import {
-    BugBashItemEditorPortalActions, getEditBugBashItemBugBash, getEditBugBashItemId,
-    IBugBashItemEditorPortalAwareState, isBugBashItemEditorPortalOpen
+    BugBashItemEditorPortalActions,
+    getEditBugBashItemBugBash,
+    getEditBugBashItemId,
+    IBugBashItemEditorPortalAwareState,
+    isBugBashItemEditorPortalOpen
 } from "../Redux/Portal";
 import { BugBashItemEditorPanel } from "./BugBashItemEditorPanel";
 

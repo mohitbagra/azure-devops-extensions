@@ -1,14 +1,14 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
-import {
-    getCurrentUserSettings, getUserSettingsStatus, IBugBashSettingsAwareState, UserSettingActions
-} from "BugBashPro/Redux/Settings";
+import { getCurrentUserSettings, getUserSettingsStatus, IBugBashSettingsAwareState, UserSettingActions } from "BugBashPro/Redux/Settings";
 import { Resources } from "BugBashPro/Resources";
-import { IUserSetting, LoadStatus } from "BugBashPro/Shared/Contracts";
-import { TeamPicker } from "Common/Components/AzDev/TeamPicker";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { IUserSetting } from "BugBashPro/Shared/Contracts";
+import { TeamPicker } from "Common/AzDev/Teams/Components/TeamPicker";
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useControlledState } from "Common/Hooks/useControlledState";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 
 interface IUserSettingsEditorStateProps {

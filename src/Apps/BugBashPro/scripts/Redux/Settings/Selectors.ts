@@ -1,4 +1,4 @@
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { IBugBashSettingsAwareState, IProjectSettingState, IUserSettingState } from "./Contracts";
 

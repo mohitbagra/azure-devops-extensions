@@ -1,5 +1,5 @@
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
 import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { CommentActions, CommentActionTypes } from "./Actions";
 import { defaultState, ICommentsState } from "./Contracts";

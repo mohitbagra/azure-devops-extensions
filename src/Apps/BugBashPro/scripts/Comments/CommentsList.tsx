@@ -1,13 +1,13 @@
 import "./CommentsList.scss";
 
 import { ago } from "azure-devops-ui/Utilities/Date";
-import {
-    CommentActions, getComments, getCommentsStatus, ICommentsAwareState
-} from "BugBashPro/Redux/Comments";
-import { IBugBashItemComment, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { CommentActions, getComments, getCommentsStatus, ICommentsAwareState } from "BugBashPro/Redux/Comments";
+import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
 import { IdentityView } from "Common/Components/IdentityView";
 import { Loading } from "Common/Components/Loading";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 
 interface ICommentsListProps {

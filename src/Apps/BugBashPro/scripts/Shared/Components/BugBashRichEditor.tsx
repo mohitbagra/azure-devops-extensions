@@ -1,21 +1,25 @@
 import { getClient } from "azure-devops-extension-api";
-import {
-    GitPush, GitRestClient, ItemContentType, VersionControlChangeType
-} from "azure-devops-extension-api/Git";
+import { GitPush, GitRestClient, ItemContentType, VersionControlChangeType } from "azure-devops-extension-api/Git";
 import { BugBashItemEditorErrorKey } from "BugBashPro/BugBashItemEditor/Constants";
 import {
-    getBugBashSettingsModule, getProjectSetting, getProjectSettingStatus,
-    IBugBashSettingsAwareState, ProjectSettingActions
+    getBugBashSettingsModule,
+    getProjectSetting,
+    getProjectSettingStatus,
+    IBugBashSettingsAwareState,
+    ProjectSettingActions
 } from "BugBashPro/Redux/Settings";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
-import { KeyValurPairActions } from "Common/Redux/KeyValuePair";
+
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
+import { KeyValuePairActions } from "Common/Notifications/Redux";
 import { getProjectUrlAsync } from "Common/Utilities/UrlHelper";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 import * as React from "react";
-import { IProjectSetting, LoadStatus } from "../Contracts";
+import { IProjectSetting } from "../Contracts";
 
 interface IBugBashRichEditorStateProps {
     projectSetting?: IProjectSetting;
@@ -35,7 +39,7 @@ function mapStateToProps(state: IBugBashSettingsAwareState): IBugBashRichEditorS
 
 const Actions = {
     loadProjectSetting: ProjectSettingActions.projectSettingLoadRequested,
-    pushError: KeyValurPairActions.pushEntry
+    pushError: KeyValuePairActions.pushEntry
 };
 
 function BugBashRichEditorInternal(props: IBugBashRichEditorProps) {

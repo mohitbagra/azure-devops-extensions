@@ -1,5 +1,6 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
-import { IBugBashItem, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IBugBashItem } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IBugBashItemsAwareState {
     bugBashItemsState: IBugBashItemsState;

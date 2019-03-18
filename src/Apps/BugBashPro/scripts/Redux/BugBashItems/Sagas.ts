@@ -1,24 +1,24 @@
 import { TeamFieldValues } from "azure-devops-extension-api/Work";
-import {
-    WorkItem, WorkItemTemplate
-} from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { WorkItem, WorkItemTemplate } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { IBugBash, IBugBashItem, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
+import { getTeamFieldValues, ITeamFieldValues, TeamFieldActions, TeamFieldActionTypes } from "Common/AzDev/TeamFields/Redux";
+import { getTemplate, IWorkItemTemplate, WorkItemTemplateActions, WorkItemTemplateActionTypes } from "Common/AzDev/WorkItemTemplates/Redux";
 import { CoreFieldRefNames } from "Common/Constants";
-import { ActionsOfType } from "Common/Redux/Helpers";
-import {
-    getTeamFieldValues, ITeamFieldValues, TeamFieldActions, TeamFieldActionTypes
-} from "Common/Redux/TeamFields";
-import {
-    getTemplate, IWorkItemTemplate, WorkItemTemplateActions, WorkItemTemplateActionTypes
-} from "Common/Redux/WorkItemTemplates";
+import { LoadStatus } from "Common/Contracts";
+import { ActionsOfType } from "Common/Redux";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashItemsActions, BugBashItemsActionTypes } from "./Actions";
 import {
-    createBugBashItemAsync, createWorkItemAsync, deleteBugBashItemAsync, fetchBugBashItemAsync,
-    fetchBugBashItemsAsync, getWorkItemsAsync, updateBugBashItemAsync
+    createBugBashItemAsync,
+    createWorkItemAsync,
+    deleteBugBashItemAsync,
+    fetchBugBashItemAsync,
+    fetchBugBashItemsAsync,
+    getWorkItemsAsync,
+    updateBugBashItemAsync
 } from "./DataSource";
 import { getBugBashItemsStatus, getBugBashItemStatus, getResolvedWorkItem } from "./Selectors";
 

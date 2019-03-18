@@ -1,7 +1,9 @@
 import { BugBashesActions, IBugBashesAwareState } from "BugBashPro/Redux/BugBashes";
 import { getBugBash, getBugBashStatus } from "BugBashPro/Redux/BugBashes/Selectors";
-import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { IBugBash } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
 
 export function useBugBash(bugBashId: string): IUseBugBashHookMappedState {

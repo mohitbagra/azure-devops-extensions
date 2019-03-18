@@ -12,14 +12,14 @@ import { getBugBashItemEditorPortalModule } from "BugBashPro/BugBashItemEditor/R
 import { getBugBashesModule } from "BugBashPro/Redux/BugBashes";
 import { getBugBashItemsModule } from "BugBashPro/Redux/BugBashItems";
 import { AppView } from "BugBashPro/Shared/Constants";
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
-import { ErrorMessageBox } from "Common/Components/ConnectedNotifications/ErrorMessageBox";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { emptyRenderer } from "Common/Components/Renderers";
-import { getKeyValurPairModule } from "Common/Redux/KeyValuePair";
+import { LoadStatus } from "Common/Contracts";
+import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
+import { getKeyValuePairModule } from "Common/Notifications/Redux/Module";
 import * as React from "react";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { useBugBash } from "../Hooks/useBugBash";
@@ -119,7 +119,7 @@ export function BugBashView(props: IBugBashViewProps) {
                 getBugBashViewModule(),
                 getBugBashEditorPortalModule(),
                 getBugBashItemEditorPortalModule(),
-                getKeyValurPairModule()
+                getKeyValuePairModule()
             ]}
             cleanOnUnmount={true}
         >

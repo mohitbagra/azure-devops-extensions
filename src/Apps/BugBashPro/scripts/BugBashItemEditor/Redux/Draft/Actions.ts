@@ -1,5 +1,5 @@
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { ActionsUnion, createAction } from "Common/Redux/Helpers";
+import { ActionsUnion, createAction } from "Common/Redux";
 
 export const BugBashItemEditorActions = {
     requestDraftInitialize: (bugBash: IBugBash, bugBashItemId: string | undefined, useCached?: boolean) =>

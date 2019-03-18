@@ -1,4 +1,4 @@
-import { IdentityRef } from "azure-devops-extension-api/WebApi";
+import { IdentityRef } from "azure-devops-extension-api/WebApi/WebApi";
 import * as SDK from "azure-devops-extension-sdk";
 import { isGuid, startsWith } from "azure-devops-ui/Core/Util/String";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";

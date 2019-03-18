@@ -1,4 +1,4 @@
-import { reduceReducers } from "Common/Redux/Helpers";
+import { reduceReducers } from "Common/Redux";
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
 import { BugBashesActions } from "./Actions";

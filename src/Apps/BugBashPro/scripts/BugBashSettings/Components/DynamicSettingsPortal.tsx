@@ -4,11 +4,10 @@ import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { Panel } from "azure-devops-ui/Panel";
 import { getBugBashSettingsModule } from "BugBashPro/Redux/Settings";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
-import {
-    BugBashSettingsPortalActions, IBugBashSettingsPortalAwareState, isSettingsPortalOpen
-} from "../Redux/Portal";
+import { BugBashSettingsPortalActions, IBugBashSettingsPortalAwareState, isSettingsPortalOpen } from "../Redux/Portal";
 import { ProjectSettingEditor } from "./ProjectSettingEditor";
 import { UserSettingEditor } from "./UserSettingEditor";
 

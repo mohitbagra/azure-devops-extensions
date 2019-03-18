@@ -1,5 +1,5 @@
 import { IProjectSetting, IUserSetting } from "BugBashPro/Shared/Contracts";
-import { ActionsUnion, createAction } from "Common/Redux/Helpers";
+import { ActionsUnion, createAction } from "Common/Redux";
 
 export const UserSettingActions = {
     userSettingsLoadRequested: () => createAction(UserSettingActionTypes.UserSettingsLoadRequested),

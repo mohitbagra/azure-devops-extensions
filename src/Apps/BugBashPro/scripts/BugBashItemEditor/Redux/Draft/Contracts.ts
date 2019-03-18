@@ -1,4 +1,5 @@
-import { IBugBashItem, IChangeableValue } from "BugBashPro/Shared/Contracts";
+import { IBugBashItem } from "BugBashPro/Shared/Contracts";
+import { IChangeableValue } from "Common/Contracts";
 
 export interface IBugBashItemEditorAwareState {
     bugBashItemEditorState: IBugBashItemEditorState;

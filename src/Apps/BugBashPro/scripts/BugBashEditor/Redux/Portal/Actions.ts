@@ -1,4 +1,4 @@
-import { ActionsUnion, createAction } from "Common/Redux/Helpers";
+import { ActionsUnion, createAction } from "Common/Redux";
 
 export const BugBashEditorPortalActions = {
     openPortal: (bugBashId?: string) => createAction(BugBashEditorPortalActionTypes.OpenPortal, bugBashId),

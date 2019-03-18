@@ -58,17 +58,3 @@ export interface IUserSetting {
 export interface IProjectSetting {
     gitMediaRepo: string;
 }
-
-export interface IChangeableValue<T> {
-    originalValue: T;
-    draftValue: T;
-}
-
-export const enum LoadStatus {
-    NotLoaded = 1,
-    Loading,
-    LoadFailed,
-    Ready,
-    Updating,
-    UpdateFailed
-}

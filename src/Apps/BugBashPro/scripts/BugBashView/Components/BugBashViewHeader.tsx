@@ -6,9 +6,10 @@ import { BugBashEditorPortalActions } from "BugBashPro/BugBashEditor/Redux/Porta
 import { BugBashItemEditorPortalActions } from "BugBashPro/BugBashItemEditor/Redux/Portal";
 import { BugBashItemsActions } from "BugBashPro/Redux/BugBashItems";
 import { Resources } from "BugBashPro/Resources";
-import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
-import { useActionCreators } from "Common/Hooks/Redux";
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { BugBashViewHeaderCommands } from "../Constants";
 import { useBugBashItems } from "../Hooks/useBugBashItems";

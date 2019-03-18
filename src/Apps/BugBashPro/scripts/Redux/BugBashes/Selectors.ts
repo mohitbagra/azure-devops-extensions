@@ -1,5 +1,5 @@
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
 import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
+import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { IBugBashesAwareState, IBugBashesState, IBugBashStateModel } from "./Contracts";
 

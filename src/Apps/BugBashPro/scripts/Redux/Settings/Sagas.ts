@@ -1,14 +1,10 @@
-import { IProjectSetting, IUserSetting, LoadStatus } from "BugBashPro/Shared/Contracts";
-import { ActionsOfType } from "Common/Redux/Helpers";
+import { IProjectSetting, IUserSetting } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
+import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
-import {
-    ProjectSettingActions, ProjectSettingActionTypes, UserSettingActions, UserSettingActionTypes
-} from "./Actions";
-import {
-    fetchProjectSettingAsync, fetchUserSettingsAsync, updateProjectSettingAsync,
-    updateUserSettingAsync
-} from "./DataSource";
+import { ProjectSettingActions, ProjectSettingActionTypes, UserSettingActions, UserSettingActionTypes } from "./Actions";
+import { fetchProjectSettingAsync, fetchUserSettingsAsync, updateProjectSettingAsync, updateUserSettingAsync } from "./DataSource";
 import { getProjectSettingStatus, getUserSettingsStatus } from "./Selectors";
 
 export function* projectSettingSaga(): SagaIterator {

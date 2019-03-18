@@ -1,12 +1,12 @@
-import * as React from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * A custom hook to use a throttled function delegate
  */
 export function useThrottle(fn: (...args: any[]) => void, timeoutInMs: number): (...args: any[]) => void {
-    const timeout = React.useRef<number | null>(null);
+    const timeout = useRef<number | null>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             if (timeout.current) {
                 clearTimeout(timeout.current);
@@ -15,7 +15,7 @@ export function useThrottle(fn: (...args: any[]) => void, timeoutInMs: number): 
         };
     }, []);
 
-    return React.useCallback(
+    return useCallback(
         (...args: any[]) => {
             if (timeout.current) {
                 clearTimeout(timeout.current);

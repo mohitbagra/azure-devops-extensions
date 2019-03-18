@@ -1,4 +1,5 @@
-import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IBugBash } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IBugBashesAwareState {
     bugBashesState: IBugBashesState;

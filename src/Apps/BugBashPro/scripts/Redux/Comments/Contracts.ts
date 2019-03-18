@@ -1,4 +1,5 @@
-import { IBugBashItemComment, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
 
 export interface ICommentsAwareState {
     commentsState: ICommentsState;

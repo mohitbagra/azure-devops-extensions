@@ -1,5 +1,6 @@
-import { IBugBashItemComment, LoadStatus } from "BugBashPro/Shared/Contracts";
-import { ActionsOfType } from "Common/Redux/Helpers";
+import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
+import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { CommentActions, CommentActionTypes } from "./Actions";

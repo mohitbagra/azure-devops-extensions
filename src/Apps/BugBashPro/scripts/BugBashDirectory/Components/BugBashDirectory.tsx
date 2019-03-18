@@ -7,10 +7,10 @@ import * as SettingsEditorPanel_Async from "BugBashPro/BugBashSettings/Component
 import { getBugBashSettingsPortalModule } from "BugBashPro/BugBashSettings/Redux/Portal";
 import { getBugBashesModule } from "BugBashPro/Redux/BugBashes";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
-import { ErrorMessageBox } from "Common/Components/ConnectedNotifications/ErrorMessageBox";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { emptyRenderer } from "Common/Components/Renderers";
-import { getKeyValurPairModule } from "Common/Redux/KeyValuePair";
+import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
+import { getKeyValuePairModule } from "Common/Notifications/Redux";
 import * as React from "react";
 import { DirectoryPageErrorKey } from "../Constants";
 import { getBugBashDirectoryModule } from "../Redux";
@@ -54,7 +54,7 @@ export function BugBashDirectory() {
                 getBugBashDirectoryModule(),
                 getBugBashEditorPortalModule(),
                 getBugBashSettingsPortalModule(),
-                getKeyValurPairModule()
+                getKeyValuePairModule()
             ]}
             cleanOnUnmount={true}
         >

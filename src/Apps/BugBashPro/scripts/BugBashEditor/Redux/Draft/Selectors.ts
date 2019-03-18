@@ -1,9 +1,9 @@
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
-import { IFieldAwareState } from "Common/Redux/Fields/Contracts";
-import { ITeamAwareState } from "Common/Redux/Teams/Contracts";
-import { IWorkItemTemplateAwareState } from "Common/Redux/WorkItemTemplates/Contracts";
-import { IWorkItemTypeAwareState } from "Common/Redux/WorkItemTypes/Contracts";
+import { IFieldAwareState } from "Common/AzDev/Fields/Redux/Contracts";
+import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
+import { IWorkItemTemplateAwareState } from "Common/AzDev/WorkItemTemplates/Redux/Contracts";
+import { IWorkItemTypeAwareState } from "Common/AzDev/WorkItemTypes/Redux/Contracts";
 import { createSelector } from "reselect";
 import { isBugBashDirty, isBugBashValid } from "../../Helpers";
 import { IBugBashEditorAwareState, IBugBashEditorState } from "./Contracts";

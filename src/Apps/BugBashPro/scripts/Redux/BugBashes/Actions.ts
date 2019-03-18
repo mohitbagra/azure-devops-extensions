@@ -1,5 +1,5 @@
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { ActionsUnion, createAction } from "Common/Redux/Helpers";
+import { ActionsUnion, createAction } from "Common/Redux";
 
 export const BugBashesActions = {
     initialize: () => createAction(BugBashesActionTypes.Initialize),

@@ -1,19 +1,15 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
-import {
-    BugBashesActions, BugBashesActionTypes, getAllBugBashes
-} from "BugBashPro/Redux/BugBashes";
+import { BugBashesActions, BugBashesActionTypes, getAllBugBashes } from "BugBashPro/Redux/BugBashes";
 import { IBugBash, ISortState } from "BugBashPro/Shared/Contracts";
-import { ActionsOfType } from "Common/Redux/Helpers";
-import { KeyValurPairActions } from "Common/Redux/KeyValuePair";
+import { KeyValuePairActions } from "Common/Notifications/Redux";
+import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { DirectoryPageErrorKey } from "../Constants";
 import { getFilteredBugBashes } from "../Helpers";
 import { BugBashDirectoryActions, BugBashDirectoryActionTypes } from "./Actions";
 import { BugBashDirectoryTabId } from "./Contracts";
-import {
-    getBugBashDirectorySelectedTab, getBugBashesFilterState, getBugBashesSortState
-} from "./Selectors";
+import { getBugBashDirectorySelectedTab, getBugBashesFilterState, getBugBashesSortState } from "./Selectors";
 
 export function* bugBashDirectorySaga(): SagaIterator {
     yield takeEvery(BugBashDirectoryActionTypes.SelectTab, selectTab);
@@ -64,7 +60,7 @@ function* clearSortAndFilter(): SagaIterator {
 
 function* bugBashDeleteFailed(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashDeleteFailed>): SagaIterator {
     const { error } = action.payload;
-    yield put(KeyValurPairActions.pushEntry(DirectoryPageErrorKey, error));
+    yield put(KeyValuePairActions.pushEntry(DirectoryPageErrorKey, error));
 }
 
 function* bugBashLoadedOrCreatedOrUpdatedOrDeleted(): SagaIterator {

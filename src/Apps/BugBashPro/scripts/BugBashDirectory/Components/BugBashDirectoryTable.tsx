@@ -1,18 +1,17 @@
-import {
-    ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableCell, SortOrder
-} from "azure-devops-ui/Table";
+import { ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { BugBashEditorPortalActions } from "BugBashPro/BugBashEditor/Redux/Portal";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
-import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
+import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { getBugBashViewUrlAsync, navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 import { Loading } from "Common/Components/Loading";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
-import { useActionCreators } from "Common/Hooks/Redux";
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as format from "date-fns/format";
 import * as React from "react";

@@ -1,14 +1,14 @@
 import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
-import {
-    getProjectSetting, getProjectSettingStatus, IBugBashSettingsAwareState, ProjectSettingActions
-} from "BugBashPro/Redux/Settings";
+import { getProjectSetting, getProjectSettingStatus, IBugBashSettingsAwareState, ProjectSettingActions } from "BugBashPro/Redux/Settings";
 import { Resources } from "BugBashPro/Resources";
-import { IProjectSetting, LoadStatus } from "BugBashPro/Shared/Contracts";
-import { GitRepoPicker } from "Common/Components/AzDev/GitRepoPicker";
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
+import { IProjectSetting } from "BugBashPro/Shared/Contracts";
+import { GitRepoPicker } from "Common/AzDev/GitRepos/Components";
+import { LoadStatus } from "Common/Contracts";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useControlledState } from "Common/Hooks/useControlledState";
+import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 
 interface IProjectSettingsEditorStateProps {

@@ -1,5 +1,5 @@
 import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
-import { ActionsUnion, createAction } from "Common/Redux/Helpers";
+import { ActionsUnion, createAction } from "Common/Redux";
 
 export const CommentActions = {
     commentsLoadRequested: (bugBashItemId: string) => createAction(CommentActionTypes.CommentsLoadRequested, bugBashItemId),

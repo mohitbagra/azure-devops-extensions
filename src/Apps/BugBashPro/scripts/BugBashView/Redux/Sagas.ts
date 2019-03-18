@@ -2,22 +2,19 @@ import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Redux/BugBashes";
-import {
-    BugBashItemsActions, BugBashItemsActionTypes, getAllBugBashItems, getResolvedWorkItemsMap
-} from "BugBashPro/Redux/BugBashItems";
+import { BugBashItemsActions, BugBashItemsActionTypes, getAllBugBashItems, getResolvedWorkItemsMap } from "BugBashPro/Redux/BugBashItems";
 import { IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
-import { ActionsOfType } from "Common/Redux/Helpers";
-import { KeyValurPairActions } from "Common/Redux/KeyValuePair";
-import { getTeamsMap } from "Common/Redux/Teams";
+import { ActionsOfType } from "Common/Redux";
+
+import { getTeamsMap } from "Common/AzDev/Teams/Redux/Selectors";
+import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { SagaIterator } from "redux-saga";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { getBugBashItemsFilterData, getFilteredBugBashItems } from "../Helpers";
 import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";
 import { BugBashViewMode } from "./Contracts";
-import {
-    getBugBashItemsFilterState, getBugBashItemsSortState, getBugBashViewMode
-} from "./Selectors";
+import { getBugBashItemsFilterState, getBugBashItemsSortState, getBugBashViewMode } from "./Selectors";
 
 export function* bugBashViewSaga(): SagaIterator {
     yield takeEvery(BugBashViewActionTypes.SetViewMode, setViewMode);
@@ -91,7 +88,7 @@ function* clearSortAndFilter(): SagaIterator {
 
 function* bugBashItemDeleteFailed(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemDeleteFailed>): SagaIterator {
     const { error } = action.payload;
-    yield put(KeyValurPairActions.pushEntry(BugBashViewPageErrorKey, error));
+    yield put(KeyValuePairActions.pushEntry(BugBashViewPageErrorKey, error));
 }
 
 function* bugBashItemsLoaded(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemsLoaded>): SagaIterator {

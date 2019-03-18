@@ -1,7 +1,6 @@
-import { useActionCreators, useMappedState } from "Common/Hooks/Redux";
-import {
-    BugBashViewActions, BugBashViewMode, getBugBashViewMode, IBugBashViewAwareState
-} from "../Redux";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useMappedState } from "Common/Hooks/useMappedState";
+import { BugBashViewActions, BugBashViewMode, getBugBashViewMode, IBugBashViewAwareState } from "../Redux";
 
 export function useBugBashViewMode(): IUseBugBashViewModeHookMappedState & typeof Actions {
     const { viewMode } = useMappedState(mapStateToProps);

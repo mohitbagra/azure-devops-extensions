@@ -6,9 +6,10 @@ import { ago } from "azure-devops-ui/Utilities/Date";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
-import { TeamView } from "Common/Components/AzDev/TeamPicker/TeamView";
-import { WorkItemStateView } from "Common/Components/AzDev/WorkItemStateView";
-import { WorkItemTitleView } from "Common/Components/AzDev/WorkItemTitleView";
+
+import { TeamView } from "Common/AzDev/Teams/Components/TeamView";
+import { WorkItemTitleView } from "Common/AzDev/WorkItemTypes/Components/WorkItemTitleView";
+import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { IdentityView } from "Common/Components/IdentityView";
 import * as format from "date-fns/format";
 import * as React from "react";

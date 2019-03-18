@@ -1,12 +1,10 @@
-import { IBugBash, LoadStatus } from "BugBashPro/Shared/Contracts";
-import { ActionsOfType } from "Common/Redux/Helpers";
+import { IBugBash } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
+import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { BugBashesActions, BugBashesActionTypes } from "./Actions";
-import {
-    createBugBashAsync, deleteBugBashAsync, fetchBugBashAsync, fetchBugBashesAsync,
-    updateBugBashAsync
-} from "./DataSource";
+import { createBugBashAsync, deleteBugBashAsync, fetchBugBashAsync, fetchBugBashesAsync, updateBugBashAsync } from "./DataSource";
 import { getBugBashesStatus, getBugBashStatus } from "./Selectors";
 
 export function* bugBashesSaga(): SagaIterator {

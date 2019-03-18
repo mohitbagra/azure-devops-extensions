@@ -1,6 +1,6 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
 import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
+import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { IBugBashItemsAwareState, IBugBashItemsState, IBugBashItemStateModel } from "./Contracts";
 

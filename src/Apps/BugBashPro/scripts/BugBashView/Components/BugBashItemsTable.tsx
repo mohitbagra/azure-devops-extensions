@@ -7,7 +7,7 @@ import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
-import { useActionCreators } from "Common/Hooks/Redux";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as React from "react";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "../Constants";

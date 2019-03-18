@@ -1,24 +1,19 @@
 import "./App.scss";
 
 import * as SDK from "azure-devops-extension-sdk";
-import { Icon } from "azure-devops-ui/Icon";
 import { WrappingBehavior } from "azure-devops-ui/Label";
 import { Page } from "azure-devops-ui/Page";
 import { Splitter, SplitterDirection, SplitterElementPosition } from "azure-devops-ui/Splitter";
+import { AreaPathPicker } from "Common/AzDev/ClassificationNodes/Components/AreaPathPicker";
+import { IterationPathPicker } from "Common/AzDev/ClassificationNodes/Components/IterationPathPicker";
+import { WorkItemFieldPicker } from "Common/AzDev/Fields/Components/WorkItemFieldPicker";
+import { WorkItemFieldValuePicker } from "Common/AzDev/Fields/Components/WorkItemFieldValuePicker";
+import { WorkItemRelationTypePicker } from "Common/AzDev/WorkItemRelationTypes/Components";
+import { WorkItemTagPicker } from "Common/AzDev/WorkItemTags/Components";
+import { WorkItemTitleView } from "Common/AzDev/WorkItemTypes/Components/WorkItemTitleView";
+import { WorkItemTypePicker } from "Common/AzDev/WorkItemTypes/Components/WorkItemTypePicker";
+import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
-import { AreaPathPicker } from "Common/Components/AzDev/ClassificationNodePickers/AreaPathPicker";
-import {
-    IterationPathPicker
-} from "Common/Components/AzDev/ClassificationNodePickers/IterationPathPicker";
-import { WorkItemFieldPicker } from "Common/Components/AzDev/WorkItemFieldPicker";
-import { WorkItemFieldValuePicker } from "Common/Components/AzDev/WorkItemFieldValuePicker";
-import { WorkItemRelationTypePicker } from "Common/Components/AzDev/WorkItemRelationTypePicker";
-import { WorkItemStateView } from "Common/Components/AzDev/WorkItemStateView";
-import { WorkItemTable } from "Common/Components/AzDev/WorkItemTable";
-import { WorkItemTagPicker } from "Common/Components/AzDev/WorkItemTagPicker";
-import { WorkItemTitleView } from "Common/Components/AzDev/WorkItemTitleView";
-import { WorkItemTypePicker } from "Common/Components/AzDev/WorkItemTypePicker";
-import { Badge } from "Common/Components/Badge";
 import { FileUploadDialog } from "Common/Components/FileUploadDialog";
 import { IdentityView } from "Common/Components/IdentityView";
 import { InfoLabel } from "Common/Components/InfoLabel";
@@ -42,17 +37,6 @@ interface IAppState {
 }
 
 const navKeys: { [key: string]: () => JSX.Element } = {
-    Badge: () => (
-        <div>
-            <Badge badgeCount={10} showCalloutOnHover={true} badgeContent={() => <Icon iconName="Ringer" />}>
-                <div>ello</div>
-            </Badge>
-            <div style={{ height: 50 }} />
-            <Badge badgeCount={5} badgeContent={() => <Icon iconName="Mail" />}>
-                <div>ello</div>
-            </Badge>
-        </div>
-    ),
     ColorPicker: () => (
         <AsyncComponent loader={() => import("Common/Components/Pickers/ColorPicker")}>
             {(m: typeof ColorPicker_Async) => (
@@ -201,12 +185,6 @@ const navKeys: { [key: string]: () => JSX.Element } = {
             <WorkItemTitleView workItemId={2} title="Hello world!!" workItemTypeName="User Story" showId={true} />
             <WorkItemTitleView workItemId={3} title="Hello world!!" workItemTypeName="Task" />
             <WorkItemTitleView workItemId={4} title="Hello world!!" workItemTypeName="Feature" />
-        </div>
-    ),
-    "Work Item Grid": () => (
-        <div>
-            <WorkItemTable ids={[1, 2, 3, 4]} />
-            <WorkItemTable ids={[1, 2]} />
         </div>
     ),
     WorkItemFieldValuePicker: () => (

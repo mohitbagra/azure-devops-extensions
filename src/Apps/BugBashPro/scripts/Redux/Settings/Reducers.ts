@@ -1,13 +1,9 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
+import { LoadStatus } from "Common/Contracts";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { produce } from "immer";
-import {
-    ProjectSettingActions, ProjectSettingActionTypes, UserSettingActions, UserSettingActionTypes
-} from "./Actions";
-import {
-    defaultProjectSettingState, defaultUserSettingState, IProjectSettingState, IUserSettingState
-} from "./Contracts";
+import { ProjectSettingActions, ProjectSettingActionTypes, UserSettingActions, UserSettingActionTypes } from "./Actions";
+import { defaultProjectSettingState, defaultUserSettingState, IProjectSettingState, IUserSettingState } from "./Contracts";
 
 export function userSettingReducer(state: IUserSettingState | undefined, action: UserSettingActions): IUserSettingState {
     return produce(state || defaultUserSettingState, draft => {

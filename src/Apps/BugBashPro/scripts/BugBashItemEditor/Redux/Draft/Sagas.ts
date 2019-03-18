@@ -5,8 +5,8 @@ import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { getNewBugBashItemInstance } from "BugBashPro/Shared/Helpers";
 import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
-import { ActionsOfType } from "Common/Redux/Helpers";
-import { KeyValurPairActions } from "Common/Redux/KeyValuePair";
+import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
+import { ActionsOfType } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
@@ -150,7 +150,7 @@ function* requestDraftUpdate(draftBugBashItem: IBugBashItem, draftComment: strin
         }
 
         yield put(BugBashItemEditorActions.draftSaveSucceeded(updatedBugBashItem));
-        yield put(KeyValurPairActions.pushEntry(BugBashItemEditorNotificationKey, "Saved"));
+        yield put(KeyValuePairActions.pushEntry(BugBashItemEditorNotificationKey, "Saved"));
     }
 }
 
@@ -207,5 +207,5 @@ function* bugBashItemCreateAndUpdateFailed(
     action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemCreateFailed | BugBashItemsActionTypes.BugBashItemUpdateFailed>
 ): SagaIterator {
     const { error } = action.payload;
-    yield put(KeyValurPairActions.pushEntry(BugBashItemEditorErrorKey, error));
+    yield put(KeyValuePairActions.pushEntry(BugBashItemEditorErrorKey, error));
 }

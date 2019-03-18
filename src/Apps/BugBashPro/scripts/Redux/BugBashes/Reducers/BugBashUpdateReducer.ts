@@ -1,6 +1,6 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { LoadStatus } from "BugBashPro/Shared/Contracts";
 import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { BugBashesActions, BugBashesActionTypes } from "../Actions";
 import { defaultBugBashesState, IBugBashesState } from "../Contracts";
