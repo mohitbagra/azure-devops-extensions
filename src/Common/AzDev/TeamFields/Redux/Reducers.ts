@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { TeamFieldActions, TeamFieldActionTypes } from "./Actions";
 import { defaultState, ITeamFieldState, ITeamFieldValues } from "./Contracts";
@@ -9,7 +10,7 @@ export function teamFieldReducer(state: ITeamFieldState | undefined, action: Tea
                 const teamId = action.payload;
                 draft.teamFieldsMap[teamId.toLowerCase()] = {
                     teamId: teamId,
-                    loading: true
+                    status: LoadStatus.Loading
                 } as ITeamFieldValues;
                 break;
             }
@@ -17,14 +18,14 @@ export function teamFieldReducer(state: ITeamFieldState | undefined, action: Tea
             case TeamFieldActionTypes.LoadFailed: {
                 const { teamId, error } = action.payload;
                 draft.teamFieldsMap[teamId.toLowerCase()].error = error;
-                draft.teamFieldsMap[teamId.toLowerCase()].loading = false;
+                draft.teamFieldsMap[teamId.toLowerCase()].status = LoadStatus.LoadFailed;
                 break;
             }
 
             case TeamFieldActionTypes.LoadSucceeded: {
                 const { teamId, teamFieldValues } = action.payload;
                 draft.teamFieldsMap[teamId.toLowerCase()] = {
-                    loading: false,
+                    status: LoadStatus.Ready,
                     teamId: teamId,
                     ...teamFieldValues
                 };

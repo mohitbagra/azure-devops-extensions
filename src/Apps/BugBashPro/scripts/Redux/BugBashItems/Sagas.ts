@@ -243,9 +243,9 @@ function* loadTemplate(templateId: string, teamId: string) {
 function* loadTeamFieldValues(teamId: string) {
     const teamFieldValues: ITeamFieldValues | undefined = yield select(getTeamFieldValues, teamId);
 
-    if (teamFieldValues && !teamFieldValues.loading && !teamFieldValues.error) {
+    if (teamFieldValues && teamFieldValues.status === LoadStatus.Ready && !teamFieldValues.error) {
         return yield teamFieldValues;
-    } else if (teamFieldValues && teamFieldValues.error && !teamFieldValues.loading) {
+    } else if (teamFieldValues && teamFieldValues.error) {
         throw new Error(teamFieldValues.error);
     } else {
         yield put(TeamFieldActions.loadRequested(teamId));

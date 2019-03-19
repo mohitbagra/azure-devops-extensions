@@ -1,4 +1,5 @@
 import { TeamFieldValues } from "azure-devops-extension-api/Work";
+import { LoadStatus } from "Common/Contracts";
 
 export interface ITeamFieldAwareState {
     teamFieldState: ITeamFieldState;
@@ -10,7 +11,7 @@ export interface ITeamFieldState {
 
 export interface ITeamFieldValues extends TeamFieldValues {
     teamId: string;
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
 }
 
