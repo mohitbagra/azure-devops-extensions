@@ -8,7 +8,7 @@ import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 
 import { TeamView } from "Common/AzDev/Teams/Components/TeamView";
-import { WorkItemTitleView } from "Common/AzDev/WorkItemTypes/Components/WorkItemTitleView";
+import { WorkItemTitleView } from "Common/AzDev/WorkItemTitleView";
 import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { IdentityView } from "Common/Components/IdentityView";
 import * as format from "date-fns/format";

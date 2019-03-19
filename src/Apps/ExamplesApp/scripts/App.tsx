@@ -10,7 +10,7 @@ import { WorkItemFieldPicker } from "Common/AzDev/Fields/Components/WorkItemFiel
 import { WorkItemFieldValuePicker } from "Common/AzDev/Fields/Components/WorkItemFieldValuePicker";
 import { WorkItemRelationTypePicker } from "Common/AzDev/WorkItemRelationTypes/Components";
 import { WorkItemTagPicker } from "Common/AzDev/WorkItemTags/Components";
-import { WorkItemTitleView } from "Common/AzDev/WorkItemTypes/Components/WorkItemTitleView";
+import { WorkItemTitleView } from "Common/AzDev/WorkItemTitleView";
 import { WorkItemTypePicker } from "Common/AzDev/WorkItemTypes/Components/WorkItemTypePicker";
 import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
