@@ -3,19 +3,20 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { getWorkItemType, getWorkItemTypesStatus, IWorkItemTypeAwareState, WorkItemTypeActions } from "../Redux";
+import { getWorkItemType, getWorkItemTypesError, getWorkItemTypesStatus, IWorkItemTypeAwareState, WorkItemTypeActions } from "../Redux";
 
-export function useWorkItemType(name: string): { workItemType: WorkItemType | undefined; status: LoadStatus } {
+export function useWorkItemType(workItemTypeName: string): IUseWorkItemTypeMappedState {
     const mapState = useCallback(
         (state: IWorkItemTypeAwareState) => {
             return {
-                workItemType: getWorkItemType(state, name),
-                status: getWorkItemTypesStatus(state)
+                workItemType: getWorkItemType(state, workItemTypeName),
+                status: getWorkItemTypesStatus(state),
+                error: getWorkItemTypesError(state)
             };
         },
-        [name]
+        [workItemTypeName]
     );
-    const { workItemType, status } = useMappedState(mapState);
+    const { workItemType, status, error } = useMappedState(mapState);
     const { loadWorkItemTypes } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -24,7 +25,13 @@ export function useWorkItemType(name: string): { workItemType: WorkItemType | un
         }
     }, []);
 
-    return { workItemType, status };
+    return { workItemType, status, error };
+}
+
+interface IUseWorkItemTypeMappedState {
+    workItemType: WorkItemType | undefined;
+    status: LoadStatus;
+    error: string | undefined;
 }
 
 const Actions = {

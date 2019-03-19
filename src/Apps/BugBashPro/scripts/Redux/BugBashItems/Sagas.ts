@@ -207,7 +207,7 @@ function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 function* loadTemplate(templateId: string, teamId: string) {
     const template: IWorkItemTemplate | undefined = yield select(getTemplate, templateId);
 
-    if (template && !template.loading && !template.error) {
+    if (template && template.status === LoadStatus.Ready && !template.error) {
         return yield template;
     } else if (template && template.error) {
         throw new Error(template.error);

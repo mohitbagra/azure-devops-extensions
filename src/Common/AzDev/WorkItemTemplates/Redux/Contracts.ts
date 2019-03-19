@@ -1,6 +1,5 @@
-import {
-    WorkItemTemplate, WorkItemTemplateReference
-} from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemTemplate, WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IWorkItemTemplateAwareState {
     workItemTemplateState: IWorkItemTemplateState;
@@ -13,14 +12,16 @@ export interface IWorkItemTemplateState {
 
 export interface ITeamTemplates {
     teamId: string;
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
     templates?: WorkItemTemplateReference[];
 }
 
-export interface IWorkItemTemplate extends WorkItemTemplate {
-    loading: boolean;
+export interface IWorkItemTemplate {
+    templateId: string;
+    status: LoadStatus;
     error?: string;
+    template?: WorkItemTemplate;
 }
 
 export const defaultState: IWorkItemTemplateState = {

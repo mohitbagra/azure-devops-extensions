@@ -5,6 +5,7 @@ import { FieldType, WorkItemField, WorkItemTemplate, WorkItemType } from "azure-
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
+import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { CustomHeader, HeaderTitleArea } from "azure-devops-ui/Header";
 import { CustomPanel, Panel, PanelCloseButton, PanelContent, PanelFooter } from "azure-devops-ui/Panel";
 import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
@@ -32,6 +33,7 @@ import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox
 import { FadeAwayNotification } from "Common/Notifications/Components/FadeAwayNotification";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { defaultDateComparer } from "Common/Utilities/Date";
+import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 import { BugBashEditorErrorKey, BugBashEditorNotificationKey, TitleFieldMaxLength } from "../Constants";
 import {
@@ -240,16 +242,17 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
                                 label={Resources.TemplateTeam_Label}
                                 info={Resources.TemplateTeam_LabelInfo}
                             />
-                            <WorkItemTemplatePicker
-                                className="bugbash-control"
-                                workItemType={draftBugBash.workItemType}
-                                teamId={draftBugBash.acceptTemplateTeam}
-                                selectedValue={draftBugBash.acceptTemplateId}
-                                onChange={onTemplateChange}
-                                disabled={isSaving}
-                                label={Resources.Template_Label}
-                                info={Resources.Template_LabelInfo}
-                            />
+                            <ConditionalChildren renderChildren={!isNullOrWhiteSpace(draftBugBash.acceptTemplateTeam)}>
+                                <WorkItemTemplatePicker
+                                    className="bugbash-control"
+                                    teamId={draftBugBash.acceptTemplateTeam!}
+                                    selectedValue={draftBugBash.acceptTemplateId}
+                                    onChange={onTemplateChange}
+                                    disabled={isSaving}
+                                    label={Resources.Template_Label}
+                                    info={Resources.Template_LabelInfo}
+                                />
+                            </ConditionalChildren>
                         </div>
                         <div className="section-row flex-row flex-noshrink">
                             <TeamPicker

@@ -3,19 +3,26 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { getWorkItemRelationType, getWorkItemRelationTypesStatus, IWorkItemRelationTypeAwareState, WorkItemRelationTypeActions } from "../Redux";
+import {
+    getWorkItemRelationType,
+    getWorkItemRelationTypesError,
+    getWorkItemRelationTypesStatus,
+    IWorkItemRelationTypeAwareState,
+    WorkItemRelationTypeActions
+} from "../Redux";
 
-export function useWorkItemRelationType(nameOrRefName: string): { relationType: WorkItemRelationType | undefined; status: LoadStatus } {
+export function useWorkItemRelationType(nameOrRefName: string): IUseWorkItemRelationTypeMappedState {
     const mapState = useCallback(
         (state: IWorkItemRelationTypeAwareState) => {
             return {
                 relationType: getWorkItemRelationType(state, nameOrRefName),
-                status: getWorkItemRelationTypesStatus(state)
+                status: getWorkItemRelationTypesStatus(state),
+                error: getWorkItemRelationTypesError(state)
             };
         },
         [nameOrRefName]
     );
-    const { relationType, status } = useMappedState(mapState);
+    const { relationType, status, error } = useMappedState(mapState);
     const { loadRelationTypes } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -24,7 +31,13 @@ export function useWorkItemRelationType(nameOrRefName: string): { relationType: 
         }
     }, []);
 
-    return { relationType, status };
+    return { relationType, status, error };
+}
+
+interface IUseWorkItemRelationTypeMappedState {
+    relationType: WorkItemRelationType | undefined;
+    status: LoadStatus;
+    error: string | undefined;
 }
 
 const Actions = {

@@ -1,13 +1,15 @@
+import { LoadStatus } from "Common/Contracts";
+
 export interface ITagAwareState {
     tagState: ITagState;
 }
 
 export interface ITagState {
     tags?: string[];
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
 }
 
 export const defaultState: ITagState = {
-    loading: false
+    status: LoadStatus.NotLoaded
 };

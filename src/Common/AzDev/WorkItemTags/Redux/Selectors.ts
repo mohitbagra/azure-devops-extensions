@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { ITagAwareState, ITagState } from "./Contracts";
 
@@ -10,7 +11,12 @@ export const getTags = createSelector(
     (state: ITagState | undefined) => state && state.tags
 );
 
-export const areTagsLoading = createSelector(
+export const getTagsStatus = createSelector(
     getTagState,
-    (state: ITagState | undefined) => !!(state && state.loading)
+    (state: ITagState | undefined) => (state && state.status) || LoadStatus.NotLoaded
+);
+
+export const getTagsError = createSelector(
+    getTagState,
+    (state: ITagState | undefined) => state && state.error
 );

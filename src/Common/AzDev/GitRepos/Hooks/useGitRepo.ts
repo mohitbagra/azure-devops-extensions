@@ -3,19 +3,20 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { getGitRepo, getGitReposStatus, GitRepoActions, IGitRepoAwareState } from "../Redux";
+import { getGitRepo, getGitReposError, getGitReposStatus, GitRepoActions, IGitRepoAwareState } from "../Redux";
 
-export function useGitRepo(repoIdOrName: string): { gitRepo: GitRepository | undefined; status: LoadStatus } {
+export function useGitRepo(repoIdOrName: string): IUseGitRepoMappedState {
     const mapState = useCallback(
         (state: IGitRepoAwareState) => {
             return {
                 gitRepo: getGitRepo(state, repoIdOrName),
-                status: getGitReposStatus(state)
+                status: getGitReposStatus(state),
+                error: getGitReposError(state)
             };
         },
         [repoIdOrName]
     );
-    const { gitRepo, status } = useMappedState(mapState);
+    const { gitRepo, status, error } = useMappedState(mapState);
     const { loadRepos } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -24,7 +25,13 @@ export function useGitRepo(repoIdOrName: string): { gitRepo: GitRepository | und
         }
     }, []);
 
-    return { gitRepo, status };
+    return { gitRepo, status, error };
+}
+
+interface IUseGitRepoMappedState {
+    gitRepo: GitRepository | undefined;
+    status: LoadStatus;
+    error: string | undefined;
 }
 
 const Actions = {

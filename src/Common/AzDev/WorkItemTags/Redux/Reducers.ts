@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { TagActions, TagActionTypes } from "./Actions";
 import { defaultState, ITagState } from "./Contracts";
@@ -6,7 +7,7 @@ export function tagReducer(state: ITagState | undefined, action: TagActions): IT
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case TagActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.tags = undefined;
                 draft.error = undefined;
                 break;
@@ -15,13 +16,13 @@ export function tagReducer(state: ITagState | undefined, action: TagActions): IT
             case TagActionTypes.LoadFailed: {
                 draft.error = action.payload;
                 draft.tags = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
             case TagActionTypes.LoadSucceeded: {
                 draft.tags = action.payload;
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
             }
         }

@@ -1,45 +1,17 @@
 import { WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
-import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
-import { getTeamTemplates, getWorkItemTemplateModule, ITeamTemplates, IWorkItemTemplateAwareState, TeamTemplatesActions } from "../Redux";
+import { useTeamTemplates } from "../Hooks/useTeamTemplates";
+import { getWorkItemTemplateModule } from "../Redux";
 
-interface IWorkItemTemplatePickerOwnProps extends IPicklistPickerSharedProps<WorkItemTemplateReference> {
-    teamId?: string;
-    workItemType?: string;
+interface IWorkItemTemplatePickerProps extends IPicklistPickerSharedProps<WorkItemTemplateReference> {
+    teamId: string;
 }
 
-interface IWorkItemTemplatePickerStateProps {
-    teamTemplates?: ITeamTemplates;
-}
-
-const Actions = {
-    loadTeamWorkItemTemplates: TeamTemplatesActions.loadRequested
-};
-
-function WorkItemTemplatePickerInternal(props: IWorkItemTemplatePickerOwnProps) {
+function WorkItemTemplatePickerInternal(props: IWorkItemTemplatePickerProps) {
     const { teamId, placeholder } = props;
-    const mapStateToProps = React.useCallback(
-        (state: IWorkItemTemplateAwareState): IWorkItemTemplatePickerStateProps => {
-            return {
-                teamTemplates: teamId ? getTeamTemplates(state, teamId) : undefined
-            };
-        },
-        [teamId]
-    );
-    const { teamTemplates } = useMappedState(mapStateToProps);
-    const { loadTeamWorkItemTemplates } = useActionCreators(Actions);
-
-    React.useEffect(() => {
-        if (teamId && !teamTemplates) {
-            loadTeamWorkItemTemplates(teamId);
-        }
-    }, [teamId]);
-
-    const loading = !teamTemplates || teamTemplates.loading;
-    const templates = loading ? undefined : teamTemplates && teamTemplates.templates;
+    const { templates } = useTeamTemplates(teamId);
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a template" }, templates, (template: WorkItemTemplateReference) => ({
         key: template.id,
@@ -47,7 +19,7 @@ function WorkItemTemplatePickerInternal(props: IWorkItemTemplatePickerOwnProps) 
     }));
 }
 
-export function WorkItemTemplatePicker(props: IWorkItemTemplatePickerOwnProps) {
+export function WorkItemTemplatePicker(props: IWorkItemTemplatePickerProps) {
     return (
         <DynamicModuleLoader modules={[getWorkItemTemplateModule()]}>
             <WorkItemTemplatePickerInternal {...props} />

@@ -6,7 +6,7 @@ import { getWorkItemTypeStateColor, getWorkItemTypeStatesStatus, IWorkItemTypeSt
 
 export function useWorkItemTypeStateColor(workItemTypeName: string, stateName: string): string | undefined {
     const mapStateToProps = useCallback(
-        (state: IWorkItemTypeStateAwareState): IWorkItemStateViewStateProps => {
+        (state: IWorkItemTypeStateAwareState): IUseWorkItemTypeStateMappedState => {
             return {
                 color: getWorkItemTypeStateColor(state, workItemTypeName, stateName),
                 status: getWorkItemTypeStatesStatus(state, workItemTypeName)
@@ -21,13 +21,13 @@ export function useWorkItemTypeStateColor(workItemTypeName: string, stateName: s
         if (status === LoadStatus.NotLoaded) {
             loadWorkItemTypeStates(workItemTypeName);
         }
-    }, []);
+    }, [workItemTypeName]);
 
     return color;
 }
 
-interface IWorkItemStateViewStateProps {
-    color?: string;
+interface IUseWorkItemTypeStateMappedState {
+    color: string | undefined;
     status: LoadStatus;
 }
 
