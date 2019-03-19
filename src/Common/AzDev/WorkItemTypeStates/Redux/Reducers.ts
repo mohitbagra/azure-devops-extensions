@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { toDictionary } from "Common/Utilities/Array";
 import { produce } from "immer";
 import { WorkItemTypeStateActions, WorkItemTypeStateActionTypes } from "./Actions";
@@ -10,7 +11,7 @@ export function workItemTypeStateReducer(state: IWorkItemTypeStateState | undefi
                 const workItemTypeName = action.payload;
                 draft.statesMap[workItemTypeName.toLowerCase()] = {
                     workItemTypeName: workItemTypeName,
-                    loading: true
+                    status: LoadStatus.Loading
                 };
                 break;
             }
@@ -18,14 +19,14 @@ export function workItemTypeStateReducer(state: IWorkItemTypeStateState | undefi
             case WorkItemTypeStateActionTypes.LoadFailed: {
                 const { workItemTypeName, error } = action.payload;
                 draft.statesMap[workItemTypeName.toLowerCase()].error = error;
-                draft.statesMap[workItemTypeName.toLowerCase()].loading = false;
+                draft.statesMap[workItemTypeName.toLowerCase()].status = LoadStatus.LoadFailed;
                 break;
             }
 
             case WorkItemTypeStateActionTypes.LoadSucceeded: {
                 const { workItemTypeName, stateColors } = action.payload;
                 draft.statesMap[workItemTypeName.toLowerCase()] = {
-                    loading: false,
+                    status: LoadStatus.Ready,
                     workItemTypeName: workItemTypeName,
                     stateColors: toDictionary(stateColors, s => s.name.toLowerCase(), s => s.color)
                 };

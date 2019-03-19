@@ -4,41 +4,18 @@ import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
-import { getWorkItemTypeStateColor, getWorkItemTypeStateModule, IWorkItemTypeStateAwareState, WorkItemTypeStateActions } from "../Redux";
+import { useWorkItemTypeStateColor } from "../Hooks/useWorkItemTypeStateColor";
+import { getWorkItemTypeStateModule } from "../Redux";
 
-interface IWorkItemStateViewOwnProps extends IBaseProps {
+interface IWorkItemStateViewProps extends IBaseProps {
     stateName: string;
     workItemTypeName: string;
 }
 
-interface IWorkItemStateViewStateProps {
-    color?: string;
-}
-
-const Actions = { loadWorkItemTypeStates: WorkItemTypeStateActions.loadRequested };
-
-function WorkItemStateViewInternal(props: IWorkItemStateViewOwnProps) {
+function WorkItemStateViewInternal(props: IWorkItemStateViewProps) {
     const { className, workItemTypeName, stateName } = props;
-    const mapStateToProps = React.useCallback(
-        (state: IWorkItemTypeStateAwareState): IWorkItemStateViewStateProps => {
-            return {
-                color: getWorkItemTypeStateColor(state, workItemTypeName, stateName)
-            };
-        },
-        [workItemTypeName, stateName]
-    );
-    const { color } = useMappedState(mapStateToProps);
-    const { loadWorkItemTypeStates } = useActionCreators(Actions);
-
-    React.useEffect(() => {
-        if (!color) {
-            loadWorkItemTypeStates(workItemTypeName);
-        }
-    }, []);
-
+    const color = useWorkItemTypeStateColor(workItemTypeName, stateName);
     let stateColor;
 
     if (color) {
@@ -63,7 +40,7 @@ function WorkItemStateViewInternal(props: IWorkItemStateViewOwnProps) {
     );
 }
 
-export function WorkItemStateView(props: IWorkItemStateViewOwnProps) {
+export function WorkItemStateView(props: IWorkItemStateViewProps) {
     return (
         <DynamicModuleLoader modules={[getWorkItemTypeStateModule()]}>
             <WorkItemStateViewInternal {...props} />

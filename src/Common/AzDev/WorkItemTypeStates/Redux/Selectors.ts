@@ -1,3 +1,5 @@
+import { LoadStatus } from "Common/Contracts";
+import { createSelector } from "reselect";
 import { IWorkItemTypeStateAwareState, IWorkItemTypeStateColors, IWorkItemTypeStateState } from "./Contracts";
 
 export function getWorkItemTypeStateState(state: IWorkItemTypeStateAwareState): IWorkItemTypeStateState | undefined {
@@ -13,3 +15,13 @@ export function getWorkItemTypeStateColor(state: IWorkItemTypeStateAwareState, w
     const states = getWorkItemTypeStates(state, workItemTypeName);
     return states && states.stateColors && states.stateColors[stateName.toLowerCase()];
 }
+
+export const getWorkItemTypeStatesStatus = createSelector(
+    getWorkItemTypeStates,
+    (states: IWorkItemTypeStateColors | undefined) => (states && states.status) || LoadStatus.NotLoaded
+);
+
+export const getWorkItemTypeStatesError = createSelector(
+    getWorkItemTypeStates,
+    (states: IWorkItemTypeStateColors | undefined) => states && states.error
+);

@@ -1,3 +1,5 @@
+import { LoadStatus } from "Common/Contracts";
+
 export interface IWorkItemTypeStateAwareState {
     workItemTypeStateState: IWorkItemTypeStateState;
 }
@@ -8,7 +10,7 @@ export interface IWorkItemTypeStateState {
 
 export interface IWorkItemTypeStateColors {
     workItemTypeName: string;
-    loading: boolean;
+    status: LoadStatus;
     error?: string;
     stateColors?: { [stateName: string]: string };
 }
