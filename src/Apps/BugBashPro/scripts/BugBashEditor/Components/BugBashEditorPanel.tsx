@@ -12,7 +12,7 @@ import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { WorkItemFieldPicker } from "Common/AzDev/Fields/Components/WorkItemFieldPicker";
+import { WorkItemTypeFieldPicker } from "Common/AzDev/Fields/Components/WorkItemTypeFieldPicker";
 import { IFieldAwareState } from "Common/AzDev/Fields/Redux/Contracts";
 import { TeamPicker } from "Common/AzDev/Teams/Components/TeamPicker";
 import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
@@ -221,17 +221,19 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
                                 info={Resources.WorkItemType_LabelInfo}
                                 required={true}
                             />
-                            <WorkItemFieldPicker
-                                className="bugbash-control"
-                                workItemType={draftBugBash.workItemType}
-                                allowedFieldTypes={[FieldType.Html]}
-                                selectedValue={draftBugBash.itemDescriptionField || ""}
-                                onChange={onDescriptionFieldChange}
-                                disabled={isSaving}
-                                label={Resources.DescriptionField_Label}
-                                info={Resources.DescriptionField_LabelInfo}
-                                required={true}
-                            />
+                            <ConditionalChildren renderChildren={!isNullOrWhiteSpace(draftBugBash.workItemType)}>
+                                <WorkItemTypeFieldPicker
+                                    className="bugbash-control"
+                                    workItemTypeName={draftBugBash.workItemType}
+                                    allowedFieldTypes={[FieldType.Html]}
+                                    selectedValue={draftBugBash.itemDescriptionField || ""}
+                                    onChange={onDescriptionFieldChange}
+                                    disabled={isSaving}
+                                    label={Resources.DescriptionField_Label}
+                                    info={Resources.DescriptionField_LabelInfo}
+                                    required={true}
+                                />
+                            </ConditionalChildren>
                         </div>
                         <div className="section-row flex-row flex-noshrink">
                             <TeamPicker

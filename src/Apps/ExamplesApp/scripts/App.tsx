@@ -6,7 +6,7 @@ import { Page } from "azure-devops-ui/Page";
 import { Splitter, SplitterDirection, SplitterElementPosition } from "azure-devops-ui/Splitter";
 import { AreaPathPicker } from "Common/AzDev/ClassificationNodes/Components/AreaPathPicker";
 import { IterationPathPicker } from "Common/AzDev/ClassificationNodes/Components/IterationPathPicker";
-import { WorkItemFieldPicker } from "Common/AzDev/Fields/Components/WorkItemFieldPicker";
+import { FieldPicker } from "Common/AzDev/Fields/Components/FieldPicker";
 import { WorkItemFieldValuePicker } from "Common/AzDev/Fields/Components/WorkItemFieldValuePicker";
 import { WorkItemRelationTypePicker } from "Common/AzDev/WorkItemRelationTypes/Components";
 import { WorkItemTagPicker } from "Common/AzDev/WorkItemTags/Components";
@@ -146,12 +146,7 @@ const navKeys: { [key: string]: () => JSX.Element } = {
         />
     ),
     WorkItemFieldPicker: () => (
-        <WorkItemFieldPicker
-            required={true}
-            label="Work item field picker"
-            info="Pick work item field"
-            onChange={(o, v) => console.log(o ? o.name : v)}
-        />
+        <FieldPicker required={true} label="Work item field picker" info="Pick work item field" onChange={(o, v) => console.log(o ? o.name : v)} />
     ),
     WorkItemRelationTypePicker: () => (
         <WorkItemRelationTypePicker

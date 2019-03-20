@@ -1,9 +1,14 @@
 import { WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
-import { IFieldAwareState, IFieldState } from "./Contracts";
+import { IFieldAwareState, IFieldState, IWorkItemTypeFields, IWorkItemTypeFieldState } from "./Contracts";
 
-export function getFieldState(state: IFieldAwareState): IFieldState | undefined {
+function getFieldState(state: IFieldAwareState): IFieldState | undefined {
     return state.fieldState;
+}
+
+function getWorkItemTypeFieldState(state: IFieldAwareState): IWorkItemTypeFieldState | undefined {
+    return state.workItemTypeFieldState;
 }
 
 export function getField(state: IFieldAwareState, nameOrRefName: string): WorkItemField | undefined {
@@ -16,15 +21,24 @@ export const getFields = createSelector(
     (state: IFieldState | undefined) => state && state.fields
 );
 
-export const areFieldsLoading = createSelector(
+export const getFieldsMap = createSelector(
     getFieldState,
-    (state: IFieldState | undefined) => !!(state && state.loading)
+    (state: IFieldState | undefined) => state && state.fieldsMap
 );
 
-export function areWorkItemTypeFieldsLoading(state: IFieldAwareState, workItemTypeName: string) {
-    const fieldState = getFieldState(state);
-    const witFields = fieldState && fieldState.workItemTypeFieldsMap && fieldState.workItemTypeFieldsMap[workItemTypeName.toLowerCase()];
-    return witFields ? witFields.loading : false;
+export const getFieldsStatus = createSelector(
+    getFieldState,
+    (state: IFieldState | undefined) => (state && state.status) || LoadStatus.NotLoaded
+);
+
+export const getFieldsError = createSelector(
+    getFieldState,
+    (state: IFieldState | undefined) => state && state.error
+);
+
+function getWorkItemTypeFieldsState(state: IFieldAwareState, workItemTypeName: string): IWorkItemTypeFields | undefined {
+    const fieldState = getWorkItemTypeFieldState(state);
+    return fieldState && fieldState.workItemTypeFieldsMap && fieldState.workItemTypeFieldsMap[workItemTypeName.toLowerCase()];
 }
 
 export function getWorkItemTypeField(
@@ -32,8 +46,7 @@ export function getWorkItemTypeField(
     workItemTypeName: string,
     fieldNameOrRefName: string
 ): WorkItemTypeFieldWithReferences | undefined {
-    const fieldState = getFieldState(state);
-    const witFields = fieldState && fieldState.workItemTypeFieldsMap && fieldState.workItemTypeFieldsMap[workItemTypeName.toLowerCase()];
+    const witFields = getWorkItemTypeFieldsState(state, workItemTypeName);
     if (witFields && witFields.fieldsMap) {
         return witFields.fieldsMap[fieldNameOrRefName.toLowerCase()];
     } else {
@@ -41,12 +54,22 @@ export function getWorkItemTypeField(
     }
 }
 
-export function getWorkItemTypeFields(state: IFieldAwareState, workItemTypeName: string): WorkItemTypeFieldWithReferences[] | undefined {
-    const fieldState = getFieldState(state);
-    const witFields = fieldState && fieldState.workItemTypeFieldsMap && fieldState.workItemTypeFieldsMap[workItemTypeName.toLowerCase()];
-    if (witFields) {
-        return witFields.fields;
-    } else {
-        return undefined;
-    }
-}
+export const getWorkItemTypeFields = createSelector(
+    getWorkItemTypeFieldsState,
+    (state: IWorkItemTypeFields | undefined) => state && state.fields
+);
+
+export const getWorkItemTypeFieldsMap = createSelector(
+    getWorkItemTypeFieldsState,
+    (state: IWorkItemTypeFields | undefined) => state && state.fieldsMap
+);
+
+export const getWorkItemTypeFieldsStatus = createSelector(
+    getWorkItemTypeFieldsState,
+    (state: IWorkItemTypeFields | undefined) => (state && state.status) || LoadStatus.NotLoaded
+);
+
+export const getWorkItemTypeFieldsError = createSelector(
+    getWorkItemTypeFieldsState,
+    (state: IWorkItemTypeFields | undefined) => state && state.error
+);

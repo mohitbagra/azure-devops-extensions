@@ -1,13 +1,14 @@
 import { WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { FieldActions, FieldActionTypes, WorkItemTypeFieldActions, WorkItemTypeFieldActionTypes } from "./Actions";
-import { defaultState, IFieldState } from "./Contracts";
+import { defaultFieldState, defaultWorkItemTypeFieldState, IFieldState, IWorkItemTypeFieldState } from "./Contracts";
 
-export function fieldReducer(state: IFieldState | undefined, action: FieldActions | WorkItemTypeFieldActions): IFieldState {
-    return produce(state || defaultState, draft => {
+export function fieldReducer(state: IFieldState | undefined, action: FieldActions): IFieldState {
+    return produce(state || defaultFieldState, draft => {
         switch (action.type) {
             case FieldActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 draft.fields = undefined;
                 draft.fieldsMap = undefined;
                 draft.error = undefined;
@@ -18,7 +19,7 @@ export function fieldReducer(state: IFieldState | undefined, action: FieldAction
                 draft.error = action.payload;
                 draft.fields = undefined;
                 draft.fieldsMap = undefined;
-                draft.loading = false;
+                draft.status = LoadStatus.LoadFailed;
                 break;
             }
 
@@ -30,16 +31,21 @@ export function fieldReducer(state: IFieldState | undefined, action: FieldAction
                     draft.fieldsMap[field.name.toLowerCase()] = field;
                     draft.fieldsMap[field.referenceName.toLowerCase()] = field;
                 }
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 draft.error = undefined;
-                break;
             }
+        }
+    });
+}
 
+export function workItemTypeFieldReducer(state: IWorkItemTypeFieldState | undefined, action: WorkItemTypeFieldActions): IWorkItemTypeFieldState {
+    return produce(state || defaultWorkItemTypeFieldState, draft => {
+        switch (action.type) {
             case WorkItemTypeFieldActionTypes.BeginLoad: {
                 const workItemTypeName = action.payload;
                 draft.workItemTypeFieldsMap[workItemTypeName.toLowerCase()] = {
                     workItemTypeName: workItemTypeName,
-                    loading: true
+                    status: LoadStatus.Loading
                 };
                 break;
             }
@@ -49,7 +55,7 @@ export function fieldReducer(state: IFieldState | undefined, action: FieldAction
                 draft.workItemTypeFieldsMap[workItemTypeName.toLowerCase()] = {
                     workItemTypeName: workItemTypeName,
                     error: error,
-                    loading: false
+                    status: LoadStatus.LoadFailed
                 };
                 break;
             }
@@ -63,7 +69,7 @@ export function fieldReducer(state: IFieldState | undefined, action: FieldAction
                 }
                 draft.workItemTypeFieldsMap[workItemTypeName.toLowerCase()] = {
                     workItemTypeName: workItemTypeName,
-                    loading: false,
+                    status: LoadStatus.Ready,
                     fields: fields,
                     fieldsMap: fieldsMap
                 };
