@@ -3,8 +3,8 @@ import { Page } from "azure-devops-ui/Page";
 import { TabContent } from "azure-devops-ui/Tabs";
 import * as BugBashEditorPanel_Async from "BugBashPro/BugBashEditor/Components";
 import { getBugBashEditorPortalModule } from "BugBashPro/BugBashEditor/Redux/Portal";
-import * as SettingsEditorPanel_Async from "BugBashPro/BugBashSettings/Components";
-import { getBugBashSettingsPortalModule } from "BugBashPro/BugBashSettings/Redux/Portal";
+import * as SettingsEditorPanel_Async from "BugBashPro/BugBashSettingsEditor/Components";
+import { getBugBashSettingsPortalModule } from "BugBashPro/BugBashSettingsEditor/Redux/Portal";
 import { getBugBashesModule } from "BugBashPro/Redux/BugBashes";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
@@ -19,7 +19,7 @@ import { BugBashDirectoryTable } from "./BugBashDirectoryTable";
 import { BugBashDirectoryTabs } from "./BugBashDirectoryTabs";
 
 const bugBashEditorPanelLoader = async () => import("BugBashPro/BugBashEditor/Components");
-const settingsEditorPanelLoader = async () => import("BugBashPro/BugBashSettings/Components");
+const settingsEditorPanelLoader = async () => import("BugBashPro/BugBashSettingsEditor/Components");
 
 function BugBashDirectoryInternal(): JSX.Element {
     return (
