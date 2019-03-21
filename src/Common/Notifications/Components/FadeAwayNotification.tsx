@@ -1,10 +1,10 @@
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { FadeAway } from "Common/Components/FadeAway";
-import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { useMappedState } from "Common/Hooks/useMappedState";
+import { isNullOrEmpty } from "Common/Utilities/String";
 import * as React from "react";
-import { getKeyValue, getKeyValuePairModule, IKeyValuePairAwareState, KeyValuePairActions } from "../Redux";
+import { useKeyValuePair } from "../Hooks/useKeyValuePair";
+import { getKeyValuePairModule } from "../Redux";
 
 interface IFadeAwayNotificationOwnProps extends IBaseProps {
     notificationKey: string;
@@ -12,42 +12,17 @@ interface IFadeAwayNotificationOwnProps extends IBaseProps {
     children: (notificationString: string) => JSX.Element;
 }
 
-interface IFadeAwayNotificationStateProps {
-    notificationString?: string;
-}
-
-const Actions = {
-    dismissEntry: KeyValuePairActions.dismissEntry
-};
-
 function FadeAwayNotificationInternal(props: IFadeAwayNotificationOwnProps) {
     const { className, notificationKey, children, duration } = props;
-    const mapStateToProps = React.useCallback(
-        (state: IKeyValuePairAwareState): IFadeAwayNotificationStateProps => {
-            return {
-                notificationString: getKeyValue<string>(state, notificationKey)
-            };
-        },
-        [notificationKey]
-    );
-    const { notificationString } = useMappedState(mapStateToProps);
-    const { dismissEntry } = useActionCreators(Actions);
+    const { value: notificationString, dismissEntry } = useKeyValuePair<string>(notificationKey);
 
-    React.useEffect(() => {
-        return onDismiss;
-    }, []);
-
-    const onDismiss = React.useCallback(() => {
-        dismissEntry(notificationKey);
-    }, [notificationKey]);
-
-    if (!notificationString) {
+    if (isNullOrEmpty(notificationString)) {
         return null;
     }
 
     return (
-        <FadeAway className={className} duration={duration} onDismiss={onDismiss}>
-            {children(notificationString)}
+        <FadeAway className={className} duration={duration} onDismiss={dismissEntry}>
+            {children(notificationString!)}
         </FadeAway>
     );
 }

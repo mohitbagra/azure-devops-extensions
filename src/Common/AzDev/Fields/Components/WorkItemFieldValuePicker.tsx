@@ -1,6 +1,6 @@
 import "./WorkItemFieldValuePicker.scss";
 
-import { FieldType, WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking";
+import { FieldType } from "azure-devops-extension-api/WorkItemTracking";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { css } from "azure-devops-ui/Util";
@@ -13,38 +13,22 @@ import { DateTimePickerDropdown } from "Common/Components/Pickers/DateTimePicker
 import { PicklistPicker } from "Common/Components/Pickers/PicklistPicker";
 import { RichEditor } from "Common/Components/RichEditor";
 import { TextField } from "Common/Components/TextField";
-import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { useMappedState } from "Common/Hooks/useMappedState";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
 import * as React from "react";
-import { FieldActions, getField, getFieldModule, getWorkItemTypeField, IFieldAwareState, WorkItemTypeFieldActions } from "../Redux";
+import { useField } from "../Hooks/useField";
+import { useWorkItemTypeField } from "../Hooks/useWorkItemTypeField";
+import { getFieldModule } from "../Redux";
 
 interface IWorkItemFieldValuePickerOwnProps extends ILabelledComponentProps, IInputComponentProps<any> {
     fieldRefName: string;
     workItemTypeName: string;
 }
 
-interface IWorkItemFieldValuePickerStateProps {
-    field?: WorkItemField;
-    workItemTypeField?: WorkItemTypeFieldWithReferences;
-}
-
-const Actions = { loadFields: FieldActions.loadRequested, loadWorkItemTypeFields: WorkItemTypeFieldActions.loadRequested };
-
 function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnProps) {
     const { fieldRefName, workItemTypeName, value, label, disabled, info, required, getErrorMessage, className, onChange } = props;
-    const mapStateToProps = React.useCallback(
-        (state: IFieldAwareState): IWorkItemFieldValuePickerStateProps => {
-            return {
-                field: getField(state, fieldRefName),
-                workItemTypeField: getWorkItemTypeField(state, workItemTypeName, fieldRefName)
-            };
-        },
-        [workItemTypeName, fieldRefName]
-    );
-    const { field, workItemTypeField } = useMappedState(mapStateToProps);
-    const { loadFields, loadWorkItemTypeFields } = useActionCreators(Actions);
+    const { field } = useField(fieldRefName);
+    const { field: workItemTypeField } = useWorkItemTypeField(workItemTypeName, fieldRefName);
 
     const onCheckboxChanged = (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) => {
         onFieldValueChanged(checked ? "1" : "0");
@@ -61,15 +45,6 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
         }
     };
     const convertToComboOption = (av: any) => ({ key: av.toString(), name: av.toString() });
-
-    React.useEffect(() => {
-        if (!field) {
-            loadFields();
-        }
-        if (!workItemTypeField) {
-            loadWorkItemTypeFields(workItemTypeName);
-        }
-    }, []);
 
     if (!field || !workItemTypeField) {
         return <Spinner size={SpinnerSize.large} />;
