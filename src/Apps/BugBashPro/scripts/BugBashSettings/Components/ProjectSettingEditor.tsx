@@ -1,44 +1,25 @@
 import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { getProjectSetting, getProjectSettingStatus, IBugBashSettingsAwareState, ProjectSettingActions } from "BugBashPro/Redux/Settings";
+import { useProjectSetting } from "BugBashPro/Hooks/useProjectSetting";
+import { ProjectSettingActions } from "BugBashPro/Redux/Settings/Actions";
 import { Resources } from "BugBashPro/Resources";
 import { IProjectSetting } from "BugBashPro/Shared/Contracts";
 import { GitRepoPicker } from "Common/AzDev/GitRepos/Components";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useControlledState } from "Common/Hooks/useControlledState";
-import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 
-interface IProjectSettingsEditorStateProps {
-    projectSetting?: IProjectSetting;
-    status: LoadStatus;
-}
-
-function mapStateToProps(state: IBugBashSettingsAwareState): IProjectSettingsEditorStateProps {
-    return {
-        projectSetting: getProjectSetting(state),
-        status: getProjectSettingStatus(state)
-    };
-}
-
 const Actions = {
-    loadProjectSetting: ProjectSettingActions.projectSettingLoadRequested,
     updateProjectSetting: ProjectSettingActions.projectSettingUpdateRequested
 };
 
 export function ProjectSettingEditor() {
-    const { projectSetting: prop_projectSetting, status } = useMappedState(mapStateToProps);
-    const { loadProjectSetting, updateProjectSetting } = useActionCreators(Actions);
+    const { projectSetting: prop_projectSetting, status } = useProjectSetting();
+    const { updateProjectSetting } = useActionCreators(Actions);
 
     const [projectSetting, setProjectSetting] = useControlledState<IProjectSetting | undefined>(prop_projectSetting);
-
-    React.useEffect(() => {
-        if (!prop_projectSetting && status !== LoadStatus.Loading) {
-            loadProjectSetting();
-        }
-    }, []);
 
     const isProjectSettingDirty = !equals(
         (prop_projectSetting && prop_projectSetting.gitMediaRepo) || "",

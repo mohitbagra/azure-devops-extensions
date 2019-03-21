@@ -1,57 +1,31 @@
 import { getClient } from "azure-devops-extension-api";
 import { GitPush, GitRestClient, ItemContentType, VersionControlChangeType } from "azure-devops-extension-api/Git";
 import { BugBashItemEditorErrorKey } from "BugBashPro/BugBashItemEditor/Constants";
-import {
-    getBugBashSettingsModule,
-    getProjectSetting,
-    getProjectSettingStatus,
-    IBugBashSettingsAwareState,
-    ProjectSettingActions
-} from "BugBashPro/Redux/Settings";
+import { getBugBashSettingsModule } from "BugBashPro/Redux/Settings";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";
 
+import { useProjectSetting } from "BugBashPro/Hooks/useProjectSetting";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { useMappedState } from "Common/Hooks/useMappedState";
 import { KeyValuePairActions } from "Common/Notifications/Redux";
 import { getProjectUrlAsync } from "Common/Utilities/UrlHelper";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 import * as React from "react";
-import { IProjectSetting } from "../Contracts";
-
-interface IBugBashRichEditorStateProps {
-    projectSetting?: IProjectSetting;
-    status: LoadStatus;
-}
 
 interface IBugBashRichEditorProps extends IRichEditorProps {
     bugBashId: string;
 }
 
-function mapStateToProps(state: IBugBashSettingsAwareState): IBugBashRichEditorStateProps {
-    return {
-        projectSetting: getProjectSetting(state),
-        status: getProjectSettingStatus(state)
-    };
-}
-
 const Actions = {
-    loadProjectSetting: ProjectSettingActions.projectSettingLoadRequested,
     pushError: KeyValuePairActions.pushEntry
 };
 
 function BugBashRichEditorInternal(props: IBugBashRichEditorProps) {
     const { bugBashId } = props;
-    const { projectSetting, status } = useMappedState(mapStateToProps);
-    const { loadProjectSetting, pushError } = useActionCreators(Actions);
-
-    React.useEffect(() => {
-        if (!projectSetting && status !== LoadStatus.Loading) {
-            loadProjectSetting();
-        }
-    }, []);
+    const { projectSetting, status } = useProjectSetting();
+    const { pushError } = useActionCreators(Actions);
 
     if (!projectSetting || status === LoadStatus.Loading) {
         return <Loading />;

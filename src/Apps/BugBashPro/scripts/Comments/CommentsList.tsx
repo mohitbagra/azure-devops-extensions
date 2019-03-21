@@ -1,12 +1,12 @@
 import "./CommentsList.scss";
 
 import { ago } from "azure-devops-ui/Utilities/Date";
+import { useComments } from "BugBashPro/Hooks/useComments";
 import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
 import { IdentityView } from "Common/Components/IdentityView";
 import { Loading } from "Common/Components/Loading";
 import { LoadStatus } from "Common/Contracts";
 import * as React from "react";
-import { useComments } from "./Hooks/useComments";
 
 interface ICommentsListProps {
     bugBashItemId: string;
