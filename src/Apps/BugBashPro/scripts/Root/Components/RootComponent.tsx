@@ -1,8 +1,8 @@
 import "./Root.scss";
 
 import * as SDK from "azure-devops-extension-sdk";
-import * as BugBashDirectory_Async from "BugBashPro/BugBashDirectory";
-import * as BugBashView_Async from "BugBashPro/BugBashView";
+import * as BugBashDirectory_Async from "BugBashPro/Hubs/BugBashDirectory";
+import * as BugBashView_Async from "BugBashPro/Hubs/BugBashView";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { Loading } from "Common/Components/Loading";
@@ -11,8 +11,8 @@ import * as React from "react";
 import { useHashParams } from "../Hooks/useHashParams";
 import * as ChangelogMessage_Async from "./ChangelogMessage";
 
-const bugBashDirectoryLoader = async () => import("BugBashPro/BugBashDirectory");
-const bugBashViewLoader = async () => import("BugBashPro/BugBashView");
+const bugBashDirectoryLoader = async () => import("BugBashPro/Hubs/BugBashDirectory");
+const bugBashViewLoader = async () => import("BugBashPro/Hubs/BugBashView");
 const changelogMessageLoader = async () => import("./ChangelogMessage");
 
 export function RootComponent() {
