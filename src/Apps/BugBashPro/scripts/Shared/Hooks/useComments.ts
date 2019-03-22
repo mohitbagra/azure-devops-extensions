@@ -6,7 +6,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
 
 export function useComments(bugBashItemId: string): IUseCommentsMappedState {
-    const mapStateToProps = useCallback(
+    const mapState = useCallback(
         (state: ICommentsAwareState): IUseCommentsMappedState => {
             return {
                 comments: getComments(state, bugBashItemId),
@@ -15,7 +15,7 @@ export function useComments(bugBashItemId: string): IUseCommentsMappedState {
         },
         [bugBashItemId]
     );
-    const { comments, status } = useMappedState(mapStateToProps);
+    const { comments, status } = useMappedState(mapState);
     const { requestCommentsLoad } = useActionCreators(Actions);
 
     useEffect(() => {

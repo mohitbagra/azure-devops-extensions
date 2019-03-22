@@ -6,7 +6,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
 
 export function useBugBash(bugBashId: string): IUseBugBashHookMappedState {
-    const mapStateToProps = useCallback(
+    const mapState = useCallback(
         (state: IBugBashesAwareState): IUseBugBashHookMappedState => {
             return {
                 bugBash: getBugBash(state, bugBashId),
@@ -16,7 +16,7 @@ export function useBugBash(bugBashId: string): IUseBugBashHookMappedState {
         [bugBashId]
     );
 
-    const { bugBash, bugBashStatus } = useMappedState(mapStateToProps);
+    const { bugBash, bugBashStatus } = useMappedState(mapState);
     const { loadBugBash } = useActionCreators(Actions);
 
     useEffect(() => {

@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { BugBashItemsFilterData, getBugBashViewFilterData, getFilteredBugBashItems, IBugBashViewAwareState } from "../Redux";
 
 export function useBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedState {
-    const { filteredBugBashItems, workItemsMap, filterData, status } = useMappedState(mapStateToProps);
+    const { filteredBugBashItems, workItemsMap, filterData, status } = useMappedState(mapState);
     const { loadBugBashItems } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const Actions = {
     loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
-function mapStateToProps(state: IBugBashViewAwareState & IBugBashItemsAwareState): IUseBugBashItemsHookMappedState {
+function mapState(state: IBugBashViewAwareState & IBugBashItemsAwareState): IUseBugBashItemsHookMappedState {
     return {
         filteredBugBashItems: getFilteredBugBashItems(state),
         filterData: getBugBashViewFilterData(state),

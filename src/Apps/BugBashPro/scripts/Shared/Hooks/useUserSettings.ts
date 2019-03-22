@@ -1,12 +1,12 @@
 import { IUserSetting } from "BugBashPro/Shared/Contracts";
-import { getCurrentUserSetting, getUserSettingsStatus, IBugBashSettingsAwareState, UserSettingActions } from "BugBashPro/Shared/Redux/Settings";
+import { getUserSettings, getUserSettingsStatus, IBugBashSettingsAwareState, UserSettingActions } from "BugBashPro/Shared/Redux/Settings";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
 
-export function useCurrentUserSetting(): IUseCurrentUserSettingMappedState {
-    const { userSetting, status } = useMappedState(mapState);
+export function useUserSettings(): IUseUserSettingsMappedState {
+    const { userSettings, status } = useMappedState(mapState);
     const { loadUserSettings } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -15,19 +15,19 @@ export function useCurrentUserSetting(): IUseCurrentUserSettingMappedState {
         }
     }, []);
 
-    return { userSetting, status };
+    return { userSettings, status };
 }
 
-interface IUseCurrentUserSettingMappedState {
-    userSetting: IUserSetting | undefined;
-    status: LoadStatus;
-}
-
-function mapState(state: IBugBashSettingsAwareState): IUseCurrentUserSettingMappedState {
+function mapState(state: IBugBashSettingsAwareState): IUseUserSettingsMappedState {
     return {
-        userSetting: getCurrentUserSetting(state),
+        userSettings: getUserSettings(state),
         status: getUserSettingsStatus(state)
     };
+}
+
+interface IUseUserSettingsMappedState {
+    userSettings: IUserSetting[] | undefined;
+    status: LoadStatus;
 }
 
 const Actions = {

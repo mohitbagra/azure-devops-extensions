@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getBugBashCounts, getFilteredBugBashes, IBugBashCounts, IBugBashDirectoryAwareState } from "../Redux";
 
 export function useBugBashes(): IUseBugBashesHookMappedState & typeof Actions {
-    const { filteredBugBashes, status, bugBashCounts } = useMappedState(mapStateToProps);
+    const { filteredBugBashes, status, bugBashCounts } = useMappedState(mapState);
     const { loadBugBashes, deleteBugBash } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const Actions = {
     deleteBugBash: BugBashesActions.bugBashDeleteRequested
 };
 
-function mapStateToProps(state: IBugBashDirectoryAwareState & IBugBashesAwareState): IUseBugBashesHookMappedState {
+function mapState(state: IBugBashDirectoryAwareState & IBugBashesAwareState): IUseBugBashesHookMappedState {
     return {
         filteredBugBashes: getFilteredBugBashes(state),
         status: getBugBashesStatus(state),

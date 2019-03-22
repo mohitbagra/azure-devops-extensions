@@ -6,7 +6,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
 
 export function useUserSetting(userEmail: string): IUseUserSettingMappedState {
-    const mapStateToProps = useCallback(
+    const mapState = useCallback(
         (state: IBugBashSettingsAwareState): IUseUserSettingMappedState => {
             return {
                 userSetting: getUserSetting(state, userEmail),
@@ -16,7 +16,7 @@ export function useUserSetting(userEmail: string): IUseUserSettingMappedState {
         [userEmail]
     );
 
-    const { userSetting, status } = useMappedState(mapStateToProps);
+    const { userSetting, status } = useMappedState(mapState);
     const { loadUserSettings } = useActionCreators(Actions);
 
     useEffect(() => {

@@ -6,7 +6,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
 
 export function useProjectSetting(): IUseProjectSettingEditorMappedState {
-    const { projectSetting, status } = useMappedState(mapStateToProps);
+    const { projectSetting, status } = useMappedState(mapState);
     const { loadProjectSetting } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ interface IUseProjectSettingEditorMappedState {
     status: LoadStatus;
 }
 
-function mapStateToProps(state: IBugBashSettingsAwareState): IUseProjectSettingEditorMappedState {
+function mapState(state: IBugBashSettingsAwareState): IUseProjectSettingEditorMappedState {
     return {
         projectSetting: getProjectSetting(state),
         status: getProjectSettingStatus(state)

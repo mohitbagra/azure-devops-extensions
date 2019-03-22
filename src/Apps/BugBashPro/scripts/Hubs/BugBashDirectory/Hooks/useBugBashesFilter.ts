@@ -4,7 +4,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { BugBashDirectoryActions, getBugBashesFilterState, IBugBashDirectoryAwareState } from "../Redux";
 
 export function useBugBashesFilter(): IUseBugBashesFilterHookMappedState & typeof Actions {
-    const { filter } = useMappedState(mapStateToProps);
+    const { filter } = useMappedState(mapState);
     const { setFilter } = useActionCreators(Actions);
 
     return { filter, setFilter };
@@ -14,7 +14,7 @@ const Actions = {
     setFilter: BugBashDirectoryActions.applyFilter
 };
 
-function mapStateToProps(state: IBugBashDirectoryAwareState): IUseBugBashesFilterHookMappedState {
+function mapState(state: IBugBashDirectoryAwareState): IUseBugBashesFilterHookMappedState {
     return {
         filter: getBugBashesFilterState(state)
     };

@@ -5,7 +5,7 @@ import { useCallback, useEffect } from "react";
 import { getWorkItemTypeStateColor, getWorkItemTypeStatesStatus, IWorkItemTypeStateAwareState, WorkItemTypeStateActions } from "../Redux";
 
 export function useWorkItemTypeStateColor(workItemTypeName: string, stateName: string): string | undefined {
-    const mapStateToProps = useCallback(
+    const mapState = useCallback(
         (state: IWorkItemTypeStateAwareState): IUseWorkItemTypeStateMappedState => {
             return {
                 color: getWorkItemTypeStateColor(state, workItemTypeName, stateName),
@@ -14,7 +14,7 @@ export function useWorkItemTypeStateColor(workItemTypeName: string, stateName: s
         },
         [workItemTypeName, stateName]
     );
-    const { color, status } = useMappedState(mapStateToProps);
+    const { color, status } = useMappedState(mapState);
     const { loadWorkItemTypeStates } = useActionCreators(Actions);
 
     useEffect(() => {

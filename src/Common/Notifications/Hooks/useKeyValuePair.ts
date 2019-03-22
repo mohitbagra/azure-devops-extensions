@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { getKeyValue, IKeyValuePairAwareState, KeyValuePairActions } from "../Redux";
 
 export function useKeyValuePair<T>(key: string): { value: T | undefined; dismissEntry: () => void } {
-    const mapStateToProps = useCallback(
+    const mapState = useCallback(
         (state: IKeyValuePairAwareState): IUseKeyValuePairMappedState<T> => {
             return {
                 value: getKeyValue<T>(state, key)
@@ -12,7 +12,7 @@ export function useKeyValuePair<T>(key: string): { value: T | undefined; dismiss
         },
         [key]
     );
-    const { value } = useMappedState(mapStateToProps);
+    const { value } = useMappedState(mapState);
     const { dismissEntry } = useActionCreators(Actions);
 
     const onDismiss = useCallback(() => {
