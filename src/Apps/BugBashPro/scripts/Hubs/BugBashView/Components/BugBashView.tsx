@@ -5,10 +5,10 @@ import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { Page } from "azure-devops-ui/Page";
 import { TabContent } from "azure-devops-ui/Tabs";
 import { ZeroData, ZeroDataActionType } from "azure-devops-ui/ZeroData";
-import * as BugBashEditorPanel_Async from "BugBashPro/Editors/BugBashEditor";
-import { getBugBashEditorPortalModule } from "BugBashPro/Editors/BugBashEditor/Redux/Portal";
-import * as BugBashItemEditorPanel_Async from "BugBashPro/Editors/BugBashItemEditor";
-import { getBugBashItemEditorPortalModule } from "BugBashPro/Editors/BugBashItemEditor/Redux/Portal";
+import * as BugBashEditorPortal_Async from "BugBashPro/Portals/BugBashEditorPortal";
+import { getBugBashEditorPortalModule } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
+import * as BugBashItemEditorPortal_Async from "BugBashPro/Portals/BugBashItemEditorPortal";
+import { getBugBashItemEditorPortalModule } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes";
@@ -25,23 +25,23 @@ import { BugBashViewPageErrorKey } from "../Constants";
 import { useBugBash } from "../Hooks/useBugBash";
 import { IBugBashItemProviderParams } from "../Interfaces";
 import { getBugBashViewModule } from "../Redux";
-import * as BugBashItemsBoard_Async from "./BugBashItemsBoard";
-import * as BugBashItemsCharts_Async from "./BugBashItemsCharts";
 import { BugBashItemProvider } from "./BugBashItemsProvider";
-import * as BugBashItemsTable_Async from "./BugBashItemsTable";
 import { BugBashViewHeader } from "./BugBashViewHeader";
 import { BugBashViewTabsWithFilter } from "./BugBashViewTabsWithFilter";
+import * as BugBashItemsBoard_Async from "./Pivots/Board";
+import * as BugBashItemsCharts_Async from "./Pivots/Charts";
+import * as BugBashItemsTable_Async from "./Pivots/List";
 
 interface IBugBashViewProps {
     bugBashId: string;
     view: AppView;
 }
 
-const bugBashEditorPanelLoader = async () => import("BugBashPro/Editors/BugBashEditor");
-const bugBashItemEditorPanelLoader = async () => import("BugBashPro/Editors/BugBashItemEditor");
-const chartsViewLoader = async () => import("./BugBashItemsCharts");
-const listViewLoader = async () => import("./BugBashItemsTable");
-const boardViewLoader = async () => import("./BugBashItemsBoard");
+const bugBashEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashEditorPortal");
+const bugBashItemEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashItemEditorPortal");
+const chartsViewLoader = async () => import("./Pivots/Charts");
+const listViewLoader = async () => import("./Pivots/List");
+const boardViewLoader = async () => import("./Pivots/Board");
 
 function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
     const { bugBashId, view } = props;
@@ -68,11 +68,11 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
             <div className="flex-column flex-noshrink">
                 <ErrorMessageBox errorKey={BugBashViewPageErrorKey} />
             </div>
-            <AsyncComponent loader={bugBashItemEditorPanelLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashItemEditorPanel_Async) => <m.DynamicBugBashItemEditorPortal />}
+            <AsyncComponent loader={bugBashItemEditorPortalLoader} loadingComponent={emptyRenderer}>
+                {(m: typeof BugBashItemEditorPortal_Async) => <m.DynamicBugBashItemEditorPortal />}
             </AsyncComponent>
-            <AsyncComponent loader={bugBashEditorPanelLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashEditorPanel_Async) => <m.DynamicBugBashEditorPortal />}
+            <AsyncComponent loader={bugBashEditorPortalLoader} loadingComponent={emptyRenderer}>
+                {(m: typeof BugBashEditorPortal_Async) => <m.DynamicBugBashEditorPortal />}
             </AsyncComponent>
             <BugBashViewHeader bugBash={bugBash} />
             <BugBashViewTabsWithFilter bugBash={bugBash} view={view} />

@@ -1,6 +1,6 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
-import { BugBashItemEditorPortalActions } from "BugBashPro/Editors/BugBashItemEditor/Redux/Portal";
+import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
@@ -10,11 +10,11 @@ import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as React from "react";
-import { BugBashItemFieldNames, WorkItemFieldNames } from "../Constants";
-import { useBugBashItemsSort } from "../Hooks/useBugBashItemsSort";
-import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../Interfaces";
-import { BugBashViewMode } from "../Redux";
+import { BugBashItemFieldNames, WorkItemFieldNames } from "../../../Constants";
+import { useBugBashItemsSort } from "../../../Hooks/useBugBashItemsSort";
+import { useBugBashViewMode } from "../../../Hooks/useBugBashViewMode";
+import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../../../Interfaces";
+import { BugBashViewMode } from "../../../Redux";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
 const Actions = {

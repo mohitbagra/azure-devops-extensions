@@ -1,10 +1,10 @@
 import { Card } from "azure-devops-ui/Card";
 import { Page } from "azure-devops-ui/Page";
 import { TabContent } from "azure-devops-ui/Tabs";
-import * as BugBashEditorPanel_Async from "BugBashPro/Editors/BugBashEditor";
-import { getBugBashEditorPortalModule } from "BugBashPro/Editors/BugBashEditor/Redux/Portal";
-import * as SettingsEditorPanel_Async from "BugBashPro/Editors/BugBashSettingsEditor/Components";
-import { getBugBashSettingsPortalModule } from "BugBashPro/Editors/BugBashSettingsEditor/Redux/Portal";
+import * as BugBashEditorPortal_Async from "BugBashPro/Portals/BugBashEditorPortal";
+import { getBugBashEditorPortalModule } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
+import * as SettingsEditorPortal_Async from "BugBashPro/Portals/BugBashSettingsEditorPortal";
+import { getBugBashSettingsPortalModule } from "BugBashPro/Portals/BugBashSettingsEditorPortal/Redux";
 import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
@@ -18,8 +18,8 @@ import { BugBashDirectoryHeader } from "./BugBashDirectoryHeader";
 import { BugBashDirectoryTable } from "./BugBashDirectoryTable";
 import { BugBashDirectoryTabs } from "./BugBashDirectoryTabs";
 
-const bugBashEditorPanelLoader = async () => import("BugBashPro/Editors/BugBashEditor");
-const settingsEditorPanelLoader = async () => import("BugBashPro/Editors/BugBashSettingsEditor/Components");
+const bugBashEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashEditorPortal");
+const settingsEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashSettingsEditorPortal");
 
 function BugBashDirectoryInternal(): JSX.Element {
     return (
@@ -27,11 +27,11 @@ function BugBashDirectoryInternal(): JSX.Element {
             <div className="flex-column flex-noshrink">
                 <ErrorMessageBox errorKey={DirectoryPageErrorKey} />
             </div>
-            <AsyncComponent loader={bugBashEditorPanelLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashEditorPanel_Async) => <m.DynamicBugBashEditorPortal />}
+            <AsyncComponent loader={bugBashEditorPortalLoader} loadingComponent={emptyRenderer}>
+                {(m: typeof BugBashEditorPortal_Async) => <m.DynamicBugBashEditorPortal />}
             </AsyncComponent>
-            <AsyncComponent loader={settingsEditorPanelLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof SettingsEditorPanel_Async) => <m.DynamicSettingsPortal />}
+            <AsyncComponent loader={settingsEditorPortalLoader} loadingComponent={emptyRenderer}>
+                {(m: typeof SettingsEditorPortal_Async) => <m.DynamicSettingsPortal />}
             </AsyncComponent>
             <BugBashDirectoryHeader />
             <BugBashDirectoryTabs />

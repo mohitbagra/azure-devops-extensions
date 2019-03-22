@@ -1,2 +1,1 @@
-export * from "./Components/ProjectSettingEditor";
-export * from "./Components/UserSettingEditor";
+export * from "./Components/BugBashSettingsEditorPanel";

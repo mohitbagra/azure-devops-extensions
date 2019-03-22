@@ -4,10 +4,10 @@ import { CoreFieldRefNames } from "Common/Constants";
 import { getDistinctNameFromIdentityRef, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { isBugBashItemAccepted } from "../Helpers";
-import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../Interfaces";
-import { BugBashViewMode } from "../Redux";
+import { isBugBashItemAccepted } from "../../../Helpers";
+import { useBugBashViewMode } from "../../../Hooks/useBugBashViewMode";
+import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../../../Interfaces";
+import { BugBashViewMode } from "../../../Redux";
 
 export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
     const { filteredBugBashItems, workItemsMap } = props;

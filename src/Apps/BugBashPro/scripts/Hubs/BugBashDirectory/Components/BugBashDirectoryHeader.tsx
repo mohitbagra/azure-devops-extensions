@@ -1,6 +1,6 @@
 import { Header, TitleSize } from "azure-devops-ui/Header";
-import { BugBashEditorPortalActions } from "BugBashPro/Editors/BugBashEditor/Redux/Portal";
-import { BugBashSettingsPortalActions } from "BugBashPro/Editors/BugBashSettingsEditor/Redux/Portal";
+import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
+import { BugBashSettingsPortalActions } from "BugBashPro/Portals/BugBashSettingsEditorPortal/Redux";
 import { Resources } from "BugBashPro/Resources";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";

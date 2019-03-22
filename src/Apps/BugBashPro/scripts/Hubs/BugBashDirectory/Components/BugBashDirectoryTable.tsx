@@ -1,7 +1,7 @@
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ZeroData } from "azure-devops-ui/ZeroData";
-import { BugBashEditorPortalActions } from "BugBashPro/Editors/BugBashEditor/Redux/Portal";
+import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { IBugBash } from "BugBashPro/Shared/Contracts";

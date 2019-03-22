@@ -5,16 +5,15 @@ import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ago } from "azure-devops-ui/Utilities/Date";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
-import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
-
 import { TeamView } from "Common/AzDev/Teams/Components/TeamView";
 import { WorkItemTitleView } from "Common/AzDev/WorkItemTitleView";
 import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
+import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 import { IdentityView } from "Common/Components/IdentityView";
 import * as format from "date-fns/format";
 import * as React from "react";
-import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "../Constants";
-import { isBugBashItemAccepted, isBugBashItemRejected, isWorkItemFieldName } from "../Helpers";
+import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "../../../Constants";
+import { isBugBashItemAccepted, isBugBashItemRejected, isWorkItemFieldName } from "../../../Helpers";
 
 export function onRenderBugBashItemCell(
     columnIndex: number,
