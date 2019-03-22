@@ -11,6 +11,7 @@ import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
+import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getCommentsModule } from "BugBashPro/Shared/Redux/Comments";
 import { getTeamFieldModule } from "Common/AzDev/TeamFields/Redux";
 import { TeamPicker } from "Common/AzDev/Teams/Components/TeamPicker";
@@ -121,7 +122,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
                 {!draftInitializeError && <Loading />}
             </Panel>
         );
-    } else if (draftBugBashItem.workItemId) {
+    } else if (isBugBashItemAccepted(draftBugBashItem)) {
         return (
             <Panel blurDismiss={false} className="bugbash-item-editor-panel" size={ContentSize.Large} onDismiss={dismissPanel}>
                 <div>This work item is accepted</div>

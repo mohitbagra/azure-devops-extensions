@@ -1,9 +1,22 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { getTeam, ITeamAwareState } from "Common/AzDev/Teams/Redux";
+import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { TitleFieldMaxLength } from "./Constants";
 import { IBugBashItemEditorAwareState } from "./Redux";
+
+export function getNewBugBashItemInstance(bugBashId: string, teamId?: string): IBugBashItem {
+    return {
+        bugBashId: bugBashId,
+        title: "",
+        description: "",
+        teamId: teamId,
+        createdBy: getCurrentUser(),
+        rejected: false,
+        rejectReason: ""
+    } as IBugBashItem;
+}
 
 export function isBugBashItemValid(state: IBugBashItemEditorAwareState & ITeamAwareState, bugBashItem: IBugBashItem): boolean {
     const { title, teamId, rejectReason } = bugBashItem;

@@ -9,6 +9,16 @@ import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { TitleFieldMaxLength } from "./Constants";
 
+export function getNewBugBashInstance(): IBugBash {
+    return {
+        title: "",
+        workItemType: "",
+        projectId: "",
+        itemDescriptionField: "",
+        autoAccept: false
+    };
+}
+
 export function isBugBashValid(
     state: ITeamAwareState & IFieldAwareState & IWorkItemTypeAwareState & IWorkItemTemplateAwareState,
     bugBash: IBugBash

@@ -2,7 +2,6 @@ import { equals } from "azure-devops-ui/Core/Util/String";
 import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { getNewBugBashInstance } from "BugBashPro/Shared/Helpers";
 import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { BugBashesActions, BugBashesActionTypes, getBugBash } from "BugBashPro/Shared/Redux/BugBashes";
 import { KeyValuePairActions } from "Common/Notifications/Redux";
@@ -12,6 +11,7 @@ import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { all, call, put, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashEditorErrorKey, BugBashEditorNotificationKey } from "../Constants";
+import { getNewBugBashInstance } from "../Helpers";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { getDraftBugBash, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 

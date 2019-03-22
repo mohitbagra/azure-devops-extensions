@@ -1,34 +1,21 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { IdentityRef } from "azure-devops-extension-api/WebApi/WebApi";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
-import {
-    caseInsensitiveContains, equals, localeIgnoreCaseComparer
-} from "azure-devops-ui/Core/Util/String";
+import { caseInsensitiveContains, equals, localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
-import { applyFilterAndSort } from "BugBashPro/Shared/Helpers";
+import {
+    applyFilterAndSort,
+    isBugBashItemAccepted,
+    isBugBashItemPending,
+    isBugBashItemRejected,
+    isWorkItemFieldName
+} from "BugBashPro/Shared/Helpers";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "./Constants";
 import { BugBashItemsFilterData, BugBashViewMode } from "./Redux/Contracts";
-
-export function isBugBashItemPending(bugBashItem: IBugBashItem): boolean {
-    return !isBugBashItemAccepted(bugBashItem) && !isBugBashItemRejected(bugBashItem);
-}
-
-export function isBugBashItemRejected(bugBashItem: IBugBashItem): boolean {
-    return !isBugBashItemAccepted(bugBashItem) && !!bugBashItem.rejected;
-}
-
-export function isBugBashItemAccepted(bugBashItem: IBugBashItem): boolean {
-    const { workItemId } = bugBashItem;
-    return workItemId != null && workItemId > 0;
-}
-
-export function isWorkItemFieldName(field: string) {
-    return field.indexOf("System.") === 0;
-}
 
 interface IBugBashItemWithWorkItem {
     bugBashItem: IBugBashItem;

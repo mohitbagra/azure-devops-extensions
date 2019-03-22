@@ -1,38 +1,11 @@
-import {
-    caseInsensitiveContains, localeIgnoreCaseComparer
-} from "azure-devops-ui/Core/Util/String";
+import { caseInsensitiveContains, localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { IBugBash, ISortState } from "BugBashPro/Shared/Contracts";
-import { applyFilterAndSort } from "BugBashPro/Shared/Helpers";
+import { applyFilterAndSort, isBugBashCompleted, isBugBashInProgress, isBugBashScheduled } from "BugBashPro/Shared/Helpers";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { BugBashFieldNames, BugBashKeyTypes } from "./Constants";
 import { BugBashDirectoryTabId, IBugBashCounts } from "./Redux/Contracts";
-
-export function isBugBashCompleted(bugBash: IBugBash, currentTime: Date): boolean {
-    const endTime = bugBash.endTime;
-    return endTime != null && defaultDateComparer(endTime, currentTime) < 0;
-}
-
-export function isBugBashScheduled(bugBash: IBugBash, currentTime: Date): boolean {
-    const startTime = bugBash.startTime;
-    return startTime != null && defaultDateComparer(startTime, currentTime) > 0;
-}
-
-export function isBugBashInProgress(bugBash: IBugBash, currentTime: Date): boolean {
-    const startTime = bugBash.startTime;
-    const endTime = bugBash.endTime;
-
-    if (!startTime && !endTime) {
-        return true;
-    } else if (!startTime && endTime) {
-        return defaultDateComparer(endTime, currentTime) >= 0;
-    } else if (startTime && !endTime) {
-        return defaultDateComparer(startTime, currentTime) <= 0;
-    } else {
-        return defaultDateComparer(startTime, currentTime) <= 0 && defaultDateComparer(endTime, currentTime) >= 0;
-    }
-}
 
 export function getFilteredBugBashes(
     allBugBashes: IBugBash[] | undefined,
