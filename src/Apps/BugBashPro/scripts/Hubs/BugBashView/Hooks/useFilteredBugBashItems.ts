@@ -7,7 +7,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
 import { BugBashItemsFilterData, getBugBashViewFilterData, getFilteredBugBashItems, IBugBashViewAwareState } from "../Redux";
 
-export function useBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedState {
+export function useFilteredBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedState {
     const { filteredBugBashItems, workItemsMap, filterData, status } = useMappedState(mapState);
     const { loadBugBashItems } = useActionCreators(Actions);
 

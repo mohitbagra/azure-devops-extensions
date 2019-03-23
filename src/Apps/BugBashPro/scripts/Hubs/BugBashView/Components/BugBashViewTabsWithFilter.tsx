@@ -11,37 +11,26 @@ import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { navigateToBugBashItemsBoard, navigateToBugBashItemsCharts, navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { TeamView } from "Common/AzDev/Teams/Components/TeamView";
-import { getTeamsMap, ITeamAwareState } from "Common/AzDev/Teams/Redux";
+import { useTeams } from "Common/AzDev/Teams/Hooks/useTeams";
 import { LoadStatus } from "Common/Contracts";
-import { useMappedState } from "Common/Hooks/useMappedState";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { SelectionMode } from "office-ui-fabric-react/lib/utilities/selection/interfaces";
 import * as React from "react";
 import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
-import { useBugBashItems } from "../Hooks/useBugBashItems";
 import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
+import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 import { IBugBashViewBaseProps } from "../Interfaces";
 import { BugBashItemsFilterData, BugBashViewMode } from "../Redux";
 
-interface IBugBashViewTabsWithFilterOwnProps extends IBugBashViewBaseProps {
+interface IBugBashViewTabsWithFilterProps extends IBugBashViewBaseProps {
     view: AppView;
 }
 
-interface IBugBashViewTabsWithFilterStateProps {
-    teamsMap?: { [idOrName: string]: WebApiTeam };
-}
-
-function mapStateToProps(state: ITeamAwareState): IBugBashViewTabsWithFilterStateProps {
-    return {
-        teamsMap: getTeamsMap(state)
-    };
-}
-
-export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterOwnProps) {
+export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps) {
     const { bugBash, view } = props;
-    const { teamsMap } = useMappedState(mapStateToProps);
-    const { status, filterData } = useBugBashItems(bugBash.id!);
+    const { teamsMap } = useTeams();
+    const { status, filterData } = useFilteredBugBashItems(bugBash.id!);
     const { viewMode, setViewMode } = useBugBashViewMode();
     const { setFilter } = useBugBashItemsFilter();
 

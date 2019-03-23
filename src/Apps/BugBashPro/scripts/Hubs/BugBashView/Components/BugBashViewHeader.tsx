@@ -12,7 +12,7 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { BugBashViewHeaderCommands } from "../Constants";
-import { useBugBashItems } from "../Hooks/useBugBashItems";
+import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 import { IBugBashViewBaseProps } from "../Interfaces";
 
 const Actions = {
@@ -23,7 +23,7 @@ const Actions = {
 
 export function BugBashViewHeader(props: IBugBashViewBaseProps) {
     const { bugBash } = props;
-    const { status } = useBugBashItems(bugBash.id!);
+    const { status } = useFilteredBugBashItems(bugBash.id!);
     const { openNewBugBashItemPanel, openBugBashEditorPanel, loadBugBashItems } = useActionCreators(Actions);
 
     const renderHeaderTitle = React.useMemo(() => onRenderHeaderTitle(bugBash), [bugBash]);

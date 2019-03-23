@@ -6,9 +6,9 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
 import { getBugBashCounts, getFilteredBugBashes, IBugBashCounts, IBugBashDirectoryAwareState } from "../Redux";
 
-export function useBugBashes(): IUseBugBashesHookMappedState & typeof Actions {
+export function useFilteredBugBashes(): IUseBugBashesHookMappedState {
     const { filteredBugBashes, status, bugBashCounts } = useMappedState(mapState);
-    const { loadBugBashes, deleteBugBash } = useActionCreators(Actions);
+    const { loadBugBashes } = useActionCreators(Actions);
 
     useEffect(() => {
         if (status === LoadStatus.NotLoaded) {
@@ -16,12 +16,11 @@ export function useBugBashes(): IUseBugBashesHookMappedState & typeof Actions {
         }
     }, []);
 
-    return { filteredBugBashes, status, bugBashCounts, loadBugBashes, deleteBugBash };
+    return { filteredBugBashes, status, bugBashCounts };
 }
 
 const Actions = {
-    loadBugBashes: BugBashesActions.bugBashesLoadRequested,
-    deleteBugBash: BugBashesActions.bugBashDeleteRequested
+    loadBugBashes: BugBashesActions.bugBashesLoadRequested
 };
 
 function mapState(state: IBugBashDirectoryAwareState & IBugBashesAwareState): IUseBugBashesHookMappedState {

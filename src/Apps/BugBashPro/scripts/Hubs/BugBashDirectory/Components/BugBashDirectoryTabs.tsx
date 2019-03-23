@@ -1,8 +1,8 @@
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
 import { Resources } from "BugBashPro/Resources";
 import * as React from "react";
-import { useBugBashes } from "../Hooks/useBugBashes";
 import { useBugBashesSelectedTab } from "../Hooks/useBugBashesSelectedTab";
+import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";
 import { BugBashDirectoryTabId } from "../Redux";
 import { BugBashDirectoryFilterBar } from "./BugBashDirectoryFilterBar";
 
@@ -10,7 +10,7 @@ const renderFilterBar = () => <BugBashDirectoryFilterBar />;
 
 export function BugBashDirectoryTabs(): JSX.Element {
     const { selectedTab, setSelectedTab } = useBugBashesSelectedTab();
-    const { bugBashCounts } = useBugBashes();
+    const { bugBashCounts } = useFilteredBugBashes();
 
     return (
         <TabBar

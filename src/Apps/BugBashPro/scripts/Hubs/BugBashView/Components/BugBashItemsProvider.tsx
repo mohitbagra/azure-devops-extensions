@@ -3,7 +3,7 @@ import { Resources } from "BugBashPro/Resources";
 import { Loading } from "Common/Components/Loading";
 import { LoadStatus } from "Common/Contracts";
 import * as React from "react";
-import { useBugBashItems } from "../Hooks/useBugBashItems";
+import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../Interfaces";
 
 interface IBugBashItemProviderProps extends IBugBashViewBaseProps {
@@ -12,7 +12,7 @@ interface IBugBashItemProviderProps extends IBugBashViewBaseProps {
 
 export function BugBashItemProvider(props: IBugBashItemProviderProps) {
     const { bugBash, children } = props;
-    const { filteredBugBashItems, workItemsMap, status, filterData } = useBugBashItems(bugBash.id!);
+    const { filteredBugBashItems, workItemsMap, status, filterData } = useFilteredBugBashItems(bugBash.id!);
 
     if (!filteredBugBashItems || status === LoadStatus.NotLoaded) {
         return <Loading />;

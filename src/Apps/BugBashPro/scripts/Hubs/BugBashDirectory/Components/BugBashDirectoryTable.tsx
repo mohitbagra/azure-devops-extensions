@@ -6,6 +6,7 @@ import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { getBugBashViewUrlAsync, navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
+import { BugBashesActions } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 import { Loading } from "Common/Components/Loading";
 import { ITableColumn, Table } from "Common/Components/Table";
@@ -16,17 +17,18 @@ import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as format from "date-fns/format";
 import * as React from "react";
 import { BugBashFieldNames } from "../Constants";
-import { useBugBashes } from "../Hooks/useBugBashes";
 import { useBugBashesSort } from "../Hooks/useBugBashesSort";
+import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";
 
 const Actions = {
-    openEditorPanel: BugBashEditorPortalActions.openPortal
+    openEditorPanel: BugBashEditorPortalActions.openPortal,
+    deleteBugBash: BugBashesActions.bugBashDeleteRequested
 };
 
 export function BugBashDirectoryTable() {
     const { sortColumn, isSortedDescending, applySort } = useBugBashesSort();
-    const { filteredBugBashes, status, deleteBugBash } = useBugBashes();
-    const { openEditorPanel } = useActionCreators(Actions);
+    const { filteredBugBashes, status } = useFilteredBugBashes();
+    const { openEditorPanel, deleteBugBash } = useActionCreators(Actions);
 
     const isLoading = status === LoadStatus.Loading || status === LoadStatus.NotLoaded;
     const columns = React.useMemo(() => getColumns(sortColumn, isSortedDescending, deleteBugBash, openEditorPanel), [sortColumn, isSortedDescending]);
