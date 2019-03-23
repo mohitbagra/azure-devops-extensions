@@ -1,7 +1,7 @@
 import { getClient } from "azure-devops-extension-api";
 import { GitPush, GitRestClient, ItemContentType, VersionControlChangeType } from "azure-devops-extension-api/Git";
 import { useProjectSetting } from "BugBashPro/Shared/Hooks/useProjectSetting";
-import { getBugBashSettingsModule } from "BugBashPro/Shared/Redux/Settings";
+import { getBugBashProjectSettingsModule } from "BugBashPro/Shared/Redux/ProjectSettings";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";
@@ -128,7 +128,7 @@ function buildGitPush(
 
 export function BugBashRichEditor(props: IBugBashRichEditorProps) {
     return (
-        <DynamicModuleLoader modules={[getBugBashSettingsModule()]}>
+        <DynamicModuleLoader modules={[getBugBashProjectSettingsModule()]}>
             <BugBashRichEditorInternal {...props} />
         </DynamicModuleLoader>
     );

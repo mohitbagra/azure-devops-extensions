@@ -1,11 +1,11 @@
 import { Button } from "azure-devops-ui/Button";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { IStatusProps, Status, Statuses, StatusSize } from "azure-devops-ui/Status";
-import { isBugBashCompleted, isBugBashInProgress } from "BugBashPro/Hubs/BugBashDirectory/Helpers";
 import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
 import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
+import { isBugBashCompleted, isBugBashInProgress } from "BugBashPro/Shared/Helpers";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems";
 import { LoadStatus } from "Common/Contracts";

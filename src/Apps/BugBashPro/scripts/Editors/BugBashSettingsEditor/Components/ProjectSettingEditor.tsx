@@ -4,7 +4,7 @@ import { equals } from "azure-devops-ui/Core/Util/String";
 import { Resources } from "BugBashPro/Resources";
 import { IProjectSetting } from "BugBashPro/Shared/Contracts";
 import { useProjectSetting } from "BugBashPro/Shared/Hooks/useProjectSetting";
-import { ProjectSettingActions } from "BugBashPro/Shared/Redux/Settings/Actions";
+import { ProjectSettingActions } from "BugBashPro/Shared/Redux/ProjectSettings/Actions";
 import { GitRepoPicker } from "Common/AzDev/GitRepos/Components";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";

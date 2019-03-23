@@ -4,7 +4,7 @@ import { equals } from "azure-devops-ui/Core/Util/String";
 import { Resources } from "BugBashPro/Resources";
 import { IUserSetting } from "BugBashPro/Shared/Contracts";
 import { useCurrentUserSetting } from "BugBashPro/Shared/Hooks/useCurrentUserSetting";
-import { UserSettingActions } from "BugBashPro/Shared/Redux/Settings";
+import { UserSettingActions } from "BugBashPro/Shared/Redux/UserSettings";
 import { TeamPicker } from "Common/AzDev/Teams/Components/TeamPicker";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";

@@ -2,8 +2,8 @@ import { equals } from "azure-devops-ui/Core/Util/String";
 import { LoadStatus } from "Common/Contracts";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { produce } from "immer";
-import { ProjectSettingActions, ProjectSettingActionTypes, UserSettingActions, UserSettingActionTypes } from "./Actions";
-import { defaultProjectSettingState, defaultUserSettingState, IProjectSettingState, IUserSettingState } from "./Contracts";
+import { UserSettingActions, UserSettingActionTypes } from "./Actions";
+import { defaultUserSettingState, IUserSettingState } from "./Contracts";
 
 export function userSettingReducer(state: IUserSettingState | undefined, action: UserSettingActions): IUserSettingState {
     return produce(state || defaultUserSettingState, draft => {
@@ -39,30 +39,6 @@ export function userSettingReducer(state: IUserSettingState | undefined, action:
                         draft.settings.push(userSetting);
                     }
                 }
-            }
-        }
-    });
-}
-
-export function projectSettingReducer(state: IProjectSettingState | undefined, action: ProjectSettingActions): IProjectSettingState {
-    return produce(state || defaultProjectSettingState, draft => {
-        switch (action.type) {
-            case ProjectSettingActionTypes.BeginLoadProjectSetting: {
-                draft.status = LoadStatus.Loading;
-                draft.settings = undefined;
-                draft.error = undefined;
-                break;
-            }
-
-            case ProjectSettingActionTypes.ProjectSettingLoaded: {
-                draft.settings = action.payload;
-                draft.status = LoadStatus.Ready;
-                draft.error = undefined;
-                break;
-            }
-
-            case ProjectSettingActionTypes.ProjectSettingUpdated: {
-                draft.settings = action.payload;
             }
         }
     });
