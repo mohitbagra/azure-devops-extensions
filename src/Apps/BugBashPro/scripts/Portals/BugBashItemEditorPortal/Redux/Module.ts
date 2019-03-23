@@ -1,16 +1,18 @@
 import { ReducersMapObject } from "redux";
-import { IModule } from "redux-dynamic-modules";
+import { ISagaModule } from "redux-dynamic-modules-saga";
 import { BugBashItemEditorPortalActions } from "./Actions";
 import { IBugBashItemEditorPortalAwareState } from "./Contracts";
 import { bugBashItemEditorPortalReducer } from "./Reducers";
+import { bugBashItemEditorPortalSaga } from "./Sagas";
 
-export function getBugBashItemEditorPortalModule(): IModule<IBugBashItemEditorPortalAwareState> {
+export function getBugBashItemEditorPortalModule(): ISagaModule<IBugBashItemEditorPortalAwareState> {
     const reducerMap: ReducersMapObject<IBugBashItemEditorPortalAwareState, BugBashItemEditorPortalActions> = {
         bugBashItemEditorPortalState: bugBashItemEditorPortalReducer
     };
 
     return {
         id: "bugBashItemEditorPortal",
-        reducerMap
+        reducerMap,
+        sagas: [bugBashItemEditorPortalSaga]
     };
 }

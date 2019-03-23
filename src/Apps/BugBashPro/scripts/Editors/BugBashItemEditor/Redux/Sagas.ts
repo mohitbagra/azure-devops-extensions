@@ -1,5 +1,4 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
@@ -121,7 +120,7 @@ function* requestDraftCreate(draftBugBashItem: IBugBashItem, draftComment: strin
                 navigateToBugBashItem(createdBugBashItem.bugBashId, createdBugBashItem.id!);
             }
         });
-        yield put(BugBashItemEditorPortalActions.dismissPortal());
+        yield put(BugBashItemEditorActions.requestPortalClose());
     }
 }
 
@@ -198,7 +197,7 @@ function* requestDraftAccept(action: ActionsOfType<BugBashItemEditorActions, Bug
                     openNewWindow(workItemUrl);
                 }
             });
-            yield put(BugBashItemEditorPortalActions.dismissPortal());
+            yield put(BugBashItemEditorActions.requestPortalClose());
         }
     }
 }

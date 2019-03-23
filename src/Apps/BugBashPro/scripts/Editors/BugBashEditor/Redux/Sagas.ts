@@ -1,5 +1,4 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
@@ -100,7 +99,7 @@ function* requestDraftCreate(draftBugBash: IBugBash) {
                 navigateToBugBashItemsList(createdBugBash.id!);
             }
         });
-        yield put(BugBashEditorPortalActions.dismissPortal());
+        yield put(BugBashEditorActions.requestPortalClose());
     }
 }
 
