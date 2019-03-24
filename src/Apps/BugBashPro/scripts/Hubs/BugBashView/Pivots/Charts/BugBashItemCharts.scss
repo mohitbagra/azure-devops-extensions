@@ -1,11 +1,12 @@
+@import "_CommonStyles.scss";
+
 .bugbash-charts {
     display: flex;
-    height: calc(100% - 10px);
-    padding: 0 10px 10px 0;
+    padding: 10px;
 
     .chart-view-container {
         flex: 1;
-        background-color: #f9f9f9;
+        background-color: $neutral-4;
         padding: 10px;
         margin-right: 10px;
         display: flex;
@@ -28,19 +29,23 @@
     }
 
     .chart-tooltip {
-        border: 1px solid #ccc;
-        background-color: white;
-        color: #8884d8;
-        padding: 10px;
+        background-color: $tooltip-background-color;
+        border-radius: 2px;
+        color: $white;
+        font-size: $fontSize;
+        padding: 8px 12px;
+        text-align: left;
+        word-break: break-all;
+        word-break: break-word;
 
         .team-name {
             margin-bottom: 10px;
             font-weight: bold;
-            color: #111;
+            color: $white;
         }
 
         .tooltip-key {
-            color: #111;
+            color: $white;
         }
     }
 }

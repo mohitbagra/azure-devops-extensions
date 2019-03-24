@@ -23,8 +23,8 @@ function BugBashItemsChartsInternal(props: IBugBashViewBaseProps & IBugBashItemP
     const { userSettingsMap } = useUserSettings();
     const { teamsMap } = useTeams();
     const { viewMode } = useBugBashViewMode();
-    const toggleGroupByTeam = React.useCallback(() => {
-        setGroupedByTeam(!groupedByTeam);
+    const toggleGroupByTeam = React.useCallback((_e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, checked: boolean) => {
+        setGroupedByTeam(checked);
     }, []);
 
     if (!teamsMap || !userSettingsMap) {
@@ -117,7 +117,7 @@ function BugBashItemsChartsInternal(props: IBugBashViewBaseProps & IBugBashItemP
                                 <XAxis type="number" allowDecimals={false} />
                                 <YAxis type="category" dataKey="name" tick={<CustomAxisTick />} allowDecimals={false} />
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <Tooltip isAnimationActive={false} />
+                                <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
                                 <Bar isAnimationActive={false} dataKey="value" fill="#8884d8" />
                             </BarChart>
                         </ResponsiveContainer>
@@ -126,7 +126,7 @@ function BugBashItemsChartsInternal(props: IBugBashViewBaseProps & IBugBashItemP
             </ConditionalChildren>
             <div className="chart-view-container">
                 <div className="header-container">
-                    <div>{`Created By (${filteredBugBashItems.length})`}</div>
+                    <div className="flex-grow">{`Created By (${filteredBugBashItems.length})`}</div>
                     <Checkbox label="Group by team" checked={groupedByTeam} className="group-by-checkbox" onChange={toggleGroupByTeam} />
                 </div>
                 <div className="chart-view">
