@@ -1,21 +1,35 @@
-import { WebApiTeam } from "azure-devops-extension-api/Core";
+import "./BugBashItemCharts.scss";
+
 import { Checkbox } from "azure-devops-ui/Checkbox";
+import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
+import { useUserSettings } from "BugBashPro/Shared/Hooks/useUserSettings";
+import { getBugBashUserSettingsModule } from "BugBashPro/Shared/Redux/UserSettings";
+import { useTeams } from "Common/AzDev/Teams/Hooks/useTeams";
+import { getTeamModule } from "Common/AzDev/Teams/Redux";
+import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
+import { Loading } from "Common/Components/Loading";
 import { CoreFieldRefNames } from "Common/Constants";
 import { getDistinctNameFromIdentityRef, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
+function BugBashItemsChartsInternal(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
     const { filteredBugBashItems, workItemsMap } = props;
     const [groupedByTeam, setGroupedByTeam] = React.useState(false);
+    const { userSettingsMap } = useUserSettings();
+    const { teamsMap } = useTeams();
     const { viewMode } = useBugBashViewMode();
     const toggleGroupByTeam = React.useCallback(() => {
         setGroupedByTeam(!groupedByTeam);
     }, []);
+
+    if (!teamsMap || !userSettingsMap) {
+        return <Loading />;
+    }
 
     const assignedToTeamCounts: { [key: string]: number } = {};
     const createdByCounts: { [key: string]: { count: number; members: { [key: string]: number } } } = {};
@@ -26,9 +40,9 @@ export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemPr
         const createdByUser = bugBashItem.createdBy;
         const createdBy = getDistinctNameFromIdentityRef(createdByUser);
 
-        // let userSetting: IUserSetting | undefined;
-        // const associatedTeamId = userSetting ? userSetting.associatedTeam : "";
-        let associatedTeam: WebApiTeam | undefined; // associatedTeamId ? StoresHub.teamStore.getItem(associatedTeamId) : null;
+        const userSetting = userSettingsMap[createdByUser.uniqueName.toLowerCase()];
+        const associatedTeamId = userSetting ? userSetting.associatedTeam : "";
+        const associatedTeam = associatedTeamId ? teamsMap[associatedTeamId.toLowerCase()] : null;
 
         let teamId: string;
         if (isBugBashItemAccepted(bugBashItem) && workItemsMap && workItemsMap[bugBashItem.workItemId!]) {
@@ -59,7 +73,9 @@ export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemPr
     }
 
     for (const teamId of Object.keys(assignedToTeamCounts)) {
-        assignedToTeamData.push({ name: teamId /*this._getTeamName(teamId)*/, value: assignedToTeamCounts[teamId] });
+        const team = teamsMap[teamId.toLowerCase()];
+        const teamName = team ? team.name : teamId;
+        assignedToTeamData.push({ name: teamName, value: assignedToTeamCounts[teamId] });
     }
 
     for (const createdBy of Object.keys(createdByCounts)) {
@@ -82,8 +98,8 @@ export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemPr
     createdByData.sort((a, b) => b.value - a.value);
 
     return (
-        <div className="bugbash-charts">
-            {viewMode !== BugBashViewMode.All && (
+        <div className="bugbash-charts flex-grow">
+            <ConditionalChildren renderChildren={viewMode === BugBashViewMode.All}>
                 <div className="chart-view-container">
                     <div className="header-container">
                         <div>{`Assigned to ${viewMode === BugBashViewMode.Accepted ? "area path" : "team"} (${filteredBugBashItems.length})`}</div>
@@ -107,7 +123,7 @@ export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemPr
                         </ResponsiveContainer>
                     </div>
                 </div>
-            )}
+            </ConditionalChildren>
             <div className="chart-view-container">
                 <div className="header-container">
                     <div>{`Created By (${filteredBugBashItems.length})`}</div>
@@ -183,3 +199,11 @@ const CustomTooltip: React.StatelessComponent<any> = (props: any): JSX.Element |
         );
     }
 };
+
+export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
+    return (
+        <DynamicModuleLoader modules={[getBugBashUserSettingsModule(), getTeamModule()]}>
+            <BugBashItemsChartsInternal {...props} />
+        </DynamicModuleLoader>
+    );
+}
