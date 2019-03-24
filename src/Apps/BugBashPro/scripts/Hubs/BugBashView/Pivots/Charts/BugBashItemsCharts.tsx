@@ -1,13 +1,13 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core";
 import { Checkbox } from "azure-devops-ui/Checkbox";
+import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
+import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
+import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { CoreFieldRefNames } from "Common/Constants";
 import { getDistinctNameFromIdentityRef, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { useBugBashViewMode } from "../../../Hooks/useBugBashViewMode";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../../../Interfaces";
-import { BugBashViewMode } from "../../../Redux";
 
 export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
     const { filteredBugBashItems, workItemsMap } = props;

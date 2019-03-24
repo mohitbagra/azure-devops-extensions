@@ -3,6 +3,7 @@ import { Icon } from "azure-devops-ui/Icon";
 import { ITableColumn, SimpleTableCell } from "azure-devops-ui/Table";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ago } from "azure-devops-ui/Utilities/Date";
+import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted, isBugBashItemRejected, isWorkItemFieldName } from "BugBashPro/Shared/Helpers";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
@@ -13,7 +14,6 @@ import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkCo
 import { IdentityView } from "Common/Components/IdentityView";
 import * as format from "date-fns/format";
 import * as React from "react";
-import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "../../../Constants";
 
 export function onRenderBugBashItemCell(
     columnIndex: number,

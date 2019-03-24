@@ -5,6 +5,9 @@ import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { Page } from "azure-devops-ui/Page";
 import { TabContent } from "azure-devops-ui/Tabs";
 import { ZeroData, ZeroDataActionType } from "azure-devops-ui/ZeroData";
+import * as BugBashItemsBoard_Async from "BugBashPro/Hubs/BugBashView/Pivots/Board";
+import * as BugBashItemsCharts_Async from "BugBashPro/Hubs/BugBashView/Pivots/Charts";
+import * as BugBashItemsTable_Async from "BugBashPro/Hubs/BugBashView/Pivots/List";
 import * as BugBashEditorPortal_Async from "BugBashPro/Portals/BugBashEditorPortal";
 import { getBugBashEditorPortalModule } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
 import * as BugBashItemEditorPortal_Async from "BugBashPro/Portals/BugBashItemEditorPortal";
@@ -28,9 +31,6 @@ import { getBugBashViewModule } from "../Redux";
 import { BugBashItemProvider } from "./BugBashItemsProvider";
 import { BugBashViewHeader } from "./BugBashViewHeader";
 import { BugBashViewTabsWithFilter } from "./BugBashViewTabsWithFilter";
-import * as BugBashItemsBoard_Async from "./Pivots/Board";
-import * as BugBashItemsCharts_Async from "./Pivots/Charts";
-import * as BugBashItemsTable_Async from "./Pivots/List";
 
 interface IBugBashViewProps {
     bugBashId: string;
@@ -39,9 +39,9 @@ interface IBugBashViewProps {
 
 const bugBashEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashEditorPortal");
 const bugBashItemEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashItemEditorPortal");
-const chartsViewLoader = async () => import("./Pivots/Charts");
-const listViewLoader = async () => import("./Pivots/List");
-const boardViewLoader = async () => import("./Pivots/Board");
+const chartsViewLoader = async () => import("BugBashPro/Hubs/BugBashView/Pivots/Charts");
+const listViewLoader = async () => import("BugBashPro/Hubs/BugBashView/Pivots/List");
+const boardViewLoader = async () => import("BugBashPro/Hubs/BugBashView/Pivots/Board");
 
 function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
     const { bugBashId, view } = props;
