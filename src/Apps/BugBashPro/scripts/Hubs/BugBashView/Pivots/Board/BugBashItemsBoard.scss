@@ -1,0 +1,34 @@
+@import "_CommonStyles.scss";
+
+$cellWidth: 300px;
+$cellItemHorizontalMargin: 6px;
+$cellItemVerticalMargin: 5px;
+
+.board {
+    .board-header {
+        z-index: 1;
+        align-items: center;
+        margin-bottom: 5px;
+
+        .board-header-cell {
+            width: $cellWidth;
+            padding: 10px 0px 10px 10px;
+
+            .board-header-cell-content {
+                border-right: 1px solid $neutral-10;
+                padding: 5px;
+            }
+        }
+    }
+
+    .board-contents-outer {
+        .board-contents {
+            min-height: 100%;
+
+            .board-contents-cell {
+                width: $cellWidth;
+                border-right: 1px solid $neutral-10;
+            }
+        }
+    }
+}
