@@ -1,5 +1,6 @@
 import "./BugBashItemsBoard.scss";
 
+import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted, isBugBashItemPending, isBugBashItemRejected } from "BugBashPro/Shared/Helpers";
@@ -7,11 +8,22 @@ import * as React from "react";
 import { BoardCard } from "./BoardCard";
 
 export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
-    const { filteredBugBashItems } = props;
+    const { bugBash, filteredBugBashItems, workItemsMap } = props;
 
     const pendingItems = filteredBugBashItems.filter(b => isBugBashItemPending(b));
     const rejectedItems = filteredBugBashItems.filter(b => isBugBashItemRejected(b));
     const acceptedItems = filteredBugBashItems.filter(b => isBugBashItemAccepted(b));
+
+    const renderCard = React.useCallback(
+        (bugBashItem: IBugBashItem) => {
+            let acceptedWorkItem: WorkItem | undefined;
+            if (isBugBashItemAccepted(bugBashItem) && workItemsMap) {
+                acceptedWorkItem = workItemsMap[bugBashItem.workItemId!];
+            }
+            return <BoardCard key={bugBashItem.id} bugBashItem={bugBashItem} acceptedWorkItem={acceptedWorkItem} bugBash={bugBash} />;
+        },
+        [bugBash, workItemsMap]
+    );
 
     return (
         <div className="board scroll-hidden flex-grow flex-column">
@@ -35,8 +47,4 @@ export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemPro
             </div>
         </div>
     );
-}
-
-function renderCard(bugBashItem: IBugBashItem): JSX.Element {
-    return <BoardCard bugBashItem={bugBashItem} />;
 }
