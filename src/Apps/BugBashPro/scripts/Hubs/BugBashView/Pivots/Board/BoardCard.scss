@@ -8,9 +8,37 @@
     border-radius: 4px;
     transition: box-shadow 0.2s;
 
-    .card-title {
+    .board-card-control {
+        margin-bottom: 5px;
+
         a {
-            color: $primary-text;
+            word-break: break-word;
+
+            &:not(:hover) {
+                color: $primary-text;
+            }
+        }
+    }
+
+    .board-card-fields {
+        margin-top: 10px;
+
+        .board-card-control-label {
+            font-size: $fontSize;
+            flex-shrink: 0;
+            width: 100px;
+            color: $secondary-text;
+        }
+
+        .board-card-control-inner {
+            flex-grow: 1;
+            color: $neutral-80;
+            font-size: $fontSize;
+
+            .identity-display-name {
+                color: $neutral-80;
+                font-size: $fontSize;
+            }
         }
     }
 }

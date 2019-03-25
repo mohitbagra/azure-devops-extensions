@@ -44,7 +44,6 @@ export function onRenderBugBashItemCell(
             innerElement = (
                 <WorkItemTitleView
                     linkClassName="bolt-table-link bolt-table-inline-link"
-                    showId={true}
                     workItemId={acceptedWorkItem!.id}
                     title={value as string}
                     workItemTypeName={acceptedWorkItem!.fields[WorkItemFieldNames.WorkItemType]}
@@ -112,13 +111,13 @@ function renderStatusCell(bugBashItem: IBugBashItem): JSX.Element {
     return (
         <div style={{ textAlign: "center" }}>
             <Tooltip text={tooltip}>
-                <Icon
-                    iconName={iconName}
-                    style={{
+                {Icon({
+                    iconName: iconName,
+                    style: {
                         color: color,
                         cursor: "default"
-                    }}
-                />
+                    }
+                })}
             </Tooltip>
         </div>
     );

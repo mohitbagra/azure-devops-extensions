@@ -83,7 +83,7 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps
                 filter={filterRef.current}
                 filterToggled={filterToggledRef.current}
                 items={
-                    bugBash.autoAccept
+                    bugBash.autoAccept || view === AppView.ACTION_BOARD
                         ? []
                         : [
                               {
@@ -105,7 +105,7 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps
                 }
             />
         ),
-        [bugBash.autoAccept, status, viewMode]
+        [bugBash.autoAccept, status, viewMode, view]
     );
 
     const onFilterBarDismissClicked = React.useCallback(() => {

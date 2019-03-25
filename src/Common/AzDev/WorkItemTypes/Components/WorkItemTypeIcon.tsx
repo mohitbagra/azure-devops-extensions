@@ -12,13 +12,14 @@ interface IWorkItemTypeIconProps extends IBaseProps {
 }
 
 function WorkItemTypeIconInternal(props: IWorkItemTypeIconProps) {
-    const { workItemTypeName, width } = props;
+    const { workItemTypeName, width, className } = props;
     const { workItemType } = useWorkItemType(workItemTypeName);
 
     if (workItemType && workItemType.icon) {
         return (
             <Tooltip text={workItemType.name}>
                 {Image({
+                    className: className,
                     src: workItemType.icon.url,
                     alt: workItemType.name,
                     containImage: true,

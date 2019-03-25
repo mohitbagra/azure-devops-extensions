@@ -176,9 +176,9 @@ const navKeys: { [key: string]: () => JSX.Element } = {
     ),
     TitleView: () => (
         <div>
-            <WorkItemTitleView workItemId={1} title="Hello world!!" workItemTypeName="Bug" showId={true} />
-            <WorkItemTitleView workItemId={2} title="Hello world!!" workItemTypeName="User Story" showId={true} />
-            <WorkItemTitleView workItemId={3} title="Hello world!!" workItemTypeName="Task" />
+            <WorkItemTitleView workItemId={1} title="Hello world!!" workItemTypeName="Bug" />
+            <WorkItemTitleView workItemId={2} title="Hello world!!" workItemTypeName="User Story" hideId={true} />
+            <WorkItemTitleView workItemId={3} title="Hello world!!" workItemTypeName="Task" hideTitle={true} />
             <WorkItemTitleView workItemId={4} title="Hello world!!" workItemTypeName="Feature" />
         </div>
     ),

@@ -1,7 +1,9 @@
 import "./BugBashItemsBoard.scss";
 
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
+import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux/Contracts";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted, isBugBashItemPending, isBugBashItemRejected } from "BugBashPro/Shared/Helpers";
 import * as React from "react";
@@ -9,6 +11,13 @@ import { BoardCard } from "./BoardCard";
 
 export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
     const { bugBash, filteredBugBashItems, workItemsMap } = props;
+    const { viewMode, setViewMode } = useBugBashViewMode();
+
+    React.useEffect(() => {
+        if (viewMode !== BugBashViewMode.All) {
+            setViewMode(BugBashViewMode.All);
+        }
+    }, []);
 
     const pendingItems = filteredBugBashItems.filter(b => isBugBashItemPending(b));
     const rejectedItems = filteredBugBashItems.filter(b => isBugBashItemRejected(b));
@@ -24,6 +33,10 @@ export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemPro
         },
         [bugBash, workItemsMap]
     );
+
+    if (viewMode !== BugBashViewMode.All) {
+        return null;
+    }
 
     return (
         <div className="board scroll-hidden flex-grow flex-column">

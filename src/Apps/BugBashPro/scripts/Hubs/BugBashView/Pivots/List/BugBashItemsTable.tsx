@@ -162,7 +162,7 @@ function getContextMenuItems(
 
 function getAllColumns(): ITableColumn<IBugBashItem>[] {
     return [
-        getColumn(BugBashItemFieldNames.Status, "Status", [60, 60, 60]),
+        getColumn(BugBashItemFieldNames.Status, "", [40, 40, 40]),
         getColumn(BugBashItemFieldNames.Title, "Title", [-50, 300, 1500]),
         getColumn(BugBashItemFieldNames.CreatedBy, "Created By", [-25, 150, 500]),
         getColumn(BugBashItemFieldNames.CreatedDate, "Created Date", [-25, 150, 500])

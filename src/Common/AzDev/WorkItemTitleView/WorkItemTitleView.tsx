@@ -12,24 +12,27 @@ interface IWorkItemTitleViewProps extends IBaseProps {
     workItemId: number;
     title: string;
     workItemTypeName: string;
-    showId?: boolean;
+    hideId?: boolean;
+    hideTitle?: boolean;
     onClick?(e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>): void;
 }
 
 export function WorkItemTitleView(props: IWorkItemTitleViewProps) {
-    const { workItemId, title, workItemTypeName, showId, className, linkClassName, onClick } = props;
+    const { workItemId, title, workItemTypeName, hideId = false, hideTitle = false, className, linkClassName, onClick } = props;
 
     return (
         <div className={css("work-item-title-view flex-row flex-center", className)}>
-            <WorkItemTypeIcon workItemTypeName={workItemTypeName} />
-            {showId && <span className="work-item-id">{workItemId}</span>}
-            <AsyncLinkComponent
-                key={workItemId}
-                className={css("title-link flex-grow text-ellipsis", linkClassName)}
-                getHrefAsync={getWorkItemUrlPromise(workItemId)}
-                title={title}
-                onClick={onClick && onLinkClick(onClick)}
-            />
+            <WorkItemTypeIcon workItemTypeName={workItemTypeName} className="flex-noshrink" />
+            {!hideId && <span className="work-item-id">{workItemId}</span>}
+            {!hideTitle && (
+                <AsyncLinkComponent
+                    key={workItemId}
+                    className={css("title-link flex-grow text-ellipsis", linkClassName)}
+                    getHrefAsync={getWorkItemUrlPromise(workItemId)}
+                    title={title}
+                    onClick={onClick && onLinkClick(onClick)}
+                />
+            )}
         </div>
     );
 }
