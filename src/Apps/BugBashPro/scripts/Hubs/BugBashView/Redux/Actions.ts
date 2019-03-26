@@ -4,7 +4,7 @@ import { ActionsUnion, createAction } from "Common/Redux";
 import { BugBashItemsFilterData, BugBashViewMode } from "./Contracts";
 
 export const BugBashViewActions = {
-    initialize: () => createAction(BugBashViewActionTypes.Initialize),
+    initialize: (initialBugBashItemId: string | undefined) => createAction(BugBashViewActionTypes.Initialize, initialBugBashItemId),
     setFilteredItems: (filteredBugBashItems: IBugBashItem[] | undefined) =>
         createAction(BugBashViewActionTypes.SetFilteredItems, filteredBugBashItems),
     setFilterData: (filterData: BugBashItemsFilterData) => createAction(BugBashViewActionTypes.SetFilterData, filterData),

@@ -117,7 +117,7 @@ export function BugBashView(props: IBugBashViewProps) {
             modules={[
                 getBugBashesModule(),
                 getBugBashItemsModule(),
-                getBugBashViewModule(),
+                getBugBashViewModule(props.bugBashItemId),
                 getBugBashEditorPortalModule(),
                 getBugBashItemEditorPortalModule(),
                 getKeyValuePairModule()
