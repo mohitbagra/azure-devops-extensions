@@ -22,10 +22,6 @@ export function navigateToBugBashItemsBoard(bugBashId: string) {
     setHash({ view: AppView.ACTION_BOARD, id: bugBashId });
 }
 
-export function navigateToBugBashItem(bugBashId: string, bugBashItemId: string) {
-    setHash({ view: AppView.ACTION_ITEM, bugBashId, bugBashItemId });
-}
-
 export async function getBugBashDirectoryUrlAsync(): Promise<string> {
     const hubUrl = await getContributionHubUrlAsync();
     return `${hubUrl}#view=${AppView.ACTION_ALL}`;
@@ -53,5 +49,5 @@ export async function getBugBashItemsBoardUrlAsync(bugBashId: string): Promise<s
 
 export async function getBugBashItemUrlAsync(bugBashId: string, bugBashItemId: string): Promise<string> {
     const hubUrl = await getContributionHubUrlAsync();
-    return `${hubUrl}#view=${AppView.ACTION_ITEM}&bugBashId=${bugBashId}&bugBashItemId=${bugBashItemId}`;
+    return `${hubUrl}#view=${AppView.ACTION_LIST}&id=${bugBashId}&bugBashItemId=${bugBashItemId}`;
 }

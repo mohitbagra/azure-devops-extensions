@@ -1,15 +1,10 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { Resources } from "BugBashPro/Resources";
-import { IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
+import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { BugBashItemsActions, BugBashItemsActionTypes, getBugBashItem } from "BugBashPro/Shared/Redux/BugBashItems";
 import { CommentActions, CommentActionTypes } from "BugBashPro/Shared/Redux/Comments";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
-import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
-import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
-import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import { SagaIterator } from "redux-saga";
 import { all, call, put, race, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashItemEditorErrorKey, BugBashItemEditorNotificationKey } from "../Constants";
@@ -71,7 +66,7 @@ function* requestDraftInitialize(action: ActionsOfType<BugBashItemEditorActions,
 }
 
 function* requestDraftSave(action: ActionsOfType<BugBashItemEditorActions, BugBashItemEditorActionTypes.RequestDraftSave>): SagaIterator {
-    const bugBashItemId = action.payload;
+    const { bugBash, bugBashItemId } = action.payload;
     const [isDirty, isValid, isSaving, draftBugBashItem, draftComment] = yield all([
         select(isDraftDirty, bugBashItemId),
         select(isDraftValid, bugBashItemId),
@@ -82,14 +77,14 @@ function* requestDraftSave(action: ActionsOfType<BugBashItemEditorActions, BugBa
 
     if (isValid && isDirty && !isSaving) {
         if (isNullOrWhiteSpace(bugBashItemId)) {
-            yield call(requestDraftCreate, draftBugBashItem, draftComment);
+            yield call(requestDraftCreate, bugBash, draftBugBashItem, draftComment);
         } else {
             yield call(requestDraftUpdate, draftBugBashItem, draftComment);
         }
     }
 }
 
-function* requestDraftCreate(draftBugBashItem: IBugBashItem, draftComment: string | undefined) {
+function* requestDraftCreate(bugBash: IBugBash, draftBugBashItem: IBugBashItem, draftComment: string | undefined) {
     yield put(BugBashItemsActions.bugBashItemCreateRequested(draftBugBashItem));
 
     const itemCreatedAction: ActionsOfType<
@@ -110,17 +105,7 @@ function* requestDraftCreate(draftBugBashItem: IBugBashItem, draftComment: strin
             yield put(CommentActions.commentCreateRequested(createdBugBashItem.id!, draftComment));
             yield race([take(CommentActionTypes.CommentCreated), take(CommentActionTypes.CommentCreateFailed)]);
         }
-
-        yield call(addToast, {
-            message: Resources.BugBashItemCreatedMessage,
-            callToAction: Resources.View,
-            duration: 5000,
-            forceOverrideExisting: true,
-            onCallToActionClick: () => {
-                navigateToBugBashItem(createdBugBashItem.bugBashId, createdBugBashItem.id!);
-            }
-        });
-        yield put(BugBashItemEditorActions.requestPortalClose());
+        yield put(BugBashItemEditorActions.requestPortalClose(bugBash, createdBugBashItem));
     }
 }
 
@@ -187,17 +172,7 @@ function* requestDraftAccept(action: ActionsOfType<BugBashItemEditorActions, Bug
 
         if (itemUpdatedAction.type === BugBashItemsActionTypes.BugBashItemUpdated) {
             const { bugBashItem: acceptedBugBashItem } = itemUpdatedAction.payload;
-            const workItemUrl: string = yield call(getWorkItemUrlAsync, acceptedBugBashItem.workItemId!);
-            yield call(addToast, {
-                message: Resources.BugBashAcceptedCreatedMessage,
-                callToAction: Resources.View,
-                duration: 5000,
-                forceOverrideExisting: true,
-                onCallToActionClick: () => {
-                    openNewWindow(workItemUrl);
-                }
-            });
-            yield put(BugBashItemEditorActions.requestPortalClose());
+            yield put(BugBashItemEditorActions.requestPortalClose(bugBash, acceptedBugBashItem));
         }
     }
 }

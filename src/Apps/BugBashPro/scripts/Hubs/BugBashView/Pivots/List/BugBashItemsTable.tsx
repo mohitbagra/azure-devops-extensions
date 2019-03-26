@@ -1,7 +1,7 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IMenuItem } from "azure-devops-ui/Components/Menu/Menu.Props";
 import { ListSelection } from "azure-devops-ui/List";
-import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
+import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, ITableRow, SortOrder } from "azure-devops-ui/Table";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
 import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashItemsSort";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
@@ -70,6 +70,13 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
         return columns;
     }, [bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending]);
 
+    const onRowActivate = React.useCallback(
+        (_event: React.SyntheticEvent<HTMLElement>, tableRow: ITableRow<IBugBashItem>) => {
+            openEditorPanel(bugBash, tableRow.data);
+        },
+        [bugBash]
+    );
+
     return (
         <Table<IBugBashItem>
             key={viewMode}
@@ -78,6 +85,8 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
             scrollable={true}
             showLines={false}
             behaviors={[sortingBehavior]}
+            singleClickActivation={false}
+            onActivate={onRowActivate}
             selection={viewMode === BugBashViewMode.Accepted ? selectionRef.current : undefined}
         />
     );

@@ -10,12 +10,14 @@ export const BugBashItemEditorActions = {
     updateDraft: (draftBugBashItem: IBugBashItem) => createAction(BugBashItemEditorActionTypes.UpdateDraft, draftBugBashItem),
     updateDraftComment: (bugBashItemId: string | undefined, comment: string) =>
         createAction(BugBashItemEditorActionTypes.UpdateDraftComment, { bugBashItemId, comment }),
-    requestDraftSave: (bugBashItemId: string | undefined) => createAction(BugBashItemEditorActionTypes.RequestDraftSave, bugBashItemId),
+    requestDraftSave: (bugBash: IBugBash, bugBashItemId: string | undefined) =>
+        createAction(BugBashItemEditorActionTypes.RequestDraftSave, { bugBash, bugBashItemId }),
     draftSaveSucceeded: (bugBashItem: IBugBashItem) => createAction(BugBashItemEditorActionTypes.DraftSaveSucceeded, bugBashItem),
     requestDraftAccept: (bugBash: IBugBash, bugBashItemId: string | undefined) =>
         createAction(BugBashItemEditorActionTypes.RequestDraftAccept, { bugBash, bugBashItemId }),
 
-    requestPortalClose: () => createAction(BugBashItemEditorActionTypes.RequestPortalClose)
+    requestPortalClose: (bugBash: IBugBash, bugBashItem: IBugBashItem) =>
+        createAction(BugBashItemEditorActionTypes.RequestPortalClose, { bugBash, bugBashItem })
 };
 
 export const enum BugBashItemEditorActionTypes {

@@ -35,6 +35,7 @@ import { BugBashViewTabsWithFilter } from "./BugBashViewTabsWithFilter";
 interface IBugBashViewProps {
     bugBashId: string;
     view: AppView;
+    bugBashItemId?: string;
 }
 
 const bugBashEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashEditorPortal");

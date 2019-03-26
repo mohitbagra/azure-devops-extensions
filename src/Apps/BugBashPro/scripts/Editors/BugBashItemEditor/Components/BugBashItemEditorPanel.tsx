@@ -151,7 +151,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
     };
 
     const saveBugBashItem = () => {
-        requestDraftSave(bugBashItemId);
+        requestDraftSave(bugBash, bugBashItemId);
     };
 
     const acceptBugBashItem = () => {

@@ -44,12 +44,11 @@ export function RootComponent() {
             case AppView.ACTION_BOARD:
                 view = (
                     <AsyncComponent loader={bugBashViewLoader} key="bugbashview">
-                        {(m: typeof BugBashView_Async) => <m.BugBashView bugBashId={hashParams.bugBashId!} view={hashParams.view} />}
+                        {(m: typeof BugBashView_Async) => (
+                            <m.BugBashView bugBashId={hashParams.bugBashId!} view={hashParams.view} bugBashItemId={hashParams.bugBashItemId} />
+                        )}
                     </AsyncComponent>
                 );
-                break;
-            case AppView.ACTION_ITEM:
-                view = <div>{`Bug bash item: ${hashParams.bugBashId} ${hashParams.bugBashItemId}`}</div>;
                 break;
             default:
                 view = <Loading />;

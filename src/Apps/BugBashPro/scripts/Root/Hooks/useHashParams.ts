@@ -21,19 +21,14 @@ export function useHashParams(): IHashParams | undefined {
             setHashParams({
                 view: AppView.ACTION_ALL
             });
-        } else if (viewMode === AppView.ACTION_ITEM && !isNullOrWhiteSpace(queryParams.bugBashId) && !isNullOrWhiteSpace(queryParams.bugBashItemId)) {
-            setHashParams({
-                view: AppView.ACTION_ITEM,
-                bugBashId: queryParams.bugBashId,
-                bugBashItemId: queryParams.bugBashItemId
-            });
         } else if (
             (viewMode === AppView.ACTION_LIST || viewMode === AppView.ACTION_CHARTS || viewMode === AppView.ACTION_BOARD) &&
             !isNullOrWhiteSpace(queryParams.id)
         ) {
             setHashParams({
                 view: viewMode,
-                bugBashId: queryParams.id
+                bugBashId: queryParams.id,
+                bugBashItemId: queryParams.bugBashItemId
             });
         } else {
             switchToDirectory();
