@@ -35,7 +35,7 @@ export function BoardCard(props: IBoardCardProps) {
         (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
             if (!e.ctrlKey) {
                 e.preventDefault();
-                openEditorPanel(bugBash, bugBashItem.id!);
+                openEditorPanel(bugBash, bugBashItem);
             }
         },
         [bugBash, bugBashItem.id]

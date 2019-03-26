@@ -47,6 +47,7 @@ export function onRenderBugBashItemCell(
                     workItemId={acceptedWorkItem!.id}
                     title={value as string}
                     workItemTypeName={acceptedWorkItem!.fields[WorkItemFieldNames.WorkItemType]}
+                    onClick={onTitleClick}
                 />
             );
         } else {

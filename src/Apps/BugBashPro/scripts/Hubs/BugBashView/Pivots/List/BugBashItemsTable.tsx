@@ -66,7 +66,7 @@ export function getColumns(
     workItemsMap: { [workItemId: number]: WorkItem } | undefined,
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
-    onEdit: (bugBash: IBugBash, bugBashItemId: string) => void,
+    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void,
     onDelete: (bugBashId: string, bugBashItemId: string) => void
 ): ITableColumn<IBugBashItem>[] {
     let columns: ITableColumn<IBugBashItem>[];
@@ -107,7 +107,7 @@ export function getColumns(
                 (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
                     if (!e.ctrlKey) {
                         e.preventDefault();
-                        onEdit(bugBash, bugBashItem.id!);
+                        onEdit(bugBash, bugBashItem);
                     }
                 }
             );
@@ -120,7 +120,7 @@ export function getColumns(
 
 function getContextMenuItems(
     bugBash: IBugBash,
-    onEdit: (bugBash: IBugBash, bugBashItemId: string) => void,
+    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void,
     onDelete: (bugBashId: string, bugBashItemId: string) => void
 ): ColumnMore<IBugBashItem> {
     return new ColumnMore((bugBashItem: IBugBashItem) => {
@@ -139,7 +139,7 @@ function getContextMenuItems(
                     id: "edit",
                     text: Resources.Edit,
                     onActivate: () => {
-                        onEdit(bugBash, bugBashItem.id!);
+                        onEdit(bugBash, bugBashItem);
                     },
                     iconProps: { iconName: "Edit", className: "communication-foreground" }
                 },

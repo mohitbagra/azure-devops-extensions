@@ -1,9 +1,9 @@
-import { IBugBash } from "BugBashPro/Shared/Contracts";
+import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const BugBashItemEditorPortalActions = {
-    openPortal: (bugBash: IBugBash, bugBashItemId?: string) =>
-        createAction(BugBashItemEditorPortalActionTypes.OpenPortal, { bugBash, bugBashItemId }),
+    openPortal: (bugBash: IBugBash, bugBashItem: IBugBashItem | undefined) =>
+        createAction(BugBashItemEditorPortalActionTypes.OpenPortal, { bugBash, bugBashItem }),
     dismissPortal: () => createAction(BugBashItemEditorPortalActionTypes.DismissPortal)
 };
 

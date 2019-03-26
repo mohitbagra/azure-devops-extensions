@@ -1,3 +1,4 @@
+import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { produce } from "immer";
 import { BugBashItemEditorPortalActions, BugBashItemEditorPortalActionTypes } from "./Actions";
 import { defaultBugBashItemEditorPortalState, IBugBashItemEditorPortalState } from "./Contracts";
@@ -9,10 +10,13 @@ export function bugBashItemEditorPortalReducer(
     return produce(state || defaultBugBashItemEditorPortalState, draft => {
         switch (action.type) {
             case BugBashItemEditorPortalActionTypes.OpenPortal: {
-                const { bugBash, bugBashItemId } = action.payload;
-                draft.portalOpen = true;
-                draft.bugBash = bugBash;
-                draft.bugBashItemId = bugBashItemId;
+                const { bugBash, bugBashItem } = action.payload;
+                if (!bugBashItem || !isBugBashItemAccepted(bugBashItem)) {
+                    // dont open the panel is item is accepted
+                    draft.portalOpen = true;
+                    draft.bugBash = bugBash;
+                    draft.bugBashItemId = bugBashItem ? bugBashItem.id : undefined;
+                }
                 break;
             }
 
