@@ -43,6 +43,7 @@ export function onRenderBugBashItemCell(
         if (isAccepted) {
             innerElement = (
                 <WorkItemTitleView
+                    className="flex-grow"
                     linkClassName="bolt-table-link bolt-table-inline-link"
                     workItemId={acceptedWorkItem!.id}
                     title={value as string}

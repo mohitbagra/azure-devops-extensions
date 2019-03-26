@@ -1,6 +1,7 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IMenuItem } from "azure-devops-ui/Components/Menu/Menu.Props";
-import { ColumnMore, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
+import { ListSelection } from "azure-devops-ui/List";
+import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
 import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashItemsSort";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
@@ -13,8 +14,11 @@ import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
+import { CoreFieldRefNames } from "Common/Constants";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
+import { getQueryUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
@@ -28,6 +32,19 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
     const { openEditorPanel, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
+    const selectionRef = React.useRef(new ListSelection(true));
+    const columnSelect = React.useMemo(() => new ColumnSelect(), [viewMode]);
+    const columnMore = React.useMemo(
+        () =>
+            getContextMenuItems(
+                bugBash,
+                filteredBugBashItems,
+                viewMode === BugBashViewMode.Accepted ? selectionRef.current : undefined,
+                openEditorPanel,
+                deleteBugBashItem
+            ),
+        [bugBash, filteredBugBashItems, viewMode]
+    );
 
     const sortingBehavior = React.useMemo(
         () =>
@@ -44,10 +61,14 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
         [viewMode]
     );
 
-    const columns = React.useMemo(
-        () => getColumns(bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel, deleteBugBashItem),
-        [bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending]
-    );
+    const columns = React.useMemo(() => {
+        const columns = getColumns(bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel);
+        if (viewMode === BugBashViewMode.Accepted) {
+            columns.unshift(columnSelect);
+        }
+        columns.push(columnMore);
+        return columns;
+    }, [bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending]);
 
     return (
         <Table<IBugBashItem>
@@ -57,6 +78,7 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
             scrollable={true}
             showLines={false}
             behaviors={[sortingBehavior]}
+            selection={viewMode === BugBashViewMode.Accepted ? selectionRef.current : undefined}
         />
     );
 }
@@ -67,8 +89,7 @@ export function getColumns(
     workItemsMap: { [workItemId: number]: WorkItem } | undefined,
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
-    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void,
-    onDelete: (bugBashId: string, bugBashItemId: string) => void
+    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void
 ): ITableColumn<IBugBashItem>[] {
     let columns: ITableColumn<IBugBashItem>[];
     switch (viewMode) {
@@ -115,26 +136,46 @@ export function getColumns(
         };
     }
 
-    columns.push(getContextMenuItems(bugBash, onEdit, onDelete));
     return columns;
 }
 
 function getContextMenuItems(
     bugBash: IBugBash,
+    bugBashItems: IBugBashItem[],
+    selection: ListSelection | undefined,
     onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void,
     onDelete: (bugBashId: string, bugBashItemId: string) => void
 ): ColumnMore<IBugBashItem> {
     return new ColumnMore((bugBashItem: IBugBashItem) => {
-        const menuItems: IMenuItem[] = [
-            {
+        const menuItems: IMenuItem[] = [];
+        if (!selection || selection.selectedCount === 1) {
+            // if there is no selection (non-accepted view mode), or if only 1 row is selected in accepted view mode, show Edit menu item
+            menuItems.push({
                 id: "edit",
                 text: Resources.Edit,
                 onActivate: () => {
                     onEdit(bugBash, bugBashItem);
                 },
                 iconProps: { iconName: "Edit", className: "communication-foreground" }
-            }
-        ];
+            });
+        } else if (selection && selection.selectedCount > 1) {
+            // only for accepted work items
+            menuItems.push({
+                id: "openInQueries",
+                text: Resources.OpenSelectedWorkItems,
+                onActivate: () => {
+                    const selectedWorkItemIds: number[] = [];
+                    const ranges = selection.value;
+                    for (const range of ranges) {
+                        const { endIndex, beginIndex } = range;
+                        selectedWorkItemIds.push(...bugBashItems.slice(beginIndex, endIndex + 1).map(b => b.workItemId!));
+                    }
+                    navigateToQueries(selectedWorkItemIds);
+                },
+                iconProps: { iconName: "ReplyMirrored", className: "communication-foreground" }
+            });
+        }
+
         if (!isBugBashItemAccepted(bugBashItem)) {
             menuItems.push({
                 id: "delete",
@@ -206,4 +247,16 @@ function getColumn(key: BugBashItemFieldNames | WorkItemFieldNames, name: string
         width: width,
         resizable: key !== BugBashItemFieldNames.Status
     } as ITableColumn<IBugBashItem>;
+}
+
+async function navigateToQueries(workItemIds: number[]) {
+    const queryUrl = await getQueryUrlAsync(workItemIds, [
+        CoreFieldRefNames.Id,
+        CoreFieldRefNames.Title,
+        CoreFieldRefNames.State,
+        CoreFieldRefNames.AssignedTo,
+        CoreFieldRefNames.AreaPath
+    ]);
+
+    openNewWindow(queryUrl);
 }

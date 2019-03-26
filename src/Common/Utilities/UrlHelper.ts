@@ -10,7 +10,7 @@ export async function getQueryUrlAsync(workItemIds: number[], fields: string[]):
                 FROM WorkItems
                 WHERE [System.ID] IN (${workItemIds.join(",")})`;
 
-    return `${url}?wiql=${encodeURIComponent(wiql)}`;
+    return `${url}/query?wiql=${encodeURIComponent(wiql)}`;
 }
 
 export async function getWorkItemUrlAsync(workItemId: number): Promise<string> {

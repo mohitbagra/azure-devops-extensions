@@ -48,6 +48,7 @@ export namespace Resources {
     export const BugBashCreatedMessage = "New bug bash created";
     export const BugBashItemCreatedMessage = "New bug bash item created";
     export const BugBashAcceptedCreatedMessage = "Work item created";
+    export const OpenSelectedWorkItems = "Open selected work items";
     export const View = "View";
     export const Open = "Open";
 }

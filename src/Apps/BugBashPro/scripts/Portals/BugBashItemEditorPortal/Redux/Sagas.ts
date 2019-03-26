@@ -22,6 +22,6 @@ function* openPortalRequested(action: ActionsOfType<BugBashItemEditorPortalActio
 
     if (bugBashItem && isBugBashItemAccepted(bugBashItem)) {
         const workItem: WorkItem = yield call(openWorkItem, bugBashItem.workItemId!);
-        yield put(BugBashItemsActions.bugBashItemLoaded(bugBashItem, workItem));
+        yield put(BugBashItemsActions.bugBashItemUpdated(bugBashItem, workItem));
     }
 }
