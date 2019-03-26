@@ -1,4 +1,5 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { IMenuItem } from "azure-devops-ui/Components/Menu/Menu.Props";
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, SortOrder } from "azure-devops-ui/Table";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
 import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashItemsSort";
@@ -8,7 +9,7 @@ import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux";
 import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { navigateToBugBashItem } from "BugBashPro/Shared/NavHelpers";
+import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
@@ -124,38 +125,33 @@ function getContextMenuItems(
     onDelete: (bugBashId: string, bugBashItemId: string) => void
 ): ColumnMore<IBugBashItem> {
     return new ColumnMore((bugBashItem: IBugBashItem) => {
+        const menuItems: IMenuItem[] = [
+            {
+                id: "edit",
+                text: Resources.Edit,
+                onActivate: () => {
+                    onEdit(bugBash, bugBashItem);
+                },
+                iconProps: { iconName: "Edit", className: "communication-foreground" }
+            }
+        ];
+        if (!isBugBashItemAccepted(bugBashItem)) {
+            menuItems.push({
+                id: "delete",
+                text: Resources.Delete,
+                onActivate: () => {
+                    confirmAction(Resources.ConfirmDialogTitle, Resources.DeleteBugBashItemConfirmation, (ok: boolean) => {
+                        if (ok) {
+                            onDelete(bugBashItem.bugBashId, bugBashItem.id!);
+                        }
+                    });
+                },
+                iconProps: { iconName: "Cancel", className: "error-text" }
+            });
+        }
         return {
             id: "sub-menu",
-            items: [
-                {
-                    id: "open",
-                    text: "Open",
-                    onActivate: () => {
-                        navigateToBugBashItem(bugBashItem.bugBashId, bugBashItem.id!);
-                    },
-                    iconProps: { iconName: "ReplyMirrored", className: "communication-foreground" }
-                },
-                {
-                    id: "edit",
-                    text: Resources.Edit,
-                    onActivate: () => {
-                        onEdit(bugBash, bugBashItem);
-                    },
-                    iconProps: { iconName: "Edit", className: "communication-foreground" }
-                },
-                {
-                    id: "delete",
-                    text: Resources.Delete,
-                    onActivate: () => {
-                        confirmAction(Resources.ConfirmDialogTitle, Resources.DeleteBugBashItemConfirmation, (ok: boolean) => {
-                            if (ok) {
-                                onDelete(bugBashItem.bugBashId, bugBashItem.id!);
-                            }
-                        });
-                    },
-                    iconProps: { iconName: "Cancel", className: "error-text" }
-                }
-            ]
+            items: menuItems
         };
     });
 }
