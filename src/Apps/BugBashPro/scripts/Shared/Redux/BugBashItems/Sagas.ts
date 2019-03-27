@@ -3,7 +3,7 @@ import { WorkItem, WorkItemTemplate } from "azure-devops-extension-api/WorkItemT
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { getTeamFieldValues, ITeamFieldValues, TeamFieldActions, TeamFieldActionTypes } from "Common/AzDev/TeamFields/Redux";
-import { getTemplate, IWorkItemTemplate, WorkItemTemplateActions, WorkItemTemplateActionTypes } from "Common/AzDev/WorkItemTemplates/Redux";
+import { getTemplateState, IWorkItemTemplate, WorkItemTemplateActions, WorkItemTemplateActionTypes } from "Common/AzDev/WorkItemTemplates/Redux";
 import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
@@ -205,7 +205,7 @@ function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 }
 
 function* loadTemplate(templateId: string, teamId: string) {
-    const template: IWorkItemTemplate | undefined = yield select(getTemplate, templateId);
+    const template: IWorkItemTemplate | undefined = yield select(getTemplateState, templateId);
 
     if (template && template.status === LoadStatus.Ready && !template.error) {
         return yield template;
