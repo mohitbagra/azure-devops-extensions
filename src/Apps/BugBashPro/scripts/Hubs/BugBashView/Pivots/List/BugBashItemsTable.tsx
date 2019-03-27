@@ -72,7 +72,7 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
 
     const onRowActivate = React.useCallback(
         (_event: React.SyntheticEvent<HTMLElement>, tableRow: ITableRow<IBugBashItem>) => {
-            openEditorPanel(bugBash, tableRow.data);
+            openEditorPanel(bugBash, tableRow.data, { readFromCache: false });
         },
         [bugBash]
     );
@@ -98,7 +98,7 @@ export function getColumns(
     workItemsMap: { [workItemId: number]: WorkItem } | undefined,
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
-    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void
+    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem, options: { readFromCache: boolean }) => void
 ): ITableColumn<IBugBashItem>[] {
     let columns: ITableColumn<IBugBashItem>[];
     switch (viewMode) {
@@ -138,7 +138,7 @@ export function getColumns(
                 (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
                     if (!e.ctrlKey) {
                         e.preventDefault();
-                        onEdit(bugBash, bugBashItem);
+                        onEdit(bugBash, bugBashItem, { readFromCache: false });
                     }
                 }
             );
@@ -152,7 +152,7 @@ function getContextMenuItems(
     bugBash: IBugBash,
     bugBashItems: IBugBashItem[],
     selection: ListSelection | undefined,
-    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem) => void,
+    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem, options: { readFromCache: boolean }) => void,
     onDelete: (bugBashId: string, bugBashItemId: string) => void
 ): ColumnMore<IBugBashItem> {
     return new ColumnMore((bugBashItem: IBugBashItem) => {
@@ -163,7 +163,7 @@ function getContextMenuItems(
                 id: "edit",
                 text: Resources.Edit,
                 onActivate: () => {
-                    onEdit(bugBash, bugBashItem);
+                    onEdit(bugBash, bugBashItem, { readFromCache: false });
                 },
                 iconProps: { iconName: "Edit", className: "communication-foreground" }
             });

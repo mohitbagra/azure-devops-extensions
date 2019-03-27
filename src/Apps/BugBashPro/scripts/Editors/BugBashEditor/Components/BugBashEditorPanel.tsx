@@ -49,6 +49,7 @@ import {
 
 interface IBugBashEditorPanelOwnProps {
     bugBashId?: string;
+    readFromCache: boolean;
     onDismiss: () => void;
 }
 
@@ -67,7 +68,7 @@ const Actions = {
 };
 
 function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
-    const { onDismiss, bugBashId } = props;
+    const { onDismiss, bugBashId, readFromCache } = props;
     const mapStateToProps = React.useCallback(
         (
             state: IBugBashEditorAwareState & ITeamAwareState & IFieldAwareState & IWorkItemTypeAwareState & IWorkItemTemplateAwareState
@@ -88,7 +89,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
     const throttledOnDraftChanged = useThrottle(updateDraft, 200);
     React.useEffect(() => {
         if (!draftBugBash) {
-            requestDraftInitialize(bugBashId, true);
+            requestDraftInitialize(bugBashId, readFromCache);
         }
     }, [bugBashId]);
 

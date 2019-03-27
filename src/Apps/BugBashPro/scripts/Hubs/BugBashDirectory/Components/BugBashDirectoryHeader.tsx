@@ -29,7 +29,7 @@ export function BugBashDirectoryHeader(): JSX.Element {
                     ...DirectoryPageHeaderCommands.new,
                     disabled: isLoading,
                     onActivate: () => {
-                        openEditorPanel();
+                        openEditorPanel(undefined, { readFromCache: false });
                     }
                 },
                 {

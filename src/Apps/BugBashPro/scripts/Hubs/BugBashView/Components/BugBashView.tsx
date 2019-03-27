@@ -117,9 +117,9 @@ export function BugBashView(props: IBugBashViewProps) {
             modules={[
                 getBugBashesModule(),
                 getBugBashItemsModule(),
-                getBugBashViewModule(props.bugBashItemId),
+                getBugBashViewModule(),
                 getBugBashEditorPortalModule(),
-                getBugBashItemEditorPortalModule(),
+                getBugBashItemEditorPortalModule(props.bugBashItemId),
                 getKeyValuePairModule()
             ]}
             cleanOnUnmount={true}

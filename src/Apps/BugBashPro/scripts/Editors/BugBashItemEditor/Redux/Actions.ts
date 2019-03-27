@@ -2,8 +2,8 @@ import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const BugBashItemEditorActions = {
-    requestDraftInitialize: (bugBash: IBugBash, bugBashItemId: string | undefined, useCached?: boolean) =>
-        createAction(BugBashItemEditorActionTypes.RequestDraftInitialize, { bugBash, bugBashItemId, useCached }),
+    requestDraftInitialize: (bugBash: IBugBash, bugBashItemId: string | undefined, readFromCache: boolean) =>
+        createAction(BugBashItemEditorActionTypes.RequestDraftInitialize, { bugBash, bugBashItemId, readFromCache }),
     draftInitializeFailed: (bugBash: IBugBash, bugBashItemId: string, error: string) =>
         createAction(BugBashItemEditorActionTypes.DraftInitializeFailed, { bugBash, bugBashItemId, error }),
     initializeDraft: (draftBugBashItem: IBugBashItem) => createAction(BugBashItemEditorActionTypes.InitializeDraft, draftBugBashItem),
@@ -16,8 +16,8 @@ export const BugBashItemEditorActions = {
     requestDraftAccept: (bugBash: IBugBash, bugBashItemId: string | undefined) =>
         createAction(BugBashItemEditorActionTypes.RequestDraftAccept, { bugBash, bugBashItemId }),
 
-    requestPortalClose: (bugBash: IBugBash, bugBashItem: IBugBashItem) =>
-        createAction(BugBashItemEditorActionTypes.RequestPortalClose, { bugBash, bugBashItem })
+    requestDismiss: (bugBash: IBugBash, bugBashItem: IBugBashItem) =>
+        createAction(BugBashItemEditorActionTypes.RequestDismiss, { bugBash, bugBashItem })
 };
 
 export const enum BugBashItemEditorActionTypes {
@@ -29,7 +29,7 @@ export const enum BugBashItemEditorActionTypes {
     RequestDraftSave = "BugBashItemEditor/RequestDraftSave",
     DraftSaveSucceeded = "BugBashItemEditor/DraftSaveSucceeded",
     RequestDraftAccept = "BugBashItemEditor/RequestDraftAccept",
-    RequestPortalClose = "BugBashItemEditor/RequestPortalClose"
+    RequestDismiss = "BugBashItemEditor/RequestDismiss"
 }
 
 export type BugBashItemEditorActions = ActionsUnion<typeof BugBashItemEditorActions>;

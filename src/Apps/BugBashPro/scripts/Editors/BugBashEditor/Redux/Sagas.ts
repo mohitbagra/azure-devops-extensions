@@ -1,11 +1,8 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { BugBashesActions, BugBashesActionTypes, getBugBash } from "BugBashPro/Shared/Redux/BugBashes";
 import { KeyValuePairActions } from "Common/Notifications/Redux";
 import { ActionsOfType } from "Common/Redux";
-import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { all, call, put, select, take, takeEvery } from "redux-saga/effects";
@@ -23,13 +20,13 @@ export function* bugBashEditorSaga(): SagaIterator {
 }
 
 function* requestDraftInitialize(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftInitialize>): SagaIterator {
-    const { bugBashId, useCached } = action.payload;
+    const { bugBashId, readFromCache } = action.payload;
 
     if (!bugBashId) {
         yield put(BugBashEditorActions.initializeDraft({ ...getNewBugBashInstance() }));
     } else {
         const existingBugBash: IBugBash | undefined = yield select(getBugBash, bugBashId);
-        if (existingBugBash && useCached) {
+        if (existingBugBash && readFromCache) {
             yield put(BugBashEditorActions.initializeDraft(existingBugBash));
         } else {
             yield put(BugBashesActions.bugBashLoadRequested(bugBashId));
@@ -90,16 +87,7 @@ function* requestDraftCreate(draftBugBash: IBugBash) {
 
     if (itemCreatedAction.type === BugBashesActionTypes.BugBashCreated) {
         const createdBugBash = itemCreatedAction.payload;
-        yield call(addToast, {
-            message: Resources.BugBashCreatedMessage,
-            callToAction: Resources.View,
-            duration: 5000,
-            forceOverrideExisting: true,
-            onCallToActionClick: () => {
-                navigateToBugBashItemsList(createdBugBash.id!);
-            }
-        });
-        yield put(BugBashEditorActions.requestPortalClose());
+        yield put(BugBashEditorActions.requestDismiss(createdBugBash.id!));
     }
 }
 

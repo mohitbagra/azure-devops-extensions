@@ -22,13 +22,13 @@ export function* bugBashItemEditorSaga(): SagaIterator {
 }
 
 function* requestDraftInitialize(action: ActionsOfType<BugBashItemEditorActions, BugBashItemEditorActionTypes.RequestDraftInitialize>): SagaIterator {
-    const { bugBash, bugBashItemId, useCached } = action.payload;
+    const { bugBash, bugBashItemId, readFromCache } = action.payload;
 
     if (!bugBashItemId) {
         yield put(BugBashItemEditorActions.initializeDraft({ ...getNewBugBashItemInstance(bugBash.id!, bugBash.defaultTeam) }));
     } else {
         const existingBugBashItem: IBugBashItem | undefined = yield select(getBugBashItem, bugBashItemId);
-        if (existingBugBashItem && useCached) {
+        if (existingBugBashItem && readFromCache) {
             yield put(BugBashItemEditorActions.initializeDraft(existingBugBashItem));
         } else {
             yield put(BugBashItemsActions.bugBashItemLoadRequested(bugBash.id!, bugBashItemId));
@@ -105,7 +105,7 @@ function* requestDraftCreate(bugBash: IBugBash, draftBugBashItem: IBugBashItem, 
             yield put(CommentActions.commentCreateRequested(createdBugBashItem.id!, draftComment));
             yield race([take(CommentActionTypes.CommentCreated), take(CommentActionTypes.CommentCreateFailed)]);
         }
-        yield put(BugBashItemEditorActions.requestPortalClose(bugBash, createdBugBashItem));
+        yield put(BugBashItemEditorActions.requestDismiss(bugBash, createdBugBashItem));
     }
 }
 
@@ -172,7 +172,7 @@ function* requestDraftAccept(action: ActionsOfType<BugBashItemEditorActions, Bug
 
         if (itemUpdatedAction.type === BugBashItemsActionTypes.BugBashItemUpdated) {
             const { bugBashItem: acceptedBugBashItem } = itemUpdatedAction.payload;
-            yield put(BugBashItemEditorActions.requestPortalClose(bugBash, acceptedBugBashItem));
+            yield put(BugBashItemEditorActions.requestDismiss(bugBash, acceptedBugBashItem));
         }
     }
 }

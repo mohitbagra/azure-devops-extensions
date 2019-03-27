@@ -8,11 +8,13 @@ import {
     getEditBugBashItemBugBash,
     getEditBugBashItemId,
     IBugBashItemEditorPortalAwareState,
-    isBugBashItemEditorPortalOpen
+    isBugBashItemEditorPortalOpen,
+    shouldReadFromCache
 } from "../Redux";
 
 interface IDynamicBugBashItemEditorPortalStateProps {
     panelOpen: boolean;
+    readFromCache: boolean;
     bugBash?: IBugBash;
     bugBashItemId?: string;
 }
@@ -21,7 +23,8 @@ function mapStateToProps(state: IBugBashItemEditorPortalAwareState): IDynamicBug
     return {
         panelOpen: isBugBashItemEditorPortalOpen(state),
         bugBashItemId: getEditBugBashItemId(state),
-        bugBash: getEditBugBashItemBugBash(state)
+        bugBash: getEditBugBashItemBugBash(state),
+        readFromCache: shouldReadFromCache(state)
     };
 }
 
@@ -30,12 +33,12 @@ const Actions = {
 };
 
 export function DynamicBugBashItemEditorPortal() {
-    const { panelOpen, bugBashItemId, bugBash } = useMappedState(mapStateToProps);
+    const { panelOpen, bugBashItemId, bugBash, readFromCache } = useMappedState(mapStateToProps);
     const { dismissPortal } = useActionCreators(Actions);
 
     if (!panelOpen || !bugBash) {
         return null;
     }
 
-    return <BugBashItemEditorPanel bugBash={bugBash} bugBashItemId={bugBashItemId} onDismiss={dismissPortal} />;
+    return <BugBashItemEditorPanel bugBash={bugBash} bugBashItemId={bugBashItemId} onDismiss={dismissPortal} readFromCache={readFromCache} />;
 }

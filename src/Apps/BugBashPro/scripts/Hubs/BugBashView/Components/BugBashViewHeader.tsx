@@ -38,14 +38,15 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     ...BugBashViewHeaderCommands.new,
                     disabled: isLoading,
                     onActivate: () => {
-                        openNewBugBashItemPanel(bugBash, undefined);
+                        openNewBugBashItemPanel(bugBash, undefined, { readFromCache: false });
                     }
                 },
                 {
                     ...BugBashViewHeaderCommands.edit,
                     disabled: isLoading,
                     onActivate: () => {
-                        openBugBashEditorPanel(bugBash.id);
+                        // dont refresh bug bash from server when editing from inside of bug bash view
+                        openBugBashEditorPanel(bugBash.id, { readFromCache: true });
                     }
                 },
                 {

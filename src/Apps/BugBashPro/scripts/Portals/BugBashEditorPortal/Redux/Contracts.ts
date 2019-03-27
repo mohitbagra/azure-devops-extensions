@@ -4,9 +4,11 @@ export interface IBugBashEditorPortalAwareState {
 
 export interface IBugBashEditorPortalState {
     portalOpen: boolean;
+    readFromCache: boolean;
     bugBashId?: string;
 }
 
 export const defaultBugBashEditorPortalState: IBugBashEditorPortalState = {
-    portalOpen: false
+    portalOpen: false,
+    readFromCache: true
 };

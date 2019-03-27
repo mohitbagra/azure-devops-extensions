@@ -19,3 +19,8 @@ export const getEditBugBashItemBugBash = createSelector(
     getBugBashItemEditorPortalState,
     state => state && state.bugBash
 );
+
+export const shouldReadFromCache = createSelector(
+    getBugBashItemEditorPortalState,
+    state => !!(state && state.readFromCache)
+);

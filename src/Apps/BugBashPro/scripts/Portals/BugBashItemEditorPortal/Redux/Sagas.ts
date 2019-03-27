@@ -1,23 +1,50 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { BugBashItemEditorActions, BugBashItemEditorActionTypes } from "BugBashPro/Editors/BugBashItemEditor/Redux/Actions";
 import { Resources } from "BugBashPro/Resources";
+import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
-import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
+import { BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
+import { getBugBash } from "BugBashPro/Shared/Redux/BugBashes/Selectors";
+import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
+import { getBugBashItem } from "BugBashPro/Shared/Redux/BugBashItems/Selectors";
 import { ActionsOfType } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { openWorkItem } from "Common/ServiceWrappers/WorkItemNavigationService";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import { Channel, channel, SagaIterator } from "redux-saga";
-import { call, delay, put, race, take, takeEvery } from "redux-saga/effects";
+import { call, delay, put, race, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashItemEditorPortalActions, BugBashItemEditorPortalActionTypes } from "./Actions";
 
 export function* bugBashItemEditorPortalSaga(): SagaIterator {
-    yield takeEvery(BugBashItemEditorActionTypes.RequestPortalClose, portalCloseRequested);
+    yield takeEvery(BugBashItemEditorPortalActionTypes.Initialize, initializePortal);
     yield takeEvery(BugBashItemEditorPortalActionTypes.OpenPortal, openPortalRequested);
+
+    yield takeEvery(BugBashItemEditorActionTypes.RequestDismiss, dismissPortal);
 }
 
-function* portalCloseRequested(action: ActionsOfType<BugBashItemEditorActions, BugBashItemEditorActionTypes.RequestPortalClose>) {
+function* initializePortal(action: ActionsOfType<BugBashItemEditorPortalActions, BugBashItemEditorPortalActionTypes.Initialize>) {
+    const initialBugBashItemId = action.payload;
+    if (initialBugBashItemId) {
+        const { bugBashItemsLoaded } = yield race({
+            bugBashItemsLoaded: take(BugBashItemsActionTypes.BugBashItemsLoaded),
+            bugBashLoadFailed: take(BugBashesActionTypes.BugBashLoadFailed)
+        });
+
+        if (bugBashItemsLoaded) {
+            const bugBashItem: IBugBashItem | undefined = yield select(getBugBashItem, initialBugBashItemId);
+            if (bugBashItem) {
+                const bugBashId = bugBashItem.bugBashId;
+                const bugBash: IBugBash | undefined = yield select(getBugBash, bugBashId);
+                if (bugBash) {
+                    yield put(BugBashItemEditorPortalActions.openPortal(bugBash, bugBashItem, { readFromCache: true }));
+                }
+            }
+        }
+    }
+}
+
+function* dismissPortal(action: ActionsOfType<BugBashItemEditorActions, BugBashItemEditorActionTypes.RequestDismiss>) {
     const { bugBash, bugBashItem } = action.payload;
 
     yield put(BugBashItemEditorPortalActions.dismissPortal());
@@ -36,7 +63,7 @@ function* portalCloseRequested(action: ActionsOfType<BugBashItemEditorActions, B
     } else {
         const callbackChannel: Channel<BugBashItemEditorPortalActions> = yield call(channel);
         const callback = () => {
-            callbackChannel.put(BugBashItemEditorPortalActions.openPortal(bugBash, bugBashItem));
+            callbackChannel.put(BugBashItemEditorPortalActions.openPortal(bugBash, bugBashItem, { readFromCache: true }));
         };
 
         yield call(addToast, {

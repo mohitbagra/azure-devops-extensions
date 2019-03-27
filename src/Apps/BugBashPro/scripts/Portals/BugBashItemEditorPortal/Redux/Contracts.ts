@@ -6,10 +6,12 @@ export interface IBugBashItemEditorPortalAwareState {
 
 export interface IBugBashItemEditorPortalState {
     portalOpen: boolean;
+    readFromCache: boolean;
     bugBash?: IBugBash;
     bugBashItemId?: string;
 }
 
 export const defaultBugBashItemEditorPortalState: IBugBashItemEditorPortalState = {
-    portalOpen: false
+    portalOpen: false,
+    readFromCache: true
 };

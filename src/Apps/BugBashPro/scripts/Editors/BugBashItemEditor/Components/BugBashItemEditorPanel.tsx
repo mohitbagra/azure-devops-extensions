@@ -48,6 +48,7 @@ import { CommentsList } from "./CommentsList";
 interface IBugBashItemEditorPanelOwnProps {
     bugBash: IBugBash;
     bugBashItemId?: string;
+    readFromCache: boolean;
     onDismiss: () => void;
 }
 
@@ -69,7 +70,7 @@ const Actions = {
 };
 
 function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) {
-    const { onDismiss, bugBashItemId, bugBash } = props;
+    const { onDismiss, bugBashItemId, bugBash, readFromCache } = props;
     const mapStateToProps = React.useCallback(
         (state: IBugBashItemEditorAwareState & ITeamAwareState): IBugBashItemEditorPanelStateProps => {
             return {
@@ -91,7 +92,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
 
     React.useEffect(() => {
         if (!draftBugBashItem) {
-            requestDraftInitialize(bugBash, bugBashItemId);
+            requestDraftInitialize(bugBash, bugBashItemId, readFromCache);
         }
     }, [bugBashItemId]);
 

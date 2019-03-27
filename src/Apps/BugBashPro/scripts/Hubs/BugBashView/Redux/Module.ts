@@ -5,7 +5,7 @@ import { IBugBashViewAwareState } from "./Contracts";
 import { bugBashViewReducer } from "./Reducers";
 import { bugBashViewSaga } from "./Sagas";
 
-export function getBugBashViewModule(initialBugBashItemId: string | undefined): ISagaModule<IBugBashViewAwareState> {
+export function getBugBashViewModule(): ISagaModule<IBugBashViewAwareState> {
     const reducerMap: ReducersMapObject<IBugBashViewAwareState, BugBashViewActions> = {
         bugBashViewState: bugBashViewReducer
     };
@@ -13,7 +13,7 @@ export function getBugBashViewModule(initialBugBashItemId: string | undefined): 
     return {
         id: "bugBashView",
         reducerMap,
-        initialActions: [BugBashViewActions.initialize(initialBugBashItemId)],
+        initialActions: [BugBashViewActions.initialize()],
         sagas: [bugBashViewSaga]
     };
 }

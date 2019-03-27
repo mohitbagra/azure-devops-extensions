@@ -1,21 +1,14 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
-import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux/Actions";
-import { IBugBash, IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
-import { BugBashesActions, BugBashesActionTypes, getBugBash } from "BugBashPro/Shared/Redux/BugBashes";
-import {
-    BugBashItemsActions,
-    BugBashItemsActionTypes,
-    getAllBugBashItems,
-    getBugBashItem,
-    getResolvedWorkItemsMap
-} from "BugBashPro/Shared/Redux/BugBashItems";
+import { IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
+import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes";
+import { BugBashItemsActions, BugBashItemsActionTypes, getAllBugBashItems, getResolvedWorkItemsMap } from "BugBashPro/Shared/Redux/BugBashItems";
 import { getTeamsMap } from "Common/AzDev/Teams/Redux/Selectors";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { put, race, select, take, takeEvery } from "redux-saga/effects";
+import { put, select, takeEvery } from "redux-saga/effects";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { getBugBashItemsFilterData, getFilteredBugBashItems } from "../Helpers";
 import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";
@@ -23,7 +16,6 @@ import { BugBashViewMode } from "./Contracts";
 import { getBugBashItemsFilterState, getBugBashItemsSortState, getBugBashViewMode } from "./Selectors";
 
 export function* bugBashViewSaga(): SagaIterator {
-    yield takeEvery(BugBashViewActionTypes.Initialize, initializeView);
     yield takeEvery(BugBashViewActionTypes.SetViewMode, setViewMode);
     yield takeEvery(BugBashViewActionTypes.ApplyFilter, applyFilter);
     yield takeEvery(BugBashViewActionTypes.ApplySort, applySort);
@@ -38,27 +30,6 @@ export function* bugBashViewSaga(): SagaIterator {
     yield takeEvery(BugBashItemsActionTypes.BugBashItemDeleted, bugBashItemLoadedOrCreatedOrUpdatedOrDeleted);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemCreated, bugBashItemLoadedOrCreatedOrUpdatedOrDeleted);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemUpdated, bugBashItemLoadedOrCreatedOrUpdatedOrDeleted);
-}
-
-function* initializeView(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.Initialize>) {
-    const initialBugBashItemId = action.payload;
-    if (initialBugBashItemId) {
-        const { bugBashItemsLoaded } = yield race({
-            bugBashItemsLoaded: take(BugBashItemsActionTypes.BugBashItemsLoaded),
-            bugBashLoadFailed: take(BugBashesActionTypes.BugBashLoadFailed)
-        });
-
-        if (bugBashItemsLoaded) {
-            const bugBashItem: IBugBashItem | undefined = yield select(getBugBashItem, initialBugBashItemId);
-            if (bugBashItem) {
-                const bugBashId = bugBashItem.bugBashId;
-                const bugBash: IBugBash | undefined = yield select(getBugBash, bugBashId);
-                if (bugBash) {
-                    yield put(BugBashItemEditorPortalActions.openPortal(bugBash, bugBashItem));
-                }
-            }
-        }
-    }
 }
 
 function* bugBashLoaded(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashLoaded | BugBashesActionTypes.BugBashUpdated>) {

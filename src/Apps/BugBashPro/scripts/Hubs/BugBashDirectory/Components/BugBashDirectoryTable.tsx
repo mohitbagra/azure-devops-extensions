@@ -71,7 +71,7 @@ function getColumns(
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
     onDelete: (bugBashId: string) => void,
-    onEdit: (bugBashId: string) => void
+    onEdit: (bugBashId: string, options: { readFromCache: boolean }) => void
 ): ITableColumn<IBugBash>[] {
     return [
         {
@@ -156,7 +156,8 @@ function getColumns(
                         id: "edit",
                         text: Resources.Edit,
                         onActivate: () => {
-                            onEdit(bugBash.id!);
+                            // refresh bug bash from server before edit
+                            onEdit(bugBash.id!, { readFromCache: false });
                         },
                         iconProps: { iconName: "Edit", className: "communication-foreground" }
                     },
