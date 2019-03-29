@@ -148,7 +148,7 @@ function* deleteBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 }
 
 function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemAcceptRequested>): SagaIterator {
-    const { bugBashItem, bugBash } = action.payload;
+    const { bugBashItem, bugBash, acceptingDuringCreation } = action.payload;
 
     if (isNullOrWhiteSpace(bugBashItem.bugBashId)) {
         throw new Error("This bug bash item is not associated with any bug bash");
@@ -178,8 +178,10 @@ function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
                 // fill in field values
                 const fieldValues = getAcceptFieldValues(bugBash, bugBashItem, acceptTemplate, teamFieldValue);
 
-                // do an empty update first to make sure we are on the latest revision.
-                updatedBugBashItem = yield call(updateBugBashItemAsync, bugBashItem.bugBashId, bugBashItem);
+                if (!acceptingDuringCreation) {
+                    // do an empty update first to make sure we are on the latest revision.
+                    updatedBugBashItem = yield call(updateBugBashItemAsync, bugBashItem.bugBashId, bugBashItem);
+                }
 
                 // attempt to save work item
                 const acceptedWorkItem = yield call(createWorkItemAsync, bugBash.workItemType, fieldValues);
@@ -208,7 +210,7 @@ function* loadTemplate(templateId: string, teamId: string) {
     const template: IWorkItemTemplate | undefined = yield select(getTemplateState, templateId);
 
     if (template && template.status === LoadStatus.Ready && !template.error) {
-        return yield template;
+        return yield template.template;
     } else if (template && template.error) {
         throw new Error(template.error);
     } else {

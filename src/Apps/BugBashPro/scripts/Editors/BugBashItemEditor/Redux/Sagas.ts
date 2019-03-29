@@ -105,7 +105,11 @@ function* requestDraftCreate(bugBash: IBugBash, draftBugBashItem: IBugBashItem, 
             yield put(CommentActions.commentCreateRequested(createdBugBashItem.id!, draftComment));
             yield race([take(CommentActionTypes.CommentCreated), take(CommentActionTypes.CommentCreateFailed)]);
         }
-        yield put(BugBashItemEditorActions.requestDismiss(bugBash, createdBugBashItem));
+        if (bugBash.autoAccept) {
+            yield call(acceptBugBashItem, bugBash, createdBugBashItem, true);
+        } else {
+            yield put(BugBashItemEditorActions.requestDismiss(bugBash, createdBugBashItem));
+        }
     }
 }
 
@@ -151,29 +155,7 @@ function* requestDraftAccept(action: ActionsOfType<BugBashItemEditorActions, Bug
     ]);
 
     if (isValid && !isDirty && !isSaving) {
-        yield put(BugBashItemsActions.bugBashItemAcceptRequested(bugBash, draftBugBashItem));
-
-        const itemUpdatedAction: ActionsOfType<
-            BugBashItemsActions,
-            BugBashItemsActionTypes.BugBashItemUpdated | BugBashItemsActionTypes.BugBashItemUpdateFailed
-        > = yield take(
-            (
-                action: ActionsOfType<
-                    BugBashItemsActions,
-                    BugBashItemsActionTypes.BugBashItemUpdated | BugBashItemsActionTypes.BugBashItemUpdateFailed
-                >
-            ): boolean => {
-                return (
-                    (action.type === BugBashItemsActionTypes.BugBashItemUpdated || action.type === BugBashItemsActionTypes.BugBashItemUpdateFailed) &&
-                    equals(action.payload.bugBashItem.id!, draftBugBashItem.id, true)
-                );
-            }
-        );
-
-        if (itemUpdatedAction.type === BugBashItemsActionTypes.BugBashItemUpdated) {
-            const { bugBashItem: acceptedBugBashItem } = itemUpdatedAction.payload;
-            yield put(BugBashItemEditorActions.requestDismiss(bugBash, acceptedBugBashItem));
-        }
+        yield call(acceptBugBashItem, bugBash, draftBugBashItem, false);
     }
 }
 
@@ -182,4 +164,27 @@ function* bugBashItemCreateAndUpdateFailed(
 ): SagaIterator {
     const { error } = action.payload;
     yield put(KeyValuePairActions.pushEntry(BugBashItemEditorErrorKey, error));
+}
+
+function* acceptBugBashItem(bugBash: IBugBash, bugBashItem: IBugBashItem, acceptingDuringCreation: boolean): SagaIterator {
+    yield put(BugBashItemsActions.bugBashItemAcceptRequested(bugBash, bugBashItem, acceptingDuringCreation));
+
+    const itemUpdatedAction: ActionsOfType<
+        BugBashItemsActions,
+        BugBashItemsActionTypes.BugBashItemUpdated | BugBashItemsActionTypes.BugBashItemUpdateFailed
+    > = yield take(
+        (
+            action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemUpdated | BugBashItemsActionTypes.BugBashItemUpdateFailed>
+        ): boolean => {
+            return (
+                (action.type === BugBashItemsActionTypes.BugBashItemUpdated || action.type === BugBashItemsActionTypes.BugBashItemUpdateFailed) &&
+                equals(action.payload.bugBashItem.id!, bugBashItem.id!, true)
+            );
+        }
+    );
+
+    if (itemUpdatedAction.type === BugBashItemsActionTypes.BugBashItemUpdated) {
+        const { bugBashItem: acceptedBugBashItem } = itemUpdatedAction.payload;
+        yield put(BugBashItemEditorActions.requestDismiss(bugBash, acceptedBugBashItem));
+    }
 }
