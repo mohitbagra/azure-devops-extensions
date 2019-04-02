@@ -14,7 +14,6 @@ import { WorkItemTitleView } from "Common/AzDev/WorkItemTitleView";
 import { WorkItemTypePicker } from "Common/AzDev/WorkItemTypes/Components/WorkItemTypePicker";
 import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
-import { FileUploadDialog } from "Common/Components/FileUploadDialog";
 import { IdentityView } from "Common/Components/IdentityView";
 import { InfoLabel } from "Common/Components/InfoLabel";
 import { InputError } from "Common/Components/InputError";
@@ -50,7 +49,6 @@ const navKeys: { [key: string]: () => JSX.Element } = {
         </AsyncComponent>
     ),
     DateTimePicker: () => <DateTimePicker value={new Date()} onDateChange={console.log} />,
-    FileUploadDialog: () => <FileUploadDialog />,
     IdentityView: () => <IdentityView value={getCurrentUser()} />,
     InfoLabel: () => (
         <div>

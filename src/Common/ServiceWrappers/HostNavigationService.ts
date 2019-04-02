@@ -51,6 +51,11 @@ export async function getHash(): Promise<{ [key: string]: string }> {
     return parseHashString(currentHash);
 }
 
+export async function setDocumentTitle(title: string) {
+    const service = await getHostNavigationService();
+    service.setDocumentTitle(title);
+}
+
 export async function openNewWindow(url: string, features?: string) {
     const service = await getHostNavigationService();
     service.openNewWindow(url, features || "");

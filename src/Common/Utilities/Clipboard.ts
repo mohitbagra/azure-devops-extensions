@@ -45,7 +45,7 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
         success = true;
     } else {
         let range;
-        let sel;
+        let sel: Selection | null;
         // Create an element in the dom with the content to be copied.
         const copyContent = document.createElement("div");
         const copyDivId = "copyDiv";
@@ -75,10 +75,15 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
 
                 range = document.createRange();
                 sel = window.getSelection();
-                sel.removeAllRanges();
+
+                if (sel) {
+                    sel.removeAllRanges();
+                }
 
                 range.selectNodeContents(copyContent);
-                sel.addRange(range);
+                if (sel) {
+                    sel.addRange(range);
+                }
                 success = (document as any).execCommand("copy");
             }
         } finally {
