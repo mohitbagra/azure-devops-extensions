@@ -1,8 +1,12 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
+import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
+import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
+import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { BugBashesActions, BugBashesActionTypes, getBugBash } from "BugBashPro/Shared/Redux/BugBashes";
 import { KeyValuePairActions } from "Common/Notifications/Redux";
 import { ActionsOfType } from "Common/Redux";
+import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { all, call, put, select, take, takeEvery } from "redux-saga/effects";
@@ -87,7 +91,17 @@ function* requestDraftCreate(draftBugBash: IBugBash) {
 
     if (itemCreatedAction.type === BugBashesActionTypes.BugBashCreated) {
         const createdBugBash = itemCreatedAction.payload;
-        yield put(BugBashEditorActions.requestDismiss(createdBugBash.id!));
+        yield put(BugBashPortalActions.dismissPortal());
+
+        yield call(addToast, {
+            message: Resources.BugBashCreatedMessage,
+            callToAction: Resources.View,
+            duration: 5000,
+            forceOverrideExisting: true,
+            onCallToActionClick: () => {
+                navigateToBugBashItemsList(createdBugBash.id!);
+            }
+        });
     }
 }
 

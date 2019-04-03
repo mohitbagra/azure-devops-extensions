@@ -7,7 +7,8 @@ import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBas
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux";
-import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
+import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
+import { IBugBashItemEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
@@ -23,27 +24,37 @@ import * as React from "react";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
 const Actions = {
-    openEditorPanel: BugBashItemEditorPortalActions.openPortal,
+    openPortal: BugBashPortalActions.openPortal,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
 export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
-    const { bugBash, filteredBugBashItems, workItemsMap } = props;
-    const { openEditorPanel, deleteBugBashItem } = useActionCreators(Actions);
+    const { bugBashId, filteredBugBashItems, workItemsMap } = props;
+    const { openPortal, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
     const selectionRef = React.useRef(new ListSelection(true));
     const columnSelect = React.useMemo(() => new ColumnSelect(), [viewMode]);
+    const onEditBugBashItem = React.useCallback(
+        (bugBashItemId: string) => {
+            openPortal(PortalType.BugBashItemEdit, {
+                bugBashId: bugBashId,
+                bugBashItemId: bugBashItemId,
+                readFromCache: false
+            } as IBugBashItemEditPortalProps);
+        },
+        [bugBashId]
+    );
+
     const columnMore = React.useMemo(
         () =>
             getContextMenuItems(
-                bugBash.id!,
                 filteredBugBashItems,
                 viewMode === BugBashViewMode.Accepted ? selectionRef.current : undefined,
-                openEditorPanel,
+                onEditBugBashItem,
                 deleteBugBashItem
             ),
-        [bugBash, filteredBugBashItems, viewMode]
+        [filteredBugBashItems, viewMode]
     );
 
     const sortingBehavior = React.useMemo(
@@ -62,20 +73,17 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
     );
 
     const columns = React.useMemo(() => {
-        const columns = getColumns(bugBash.id!, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel);
+        const columns = getColumns(viewMode, workItemsMap, sortColumn, isSortedDescending, onEditBugBashItem);
         if (viewMode === BugBashViewMode.Accepted) {
             columns.unshift(columnSelect);
         }
         columns.push(columnMore);
         return columns;
-    }, [bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending]);
+    }, [viewMode, workItemsMap, sortColumn, isSortedDescending]);
 
-    const onRowActivate = React.useCallback(
-        (_event: React.SyntheticEvent<HTMLElement>, tableRow: ITableRow<IBugBashItem>) => {
-            openEditorPanel(bugBash.id!, tableRow.data.id, { readFromCache: false });
-        },
-        [bugBash]
-    );
+    const onRowActivate = React.useCallback((_event: React.SyntheticEvent<HTMLElement>, tableRow: ITableRow<IBugBashItem>) => {
+        onEditBugBashItem(tableRow.data.id!);
+    }, []);
 
     return (
         <Table<IBugBashItem>
@@ -93,12 +101,11 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
 }
 
 export function getColumns(
-    bugBashId: string,
     viewMode: BugBashViewMode,
     workItemsMap: { [workItemId: number]: WorkItem } | undefined,
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
-    onEdit: (bugBashId: string, bugBashItemId: string | undefined, options?: { readFromCache: boolean }) => void
+    onEditBugBashItem: (bugBashItemId: string) => void
 ): ITableColumn<IBugBashItem>[] {
     let columns: ITableColumn<IBugBashItem>[];
     switch (viewMode) {
@@ -138,7 +145,7 @@ export function getColumns(
                 (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
                     if (!e.ctrlKey) {
                         e.preventDefault();
-                        onEdit(bugBashId, bugBashItem.id, { readFromCache: false });
+                        onEditBugBashItem(bugBashItem.id!);
                     }
                 }
             );
@@ -149,11 +156,10 @@ export function getColumns(
 }
 
 function getContextMenuItems(
-    bugBashId: string,
     bugBashItems: IBugBashItem[],
     selection: ListSelection | undefined,
-    onEdit: (bugBashId: string, bugBashItemId: string | undefined, options?: { readFromCache: boolean }) => void,
-    onDelete: (bugBashId: string, bugBashItemId: string) => void
+    onEditBugBashItem: (bugBashItemId: string) => void,
+    onDeleteBugBashItem: (bugBashId: string, bugBashItemId: string) => void
 ): ColumnMore<IBugBashItem> {
     return new ColumnMore((bugBashItem: IBugBashItem) => {
         const menuItems: IMenuItem[] = [];
@@ -163,7 +169,7 @@ function getContextMenuItems(
                 id: "edit",
                 text: Resources.Edit,
                 onActivate: () => {
-                    onEdit(bugBashId, bugBashItem.id, { readFromCache: false });
+                    onEditBugBashItem(bugBashItem.id!);
                 },
                 iconProps: { iconName: "Edit", className: "communication-foreground" }
             });
@@ -192,7 +198,7 @@ function getContextMenuItems(
                 onActivate: () => {
                     confirmAction(Resources.ConfirmDialogTitle, Resources.DeleteBugBashItemConfirmation, (ok: boolean) => {
                         if (ok) {
-                            onDelete(bugBashItem.bugBashId, bugBashItem.id!);
+                            onDeleteBugBashItem(bugBashItem.bugBashId, bugBashItem.id!);
                         }
                     });
                 },

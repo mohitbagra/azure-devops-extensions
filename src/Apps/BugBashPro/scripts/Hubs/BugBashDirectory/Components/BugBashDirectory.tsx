@@ -1,14 +1,9 @@
 import { Card } from "azure-devops-ui/Card";
 import { Page } from "azure-devops-ui/Page";
 import { TabContent } from "azure-devops-ui/Tabs";
-import * as BugBashEditorPortal_Async from "BugBashPro/Portals/BugBashEditorPortal";
-import { getBugBashEditorPortalModule } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
-import * as SettingsEditorPortal_Async from "BugBashPro/Portals/BugBashSettingsEditorPortal";
-import { getBugBashSettingsPortalModule } from "BugBashPro/Portals/BugBashSettingsEditorPortal/Redux";
+import { BugBashPortal } from "BugBashPro/Portals/BugBashPortal";
 import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes";
-import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { emptyRenderer } from "Common/Components/Renderers";
 import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
 import { getKeyValuePairModule } from "Common/Notifications/Redux";
 import * as React from "react";
@@ -18,21 +13,14 @@ import { BugBashDirectoryHeader } from "./BugBashDirectoryHeader";
 import { BugBashDirectoryTable } from "./BugBashDirectoryTable";
 import { BugBashDirectoryTabs } from "./BugBashDirectoryTabs";
 
-const bugBashEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashEditorPortal");
-const settingsEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashSettingsEditorPortal");
-
 function BugBashDirectoryInternal(): JSX.Element {
     return (
         <Page className="bugbash-page flex-column flex-grow">
             <div className="flex-column flex-noshrink">
                 <ErrorMessageBox errorKey={DirectoryPageErrorKey} />
             </div>
-            <AsyncComponent loader={bugBashEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashEditorPortal_Async) => <m.BugBashEditorPortal />}
-            </AsyncComponent>
-            <AsyncComponent loader={settingsEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof SettingsEditorPortal_Async) => <m.SettingsPortal />}
-            </AsyncComponent>
+
+            <BugBashPortal />
             <BugBashDirectoryHeader />
             <BugBashDirectoryTabs />
             <TabContent>
@@ -48,16 +36,7 @@ function BugBashDirectoryInternal(): JSX.Element {
 
 export function BugBashDirectory() {
     return (
-        <DynamicModuleLoader
-            modules={[
-                getBugBashesModule(),
-                getBugBashDirectoryModule(),
-                getBugBashEditorPortalModule(),
-                getBugBashSettingsPortalModule(),
-                getKeyValuePairModule()
-            ]}
-            cleanOnUnmount={true}
-        >
+        <DynamicModuleLoader modules={[getBugBashesModule(), getBugBashDirectoryModule(), getKeyValuePairModule()]} cleanOnUnmount={true}>
             <BugBashDirectoryInternal />
         </DynamicModuleLoader>
     );

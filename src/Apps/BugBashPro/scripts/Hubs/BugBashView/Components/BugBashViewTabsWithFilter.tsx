@@ -17,6 +17,7 @@ import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { SelectionMode } from "office-ui-fabric-react/lib/utilities/selection/interfaces";
 import * as React from "react";
 import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
+import { useBugBash } from "../Hooks/useBugBash";
 import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
@@ -28,11 +29,16 @@ interface IBugBashViewTabsWithFilterProps extends IBugBashViewBaseProps {
 }
 
 export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps) {
-    const { bugBash, view } = props;
+    const { bugBashId, view } = props;
     const { teamsMap } = useTeams();
-    const { status, filterData } = useFilteredBugBashItems(bugBash.id!);
+    const { status, filterData } = useFilteredBugBashItems(bugBashId);
+    const { bugBash } = useBugBash(bugBashId);
     const { viewMode, setViewMode } = useBugBashViewMode();
     const { setFilter } = useBugBashItemsFilter();
+
+    if (!bugBash) {
+        throw new Error("Bug Bash is not initialized yet");
+    }
 
     const filterRef = React.useRef<Filter>(
         new Filter({
@@ -53,9 +59,9 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps
 
     const setSelectedTab = React.useCallback(
         (newTabId: string) => {
-            onTabSelect(newTabId, bugBash.id!);
+            onTabSelect(newTabId, bugBashId);
         },
-        [bugBash.id]
+        [bugBashId]
     );
 
     const getViewMenuItem = React.useCallback(

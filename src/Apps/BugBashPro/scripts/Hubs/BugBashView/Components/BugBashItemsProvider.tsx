@@ -15,8 +15,8 @@ interface IBugBashItemProviderProps extends IBugBashViewBaseProps {
 }
 
 export function BugBashItemProvider(props: IBugBashItemProviderProps) {
-    const { bugBash, view, children } = props;
-    const { filteredBugBashItems, workItemsMap, status, filterData } = useFilteredBugBashItems(bugBash.id!);
+    const { bugBashId, view, children } = props;
+    const { filteredBugBashItems, workItemsMap, status, filterData } = useFilteredBugBashItems(bugBashId);
     const { viewMode, setViewMode } = useBugBashViewMode();
 
     React.useEffect(() => {

@@ -1,7 +1,8 @@
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ZeroData } from "azure-devops-ui/ZeroData";
-import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
+import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
+import { IBugBashEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
@@ -21,17 +22,21 @@ import { useBugBashesSort } from "../Hooks/useBugBashesSort";
 import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";
 
 const Actions = {
-    openEditorPanel: BugBashEditorPortalActions.openPortal,
+    openPortal: BugBashPortalActions.openPortal,
     deleteBugBash: BugBashesActions.bugBashDeleteRequested
 };
 
 export function BugBashDirectoryTable() {
     const { sortColumn, isSortedDescending, applySort } = useBugBashesSort();
     const { filteredBugBashes, status } = useFilteredBugBashes();
-    const { openEditorPanel, deleteBugBash } = useActionCreators(Actions);
+    const { openPortal, deleteBugBash } = useActionCreators(Actions);
 
     const isLoading = status === LoadStatus.Loading || status === LoadStatus.NotLoaded;
-    const columns = React.useMemo(() => getColumns(sortColumn, isSortedDescending, deleteBugBash, openEditorPanel), [sortColumn, isSortedDescending]);
+    const onEditBugBash = React.useCallback((bugBashId: string) => {
+        openPortal(PortalType.BugBashEdit, { bugBashId: bugBashId, readFromCache: false } as IBugBashEditPortalProps);
+    }, []);
+
+    const columns = React.useMemo(() => getColumns(sortColumn, isSortedDescending, deleteBugBash, onEditBugBash), [sortColumn, isSortedDescending]);
     const sortingBehavior = React.useMemo(
         () =>
             new ColumnSorting<IBugBash>((proposedColumn: VSSUI_ITableColumn<IBugBash>, proposedSortOrder: SortOrder) => {
@@ -70,8 +75,8 @@ function getBugBashUrlPromise(bugBashId: string): () => Promise<string> {
 function getColumns(
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
-    onDelete: (bugBashId: string) => void,
-    onEdit: (bugBashId: string | undefined, options: { readFromCache: boolean }) => void
+    onDeleteBugBash: (bugBashId: string) => void,
+    onEditBugBash: (bugBashId: string) => void
 ): ITableColumn<IBugBash>[] {
     return [
         {
@@ -157,7 +162,7 @@ function getColumns(
                         text: Resources.Edit,
                         onActivate: () => {
                             // refresh bug bash from server before edit
-                            onEdit(bugBash.id, { readFromCache: false });
+                            onEditBugBash(bugBash.id!);
                         },
                         iconProps: { iconName: "Edit", className: "communication-foreground" }
                     },
@@ -167,7 +172,7 @@ function getColumns(
                         onActivate: () => {
                             confirmAction(Resources.ConfirmDialogTitle, Resources.DeleteBugBashConfirmation, (ok: boolean) => {
                                 if (ok) {
-                                    onDelete(bugBash.id!);
+                                    onDeleteBugBash(bugBash.id!);
                                 }
                             });
                         },

@@ -2,7 +2,8 @@ import "./BoardCard.scss";
 
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
-import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux/Actions";
+import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
+import { PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
@@ -17,7 +18,7 @@ import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 
 const Actions = {
-    openEditorPanel: BugBashItemEditorPortalActions.openPortal,
+    openPortal: BugBashPortalActions.openPortal,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
@@ -27,18 +28,18 @@ interface IBoardCardProps extends IBugBashViewBaseProps {
 }
 
 export function BoardCard(props: IBoardCardProps) {
-    const { bugBash, bugBashItem, acceptedWorkItem } = props;
-    const { openEditorPanel } = useActionCreators(Actions);
+    const { bugBashId, bugBashItem, acceptedWorkItem } = props;
+    const { openPortal } = useActionCreators(Actions);
     const isAccepted = isBugBashItemAccepted(bugBashItem) && acceptedWorkItem !== undefined;
 
     const onTitleClick = React.useCallback(
         (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
             if (!e.ctrlKey) {
                 e.preventDefault();
-                openEditorPanel(bugBash.id!, bugBashItem.id, { readFromCache: false });
+                openPortal(PortalType.BugBashItemEdit, { bugBashId: bugBashId, bugBashItemId: bugBashItem.id, readFromCache: false });
             }
         },
-        [bugBash, bugBashItem.id]
+        [bugBashId, bugBashItem.id]
     );
 
     return (

@@ -1,8 +1,8 @@
 import { Button } from "azure-devops-ui/Button";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { IStatusProps, Status, Statuses, StatusSize } from "azure-devops-ui/Status";
-import { BugBashEditorPortalActions } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
-import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
+import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
+import { IBugBashEditPortalProps, IBugBashItemEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { isBugBashCompleted, isBugBashInProgress } from "BugBashPro/Shared/Helpers";
@@ -12,19 +12,24 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { BugBashViewHeaderCommands } from "../Constants";
+import { useBugBash } from "../Hooks/useBugBash";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 import { IBugBashViewBaseProps } from "../Interfaces";
 
 const Actions = {
-    openBugBashEditorPanel: BugBashEditorPortalActions.openPortal,
-    openNewBugBashItemPanel: BugBashItemEditorPortalActions.openPortal,
+    openPortal: BugBashPortalActions.openPortal,
     loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
 export function BugBashViewHeader(props: IBugBashViewBaseProps) {
-    const { bugBash } = props;
-    const { status } = useFilteredBugBashItems(bugBash.id!);
-    const { openNewBugBashItemPanel, openBugBashEditorPanel, loadBugBashItems } = useActionCreators(Actions);
+    const { bugBashId } = props;
+    const { status } = useFilteredBugBashItems(bugBashId);
+    const { bugBash } = useBugBash(bugBashId);
+    const { openPortal, loadBugBashItems } = useActionCreators(Actions);
+
+    if (!bugBash) {
+        throw new Error("Bug Bash is not initialized yet");
+    }
 
     const renderHeaderTitle = React.useMemo(() => onRenderHeaderTitle(bugBash), [bugBash]);
     const isLoading = status !== LoadStatus.Ready;
@@ -38,7 +43,11 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     ...BugBashViewHeaderCommands.new,
                     disabled: isLoading,
                     onActivate: () => {
-                        openNewBugBashItemPanel(bugBash.id!, undefined);
+                        openPortal(PortalType.BugBashItemEdit, {
+                            bugBashId: bugBashId,
+                            bugBashItemId: undefined,
+                            readFromCache: true
+                        } as IBugBashItemEditPortalProps);
                     }
                 },
                 {
@@ -46,14 +55,14 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     disabled: isLoading,
                     onActivate: () => {
                         // dont refresh bug bash from server when editing from inside of bug bash view
-                        openBugBashEditorPanel(bugBash.id, { readFromCache: true });
+                        openPortal(PortalType.BugBashEdit, { bugBashId: bugBashId, readFromCache: true } as IBugBashEditPortalProps);
                     }
                 },
                 {
                     ...BugBashViewHeaderCommands.refresh,
                     disabled: isLoading,
                     onActivate: () => {
-                        loadBugBashItems(bugBash.id!);
+                        loadBugBashItems(bugBashId);
                     }
                 }
             ]}

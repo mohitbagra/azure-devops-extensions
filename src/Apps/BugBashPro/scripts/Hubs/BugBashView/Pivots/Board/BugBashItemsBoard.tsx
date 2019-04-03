@@ -8,7 +8,7 @@ import * as React from "react";
 import { BoardCard } from "./BoardCard";
 
 export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
-    const { bugBash, filteredBugBashItems, workItemsMap } = props;
+    const { bugBashId, filteredBugBashItems, workItemsMap } = props;
 
     const pendingItems = filteredBugBashItems.filter(b => isBugBashItemPending(b));
     const rejectedItems = filteredBugBashItems.filter(b => isBugBashItemRejected(b));
@@ -20,9 +20,9 @@ export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemPro
             if (isBugBashItemAccepted(bugBashItem) && workItemsMap) {
                 acceptedWorkItem = workItemsMap[bugBashItem.workItemId!];
             }
-            return <BoardCard key={bugBashItem.id} bugBashItem={bugBashItem} acceptedWorkItem={acceptedWorkItem} bugBash={bugBash} />;
+            return <BoardCard key={bugBashItem.id} bugBashItem={bugBashItem} acceptedWorkItem={acceptedWorkItem} bugBashId={bugBashId} />;
         },
-        [bugBash, workItemsMap]
+        [bugBashId, workItemsMap]
     );
 
     return (

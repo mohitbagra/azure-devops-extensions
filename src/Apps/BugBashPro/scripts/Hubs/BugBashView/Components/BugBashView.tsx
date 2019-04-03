@@ -8,10 +8,7 @@ import { ZeroData, ZeroDataActionType } from "azure-devops-ui/ZeroData";
 import * as BugBashItemsBoard_Async from "BugBashPro/Hubs/BugBashView/Pivots/Board";
 import * as BugBashItemsCharts_Async from "BugBashPro/Hubs/BugBashView/Pivots/Charts";
 import * as BugBashItemsTable_Async from "BugBashPro/Hubs/BugBashView/Pivots/List";
-import * as BugBashEditorPortal_Async from "BugBashPro/Portals/BugBashEditorPortal";
-import { getBugBashEditorPortalModule } from "BugBashPro/Portals/BugBashEditorPortal/Redux";
-import * as BugBashItemEditorPortal_Async from "BugBashPro/Portals/BugBashItemEditorPortal";
-import { getBugBashItemEditorPortalModule } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
+import { BugBashPortal } from "BugBashPro/Portals/BugBashPortal";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes";
@@ -19,7 +16,6 @@ import { getBugBashItemsModule } from "BugBashPro/Shared/Redux/BugBashItems";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
-import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
 import { getKeyValuePairModule } from "Common/Notifications/Redux/Module";
@@ -38,8 +34,6 @@ interface IBugBashViewProps {
     bugBashItemId?: string;
 }
 
-const bugBashEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashEditorPortal");
-const bugBashItemEditorPortalLoader = async () => import("BugBashPro/Portals/BugBashItemEditorPortal");
 const chartsViewLoader = async () => import("BugBashPro/Hubs/BugBashView/Pivots/Charts");
 const listViewLoader = async () => import("BugBashPro/Hubs/BugBashView/Pivots/List");
 const boardViewLoader = async () => import("BugBashPro/Hubs/BugBashView/Pivots/Board");
@@ -69,20 +63,15 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
             <div className="flex-column flex-noshrink">
                 <ErrorMessageBox errorKey={BugBashViewPageErrorKey} />
             </div>
-            <AsyncComponent loader={bugBashItemEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashItemEditorPortal_Async) => <m.BugBashItemEditorPortal />}
-            </AsyncComponent>
-            <AsyncComponent loader={bugBashEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashEditorPortal_Async) => <m.BugBashEditorPortal />}
-            </AsyncComponent>
-            <BugBashViewHeader bugBash={bugBash} />
-            <BugBashViewTabsWithFilter bugBash={bugBash} view={view} />
+            <BugBashPortal />
+            <BugBashViewHeader bugBashId={bugBashId} />
+            <BugBashViewTabsWithFilter bugBashId={bugBashId} view={view} />
             <TabContent>
                 <div className="bugbash-page-contents flex-grow flex-column">
                     <Card className="flex-grow bolt-card-no-vertical-padding flex-column bugbash-page-card" contentProps={{ contentPadding: false }}>
-                        <BugBashItemProvider bugBash={bugBash} view={view}>
+                        <BugBashItemProvider bugBashId={bugBashId} view={view}>
                             {(providerParams: IBugBashItemProviderParams) => {
-                                const innerViewProps = { ...providerParams, bugBash };
+                                const innerViewProps = { ...providerParams, bugBashId };
                                 return (
                                     <>
                                         <ConditionalChildren renderChildren={view === AppView.ACTION_LIST}>
@@ -114,14 +103,7 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
 export function BugBashView(props: IBugBashViewProps) {
     return (
         <DynamicModuleLoader
-            modules={[
-                getBugBashesModule(),
-                getBugBashItemsModule(),
-                getBugBashViewModule(),
-                getBugBashEditorPortalModule(),
-                getBugBashItemEditorPortalModule(props.bugBashId, props.bugBashItemId),
-                getKeyValuePairModule()
-            ]}
+            modules={[getBugBashesModule(), getBugBashItemsModule(), getBugBashViewModule(), getKeyValuePairModule()]}
             cleanOnUnmount={true}
         >
             <BugBashViewInternal {...props} />
