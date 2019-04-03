@@ -9,8 +9,9 @@ import { CustomHeader, HeaderTitleArea } from "azure-devops-ui/Header";
 import { CustomPanel, Panel, PanelCloseButton, PanelContent, PanelFooter } from "azure-devops-ui/Panel";
 import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { ZeroData } from "azure-devops-ui/ZeroData";
+import { useBugBash } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBash";
 import { Resources } from "BugBashPro/Resources";
-import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
+import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getCommentsModule } from "BugBashPro/Shared/Redux/Comments";
 import { getTeamFieldModule } from "Common/AzDev/TeamFields/Redux";
@@ -46,7 +47,7 @@ import { BugBashRichEditor } from "./BugBashRichEditor";
 import { CommentsList } from "./CommentsList";
 
 interface IBugBashItemEditorPanelOwnProps {
-    bugBash: IBugBash;
+    bugBashId: string;
     bugBashItemId?: string;
     readFromCache: boolean;
     onDismiss: () => void;
@@ -70,7 +71,7 @@ const Actions = {
 };
 
 function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) {
-    const { onDismiss, bugBashItemId, bugBash, readFromCache } = props;
+    const { onDismiss, bugBashItemId, bugBashId, readFromCache } = props;
     const mapStateToProps = React.useCallback(
         (state: IBugBashItemEditorAwareState & ITeamAwareState): IBugBashItemEditorPanelStateProps => {
             return {
@@ -86,6 +87,11 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
     );
     const { draftBugBashItem, isValid, isDirty, draftComment, isSaving, draftInitializeError } = useMappedState(mapStateToProps);
     const { requestDraftSave, updateDraft, updateDraftComment, requestDraftInitialize, requestDraftAccept } = useActionCreators(Actions);
+    const { bugBash } = useBugBash(bugBashId);
+
+    if (!bugBash) {
+        throw new Error(`BugBash ${bugBashId} has not been loaded yet`);
+    }
 
     const throttledOnDraftChanged = useThrottle(updateDraft, 200);
     const throttledOnDraftCommentChanged = useThrottle(updateDraftComment, 200);

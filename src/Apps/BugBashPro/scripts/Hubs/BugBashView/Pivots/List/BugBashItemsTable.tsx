@@ -9,7 +9,7 @@ import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hu
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux";
 import { BugBashItemEditorPortalActions } from "BugBashPro/Portals/BugBashItemEditorPortal/Redux";
 import { Resources } from "BugBashPro/Resources";
-import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
+import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems";
 import { ITableColumn, Table } from "Common/Components/Table";
@@ -37,7 +37,7 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
     const columnMore = React.useMemo(
         () =>
             getContextMenuItems(
-                bugBash,
+                bugBash.id!,
                 filteredBugBashItems,
                 viewMode === BugBashViewMode.Accepted ? selectionRef.current : undefined,
                 openEditorPanel,
@@ -62,7 +62,7 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
     );
 
     const columns = React.useMemo(() => {
-        const columns = getColumns(bugBash, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel);
+        const columns = getColumns(bugBash.id!, viewMode, workItemsMap, sortColumn, isSortedDescending, openEditorPanel);
         if (viewMode === BugBashViewMode.Accepted) {
             columns.unshift(columnSelect);
         }
@@ -72,7 +72,7 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
 
     const onRowActivate = React.useCallback(
         (_event: React.SyntheticEvent<HTMLElement>, tableRow: ITableRow<IBugBashItem>) => {
-            openEditorPanel(bugBash, tableRow.data, { readFromCache: false });
+            openEditorPanel(bugBash.id!, tableRow.data.id, { readFromCache: false });
         },
         [bugBash]
     );
@@ -93,12 +93,12 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
 }
 
 export function getColumns(
-    bugBash: IBugBash,
+    bugBashId: string,
     viewMode: BugBashViewMode,
     workItemsMap: { [workItemId: number]: WorkItem } | undefined,
     sortColumn: string | undefined,
     isSortedDescending: boolean | undefined,
-    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem, options: { readFromCache: boolean }) => void
+    onEdit: (bugBashId: string, bugBashItemId: string | undefined, options?: { readFromCache: boolean }) => void
 ): ITableColumn<IBugBashItem>[] {
     let columns: ITableColumn<IBugBashItem>[];
     switch (viewMode) {
@@ -138,7 +138,7 @@ export function getColumns(
                 (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
                     if (!e.ctrlKey) {
                         e.preventDefault();
-                        onEdit(bugBash, bugBashItem, { readFromCache: false });
+                        onEdit(bugBashId, bugBashItem.id, { readFromCache: false });
                     }
                 }
             );
@@ -149,10 +149,10 @@ export function getColumns(
 }
 
 function getContextMenuItems(
-    bugBash: IBugBash,
+    bugBashId: string,
     bugBashItems: IBugBashItem[],
     selection: ListSelection | undefined,
-    onEdit: (bugBash: IBugBash, bugBashItem: IBugBashItem, options: { readFromCache: boolean }) => void,
+    onEdit: (bugBashId: string, bugBashItemId: string | undefined, options?: { readFromCache: boolean }) => void,
     onDelete: (bugBashId: string, bugBashItemId: string) => void
 ): ColumnMore<IBugBashItem> {
     return new ColumnMore((bugBashItem: IBugBashItem) => {
@@ -163,7 +163,7 @@ function getContextMenuItems(
                 id: "edit",
                 text: Resources.Edit,
                 onActivate: () => {
-                    onEdit(bugBash, bugBashItem, { readFromCache: false });
+                    onEdit(bugBashId, bugBashItem.id, { readFromCache: false });
                 },
                 iconProps: { iconName: "Edit", className: "communication-foreground" }
             });

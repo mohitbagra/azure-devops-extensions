@@ -5,7 +5,10 @@ import { IBugBashItemEditorPortalAwareState } from "./Contracts";
 import { bugBashItemEditorPortalReducer } from "./Reducers";
 import { bugBashItemEditorPortalSaga } from "./Sagas";
 
-export function getBugBashItemEditorPortalModule(initialBugBashItemId: string | undefined): ISagaModule<IBugBashItemEditorPortalAwareState> {
+export function getBugBashItemEditorPortalModule(
+    bugBashId: string,
+    initialBugBashItemId: string | undefined
+): ISagaModule<IBugBashItemEditorPortalAwareState> {
     const reducerMap: ReducersMapObject<IBugBashItemEditorPortalAwareState, BugBashItemEditorPortalActions> = {
         bugBashItemEditorPortalState: bugBashItemEditorPortalReducer
     };
@@ -13,7 +16,7 @@ export function getBugBashItemEditorPortalModule(initialBugBashItemId: string | 
     return {
         id: "bugBashItemEditorPortal",
         reducerMap,
-        initialActions: [BugBashItemEditorPortalActions.initialize(initialBugBashItemId)],
+        initialActions: [BugBashItemEditorPortalActions.initialize(bugBashId, initialBugBashItemId)],
         sagas: [bugBashItemEditorPortalSaga]
     };
 }

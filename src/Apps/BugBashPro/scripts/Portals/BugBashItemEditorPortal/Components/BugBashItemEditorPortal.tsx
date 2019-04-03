@@ -1,11 +1,10 @@
 import { BugBashItemEditorPanel } from "BugBashPro/Editors/BugBashItemEditor";
-import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 import {
     BugBashItemEditorPortalActions,
-    getEditBugBashItemBugBash,
+    getEditBugBashItemBugBashId,
     getEditBugBashItemId,
     IBugBashItemEditorPortalAwareState,
     isBugBashItemEditorPortalOpen,
@@ -15,7 +14,7 @@ import {
 interface IBugBashItemEditorPortalStateProps {
     panelOpen: boolean;
     readFromCache: boolean;
-    bugBash?: IBugBash;
+    bugBashId?: string;
     bugBashItemId?: string;
 }
 
@@ -23,7 +22,7 @@ function mapStateToProps(state: IBugBashItemEditorPortalAwareState): IBugBashIte
     return {
         panelOpen: isBugBashItemEditorPortalOpen(state),
         bugBashItemId: getEditBugBashItemId(state),
-        bugBash: getEditBugBashItemBugBash(state),
+        bugBashId: getEditBugBashItemBugBashId(state),
         readFromCache: shouldReadFromCache(state)
     };
 }
@@ -33,12 +32,12 @@ const Actions = {
 };
 
 export function BugBashItemEditorPortal() {
-    const { panelOpen, bugBashItemId, bugBash, readFromCache } = useMappedState(mapStateToProps);
+    const { panelOpen, bugBashItemId, bugBashId, readFromCache } = useMappedState(mapStateToProps);
     const { dismissPortal } = useActionCreators(Actions);
 
-    if (!panelOpen || !bugBash) {
+    if (!panelOpen || !bugBashId) {
         return null;
     }
 
-    return <BugBashItemEditorPanel bugBash={bugBash} bugBashItemId={bugBashItemId} onDismiss={dismissPortal} readFromCache={readFromCache} />;
+    return <BugBashItemEditorPanel bugBashId={bugBashId} bugBashItemId={bugBashItemId} onDismiss={dismissPortal} readFromCache={readFromCache} />;
 }

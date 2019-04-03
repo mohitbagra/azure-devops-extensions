@@ -80,7 +80,7 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
             <TabContent>
                 <div className="bugbash-page-contents flex-grow flex-column">
                     <Card className="flex-grow bolt-card-no-vertical-padding flex-column bugbash-page-card" contentProps={{ contentPadding: false }}>
-                        <BugBashItemProvider bugBash={bugBash}>
+                        <BugBashItemProvider bugBash={bugBash} view={view}>
                             {(providerParams: IBugBashItemProviderParams) => {
                                 const innerViewProps = { ...providerParams, bugBash };
                                 return (
@@ -119,7 +119,7 @@ export function BugBashView(props: IBugBashViewProps) {
                 getBugBashItemsModule(),
                 getBugBashViewModule(),
                 getBugBashEditorPortalModule(),
-                getBugBashItemEditorPortalModule(props.bugBashItemId),
+                getBugBashItemEditorPortalModule(props.bugBashId, props.bugBashItemId),
                 getKeyValuePairModule()
             ]}
             cleanOnUnmount={true}

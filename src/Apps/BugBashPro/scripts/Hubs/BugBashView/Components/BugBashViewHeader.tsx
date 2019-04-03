@@ -38,7 +38,7 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     ...BugBashViewHeaderCommands.new,
                     disabled: isLoading,
                     onActivate: () => {
-                        openNewBugBashItemPanel(bugBash, undefined, { readFromCache: false });
+                        openNewBugBashItemPanel(bugBash.id!, undefined);
                     }
                 },
                 {
