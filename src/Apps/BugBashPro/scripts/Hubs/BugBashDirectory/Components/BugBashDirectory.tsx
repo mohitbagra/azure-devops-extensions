@@ -28,10 +28,10 @@ function BugBashDirectoryInternal(): JSX.Element {
                 <ErrorMessageBox errorKey={DirectoryPageErrorKey} />
             </div>
             <AsyncComponent loader={bugBashEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashEditorPortal_Async) => <m.DynamicBugBashEditorPortal />}
+                {(m: typeof BugBashEditorPortal_Async) => <m.BugBashEditorPortal />}
             </AsyncComponent>
             <AsyncComponent loader={settingsEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof SettingsEditorPortal_Async) => <m.DynamicSettingsPortal />}
+                {(m: typeof SettingsEditorPortal_Async) => <m.SettingsPortal />}
             </AsyncComponent>
             <BugBashDirectoryHeader />
             <BugBashDirectoryTabs />

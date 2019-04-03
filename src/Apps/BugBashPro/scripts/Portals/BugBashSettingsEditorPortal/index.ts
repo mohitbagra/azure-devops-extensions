@@ -1,2 +1,2 @@
-export * from "./Components/DynamicSettingsPortal";
+export * from "./Components/SettingsPortal";
 export * from "./Redux/index";

@@ -12,14 +12,14 @@ import {
     shouldReadFromCache
 } from "../Redux";
 
-interface IDynamicBugBashItemEditorPortalStateProps {
+interface IBugBashItemEditorPortalStateProps {
     panelOpen: boolean;
     readFromCache: boolean;
     bugBash?: IBugBash;
     bugBashItemId?: string;
 }
 
-function mapStateToProps(state: IBugBashItemEditorPortalAwareState): IDynamicBugBashItemEditorPortalStateProps {
+function mapStateToProps(state: IBugBashItemEditorPortalAwareState): IBugBashItemEditorPortalStateProps {
     return {
         panelOpen: isBugBashItemEditorPortalOpen(state),
         bugBashItemId: getEditBugBashItemId(state),
@@ -32,7 +32,7 @@ const Actions = {
     dismissPortal: BugBashItemEditorPortalActions.dismissPortal
 };
 
-export function DynamicBugBashItemEditorPortal() {
+export function BugBashItemEditorPortal() {
     const { panelOpen, bugBashItemId, bugBash, readFromCache } = useMappedState(mapStateToProps);
     const { dismissPortal } = useActionCreators(Actions);
 

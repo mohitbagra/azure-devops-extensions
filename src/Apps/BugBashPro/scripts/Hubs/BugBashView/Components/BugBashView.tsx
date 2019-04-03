@@ -70,10 +70,10 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
                 <ErrorMessageBox errorKey={BugBashViewPageErrorKey} />
             </div>
             <AsyncComponent loader={bugBashItemEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashItemEditorPortal_Async) => <m.DynamicBugBashItemEditorPortal />}
+                {(m: typeof BugBashItemEditorPortal_Async) => <m.BugBashItemEditorPortal />}
             </AsyncComponent>
             <AsyncComponent loader={bugBashEditorPortalLoader} loadingComponent={emptyRenderer}>
-                {(m: typeof BugBashEditorPortal_Async) => <m.DynamicBugBashEditorPortal />}
+                {(m: typeof BugBashEditorPortal_Async) => <m.BugBashEditorPortal />}
             </AsyncComponent>
             <BugBashViewHeader bugBash={bugBash} />
             <BugBashViewTabsWithFilter bugBash={bugBash} view={view} />

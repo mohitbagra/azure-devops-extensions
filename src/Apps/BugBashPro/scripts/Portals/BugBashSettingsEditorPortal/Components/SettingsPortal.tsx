@@ -4,11 +4,11 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
 import { BugBashSettingsPortalActions, IBugBashSettingsPortalAwareState, isSettingsPortalOpen } from "../Redux";
 
-interface IDynamicSettingsPortalStateProps {
+interface ISettingsPortalStateProps {
     panelOpen: boolean;
 }
 
-function mapStateToProps(state: IBugBashSettingsPortalAwareState): IDynamicSettingsPortalStateProps {
+function mapStateToProps(state: IBugBashSettingsPortalAwareState): ISettingsPortalStateProps {
     return {
         panelOpen: isSettingsPortalOpen(state)
     };
@@ -18,7 +18,7 @@ const Actions = {
     dismissPortal: BugBashSettingsPortalActions.dismissPortal
 };
 
-export function DynamicSettingsPortal() {
+export function SettingsPortal() {
     const { panelOpen } = useMappedState(mapStateToProps);
     const { dismissPortal } = useActionCreators(Actions);
 

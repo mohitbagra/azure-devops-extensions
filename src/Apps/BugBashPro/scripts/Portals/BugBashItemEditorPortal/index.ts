@@ -1,2 +1,2 @@
-export * from "./Components/DynamicBugBashItemEditorPortal";
+export * from "./Components/BugBashItemEditorPortal";
 export * from "./Redux/index";
