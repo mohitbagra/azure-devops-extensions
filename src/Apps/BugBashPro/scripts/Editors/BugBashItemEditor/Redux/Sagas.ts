@@ -1,6 +1,5 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
@@ -197,8 +196,6 @@ function* acceptBugBashItem(bugBash: IBugBash, bugBashItem: IBugBashItem, accept
 }
 
 function* dismissPortalAndShowToast(bugBashId: string, bugBashItemId: string, workItemId?: number) {
-    yield put(BugBashPortalActions.dismissPortal());
-
     if (workItemId) {
         const workItemUrl: string = yield call(getWorkItemUrlAsync, workItemId);
         yield call(addToast, {
@@ -210,12 +207,11 @@ function* dismissPortalAndShowToast(bugBashId: string, bugBashItemId: string, wo
                 openNewWindow(workItemUrl);
             }
         });
+        yield put(BugBashPortalActions.dismissPortal());
     } else {
         const callbackChannel: Channel<BugBashPortalActions> = yield call(channel);
         const callback = () => {
-            callbackChannel.put(
-                BugBashPortalActions.openPortal(PortalType.BugBashItemEdit, { bugBashId, bugBashItemId: bugBashItemId, readFromCache: true })
-            );
+            callbackChannel.put(BugBashPortalActions.openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: true }));
         };
 
         yield call(addToast, {
@@ -225,6 +221,8 @@ function* dismissPortalAndShowToast(bugBashId: string, bugBashItemId: string, wo
             forceOverrideExisting: true,
             onCallToActionClick: callback
         });
+        yield put(BugBashPortalActions.dismissPortal());
+
         const { message } = yield race({
             message: take(callbackChannel),
             timeout: delay(5000)

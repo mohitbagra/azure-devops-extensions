@@ -8,7 +8,6 @@ import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBash
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { IBugBashItemEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
@@ -24,24 +23,20 @@ import * as React from "react";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
 const Actions = {
-    openPortal: BugBashPortalActions.openPortal,
+    openBugBashItemPortal: BugBashPortalActions.openBugBashItemPortal,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
 export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
     const { bugBashId, filteredBugBashItems, workItemsMap } = props;
-    const { openPortal, deleteBugBashItem } = useActionCreators(Actions);
+    const { openBugBashItemPortal, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
     const selectionRef = React.useRef(new ListSelection(true));
     const columnSelect = React.useMemo(() => new ColumnSelect(), [viewMode]);
     const onEditBugBashItem = React.useCallback(
         (bugBashItemId: string) => {
-            openPortal(PortalType.BugBashItemEdit, {
-                bugBashId: bugBashId,
-                bugBashItemId: bugBashItemId,
-                readFromCache: false
-            } as IBugBashItemEditPortalProps);
+            openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: false });
         },
         [bugBashId]
     );

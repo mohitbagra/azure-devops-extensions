@@ -3,7 +3,6 @@ import "./BoardCard.scss";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
@@ -18,7 +17,7 @@ import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 
 const Actions = {
-    openPortal: BugBashPortalActions.openPortal,
+    openBugBashItemPortal: BugBashPortalActions.openBugBashItemPortal,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
@@ -29,14 +28,14 @@ interface IBoardCardProps extends IBugBashViewBaseProps {
 
 export function BoardCard(props: IBoardCardProps) {
     const { bugBashId, bugBashItem, acceptedWorkItem } = props;
-    const { openPortal } = useActionCreators(Actions);
+    const { openBugBashItemPortal } = useActionCreators(Actions);
     const isAccepted = isBugBashItemAccepted(bugBashItem) && acceptedWorkItem !== undefined;
 
     const onTitleClick = React.useCallback(
         (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
             if (!e.ctrlKey) {
                 e.preventDefault();
-                openPortal(PortalType.BugBashItemEdit, { bugBashId: bugBashId, bugBashItemId: bugBashItem.id, readFromCache: false });
+                openBugBashItemPortal(bugBashId, bugBashItem.id, { readFromCache: false });
             }
         },
         [bugBashId, bugBashItem.id]

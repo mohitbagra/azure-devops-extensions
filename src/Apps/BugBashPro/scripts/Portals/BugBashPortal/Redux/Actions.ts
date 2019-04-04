@@ -1,14 +1,25 @@
 import { ActionsUnion, createAction } from "Common/Redux";
-import { IBugBashEditPortalProps, IBugBashItemEditPortalProps, PortalType } from "./Contracts";
 
 export const BugBashPortalActions = {
-    openPortal: (portalType: PortalType, portalProps: IBugBashEditPortalProps | IBugBashItemEditPortalProps | undefined) =>
-        createAction(BugBashPortalActionTypes.OpenPortal, { portalType, portalProps }),
+    openBugBashPortal: (bugBashId: string | undefined, options?: { readFromCache: boolean }) =>
+        createAction(BugBashPortalActionTypes.OpenBugBashPortal, { bugBashId, readFromCache: options ? options.readFromCache : true }),
+
+    openBugBashItemPortal: (bugBashId: string, bugBashItemId: string | undefined, options?: { readFromCache: boolean }) =>
+        createAction(BugBashPortalActionTypes.OpenBugBashItemPortal, {
+            bugBashId,
+            bugBashItemId,
+            readFromCache: options ? options.readFromCache : true
+        }),
+
+    openSettingsPortal: () => createAction(BugBashPortalActionTypes.OpenSettingsPortal),
+
     dismissPortal: () => createAction(BugBashPortalActionTypes.DismissPortal)
 };
 
 export const enum BugBashPortalActionTypes {
-    OpenPortal = "BugBashPortalAction/OpenPortal",
+    OpenBugBashPortal = "BugBashPortalAction/OpenBugBashPortal",
+    OpenBugBashItemPortal = "BugBashPortalAction/OpenBugBashItemPortal",
+    OpenSettingsPortal = "BugBashPortalAction/OpenSettingsPortal",
     DismissPortal = "BugBashPortalAction/DismissPortal"
 }
 

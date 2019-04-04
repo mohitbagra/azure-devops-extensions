@@ -71,7 +71,7 @@ function* deleteBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionT
     const bugBashId = action.payload;
 
     const status: LoadStatus = yield select(getBugBashStatus, bugBashId);
-    if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed) {
+    if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed || status === LoadStatus.LoadFailed) {
         yield put(BugBashesActions.beginDeleteBugBash(bugBashId));
         try {
             yield call(deleteBugBashAsync, bugBashId);

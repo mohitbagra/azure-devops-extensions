@@ -2,7 +2,6 @@ import { ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableC
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { IBugBashEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
@@ -22,18 +21,18 @@ import { useBugBashesSort } from "../Hooks/useBugBashesSort";
 import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";
 
 const Actions = {
-    openPortal: BugBashPortalActions.openPortal,
+    openBugBashPortal: BugBashPortalActions.openBugBashPortal,
     deleteBugBash: BugBashesActions.bugBashDeleteRequested
 };
 
 export function BugBashDirectoryTable() {
     const { sortColumn, isSortedDescending, applySort } = useBugBashesSort();
     const { filteredBugBashes, status } = useFilteredBugBashes();
-    const { openPortal, deleteBugBash } = useActionCreators(Actions);
+    const { openBugBashPortal, deleteBugBash } = useActionCreators(Actions);
 
     const isLoading = status === LoadStatus.Loading || status === LoadStatus.NotLoaded;
     const onEditBugBash = React.useCallback((bugBashId: string) => {
-        openPortal(PortalType.BugBashEdit, { bugBashId: bugBashId, readFromCache: false } as IBugBashEditPortalProps);
+        openBugBashPortal(bugBashId, { readFromCache: false });
     }, []);
 
     const columns = React.useMemo(() => getColumns(sortColumn, isSortedDescending, deleteBugBash, onEditBugBash), [sortColumn, isSortedDescending]);

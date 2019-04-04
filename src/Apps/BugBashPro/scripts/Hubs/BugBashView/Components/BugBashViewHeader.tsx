@@ -2,7 +2,6 @@ import { Button } from "azure-devops-ui/Button";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { IStatusProps, Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { IBugBashEditPortalProps, IBugBashItemEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { isBugBashCompleted, isBugBashInProgress } from "BugBashPro/Shared/Helpers";
@@ -17,7 +16,8 @@ import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 import { IBugBashViewBaseProps } from "../Interfaces";
 
 const Actions = {
-    openPortal: BugBashPortalActions.openPortal,
+    openBugBashPortal: BugBashPortalActions.openBugBashPortal,
+    openBugBashItemPortal: BugBashPortalActions.openBugBashItemPortal,
     loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
@@ -25,7 +25,7 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
     const { bugBashId } = props;
     const { status } = useFilteredBugBashItems(bugBashId);
     const { bugBash } = useBugBash(bugBashId);
-    const { openPortal, loadBugBashItems } = useActionCreators(Actions);
+    const { openBugBashPortal, openBugBashItemPortal, loadBugBashItems } = useActionCreators(Actions);
 
     if (!bugBash) {
         throw new Error("Bug Bash is not initialized yet");
@@ -43,11 +43,7 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     ...BugBashViewHeaderCommands.new,
                     disabled: isLoading,
                     onActivate: () => {
-                        openPortal(PortalType.BugBashItemEdit, {
-                            bugBashId: bugBashId,
-                            bugBashItemId: undefined,
-                            readFromCache: true
-                        } as IBugBashItemEditPortalProps);
+                        openBugBashItemPortal(bugBashId, undefined);
                     }
                 },
                 {
@@ -55,7 +51,7 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     disabled: isLoading,
                     onActivate: () => {
                         // dont refresh bug bash from server when editing from inside of bug bash view
-                        openPortal(PortalType.BugBashEdit, { bugBashId: bugBashId, readFromCache: true } as IBugBashEditPortalProps);
+                        openBugBashPortal(bugBashId, { readFromCache: true });
                     }
                 },
                 {

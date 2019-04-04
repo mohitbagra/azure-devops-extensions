@@ -92,7 +92,6 @@ function* requestDraftCreate(draftBugBash: IBugBash) {
 
     if (itemCreatedAction.type === BugBashesActionTypes.BugBashCreated) {
         const createdBugBash = itemCreatedAction.payload;
-        yield put(BugBashPortalActions.dismissPortal());
 
         yield call(addToast, {
             message: Resources.BugBashCreatedMessage,
@@ -103,6 +102,7 @@ function* requestDraftCreate(draftBugBash: IBugBash) {
                 navigateToBugBashItemsList(createdBugBash.id!);
             }
         });
+        yield put(BugBashPortalActions.dismissPortal());
     }
 }
 

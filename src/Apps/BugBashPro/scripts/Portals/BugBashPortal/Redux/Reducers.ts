@@ -1,15 +1,30 @@
 import { produce } from "immer";
 import { BugBashPortalActions, BugBashPortalActionTypes } from "./Actions";
-import { defaultBugBashPortalState, IBugBashPortalState } from "./Contracts";
+import { defaultBugBashPortalState, IBugBashPortalState, PortalType } from "./Contracts";
 
 export function portalReducer(state: IBugBashPortalState | undefined, action: BugBashPortalActions): IBugBashPortalState {
     return produce(state || defaultBugBashPortalState, draft => {
         switch (action.type) {
-            case BugBashPortalActionTypes.OpenPortal: {
-                const { portalProps, portalType } = action.payload;
+            case BugBashPortalActionTypes.OpenBugBashPortal: {
+                const { bugBashId, readFromCache } = action.payload;
                 draft.portalOpen = true;
-                draft.portalProps = portalProps;
-                draft.portalType = portalType;
+                draft.portalProps = { bugBashId, readFromCache };
+                draft.portalType = PortalType.BugBashEdit;
+                break;
+            }
+
+            case BugBashPortalActionTypes.OpenBugBashItemPortal: {
+                const { bugBashId, bugBashItemId, readFromCache } = action.payload;
+                draft.portalOpen = true;
+                draft.portalProps = { bugBashId, bugBashItemId, readFromCache };
+                draft.portalType = PortalType.BugBashItemEdit;
+                break;
+            }
+
+            case BugBashPortalActionTypes.OpenSettingsPortal: {
+                draft.portalOpen = true;
+                draft.portalProps = undefined;
+                draft.portalType = PortalType.SettingsEdit;
                 break;
             }
 

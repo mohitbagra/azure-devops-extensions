@@ -1,6 +1,5 @@
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { IBugBashEditPortalProps, PortalType } from "BugBashPro/Portals/BugBashPortal/Redux/Contracts";
 import { Resources } from "BugBashPro/Resources";
 import { BugBashesActions } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { LoadStatus } from "Common/Contracts";
@@ -10,13 +9,14 @@ import { DirectoryPageHeaderCommands } from "../Constants";
 import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";
 
 const Actions = {
-    openPortal: BugBashPortalActions.openPortal,
+    openBugBashPortal: BugBashPortalActions.openBugBashPortal,
+    openSettingsPortal: BugBashPortalActions.openSettingsPortal,
     loadBugBashes: BugBashesActions.bugBashesLoadRequested
 };
 
 export function BugBashDirectoryHeader(): JSX.Element {
     const { status } = useFilteredBugBashes();
-    const { openPortal, loadBugBashes } = useActionCreators(Actions);
+    const { openBugBashPortal, openSettingsPortal, loadBugBashes } = useActionCreators(Actions);
     const isLoading = status === LoadStatus.Loading || status === LoadStatus.NotLoaded;
 
     return (
@@ -28,7 +28,7 @@ export function BugBashDirectoryHeader(): JSX.Element {
                     ...DirectoryPageHeaderCommands.new,
                     disabled: isLoading,
                     onActivate: () => {
-                        openPortal(PortalType.BugBashEdit, { bugBashId: undefined, readFromCache: true } as IBugBashEditPortalProps);
+                        openBugBashPortal(undefined);
                     }
                 },
                 {
@@ -39,9 +39,7 @@ export function BugBashDirectoryHeader(): JSX.Element {
                 {
                     ...DirectoryPageHeaderCommands.settings,
                     disabled: isLoading,
-                    onActivate: () => {
-                        openPortal(PortalType.SettingsEdit, undefined);
-                    }
+                    onActivate: () => openSettingsPortal
                 }
             ]}
             titleSize={TitleSize.Large}
