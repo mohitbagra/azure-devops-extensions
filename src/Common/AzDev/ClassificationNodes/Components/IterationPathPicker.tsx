@@ -7,7 +7,7 @@ import {
 } from "Common/Components/Pickers/ClassificationNodePicker";
 import * as React from "react";
 import { useIterationPaths } from "../Hooks/useIterationPaths";
-import { getClassificationNodeModule } from "../Redux";
+import { getClassificationNodeModule } from "../Redux/Module";
 
 function IterationPathPickerInternal(props: IClassificationNodePickerSharedProps) {
     const { rootNode } = useIterationPaths();

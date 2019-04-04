@@ -4,7 +4,7 @@ import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
 import { IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
-import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes";
+import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { getAllBugBashItems, getBugBashItem, getResolvedWorkItemsMap } from "BugBashPro/Shared/Redux/BugBashItems/Selectors";
 import { getTeamsMap } from "Common/AzDev/Teams/Redux/Selectors";

@@ -3,7 +3,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
 import * as React from "react";
 import { useTeamTemplates } from "../Hooks/useTeamTemplates";
-import { getWorkItemTemplateModule } from "../Redux";
+import { getWorkItemTemplateModule } from "../Redux/Module";
 
 interface IWorkItemTemplatePickerProps extends IPicklistPickerSharedProps<WorkItemTemplateReference> {
     teamId: string;

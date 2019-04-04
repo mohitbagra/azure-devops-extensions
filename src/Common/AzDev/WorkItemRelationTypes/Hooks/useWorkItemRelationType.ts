@@ -3,13 +3,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import {
-    getWorkItemRelationType,
-    getWorkItemRelationTypesError,
-    getWorkItemRelationTypesStatus,
-    IWorkItemRelationTypeAwareState,
-    WorkItemRelationTypeActions
-} from "../Redux";
+import { WorkItemRelationTypeActions } from "../Redux/Actions";
+import { IWorkItemRelationTypeAwareState } from "../Redux/Contracts";
+import { getWorkItemRelationType, getWorkItemRelationTypesError, getWorkItemRelationTypesStatus } from "../Redux/Selectors";
 
 export function useWorkItemRelationType(nameOrRefName: string): IUseWorkItemRelationTypeMappedState {
     const mapState = useCallback(

@@ -1,7 +1,9 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { BugBashViewActions, getBugBashItemsFilterState, IBugBashViewAwareState } from "../Redux";
+import { BugBashViewActions } from "../Redux/Actions";
+import { IBugBashViewAwareState } from "../Redux/Contracts";
+import { getBugBashItemsFilterState } from "../Redux/Selectors";
 
 export function useBugBashItemsFilter(): IUseBugBashItemsFilterHookMappedState & typeof Actions {
     const { filter } = useMappedState(mapState);

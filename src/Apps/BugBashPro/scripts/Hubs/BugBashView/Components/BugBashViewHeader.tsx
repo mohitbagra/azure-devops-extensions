@@ -6,7 +6,7 @@ import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { isBugBashCompleted, isBugBashInProgress } from "BugBashPro/Shared/Helpers";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
-import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems";
+import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";

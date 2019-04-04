@@ -3,7 +3,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
 import * as React from "react";
 import { useTeams } from "../Hooks/useTeams";
-import { getTeamModule } from "../Redux";
+import { getTeamModule } from "../Redux/Module";
 
 function TeamPickerInternal(props: IPicklistPickerSharedProps<WebApiTeam>) {
     const { placeholder } = props;

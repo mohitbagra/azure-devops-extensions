@@ -1,6 +1,6 @@
 import {
     CommonServiceIds, ExtensionDataCollection, IExtensionDataManager, IExtensionDataService
-} from "azure-devops-extension-api";
+} from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
 
 let extensionDataManager: IExtensionDataManager;

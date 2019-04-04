@@ -1,4 +1,4 @@
-import { CommonServiceIds, IHostNavigationService } from "azure-devops-extension-api";
+import { CommonServiceIds, IHostNavigationService } from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
 import { isNullOrWhiteSpace } from "../Utilities/String";
 

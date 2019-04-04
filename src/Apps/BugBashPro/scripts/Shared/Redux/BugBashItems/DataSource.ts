@@ -1,4 +1,4 @@
-import { getClient } from "azure-devops-extension-api";
+import { getClient } from "azure-devops-extension-api/Common/Client";
 import {
     IdentityRef, JsonPatchDocument, JsonPatchOperation, Operation
 } from "azure-devops-extension-api/WebApi/WebApi";

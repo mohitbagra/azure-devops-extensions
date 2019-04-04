@@ -2,7 +2,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import { getTeams, getTeamsError, getTeamsMap, getTeamsStatus, ITeamAwareState, ITeamState, TeamActions } from "../Redux";
+import { TeamActions } from "../Redux/Actions";
+import { ITeamAwareState, ITeamState } from "../Redux/Contracts";
+import { getTeams, getTeamsError, getTeamsMap, getTeamsStatus } from "../Redux/Selectors";
 
 export function useTeams(): ITeamState {
     const { teams, teamsMap, status, error } = useMappedState(mapState);

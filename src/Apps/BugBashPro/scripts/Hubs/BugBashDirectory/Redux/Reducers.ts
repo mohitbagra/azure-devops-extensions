@@ -1,4 +1,4 @@
-import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes";
+import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { readLocalSetting, writeLocalSetting } from "Common/Utilities/LocalStorageService";
 import { produce } from "immer";
 import { getFilteredBugBashes } from "../Helpers";

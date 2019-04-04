@@ -7,9 +7,9 @@ import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hu
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { useUserSettings } from "BugBashPro/Shared/Hooks/useUserSettings";
-import { getBugBashUserSettingsModule } from "BugBashPro/Shared/Redux/UserSettings";
+import { getBugBashUserSettingsModule } from "BugBashPro/Shared/Redux/UserSettings/Module";
 import { useTeams } from "Common/AzDev/Teams/Hooks/useTeams";
-import { getTeamModule } from "Common/AzDev/Teams/Redux";
+import { getTeamModule } from "Common/AzDev/Teams/Redux/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { CoreFieldRefNames } from "Common/Constants";

@@ -1,7 +1,8 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { IBugBash, ISortState } from "BugBashPro/Shared/Contracts";
-import { BugBashesActions, BugBashesActionTypes, getAllBugBashes } from "BugBashPro/Shared/Redux/BugBashes";
-import { KeyValuePairActions } from "Common/Notifications/Redux";
+import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
+import { getAllBugBashes } from "BugBashPro/Shared/Redux/BugBashes/Selectors";
+import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { put, select, takeEvery } from "redux-saga/effects";

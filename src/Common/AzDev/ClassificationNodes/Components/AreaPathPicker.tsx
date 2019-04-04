@@ -7,7 +7,7 @@ import {
 } from "Common/Components/Pickers/ClassificationNodePicker";
 import * as React from "react";
 import { useAreaPaths } from "../Hooks/useAreaPaths";
-import { getClassificationNodeModule } from "../Redux";
+import { getClassificationNodeModule } from "../Redux/Module";
 
 function AreaPathPickerInternal(props: IClassificationNodePickerSharedProps) {
     const { rootNode } = useAreaPaths();

@@ -5,7 +5,7 @@ import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/
 import { contains } from "Common/Utilities/Array";
 import * as React from "react";
 import { useFields } from "../Hooks/useFields";
-import { getFieldModule } from "../Redux";
+import { getFieldModule } from "../Redux/Module";
 
 interface IFieldPickerProps extends IPicklistPickerSharedProps<WorkItemField> {
     allowedFieldTypes?: FieldType[];

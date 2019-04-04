@@ -1,11 +1,14 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { BugBashItemsActions, getBugBashItemsStatus, getResolvedWorkItemsMap, IBugBashItemsAwareState } from "BugBashPro/Shared/Redux/BugBashItems";
+import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
+import { IBugBashItemsAwareState } from "BugBashPro/Shared/Redux/BugBashItems/Contracts";
+import { getBugBashItemsStatus, getResolvedWorkItemsMap } from "BugBashPro/Shared/Redux/BugBashItems/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import { BugBashItemsFilterData, getBugBashViewFilterData, getFilteredBugBashItems, IBugBashViewAwareState } from "../Redux";
+import { BugBashItemsFilterData, IBugBashViewAwareState } from "../Redux/Contracts";
+import { getBugBashViewFilterData, getFilteredBugBashItems } from "../Redux/Selectors";
 
 export function useFilteredBugBashItems(bugBashId: string): IUseBugBashItemsHookMappedState {
     const { filteredBugBashItems, workItemsMap, filterData, status } = useMappedState(mapState);

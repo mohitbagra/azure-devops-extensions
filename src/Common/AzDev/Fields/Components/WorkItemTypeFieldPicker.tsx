@@ -6,7 +6,7 @@ import { contains } from "Common/Utilities/Array";
 import * as React from "react";
 import { useFields } from "../Hooks/useFields";
 import { useWorkItemTypeFields } from "../Hooks/useWorkItemTypeFields";
-import { getFieldModule } from "../Redux";
+import { getFieldModule } from "../Redux/Module";
 
 interface IWorkItemTypeFieldPickerProps extends IPicklistPickerSharedProps<WorkItemField> {
     workItemTypeName: string;

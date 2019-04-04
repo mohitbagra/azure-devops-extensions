@@ -1,4 +1,4 @@
-import { getClient } from "azure-devops-extension-api";
+import { getClient } from "azure-devops-extension-api/Common/Client";
 import { TeamContext } from "azure-devops-extension-api/Core/Core";
 import { WorkRestClient } from "azure-devops-extension-api/Work";
 import { memoizePromise } from "Common/Utilities/Memoize";

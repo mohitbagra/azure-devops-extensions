@@ -3,7 +3,8 @@ import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
 import { BugBashItemsActions } from "./Actions";
 import { defaultBugBashItemsState, IBugBashItemsAwareState } from "./Contracts";
-import { bugBashItemLoadReducer, bugBashItemUpdateReducer } from "./Reducers";
+import { bugBashItemLoadReducer } from "./Reducers/BugBashItemLoadReducer";
+import { bugBashItemUpdateReducer } from "./Reducers/BugBashItemUpdateReducer";
 import { bugBashItemsSaga } from "./Sagas";
 
 export function getBugBashItemsModule(): ISagaModule<IBugBashItemsAwareState> {

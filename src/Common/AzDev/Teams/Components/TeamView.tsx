@@ -7,7 +7,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { LoadStatus } from "Common/Contracts";
 import * as React from "react";
 import { useTeam } from "../Hooks/useTeam";
-import { getTeamModule } from "../Redux";
+import { getTeamModule } from "../Redux/Module";
 
 interface ITeamViewOwnProps extends IBaseProps {
     teamId: string;

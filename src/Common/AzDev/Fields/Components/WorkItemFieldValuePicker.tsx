@@ -18,7 +18,7 @@ import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
 import * as React from "react";
 import { useField } from "../Hooks/useField";
 import { useWorkItemTypeField } from "../Hooks/useWorkItemTypeField";
-import { getFieldModule } from "../Redux";
+import { getFieldModule } from "../Redux/Module";
 
 interface IWorkItemFieldValuePickerOwnProps extends ILabelledComponentProps, IInputComponentProps<any> {
     fieldRefName: string;

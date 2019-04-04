@@ -1,10 +1,13 @@
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { BugBashesActions, getBugBashesStatus, IBugBashesAwareState } from "BugBashPro/Shared/Redux/BugBashes";
+import { BugBashesActions } from "BugBashPro/Shared/Redux/BugBashes/Actions";
+import { IBugBashesAwareState } from "BugBashPro/Shared/Redux/BugBashes/Contracts";
+import { getBugBashesStatus } from "BugBashPro/Shared/Redux/BugBashes/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import { getBugBashCounts, getFilteredBugBashes, IBugBashCounts, IBugBashDirectoryAwareState } from "../Redux";
+import { IBugBashCounts, IBugBashDirectoryAwareState } from "../Redux/Contracts";
+import { getBugBashCounts, getFilteredBugBashes } from "../Redux/Selectors";
 
 export function useFilteredBugBashes(): IUseBugBashesHookMappedState {
     const { filteredBugBashes, status, bugBashCounts } = useMappedState(mapState);

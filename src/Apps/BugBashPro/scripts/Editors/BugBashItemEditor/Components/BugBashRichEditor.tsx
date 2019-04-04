@@ -1,4 +1,4 @@
-import { getClient } from "azure-devops-extension-api";
+import { getClient } from "azure-devops-extension-api/Common/Client";
 import { GitPush, GitRestClient, ItemContentType, VersionControlChangeType } from "azure-devops-extension-api/Git";
 import { useProjectSetting } from "BugBashPro/Shared/Hooks/useProjectSetting";
 import { getBugBashProjectSettingsModule } from "BugBashPro/Shared/Redux/ProjectSettings/Module";
@@ -7,7 +7,7 @@ import { Loading } from "Common/Components/Loading";
 import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { KeyValuePairActions } from "Common/Notifications/Redux";
+import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { getProjectUrlAsync } from "Common/Utilities/UrlHelper";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 import * as React from "react";

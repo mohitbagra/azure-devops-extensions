@@ -11,8 +11,8 @@ import * as BugBashItemsTable_Async from "BugBashPro/Hubs/BugBashView/Pivots/Lis
 import { BugBashPortal } from "BugBashPro/Portals/BugBashPortal";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
-import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes";
-import { getBugBashItemsModule } from "BugBashPro/Shared/Redux/BugBashItems";
+import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes/Module";
+import { getBugBashItemsModule } from "BugBashPro/Shared/Redux/BugBashItems/Module";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
@@ -23,7 +23,7 @@ import * as React from "react";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { useBugBash } from "../Hooks/useBugBash";
 import { IBugBashItemProviderParams } from "../Interfaces";
-import { getBugBashViewModule } from "../Redux";
+import { getBugBashViewModule } from "../Redux/Module";
 import { BugBashItemProvider } from "./BugBashItemsProvider";
 import { BugBashViewHeader } from "./BugBashViewHeader";
 import { BugBashViewTabsWithFilter } from "./BugBashViewTabsWithFilter";
@@ -75,17 +75,17 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
                                 return (
                                     <>
                                         <ConditionalChildren renderChildren={view === AppView.ACTION_LIST}>
-                                            <AsyncComponent loader={listViewLoader}>
+                                            <AsyncComponent loader={listViewLoader} key="bugbashitemslist">
                                                 {(m: typeof BugBashItemsTable_Async) => <m.BugBashItemsTable {...innerViewProps} />}
                                             </AsyncComponent>
                                         </ConditionalChildren>
                                         <ConditionalChildren renderChildren={view === AppView.ACTION_BOARD}>
-                                            <AsyncComponent loader={boardViewLoader}>
+                                            <AsyncComponent loader={boardViewLoader} key="bugbashitemsboard">
                                                 {(m: typeof BugBashItemsBoard_Async) => <m.BugBashItemsBoard {...innerViewProps} />}
                                             </AsyncComponent>
                                         </ConditionalChildren>
                                         <ConditionalChildren renderChildren={view === AppView.ACTION_CHARTS}>
-                                            <AsyncComponent loader={chartsViewLoader}>
+                                            <AsyncComponent loader={chartsViewLoader} key="bugbashitemschart">
                                                 {(m: typeof BugBashItemsCharts_Async) => <m.BugBashItemsCharts {...innerViewProps} />}
                                             </AsyncComponent>
                                         </ConditionalChildren>

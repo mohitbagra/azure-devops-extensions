@@ -2,7 +2,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import { FieldActions, getFields, getFieldsError, getFieldsMap, getFieldsStatus, IFieldAwareState, IFieldState } from "../Redux";
+import { FieldActions } from "../Redux/Actions";
+import { IFieldAwareState, IFieldState } from "../Redux/Contracts";
+import { getFields, getFieldsError, getFieldsMap, getFieldsStatus } from "../Redux/Selectors";
 
 export function useFields(): IFieldState {
     const { fields, fieldsMap, status, error } = useMappedState(mapState);

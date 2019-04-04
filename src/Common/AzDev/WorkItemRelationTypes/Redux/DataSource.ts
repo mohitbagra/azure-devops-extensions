@@ -1,4 +1,4 @@
-import { getClient } from "azure-devops-extension-api";
+import { getClient } from "azure-devops-extension-api/Common/Client";
 import {
     WorkItemRelationType, WorkItemTrackingRestClient
 } from "azure-devops-extension-api/WorkItemTracking";

@@ -1,6 +1,8 @@
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { areBugBashItemsSortedDescending, BugBashViewActions, getBugBashItemsSortColumn, IBugBashViewAwareState } from "../Redux";
+import { BugBashViewActions } from "../Redux/Actions";
+import { IBugBashViewAwareState } from "../Redux/Contracts";
+import { areBugBashItemsSortedDescending, getBugBashItemsSortColumn } from "../Redux/Selectors";
 
 export function useBugBashItemsSort(): IUseBugBashItemsSortHookMappedState & typeof Actions {
     const { sortColumn, isSortedDescending } = useMappedState(mapState);

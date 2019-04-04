@@ -2,8 +2,8 @@ import "./SettingsEditor.scss";
 
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { Panel } from "azure-devops-ui/Panel";
-import { getBugBashProjectSettingsModule } from "BugBashPro/Shared/Redux/ProjectSettings";
-import { getBugBashUserSettingsModule } from "BugBashPro/Shared/Redux/UserSettings";
+import { getBugBashProjectSettingsModule } from "BugBashPro/Shared/Redux/ProjectSettings/Module";
+import { getBugBashUserSettingsModule } from "BugBashPro/Shared/Redux/UserSettings/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import * as React from "react";
 import { ProjectSettingEditor } from "./ProjectSettingEditor";

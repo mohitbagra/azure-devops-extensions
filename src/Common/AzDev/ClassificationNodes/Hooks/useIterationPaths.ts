@@ -2,15 +2,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import {
-    getIterationPathError,
-    getIterationPathNodeMapById,
-    getIterationPathRootNode,
-    getIterationPathStatus,
-    IClassificationNodeAwareState,
-    IClassificationNodeState,
-    IterationPathActions
-} from "../Redux";
+import { IterationPathActions } from "../Redux/Actions";
+import { IClassificationNodeAwareState, IClassificationNodeState } from "../Redux/Contracts";
+import { getIterationPathError, getIterationPathNodeMapById, getIterationPathRootNode, getIterationPathStatus } from "../Redux/Selectors";
 
 export function useIterationPaths(): IClassificationNodeState {
     const { rootNode, nodeMapById, nodeMapByPath, error, status } = useMappedState(mapState);

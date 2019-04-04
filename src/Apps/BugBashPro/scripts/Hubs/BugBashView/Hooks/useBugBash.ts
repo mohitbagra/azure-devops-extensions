@@ -1,5 +1,7 @@
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { BugBashesActions, getBugBash, getBugBashStatus, IBugBashesAwareState } from "BugBashPro/Shared/Redux/BugBashes";
+import { BugBashesActions } from "BugBashPro/Shared/Redux/BugBashes/Actions";
+import { IBugBashesAwareState } from "BugBashPro/Shared/Redux/BugBashes/Contracts";
+import { getBugBash, getBugBashStatus } from "BugBashPro/Shared/Redux/BugBashes/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";

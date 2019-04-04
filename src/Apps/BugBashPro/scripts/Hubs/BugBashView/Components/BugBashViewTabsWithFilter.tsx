@@ -22,7 +22,7 @@ import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 import { IBugBashViewBaseProps } from "../Interfaces";
-import { BugBashItemsFilterData, BugBashViewMode } from "../Redux";
+import { BugBashItemsFilterData, BugBashViewMode } from "../Redux/Contracts";
 
 interface IBugBashViewTabsWithFilterProps extends IBugBashViewBaseProps {
     view: AppView;

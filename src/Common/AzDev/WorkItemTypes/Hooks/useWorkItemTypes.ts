@@ -2,15 +2,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import {
-    getWorkItemTypes,
-    getWorkItemTypesError,
-    getWorkItemTypesMap,
-    getWorkItemTypesStatus,
-    IWorkItemTypeAwareState,
-    IWorkItemTypeState,
-    WorkItemTypeActions
-} from "../Redux";
+import { WorkItemTypeActions } from "../Redux/Actions";
+import { IWorkItemTypeAwareState, IWorkItemTypeState } from "../Redux/Contracts";
+import { getWorkItemTypes, getWorkItemTypesError, getWorkItemTypesMap, getWorkItemTypesStatus } from "../Redux/Selectors";
 
 export function useWorkItemTypes(): IWorkItemTypeState {
     const { workItemTypes, workItemTypesMap, status, error } = useMappedState(mapState);

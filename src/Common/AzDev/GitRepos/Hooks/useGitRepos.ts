@@ -2,7 +2,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import { getGitRepos, getGitReposError, getGitReposMap, getGitReposStatus, GitRepoActions, IGitRepoAwareState, IGitRepoState } from "../Redux";
+import { GitRepoActions } from "../Redux/Actions";
+import { IGitRepoAwareState, IGitRepoState } from "../Redux/Contracts";
+import { getGitRepos, getGitReposError, getGitReposMap, getGitReposStatus } from "../Redux/Selectors";
 
 export function useGitRepos(): IGitRepoState {
     const { gitRepos, gitReposMap, status, error } = useMappedState(mapState);

@@ -1,4 +1,4 @@
-import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems";
+import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { readLocalSetting, writeLocalSetting } from "Common/Utilities/LocalStorageService";
 import { produce } from "immer";
 import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";

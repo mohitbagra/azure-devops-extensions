@@ -1,4 +1,4 @@
-import { IVssRestClientOptions } from "azure-devops-extension-api";
+import { IVssRestClientOptions } from 'azure-devops-extension-api/Common/Context';
 import { RestClientBase } from "azure-devops-extension-api/Common/RestClientBase";
 import { WebApiCreateTagRequestData, WebApiTagDefinition } from "azure-devops-extension-api/Core/Core";
 

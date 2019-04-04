@@ -1,4 +1,4 @@
-import { getClient } from "azure-devops-extension-api";
+import { getClient } from "azure-devops-extension-api/Common/Client";
 import { GitRepository, GitRestClient } from "azure-devops-extension-api/Git";
 import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";

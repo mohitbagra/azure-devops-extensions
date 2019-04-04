@@ -3,7 +3,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { getTeamTemplates, getTeamTemplatesError, getTeamTemplatesStatus, IWorkItemTemplateAwareState, TeamTemplatesActions } from "../Redux";
+import { TeamTemplatesActions } from "../Redux/Actions";
+import { IWorkItemTemplateAwareState } from "../Redux/Contracts";
+import { getTeamTemplates, getTeamTemplatesError, getTeamTemplatesStatus } from "../Redux/Selectors";
 
 export function useTeamTemplates(teamId: string): IUseTeamTemplatesMappedState {
     const mapState = useCallback(

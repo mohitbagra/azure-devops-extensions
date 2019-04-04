@@ -6,7 +6,7 @@ import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import * as React from "react";
 import { useWorkItemTypeStateColor } from "../Hooks/useWorkItemTypeStateColor";
-import { getWorkItemTypeStateModule } from "../Redux";
+import { getWorkItemTypeStateModule } from "../Redux/Module";
 
 interface IWorkItemStateViewProps extends IBaseProps {
     stateName: string;

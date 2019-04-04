@@ -2,7 +2,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useEffect } from "react";
-import { getTags, getTagsError, getTagsStatus, ITagAwareState, ITagState, TagActions } from "../Redux";
+import { TagActions } from "../Redux/Actions";
+import { ITagAwareState, ITagState } from "../Redux/Contracts";
+import { getTags, getTagsError, getTagsStatus } from "../Redux/Selectors";
 
 export function useTags(): ITagState {
     const { tags, status, error } = useMappedState(mapState);

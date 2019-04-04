@@ -4,7 +4,7 @@ import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import * as React from "react";
 import { useWorkItemType } from "../Hooks/useWorkItemType";
-import { getWorkItemTypeModule } from "../Redux";
+import { getWorkItemTypeModule } from "../Redux/Module";
 
 interface IWorkItemTypeIconProps extends IBaseProps {
     workItemTypeName: string;

@@ -3,7 +3,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
 import * as React from "react";
 import { useGitRepos } from "../Hooks/useGitRepos";
-import { getGitRepoModule } from "../Redux";
+import { getGitRepoModule } from "../Redux/Module";
 
 function GitRepoPickerInternal(props: IPicklistPickerSharedProps<GitRepository>) {
     const { placeholder } = props;

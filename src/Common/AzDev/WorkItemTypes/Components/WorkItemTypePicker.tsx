@@ -3,7 +3,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
 import * as React from "react";
 import { useWorkItemTypes } from "../Hooks/useWorkItemTypes";
-import { getWorkItemTypeModule } from "../Redux";
+import { getWorkItemTypeModule } from "../Redux/Module";
 
 function WorkItemTypePickerInternal(props: IPicklistPickerSharedProps<WorkItemType>) {
     const { placeholder } = props;

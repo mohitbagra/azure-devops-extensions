@@ -3,7 +3,9 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { getTeam, getTeamsError, getTeamsStatus, ITeamAwareState, TeamActions } from "../Redux";
+import { TeamActions } from "../Redux/Actions";
+import { ITeamAwareState } from "../Redux/Contracts";
+import { getTeam, getTeamsError, getTeamsStatus } from "../Redux/Selectors";
 
 export function useTeam(teamIdOrName: string): IUseTeamMappedState {
     const mapState = useCallback(

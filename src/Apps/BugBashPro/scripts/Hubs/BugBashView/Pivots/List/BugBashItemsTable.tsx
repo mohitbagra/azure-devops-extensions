@@ -9,7 +9,7 @@ import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hu
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
-import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems";
+import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
 import { CoreFieldRefNames } from "Common/Constants";
