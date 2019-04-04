@@ -14,7 +14,7 @@ module.exports = {
         splitChunks: {
             chunks: "all",
             minSize: 0,
-            maxInitialRequests: 5,
+            maxInitialRequests: Infinity,
             cacheGroups: {
                 default: false,
                 vendors: false,
@@ -23,26 +23,23 @@ module.exports = {
                     name: "sdk",
                     chunks: "all"
                 },
-                ui: {
-                    test: /[\\/]node_modules[\\/](azure-devops-ui|office-ui-fabric-react)[\\/]/,
-                    name: "ui",
-                    chunks: "all"
-                },
                 react: {
                     test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                     name: "react",
                     chunks: "all",
-                    priority: -10
+                    priority: 10
                 },
                 redux: {
                     test: /[\\/]node_modules[\\/](redux|react-redux|redux-saga|reselect|immer|redux-dynamic-modules|redux-dynamic-modules-saga)[\\/]/,
                     name: "redux",
-                    chunks: "all"
+                    chunks: "all",
+                    priority: 8
                 },
                 commons: {
                     name: "commons",
                     chunks: "all",
-                    minChunks: 3
+                    minChunks: 3,
+                    priority: 7
                 }
             }
         }
