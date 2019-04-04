@@ -4,7 +4,7 @@ import { FadeAway } from "Common/Components/FadeAway";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import * as React from "react";
 import { useKeyValuePair } from "../Hooks/useKeyValuePair";
-import { getKeyValuePairModule } from "../Redux";
+import { getKeyValuePairModule } from "../Redux/Module";
 
 interface IFadeAwayNotificationOwnProps extends IBaseProps {
     notificationKey: string;

@@ -1,7 +1,9 @@
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { getKeyValue, IKeyValuePairAwareState, KeyValuePairActions } from "../Redux";
+import { KeyValuePairActions } from "../Redux/Actions";
+import { IKeyValuePairAwareState } from "../Redux/Contracts";
+import { getKeyValue } from "../Redux/Selectors";
 
 export function useKeyValuePair<T>(key: string): { value: T | undefined; dismissEntry: () => void } {
     const mapState = useCallback(
