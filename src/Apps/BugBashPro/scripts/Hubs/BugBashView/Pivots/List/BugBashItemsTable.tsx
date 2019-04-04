@@ -6,8 +6,6 @@ import { BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Hubs/BugBa
 import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashItemsSort";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
 import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
-import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux";
-import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
@@ -20,23 +18,25 @@ import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { getQueryUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
+import { BugBashViewActions } from "../../Redux/Actions";
+import { BugBashViewMode } from "../../Redux/Contracts";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
 const Actions = {
-    openBugBashItemPortal: BugBashPortalActions.openBugBashItemPortal,
+    editBugBashItemRequested: BugBashViewActions.editBugBashItemRequested,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
 export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
     const { bugBashId, filteredBugBashItems, workItemsMap } = props;
-    const { openBugBashItemPortal, deleteBugBashItem } = useActionCreators(Actions);
+    const { editBugBashItemRequested, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
     const selectionRef = React.useRef(new ListSelection(true));
     const columnSelect = React.useMemo(() => new ColumnSelect(), [viewMode]);
     const onEditBugBashItem = React.useCallback(
         (bugBashItemId: string) => {
-            openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: false });
+            editBugBashItemRequested(bugBashId, bugBashItemId);
         },
         [bugBashId]
     );

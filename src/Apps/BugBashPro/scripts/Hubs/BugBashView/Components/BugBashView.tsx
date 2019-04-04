@@ -103,7 +103,12 @@ function BugBashViewInternal(props: IBugBashViewProps): JSX.Element {
 export function BugBashView(props: IBugBashViewProps) {
     return (
         <DynamicModuleLoader
-            modules={[getBugBashesModule(), getBugBashItemsModule(), getBugBashViewModule(), getKeyValuePairModule()]}
+            modules={[
+                getBugBashesModule(),
+                getBugBashItemsModule(),
+                getBugBashViewModule(props.bugBashId, props.bugBashItemId),
+                getKeyValuePairModule()
+            ]}
             cleanOnUnmount={true}
         >
             <BugBashViewInternal {...props} />

@@ -2,7 +2,6 @@ import "./BoardCard.scss";
 
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
-import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
@@ -15,9 +14,10 @@ import { CoreFieldRefNames } from "Common/Constants";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
+import { BugBashViewActions } from "../../Redux/Actions";
 
 const Actions = {
-    openBugBashItemPortal: BugBashPortalActions.openBugBashItemPortal,
+    editBugBashItemRequested: BugBashViewActions.editBugBashItemRequested,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
@@ -28,14 +28,14 @@ interface IBoardCardProps extends IBugBashViewBaseProps {
 
 export function BoardCard(props: IBoardCardProps) {
     const { bugBashId, bugBashItem, acceptedWorkItem } = props;
-    const { openBugBashItemPortal } = useActionCreators(Actions);
+    const { editBugBashItemRequested } = useActionCreators(Actions);
     const isAccepted = isBugBashItemAccepted(bugBashItem) && acceptedWorkItem !== undefined;
 
     const onTitleClick = React.useCallback(
         (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
             if (!e.ctrlKey) {
                 e.preventDefault();
-                openBugBashItemPortal(bugBashId, bugBashItem.id, { readFromCache: false });
+                editBugBashItemRequested(bugBashId, bugBashItem.id!);
             }
         },
         [bugBashId, bugBashItem.id]
