@@ -1,10 +1,11 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { getTeam, ITeamAwareState } from "Common/AzDev/Teams/Redux";
+import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
+import { getTeam } from "Common/AzDev/Teams/Redux/Selectors";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { TitleFieldMaxLength } from "./Constants";
-import { IBugBashItemEditorAwareState } from "./Redux";
+import { IBugBashItemEditorAwareState } from "./Redux/Contracts";
 
 export function getNewBugBashItemInstance(bugBashId: string, teamId?: string): IBugBashItem {
     return {
