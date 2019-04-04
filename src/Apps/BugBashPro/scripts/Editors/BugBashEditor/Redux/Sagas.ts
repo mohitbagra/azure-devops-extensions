@@ -3,8 +3,9 @@ import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Act
 import { Resources } from "BugBashPro/Resources";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
-import { BugBashesActions, BugBashesActionTypes, getBugBash } from "BugBashPro/Shared/Redux/BugBashes";
-import { KeyValuePairActions } from "Common/Notifications/Redux";
+import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
+import { getBugBash } from "BugBashPro/Shared/Redux/BugBashes/Selectors";
+import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";

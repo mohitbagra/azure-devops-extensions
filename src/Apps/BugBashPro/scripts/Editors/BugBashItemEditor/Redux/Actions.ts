@@ -14,10 +14,7 @@ export const BugBashItemEditorActions = {
         createAction(BugBashItemEditorActionTypes.RequestDraftSave, { bugBash, bugBashItemId }),
     draftSaveSucceeded: (bugBashItem: IBugBashItem) => createAction(BugBashItemEditorActionTypes.DraftSaveSucceeded, bugBashItem),
     requestDraftAccept: (bugBash: IBugBash, bugBashItemId: string | undefined) =>
-        createAction(BugBashItemEditorActionTypes.RequestDraftAccept, { bugBash, bugBashItemId }),
-
-    requestDismiss: (bugBash: IBugBash, bugBashItem: IBugBashItem) =>
-        createAction(BugBashItemEditorActionTypes.RequestDismiss, { bugBash, bugBashItem })
+        createAction(BugBashItemEditorActionTypes.RequestDraftAccept, { bugBash, bugBashItemId })
 };
 
 export const enum BugBashItemEditorActionTypes {
@@ -28,8 +25,7 @@ export const enum BugBashItemEditorActionTypes {
     UpdateDraftComment = "BugBashItemEditor/UpdateDraftComment",
     RequestDraftSave = "BugBashItemEditor/RequestDraftSave",
     DraftSaveSucceeded = "BugBashItemEditor/DraftSaveSucceeded",
-    RequestDraftAccept = "BugBashItemEditor/RequestDraftAccept",
-    RequestDismiss = "BugBashItemEditor/RequestDismiss"
+    RequestDraftAccept = "BugBashItemEditor/RequestDraftAccept"
 }
 
 export type BugBashItemEditorActions = ActionsUnion<typeof BugBashItemEditorActions>;

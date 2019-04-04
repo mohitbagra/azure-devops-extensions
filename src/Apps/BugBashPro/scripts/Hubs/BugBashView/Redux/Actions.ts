@@ -11,7 +11,10 @@ export const BugBashViewActions = {
     setViewMode: (viewMode: BugBashViewMode) => createAction(BugBashViewActionTypes.SetViewMode, viewMode),
     applyFilter: (filterState: IFilterState) => createAction(BugBashViewActionTypes.ApplyFilter, filterState),
     applySort: (sortState: ISortState) => createAction(BugBashViewActionTypes.ApplySort, sortState),
-    clearSortAndFilter: () => createAction(BugBashViewActionTypes.ClearSortAndFilter)
+    clearSortAndFilter: () => createAction(BugBashViewActionTypes.ClearSortAndFilter),
+
+    openBugBashItemRequested: (bugBashId: string, bugBashItemId: string | undefined) =>
+        createAction(BugBashViewActionTypes.OpenBugBashItemRequested, { bugBashId, bugBashItemId })
 };
 
 export const enum BugBashViewActionTypes {
@@ -21,7 +24,8 @@ export const enum BugBashViewActionTypes {
     SetViewMode = "BugBashView/SetViewMode",
     ApplyFilter = "BugBashView/ApplyFilter",
     ApplySort = "BugBashView/ApplySort",
-    ClearSortAndFilter = "BugBashView/ClearSortAndFilter"
+    ClearSortAndFilter = "BugBashView/ClearSortAndFilter",
+    OpenBugBashItemRequested = "BugBashView/OpenBugBashItemRequested"
 }
 
 export type BugBashViewActions = ActionsUnion<typeof BugBashViewActions>;
