@@ -1,7 +1,7 @@
 import { getClient } from "azure-devops-extension-api";
 import { GitPush, GitRestClient, ItemContentType, VersionControlChangeType } from "azure-devops-extension-api/Git";
 import { useProjectSetting } from "BugBashPro/Shared/Hooks/useProjectSetting";
-import { getBugBashProjectSettingsModule } from "BugBashPro/Shared/Redux/ProjectSettings";
+import { getBugBashProjectSettingsModule } from "BugBashPro/Shared/Redux/ProjectSettings/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";

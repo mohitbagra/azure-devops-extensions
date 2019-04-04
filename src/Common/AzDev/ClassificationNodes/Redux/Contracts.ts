@@ -1,5 +1,5 @@
-import { TreeNodeStructureType } from "azure-devops-extension-api/WorkItemTracking";
-import { LoadStatus } from 'Common/Contracts';
+import { TreeNodeStructureType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { LoadStatus } from "Common/Contracts";
 
 export interface IClassificationNodeAwareState {
     areaPathState: IClassificationNodeState;

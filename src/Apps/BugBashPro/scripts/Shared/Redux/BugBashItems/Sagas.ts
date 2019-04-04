@@ -1,4 +1,4 @@
-import { TeamFieldValues } from "azure-devops-extension-api/Work";
+import { TeamFieldValues } from "azure-devops-extension-api/Work/Work";
 import { WorkItem, WorkItemTemplate } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";

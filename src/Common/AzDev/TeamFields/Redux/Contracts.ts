@@ -1,4 +1,4 @@
-import { TeamFieldValues } from "azure-devops-extension-api/Work";
+import { TeamFieldValues } from "azure-devops-extension-api/Work/Work";
 import { LoadStatus } from "Common/Contracts";
 
 export interface ITeamFieldAwareState {

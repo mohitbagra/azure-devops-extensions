@@ -1,4 +1,4 @@
-import { GitRepository } from "azure-devops-extension-api/Git";
+import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const GitRepoActions = {

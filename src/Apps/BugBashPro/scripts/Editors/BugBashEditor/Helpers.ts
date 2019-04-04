@@ -1,10 +1,14 @@
 import { FieldType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import { getField, getWorkItemTypeField, IFieldAwareState } from "Common/AzDev/Fields/Redux";
-import { getTeam, ITeamAwareState } from "Common/AzDev/Teams/Redux";
-import { getTeamTemplate, IWorkItemTemplateAwareState } from "Common/AzDev/WorkItemTemplates/Redux";
-import { getWorkItemType, IWorkItemTypeAwareState } from "Common/AzDev/WorkItemTypes/Redux";
+import { IFieldAwareState } from "Common/AzDev/Fields/Redux/Contracts";
+import { getField, getWorkItemTypeField } from "Common/AzDev/Fields/Redux/Selectors";
+import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
+import { getTeam } from "Common/AzDev/Teams/Redux/Selectors";
+import { IWorkItemTemplateAwareState } from "Common/AzDev/WorkItemTemplates/Redux/Contracts";
+import { getTeamTemplate } from "Common/AzDev/WorkItemTemplates/Redux/Selectors";
+import { IWorkItemTypeAwareState } from "Common/AzDev/WorkItemTypes/Redux/Contracts";
+import { getWorkItemType } from "Common/AzDev/WorkItemTypes/Redux/Selectors";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { TitleFieldMaxLength } from "./Constants";

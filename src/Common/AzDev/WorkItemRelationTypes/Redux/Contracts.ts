@@ -1,4 +1,4 @@
-import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 
 export interface IWorkItemRelationTypeAwareState {

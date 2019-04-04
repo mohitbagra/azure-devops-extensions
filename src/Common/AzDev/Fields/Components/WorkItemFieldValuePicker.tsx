@@ -1,6 +1,6 @@
 import "./WorkItemFieldValuePicker.scss";
 
-import { FieldType } from "azure-devops-extension-api/WorkItemTracking";
+import { FieldType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { css } from "azure-devops-ui/Util";

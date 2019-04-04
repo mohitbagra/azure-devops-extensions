@@ -1,6 +1,6 @@
 import "./BugBashItemEditor.scss";
 
-import { WebApiTeam } from "azure-devops-extension-api/Core";
+import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
@@ -13,11 +13,11 @@ import { useBugBash } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBash";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
-import { getCommentsModule } from "BugBashPro/Shared/Redux/Comments";
-import { getTeamFieldModule } from "Common/AzDev/TeamFields/Redux";
+import { getCommentsModule } from "BugBashPro/Shared/Redux/Comments/Module";
+import { getTeamFieldModule } from "Common/AzDev/TeamFields/Redux/Module";
 import { TeamPicker } from "Common/AzDev/Teams/Components/TeamPicker";
-import { ITeamAwareState } from "Common/AzDev/Teams/Redux";
-import { getWorkItemTemplateModule } from "Common/AzDev/WorkItemTemplates/Redux";
+import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
+import { getWorkItemTemplateModule } from "Common/AzDev/WorkItemTemplates/Redux/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { Mousetrapped } from "Common/Components/Mousetrapped";
@@ -32,17 +32,10 @@ import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 import { BugBashItemEditorErrorKey, BugBashItemEditorNotificationKey, TitleFieldMaxLength } from "../Constants";
-import {
-    BugBashItemEditorActions,
-    getBugBashItemEditorModule,
-    getDraftBugBashItem,
-    getDraftComment,
-    getDraftInitializeError,
-    IBugBashItemEditorAwareState,
-    isDraftDirty,
-    isDraftSaving,
-    isDraftValid
-} from "../Redux";
+import { BugBashItemEditorActions } from "../Redux/Actions";
+import { IBugBashItemEditorAwareState } from "../Redux/Contracts";
+import { getBugBashItemEditorModule } from "../Redux/Module";
+import { getDraftBugBashItem, getDraftComment, getDraftInitializeError, isDraftDirty, isDraftSaving, isDraftValid } from "../Redux/Selectors";
 import { BugBashRichEditor } from "./BugBashRichEditor";
 import { CommentsList } from "./CommentsList";
 

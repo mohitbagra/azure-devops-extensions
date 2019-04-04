@@ -1,4 +1,4 @@
-import { WebApiTeam } from "azure-devops-extension-api/Core";
+import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { ITeamAwareState, ITeamState } from "./Contracts";

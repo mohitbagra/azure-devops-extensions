@@ -1,5 +1,5 @@
 import { getClient } from "azure-devops-extension-api";
-import { WebApiTagDefinition } from "azure-devops-extension-api/Core";
+import { WebApiTagDefinition } from "azure-devops-extension-api/Core/Core";
 import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";

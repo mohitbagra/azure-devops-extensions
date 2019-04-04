@@ -1,4 +1,4 @@
-import { FieldType, WorkItemField } from "azure-devops-extension-api/WorkItemTracking";
+import { FieldType, WorkItemField } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";

@@ -1,4 +1,4 @@
-import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { AreaPathActions, AreaPathActionTypes, IterationPathActions, IterationPathActionTypes } from "./Actions";

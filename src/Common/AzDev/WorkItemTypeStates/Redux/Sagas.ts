@@ -1,4 +1,4 @@
-import { WorkItemStateColor } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemStateColor } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";

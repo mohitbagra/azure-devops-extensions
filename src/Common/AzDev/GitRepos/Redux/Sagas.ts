@@ -1,4 +1,4 @@
-import { GitRepository } from "azure-devops-extension-api/Git";
+import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";

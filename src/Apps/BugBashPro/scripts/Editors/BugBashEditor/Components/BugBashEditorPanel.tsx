@@ -1,7 +1,7 @@
 import "./BugBashEditor.scss";
 
-import { WebApiTeam } from "azure-devops-extension-api/Core";
-import { FieldType, WorkItemField, WorkItemTemplate, WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
+import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
+import { FieldType, WorkItemField, WorkItemTemplate, WorkItemType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
@@ -36,16 +36,10 @@ import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 import { BugBashEditorErrorKey, BugBashEditorNotificationKey, TitleFieldMaxLength } from "../Constants";
-import {
-    BugBashEditorActions,
-    getBugBashEditorModule,
-    getDraftBugBash,
-    getDraftInitializeError,
-    IBugBashEditorAwareState,
-    isDraftDirty,
-    isDraftSaving,
-    isDraftValid
-} from "../Redux";
+import { BugBashEditorActions } from "../Redux/Actions";
+import { IBugBashEditorAwareState } from "../Redux/Contracts";
+import { getBugBashEditorModule } from "../Redux/Module";
+import { getDraftBugBash, getDraftInitializeError, isDraftDirty, isDraftSaving, isDraftValid } from "../Redux/Selectors";
 
 interface IBugBashEditorPanelOwnProps {
     bugBashId?: string;

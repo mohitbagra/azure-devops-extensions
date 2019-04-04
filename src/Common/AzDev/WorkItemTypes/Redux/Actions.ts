@@ -1,4 +1,4 @@
-import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const WorkItemTypeActions = {

@@ -1,5 +1,5 @@
 import { getClient } from "azure-devops-extension-api";
-import { TeamContext } from "azure-devops-extension-api/Core";
+import { TeamContext } from "azure-devops-extension-api/Core/Core";
 import { WorkRestClient } from "azure-devops-extension-api/Work";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";

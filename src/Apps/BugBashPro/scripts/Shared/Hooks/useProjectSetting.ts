@@ -1,10 +1,7 @@
 import { IProjectSetting } from "BugBashPro/Shared/Contracts";
-import {
-    getProjectSetting,
-    getProjectSettingStatus,
-    IBugBashSettingsAwareState,
-    ProjectSettingActions
-} from "BugBashPro/Shared/Redux/ProjectSettings";
+import { ProjectSettingActions } from "BugBashPro/Shared/Redux/ProjectSettings/Actions";
+import { IBugBashSettingsAwareState } from "BugBashPro/Shared/Redux/ProjectSettings/Contracts";
+import { getProjectSetting, getProjectSettingStatus } from "BugBashPro/Shared/Redux/ProjectSettings/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";

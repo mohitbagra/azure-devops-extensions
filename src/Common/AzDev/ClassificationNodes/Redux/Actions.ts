@@ -1,4 +1,4 @@
-import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const AreaPathActions = {

@@ -1,6 +1,5 @@
-import {
-    IWorkItemFormService, WorkItemField, WorkItemTrackingServiceIds
-} from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemField } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { IWorkItemFormService, WorkItemTrackingServiceIds } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices";
 import * as SDK from "azure-devops-extension-sdk";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { CoreFieldRefNames } from "Common/Constants";

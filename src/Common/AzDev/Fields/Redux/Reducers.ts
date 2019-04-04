@@ -1,4 +1,4 @@
-import { WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { FieldActions, FieldActionTypes, WorkItemTypeFieldActions, WorkItemTypeFieldActionTypes } from "./Actions";

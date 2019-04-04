@@ -12,11 +12,17 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
+            chunks: "all",
             minSize: 0,
             maxInitialRequests: 5,
             cacheGroups: {
                 default: false,
                 vendors: false,
+                sdk: {
+                    test: /[\\/]node_modules[\\/](azure-devops-extension-sdk)[\\/]/,
+                    name: "sdk",
+                    chunks: "all"
+                },
                 ui: {
                     test: /[\\/]node_modules[\\/](azure-devops-ui|office-ui-fabric-react)[\\/]/,
                     name: "ui",
@@ -32,6 +38,11 @@ module.exports = {
                     test: /[\\/]node_modules[\\/](redux|react-redux|redux-saga|reselect|immer|redux-dynamic-modules|redux-dynamic-modules-saga)[\\/]/,
                     name: "redux",
                     chunks: "all"
+                },
+                commons: {
+                    name: "commons",
+                    chunks: "all",
+                    minChunks: 3
                 }
             }
         }

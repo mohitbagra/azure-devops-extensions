@@ -1,6 +1,6 @@
 import { IVssRestClientOptions } from "azure-devops-extension-api";
 import { RestClientBase } from "azure-devops-extension-api/Common/RestClientBase";
-import { WebApiCreateTagRequestData, WebApiTagDefinition } from "azure-devops-extension-api/Core";
+import { WebApiCreateTagRequestData, WebApiTagDefinition } from "azure-devops-extension-api/Core/Core";
 
 export class TaggingRestClient extends RestClientBase {
     public static readonly RESOURCE_AREA_ID = "1F131D7F-CFBB-4EC9-B358-FB4E8341CE59";

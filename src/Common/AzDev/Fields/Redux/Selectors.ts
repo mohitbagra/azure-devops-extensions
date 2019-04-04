@@ -1,4 +1,4 @@
-import { WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { IFieldAwareState, IFieldState, IWorkItemTypeFields, IWorkItemTypeFieldState } from "./Contracts";

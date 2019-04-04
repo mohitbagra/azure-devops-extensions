@@ -1,4 +1,4 @@
-import { TeamFieldValues } from "azure-devops-extension-api/Work";
+import { TeamFieldValues } from "azure-devops-extension-api/Work/Work";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const TeamFieldActions = {

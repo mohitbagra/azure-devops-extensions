@@ -7,17 +7,10 @@ import { emptyRenderer } from "Common/Components/Renderers";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import * as React from "react";
-import {
-    BugBashPortalActions,
-    getBugBashPortalModule,
-    getPortalProps,
-    getPortalType,
-    IBugBashEditPortalProps,
-    IBugBashItemEditPortalProps,
-    IBugBashPortalAwareState,
-    isPortalOpen,
-    PortalType
-} from "../Redux";
+import { BugBashPortalActions } from "../Redux/Actions";
+import { IBugBashEditPortalProps, IBugBashItemEditPortalProps, IBugBashPortalAwareState, PortalType } from "../Redux/Contracts";
+import { getBugBashPortalModule } from "../Redux/Module";
+import { getPortalProps, getPortalType, isPortalOpen } from "../Redux/Selectors";
 
 interface IBugBashPortalStateProps {
     portalOpen: boolean;

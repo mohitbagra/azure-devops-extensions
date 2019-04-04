@@ -1,4 +1,4 @@
-import { GitRepository } from "azure-devops-extension-api/Git";
+import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
 import { IGitRepoAwareState, IGitRepoState } from "./Contracts";

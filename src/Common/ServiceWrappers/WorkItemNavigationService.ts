@@ -1,6 +1,5 @@
-import {
-    IWorkItemFormNavigationService, WorkItem, WorkItemTrackingServiceIds
-} from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { IWorkItemFormNavigationService, WorkItemTrackingServiceIds } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices";
 import * as SDK from "azure-devops-extension-sdk";
 
 let workItemFormNavigationService: IWorkItemFormNavigationService;

@@ -1,2 +1,1 @@
-export * from "./Components/index";
-export * from "./Redux/index";
+export * from "./Components/BugBashView";

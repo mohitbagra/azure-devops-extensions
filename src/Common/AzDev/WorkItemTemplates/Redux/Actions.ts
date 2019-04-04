@@ -1,4 +1,4 @@
-import { WorkItemTemplate, WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemTemplate, WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const TeamTemplatesActions = {

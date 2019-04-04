@@ -1,4 +1,4 @@
-import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";

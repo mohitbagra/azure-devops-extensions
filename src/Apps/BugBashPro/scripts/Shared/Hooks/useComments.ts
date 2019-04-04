@@ -1,5 +1,7 @@
 import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
-import { CommentActions, getComments, getCommentsStatus, ICommentsAwareState } from "BugBashPro/Shared/Redux/Comments";
+import { CommentActions } from "BugBashPro/Shared/Redux/Comments/Actions";
+import { ICommentsAwareState } from "BugBashPro/Shared/Redux/Comments/Contracts";
+import { getComments, getCommentsStatus } from "BugBashPro/Shared/Redux/Comments/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";

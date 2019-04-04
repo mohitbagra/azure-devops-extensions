@@ -1,4 +1,4 @@
-import { WebApiTeam } from "azure-devops-extension-api/Core";
+import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { ActionsUnion, createAction } from "Common/Redux";
 
 export const TeamActions = {

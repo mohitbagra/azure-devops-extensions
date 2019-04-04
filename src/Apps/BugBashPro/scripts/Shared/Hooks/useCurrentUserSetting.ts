@@ -1,5 +1,7 @@
 import { IUserSetting } from "BugBashPro/Shared/Contracts";
-import { getCurrentUserSetting, getUserSettingsStatus, IBugBashSettingsAwareState, UserSettingActions } from "BugBashPro/Shared/Redux/UserSettings";
+import { UserSettingActions } from "BugBashPro/Shared/Redux/UserSettings/Actions";
+import { IBugBashSettingsAwareState } from "BugBashPro/Shared/Redux/UserSettings/Contracts";
+import { getCurrentUserSetting, getUserSettingsStatus } from "BugBashPro/Shared/Redux/UserSettings/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
