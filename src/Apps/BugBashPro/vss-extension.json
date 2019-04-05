@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "bugbashpro",
-    "version": "4.1.2",
+    "version": "4.3.1",
     "name": "Bug Bash Pro",
     "description": "Easier way to manage bug bashes",
     "icons": {
@@ -11,10 +11,6 @@
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
-        },
-        {
-            "id": "Microsoft.TeamFoundation.Server",
-            "version": "[17.0,)"
         }
     ],
     "tags": ["Work Item", "Collaborate", "Bug", "Bug bash"],

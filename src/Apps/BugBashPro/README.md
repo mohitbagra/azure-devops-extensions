@@ -95,6 +95,13 @@ Users can configure 2 things here -
 # Changelog
 
 <a name="changelog" id="changelog"></a>
+
+**(04/06/2019) Version 4.2:**
+
+-   Use new azure devops extension sdk & apis
+-   Dark theme support
+-   Major UI redesign
+
 **(03/03/18) Version 3.3:**
 
 -   Added "All" pivot in results and charts view to show all the items irrespective of whether they are pending or rejected or accepted.
