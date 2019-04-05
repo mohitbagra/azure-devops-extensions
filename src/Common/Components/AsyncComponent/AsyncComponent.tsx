@@ -1,3 +1,4 @@
+import { DelayedRender } from "Common/Components/DelayedRender";
 import { InputError } from "Common/Components/InputError";
 import { Loading } from "Common/Components/Loading";
 import * as React from "react";
@@ -52,7 +53,11 @@ export function AsyncComponent<T>(props: IAsyncComponentProps<T>) {
 }
 
 function renderLoading(): JSX.Element {
-    return <Loading />;
+    return (
+        <DelayedRender delay={200}>
+            <Loading />
+        </DelayedRender>
+    );
 }
 
 function renderError(error: string): JSX.Element {
