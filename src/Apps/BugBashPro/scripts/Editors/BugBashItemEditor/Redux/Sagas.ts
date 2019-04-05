@@ -1,18 +1,14 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
-import { Resources } from "BugBashPro/Resources";
+import { BugBashViewActions } from "BugBashPro/Hubs/BugBashView/Redux/Actions";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { getBugBashItem } from "BugBashPro/Shared/Redux/BugBashItems/Selectors";
 import { CommentActions, CommentActionTypes } from "BugBashPro/Shared/Redux/Comments/Actions";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
-import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
-import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
-import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
-import { Channel, channel, SagaIterator } from "redux-saga";
-import { all, call, delay, put, race, select, take, takeEvery } from "redux-saga/effects";
+import { SagaIterator } from "redux-saga";
+import { all, call, put, race, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashItemEditorErrorKey, BugBashItemEditorNotificationKey } from "../Constants";
 import { getNewBugBashItemInstance } from "../Helpers";
 import { BugBashItemEditorActions, BugBashItemEditorActionTypes } from "./Actions";
@@ -114,7 +110,7 @@ function* requestDraftCreate(bugBash: IBugBash, draftBugBashItem: IBugBashItem, 
         if (bugBash.autoAccept) {
             yield call(acceptBugBashItem, bugBash, createdBugBashItem, true);
         } else {
-            yield call(dismissPortalAndShowToast, bugBash.id!, createdBugBashItem.id!);
+            yield put(BugBashViewActions.dismissBugBashItemPortalRequested(bugBash.id!, createdBugBashItem.id!, undefined));
         }
     }
 }
@@ -191,46 +187,6 @@ function* acceptBugBashItem(bugBash: IBugBash, bugBashItem: IBugBashItem, accept
 
     if (itemUpdatedAction.type === BugBashItemsActionTypes.BugBashItemUpdated) {
         const { bugBashItem: acceptedBugBashItem } = itemUpdatedAction.payload;
-        yield call(dismissPortalAndShowToast, bugBash.id!, acceptedBugBashItem.id!, acceptedBugBashItem.workItemId);
-    }
-}
-
-function* dismissPortalAndShowToast(bugBashId: string, bugBashItemId: string, workItemId?: number) {
-    if (workItemId) {
-        const workItemUrl: string = yield call(getWorkItemUrlAsync, workItemId);
-        yield call(addToast, {
-            message: Resources.BugBashAcceptedCreatedMessage,
-            callToAction: Resources.View,
-            duration: 5000,
-            forceOverrideExisting: true,
-            onCallToActionClick: () => {
-                openNewWindow(workItemUrl);
-            }
-        });
-        yield put(BugBashPortalActions.dismissPortal());
-    } else {
-        const callbackChannel: Channel<BugBashPortalActions> = yield call(channel);
-        const callback = () => {
-            callbackChannel.put(BugBashPortalActions.openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: true }));
-        };
-
-        yield call(addToast, {
-            message: Resources.BugBashItemCreatedMessage,
-            callToAction: Resources.View,
-            duration: 5000,
-            forceOverrideExisting: true,
-            onCallToActionClick: callback
-        });
-        yield put(BugBashPortalActions.dismissPortal());
-
-        const { message } = yield race({
-            message: take(callbackChannel),
-            timeout: delay(5000)
-        });
-
-        if (message) {
-            yield put(message);
-        }
-        yield call([callbackChannel, callbackChannel.close]);
+        yield put(BugBashViewActions.dismissBugBashItemPortalRequested(bugBash.id!, acceptedBugBashItem.id!, acceptedBugBashItem.workItemId));
     }
 }

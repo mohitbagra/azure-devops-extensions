@@ -2,6 +2,7 @@ import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
+import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
@@ -10,9 +11,12 @@ import { getAllBugBashItems, getBugBashItem, getResolvedWorkItemsMap } from "Bug
 import { getTeamsMap } from "Common/AzDev/Teams/Redux/Selectors";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
+import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
+import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { openWorkItem } from "Common/ServiceWrappers/WorkItemNavigationService";
-import { SagaIterator } from "redux-saga";
-import { call, put, race, select, take, takeEvery } from "redux-saga/effects";
+import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
+import { Channel, channel, SagaIterator } from "redux-saga";
+import { call, delay, put, race, select, take, takeEvery } from "redux-saga/effects";
 import { BugBashViewPageErrorKey } from "../Constants";
 import { getBugBashItemsFilterData, getFilteredBugBashItems } from "../Helpers";
 import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";
@@ -26,6 +30,7 @@ export function* bugBashViewSaga(): SagaIterator {
     yield takeEvery(BugBashViewActionTypes.ApplySort, applySort);
     yield takeEvery(BugBashViewActionTypes.ClearSortAndFilter, clearSortAndFilter);
     yield takeEvery(BugBashViewActionTypes.EditBugBashItemRequested, editBugBashItemRequested);
+    yield takeEvery(BugBashViewActionTypes.DismissBugBashItemPortalRequested, onBugBashItemPortalDismissed);
 
     yield takeEvery(BugBashesActionTypes.BugBashLoaded, bugBashLoaded);
     yield takeEvery(BugBashesActionTypes.BugBashUpdated, bugBashLoaded);
@@ -147,5 +152,46 @@ function* editBugBashItemRequested(action: ActionsOfType<BugBashViewActions, Bug
         yield put(BugBashItemsActions.bugBashItemUpdated(bugBashItem, workItem));
     } else {
         yield put(BugBashPortalActions.openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: false }));
+    }
+}
+
+function* onBugBashItemPortalDismissed(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.DismissBugBashItemPortalRequested>) {
+    const { bugBashId, bugBashItemId, workItemId } = action.payload;
+    if (workItemId) {
+        const workItemUrl: string = yield call(getWorkItemUrlAsync, workItemId);
+        yield call(addToast, {
+            message: Resources.BugBashAcceptedCreatedMessage,
+            callToAction: Resources.View,
+            duration: 5000,
+            forceOverrideExisting: true,
+            onCallToActionClick: () => {
+                openNewWindow(workItemUrl);
+            }
+        });
+        yield put(BugBashPortalActions.dismissPortal());
+    } else {
+        const callbackChannel: Channel<BugBashPortalActions> = yield call(channel);
+        const callback = () => {
+            callbackChannel.put(BugBashPortalActions.openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: true }));
+        };
+
+        yield call(addToast, {
+            message: Resources.BugBashItemCreatedMessage,
+            callToAction: Resources.View,
+            duration: 5000,
+            forceOverrideExisting: true,
+            onCallToActionClick: callback
+        });
+        yield put(BugBashPortalActions.dismissPortal());
+
+        const { message } = yield race({
+            message: take(callbackChannel),
+            timeout: delay(5000)
+        });
+
+        if (message) {
+            yield put(message);
+        }
+        yield call([callbackChannel, callbackChannel.close]);
     }
 }
