@@ -18,7 +18,7 @@ export function getFilteredBugBashes(
     }
 
     const currentTime = new Date();
-    const filteredAllBugBashes = applyFilterAndSort(allBugBashes, filterState, sortState, matcher, comparer);
+    const filteredAllBugBashes = applyFilterAndSort(allBugBashes, filterState, undefined, matcher, comparer);
     const pastBugBashes = filteredAllBugBashes.filter(b => isBugBashCompleted(b, currentTime));
     const ongoingBugBashes = filteredAllBugBashes.filter(b => isBugBashInProgress(b, currentTime));
     const upcomingBugBashes = filteredAllBugBashes.filter(b => isBugBashScheduled(b, currentTime));
@@ -29,20 +29,26 @@ export function getFilteredBugBashes(
         upcoming: upcomingBugBashes ? upcomingBugBashes.length : 0
     };
     let filteredBugBashes: IBugBash[];
+    let defaultSortState: ISortState;
 
     switch (selectedTab) {
         case BugBashDirectoryTabId.Past: {
             filteredBugBashes = pastBugBashes;
+            defaultSortState = { sortKey: BugBashFieldNames.EndTime, isSortedDescending: true };
             break;
         }
         case BugBashDirectoryTabId.Ongoing: {
             filteredBugBashes = ongoingBugBashes;
+            defaultSortState = { sortKey: BugBashFieldNames.StartTime, isSortedDescending: true };
             break;
         }
         default: {
             filteredBugBashes = upcomingBugBashes;
+            defaultSortState = { sortKey: BugBashFieldNames.StartTime, isSortedDescending: false };
         }
     }
+
+    filteredBugBashes.sort((b1, b2) => comparer(b1, b2, sortState || defaultSortState));
 
     return {
         filteredBugBashes: filteredBugBashes,
