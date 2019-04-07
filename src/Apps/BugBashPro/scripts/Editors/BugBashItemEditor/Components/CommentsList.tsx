@@ -28,7 +28,7 @@ export function CommentsList(props: ICommentsListProps) {
 function renderComment(item: IBugBashItemComment): JSX.Element {
     const { createdBy, createdDate, content } = item;
     return (
-        <div className="comment-item flex-row h-scroll-hidden" key={`comment_${item.id!}`}>
+        <div className="comment-item flex-row" key={`comment_${item.id!}`}>
             <div className="flex-noshrink comment-identity">
                 <IdentityView value={createdBy} avatarOnly={true} size={"medium"} />
             </div>

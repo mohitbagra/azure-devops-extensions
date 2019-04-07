@@ -20,6 +20,13 @@
 
             .comment-text {
                 margin-top: 5px;
+                word-break: break-all;
+
+                img {
+                    max-width: 100%;
+                    -ms-flex-item-align: center;
+                    align-self: center;
+                }
             }
         }
     }

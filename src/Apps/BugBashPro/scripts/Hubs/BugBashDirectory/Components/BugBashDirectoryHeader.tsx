@@ -39,7 +39,9 @@ export function BugBashDirectoryHeader(): JSX.Element {
                 {
                     ...DirectoryPageHeaderCommands.settings,
                     disabled: isLoading,
-                    onActivate: () => openSettingsPortal
+                    onActivate: () => {
+                        openSettingsPortal();
+                    }
                 }
             ]}
             titleSize={TitleSize.Large}
