@@ -23,7 +23,7 @@ The home page of the extension shows all the past/ongoing/upcoming bug bash inst
 
 ![Group](images/homepage.jpg)
 
-To create a new bug bash instance, click "New", which opens the bug bash editor
+To create a new bug bash instance, click "New Bug Bash", which opens the bug bash editor in a side panel
 
 ![Group](images/editor.jpg)
 
@@ -40,25 +40,20 @@ You can enter bug bash information in the editor to create it. Here are the prop
 
 _P.S._ : Work item templates are defined per team per workitem type. The template dropdown shows all templates in the selected team (for all work item types). Users should pick a template corresponding to the selected "Work item type" in the bug bash.
 
-![Group](images/editorview.jpg)
-
-Once saved, click on "Results" to go to the results view of this bug bash instance.
+Once saved, click on the Title cell of the newly added bug bash instance.
 
 ![Group](images/results.jpg)
 
-The results page shows 2 things -
-
-1. A results grid which shows the items created in this bug bash.
-2. An item editor where users can create new items or edit existing ones.
-
 You can choose the view of results grid from the filter at top-right (next to the result count number) -
+
 ![Group](images/filter.jpg)
 
 1. **Pending Items** - It shows all the items which are not yet accepted. By accepted, I mean that no work items have been created for these items. When you create any new item (if the Auto accept is turned off in the bug bash instance), it just creates a bug bash item without creating any work item for it. Only when you accept it, it will create an actual work item based on the work item template selected during the bug bash creation. Each item can be edited in this list by clicking the row.
 2. **Accepted Items** - It shows all the items which have been accepted. Since accepted items are in fact real work items, to edit them, you need to open the work item form. This list shows a work item grid and to open a work item you can double click the row or click the title. Accepting an item is an irreversible step.
 3. **Rejected Items** - It shows all the items which are rejected. To reject an item, select the item from "Pending Items" grid and from the item editor, select the "Reject" checkbox, fill in a "Reject Reason" and save it. Once saved, this item will start showing up in the Rejected Items grid. Note that a rejected item can still be "Accepted" in future or moved back to "Pending items" list.
+4. **All Items** - It shows all the items.
 
-To create or edit any pending item, you can use the item editor at the right side of the results page.
+To create or edit any pending item, click "New" button in the header.
 When a new item is created, it will store the title, description and team into the item's data. When the item is accepted, the title and team from the item would be used to fill the title and team field (area path for Azure Devops) of accepted work item. And the description would be filled in the description field selected during bug bash creation.
 
 Users can also start a discussion for a item in the item editor.
@@ -100,8 +95,11 @@ Users can configure 2 things here -
 
 -   Use new azure devops extension sdk & apis
 -   Dark theme support
--   Major UI redesign:
-    1.
+-   Removed "Details" pivot from bug bash view page
+-   Added "Board" pivot in bug bash view page
+-   Bug bash edit/create happens from a panel instead of a full page editor
+-   Bug bash item edit/create happens from a panel instead of a triage view
+-   Performance improvements
 
 **(03/03/18) Version 3.3:**
 
