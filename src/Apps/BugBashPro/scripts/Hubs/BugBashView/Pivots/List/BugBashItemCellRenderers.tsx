@@ -46,7 +46,6 @@ export function onRenderBugBashItemCell(
         if (isAccepted) {
             innerElement = (
                 <WorkItemTitleView
-                    className="flex-grow"
                     linkClassName="bolt-table-link"
                     workItemId={acceptedWorkItem!.id}
                     title={value as string}
@@ -58,7 +57,7 @@ export function onRenderBugBashItemCell(
             innerElement = (
                 <AsyncLinkComponent
                     key={bugBashItem.id}
-                    className="text-ellipsis bolt-table-link flex-grow"
+                    className="text-ellipsis bolt-table-link"
                     getHrefAsync={getBugBashItemUrlPromise(bugBashItem.bugBashId, bugBashItem.id!)}
                     title={bugBashItem.title}
                     onClick={onTitleClick}

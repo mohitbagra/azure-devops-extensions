@@ -88,7 +88,7 @@ export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemPro
             scrollable={true}
             showLines={false}
             behaviors={[sortingBehavior]}
-            singleClickActivation={false}
+            singleClickActivation={viewMode === BugBashViewMode.Accepted ? false : true}
             onActivate={onRowActivate}
             selection={viewMode === BugBashViewMode.Accepted ? selectionRef.current : undefined}
         />

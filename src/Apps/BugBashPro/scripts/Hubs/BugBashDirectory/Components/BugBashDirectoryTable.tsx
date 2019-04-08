@@ -60,7 +60,7 @@ export function BugBashDirectoryTable() {
             items={filteredBugBashes}
             scrollable={true}
             showLines={false}
-            singleClickActivation={false}
+            singleClickActivation={true}
             onActivate={onRowActivate}
             behaviors={[sortingBehavior]}
         />
@@ -96,7 +96,7 @@ function getColumns(
                     >
                         <AsyncLinkComponent
                             key={bugBash.id}
-                            className="text-ellipsis bolt-table-link flex-grow"
+                            className="text-ellipsis bolt-table-link"
                             getHrefAsync={getBugBashUrlPromise(bugBash.id!)}
                             title={bugBash.title}
                             onClick={onLinkClick(bugBash)}
