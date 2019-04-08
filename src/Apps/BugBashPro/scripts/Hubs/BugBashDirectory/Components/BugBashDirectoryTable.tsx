@@ -88,10 +88,15 @@ function getColumns(
             isSortedDescending: isSortedDescending,
             renderCell: (_rowIndex: number, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
                 return (
-                    <SimpleTableCell className="bolt-table-cell-content-with-link" columnIndex={columnIndex} tableColumn={tableColumn} key={`col-${columnIndex}`}>
+                    <SimpleTableCell
+                        contentClassName="bolt-table-cell-content-with-link"
+                        columnIndex={columnIndex}
+                        tableColumn={tableColumn}
+                        key={`col-${columnIndex}`}
+                    >
                         <AsyncLinkComponent
                             key={bugBash.id}
-                            className="text-ellipsis bolt-table-link"
+                            className="text-ellipsis bolt-table-link flex-grow"
                             getHrefAsync={getBugBashUrlPromise(bugBash.id!)}
                             title={bugBash.title}
                             onClick={onLinkClick(bugBash)}

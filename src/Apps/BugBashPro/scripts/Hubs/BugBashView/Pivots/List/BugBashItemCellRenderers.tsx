@@ -24,6 +24,8 @@ export function onRenderBugBashItemCell(
     onTitleClick: (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => void
 ): JSX.Element {
     let value: any;
+    let isLink = false;
+
     const isAccepted = isBugBashItemAccepted(bugBashItem);
     if (isWorkItemFieldName(key)) {
         if (isAccepted && acceptedWorkItem) {
@@ -40,11 +42,12 @@ export function onRenderBugBashItemCell(
     if (key === BugBashItemFieldNames.Status) {
         innerElement = renderStatusCell(bugBashItem);
     } else if (key === BugBashItemFieldNames.Title) {
+        isLink = true;
         if (isAccepted) {
             innerElement = (
                 <WorkItemTitleView
                     className="flex-grow"
-                    linkClassName="bolt-table-link bolt-table-inline-link"
+                    linkClassName="bolt-table-link"
                     workItemId={acceptedWorkItem!.id}
                     title={value as string}
                     workItemTypeName={acceptedWorkItem!.fields[WorkItemFieldNames.WorkItemType]}
@@ -55,7 +58,7 @@ export function onRenderBugBashItemCell(
             innerElement = (
                 <AsyncLinkComponent
                     key={bugBashItem.id}
-                    className="text-ellipsis bolt-table-link bolt-table-inline-link flex-grow"
+                    className="text-ellipsis bolt-table-link flex-grow"
                     getHrefAsync={getBugBashItemUrlPromise(bugBashItem.bugBashId, bugBashItem.id!)}
                     title={bugBashItem.title}
                     onClick={onTitleClick}
@@ -83,7 +86,12 @@ export function onRenderBugBashItemCell(
     }
 
     return (
-        <SimpleTableCell columnIndex={columnIndex} tableColumn={tableColumn} key={`col-${columnIndex}`}>
+        <SimpleTableCell
+            columnIndex={columnIndex}
+            tableColumn={tableColumn}
+            key={`col-${columnIndex}`}
+            contentClassName={isLink ? "bolt-table-cell-content-with-link" : undefined}
+        >
             {innerElement}
         </SimpleTableCell>
     );

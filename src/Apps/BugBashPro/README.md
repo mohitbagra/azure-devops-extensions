@@ -100,7 +100,8 @@ Users can configure 2 things here -
 
 -   Use new azure devops extension sdk & apis
 -   Dark theme support
--   Major UI redesign
+-   Major UI redesign:
+    1.
 
 **(03/03/18) Version 3.3:**
 
