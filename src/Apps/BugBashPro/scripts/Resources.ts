@@ -51,4 +51,5 @@ export namespace Resources {
     export const OpenSelectedWorkItems = "Open selected work items";
     export const View = "View";
     export const Open = "Open";
+    export const Details = "Details";
 }

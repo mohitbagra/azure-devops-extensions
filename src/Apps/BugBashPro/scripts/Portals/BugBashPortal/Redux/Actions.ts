@@ -13,6 +13,8 @@ export const BugBashPortalActions = {
 
     openSettingsPortal: () => createAction(BugBashPortalActionTypes.OpenSettingsPortal),
 
+    openDetailsPortal: (bugBashId: string) => createAction(BugBashPortalActionTypes.OpenDetailsPortal, bugBashId),
+
     dismissPortal: () => createAction(BugBashPortalActionTypes.DismissPortal)
 };
 
@@ -20,6 +22,7 @@ export const enum BugBashPortalActionTypes {
     OpenBugBashPortal = "BugBashPortalAction/OpenBugBashPortal",
     OpenBugBashItemPortal = "BugBashPortalAction/OpenBugBashItemPortal",
     OpenSettingsPortal = "BugBashPortalAction/OpenSettingsPortal",
+    OpenDetailsPortal = "BugBashPortalAction/OpenDetailsPortal",
     DismissPortal = "BugBashPortalAction/DismissPortal"
 }
 

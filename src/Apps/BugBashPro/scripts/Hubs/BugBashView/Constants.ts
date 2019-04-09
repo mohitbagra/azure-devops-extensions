@@ -72,6 +72,14 @@ export const BugBashViewHeaderCommands: { [key: string]: IHeaderCommandBarItem }
             iconName: "Edit"
         }
     },
+    details: {
+        important: true,
+        id: "details",
+        text: Resources.Details,
+        iconProps: {
+            iconName: "Info"
+        }
+    },
     refresh: {
         important: true,
         id: "refresh",

@@ -18,6 +18,7 @@ import { IBugBashViewBaseProps } from "../Interfaces";
 const Actions = {
     openBugBashPortal: BugBashPortalActions.openBugBashPortal,
     openBugBashItemPortal: BugBashPortalActions.openBugBashItemPortal,
+    openDetailsPortal: BugBashPortalActions.openDetailsPortal,
     loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
@@ -25,7 +26,7 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
     const { bugBashId } = props;
     const { status } = useFilteredBugBashItems(bugBashId);
     const { bugBash } = useBugBash(bugBashId);
-    const { openBugBashPortal, openBugBashItemPortal, loadBugBashItems } = useActionCreators(Actions);
+    const { openBugBashPortal, openBugBashItemPortal, openDetailsPortal, loadBugBashItems } = useActionCreators(Actions);
 
     if (!bugBash) {
         throw new Error("Bug Bash is not initialized yet");
@@ -52,6 +53,13 @@ export function BugBashViewHeader(props: IBugBashViewBaseProps) {
                     onActivate: () => {
                         // dont refresh bug bash from server when editing from inside of bug bash view
                         openBugBashPortal(bugBashId, { readFromCache: true });
+                    }
+                },
+                {
+                    ...BugBashViewHeaderCommands.details,
+                    disabled: isLoading,
+                    onActivate: () => {
+                        openDetailsPortal(bugBashId);
                     }
                 },
                 {

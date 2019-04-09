@@ -5,7 +5,7 @@ export interface IBugBashPortalAwareState {
 export interface IBugBashPortalState {
     portalOpen: boolean;
     portalType: PortalType | undefined;
-    portalProps: IBugBashEditPortalProps | IBugBashItemEditPortalProps | undefined;
+    portalProps: IBugBashEditPortalProps | IBugBashItemEditPortalProps | IBugBashDetailsEditPortalProps | undefined;
 }
 
 export const defaultBugBashPortalState: IBugBashPortalState = {
@@ -17,7 +17,12 @@ export const defaultBugBashPortalState: IBugBashPortalState = {
 export const enum PortalType {
     BugBashEdit = 1,
     BugBashItemEdit,
-    SettingsEdit
+    SettingsEdit,
+    DetailsEdit
+}
+
+export interface IBugBashDetailsEditPortalProps {
+    bugBashId: string;
 }
 
 export interface IBugBashEditPortalProps {

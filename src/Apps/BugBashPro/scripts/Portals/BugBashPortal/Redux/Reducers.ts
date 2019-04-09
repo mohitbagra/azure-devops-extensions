@@ -28,6 +28,14 @@ export function portalReducer(state: IBugBashPortalState | undefined, action: Bu
                 break;
             }
 
+            case BugBashPortalActionTypes.OpenDetailsPortal: {
+                const bugBashId = action.payload;
+                draft.portalOpen = true;
+                draft.portalProps = { bugBashId };
+                draft.portalType = PortalType.DetailsEdit;
+                break;
+            }
+
             case BugBashPortalActionTypes.DismissPortal: {
                 draft.portalOpen = false;
                 draft.portalProps = undefined;
