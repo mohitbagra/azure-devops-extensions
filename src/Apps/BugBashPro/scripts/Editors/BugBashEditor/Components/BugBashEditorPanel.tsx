@@ -115,7 +115,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
             </Panel>
         );
     }
-    const panelTitle = bugBashId ? Resources.EditBugBashPanelTitle : Resources.CreateBugBashPanelTitle;
+    const panelTitle = bugBashId ? Resources.EditBugBashTitle : Resources.CreateBugBashPanelTitle;
 
     const updateTitle = (value: string) => {
         throttledOnDraftChanged({ ...draftBugBash, title: value });

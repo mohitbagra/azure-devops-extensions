@@ -67,7 +67,7 @@ export const BugBashViewHeaderCommands: { [key: string]: IHeaderCommandBarItem }
     edit: {
         important: true,
         id: "editbugbash",
-        text: Resources.Edit,
+        text: Resources.EditBugBashTitle,
         iconProps: {
             iconName: "Edit"
         }

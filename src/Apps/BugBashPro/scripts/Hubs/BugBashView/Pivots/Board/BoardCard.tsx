@@ -14,6 +14,7 @@ import { CoreFieldRefNames } from "Common/Constants";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { BugBashViewActions } from "../../Redux/Actions";
 
 const Actions = {
@@ -24,10 +25,11 @@ const Actions = {
 interface IBoardCardProps extends IBugBashViewBaseProps {
     bugBashItem: IBugBashItem;
     acceptedWorkItem: WorkItem | undefined;
+    index: number;
 }
 
 export function BoardCard(props: IBoardCardProps) {
-    const { bugBashId, bugBashItem, acceptedWorkItem } = props;
+    const { bugBashId, bugBashItem, index, acceptedWorkItem } = props;
     const { editBugBashItemRequested } = useActionCreators(Actions);
     const isAccepted = isBugBashItemAccepted(bugBashItem) && acceptedWorkItem !== undefined;
 
@@ -42,63 +44,77 @@ export function BoardCard(props: IBoardCardProps) {
     );
 
     return (
-        <div className="board-card scroll-hidden flex-column">
-            {isAccepted && (
-                <>
-                    <div className="board-card-control">
-                        <WorkItemTitleView
-                            workItemId={acceptedWorkItem!.id}
-                            workItemTypeName={acceptedWorkItem!.fields[CoreFieldRefNames.WorkItemType]}
-                            title={acceptedWorkItem!.fields[CoreFieldRefNames.Title]}
-                            hideTitle={true}
-                        />
-                    </div>
-                    <div className="board-card-control fontWeightSemiBold">
-                        <AsyncLinkComponent
-                            key={acceptedWorkItem!.id}
-                            getHrefAsync={getWorkItemUrlPromise(acceptedWorkItem!.id)}
-                            title={acceptedWorkItem!.fields[CoreFieldRefNames.Title]}
-                            onClick={onTitleClick}
-                        />
-                    </div>
-                </>
-            )}
+        <Draggable draggableId={`card_${bugBashItem.id}`} key={`card_${bugBashItem.id}`} type="board-card" index={index} isDragDisabled={isAccepted}>
+            {(provided, _snapshot) => (
+                <div
+                    className="board-card scroll-hidden flex-column"
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    tabIndex={0}
+                >
+                    {isAccepted && (
+                        <>
+                            <div className="board-card-control">
+                                <WorkItemTitleView
+                                    workItemId={acceptedWorkItem!.id}
+                                    workItemTypeName={acceptedWorkItem!.fields[CoreFieldRefNames.WorkItemType]}
+                                    title={acceptedWorkItem!.fields[CoreFieldRefNames.Title]}
+                                    hideTitle={true}
+                                />
+                            </div>
+                            <div className="board-card-control fontWeightSemiBold">
+                                <AsyncLinkComponent
+                                    key={acceptedWorkItem!.id}
+                                    getHrefAsync={getWorkItemUrlPromise(acceptedWorkItem!.id)}
+                                    title={acceptedWorkItem!.fields[CoreFieldRefNames.Title]}
+                                    onClick={onTitleClick}
+                                />
+                            </div>
+                        </>
+                    )}
 
-            {!isAccepted && (
-                <div className="board-card-control fontWeightSemiBold">
-                    <AsyncLinkComponent
-                        key={bugBashItem.id}
-                        getHrefAsync={getBugBashItemUrlPromise(bugBashItem.bugBashId, bugBashItem.id!)}
-                        title={bugBashItem.title}
-                        onClick={onTitleClick}
-                    />
-                </div>
-            )}
-
-            <div className="board-card-fields">
-                <div className="board-card-control flex-row flex-center">
-                    <div className="board-card-control-label">Created by</div>
-                    <IdentityView className="board-card-control-inner" size="extra-extra-small" value={bugBashItem.createdBy} />
-                </div>
-
-                {!isAccepted && (
-                    <div className="board-card-control flex-row flex-center">
-                        <div className="board-card-control-label">Assigned to</div>
-                        <TeamView teamId={bugBashItem.teamId} className="board-card-control-inner" />
-                    </div>
-                )}
-                {isAccepted && (
-                    <div className="board-card-control flex-row flex-center">
-                        <div className="board-card-control-label">Area path</div>
-                        <div className="board-card-control-inner text-ellipsis">
-                            {acceptedWorkItem!.fields[CoreFieldRefNames.AreaPath].substr(
-                                acceptedWorkItem!.fields[CoreFieldRefNames.AreaPath].lastIndexOf("\\") + 1
-                            )}
+                    {!isAccepted && (
+                        <div className="board-card-control fontWeightSemiBold">
+                            <AsyncLinkComponent
+                                key={bugBashItem.id}
+                                getHrefAsync={getBugBashItemUrlPromise(bugBashItem.bugBashId, bugBashItem.id!)}
+                                title={bugBashItem.title}
+                                onClick={onTitleClick}
+                            />
                         </div>
+                    )}
+
+                    <div className="board-card-fields">
+                        <div className="board-card-control flex-row flex-center">
+                            <div className="board-card-control-label flex-noshrink">Created by</div>
+                            <IdentityView
+                                className="board-card-control-inner scroll-hidden flex-grow"
+                                size="extra-extra-small"
+                                value={bugBashItem.createdBy}
+                            />
+                        </div>
+
+                        {!isAccepted && (
+                            <div className="board-card-control flex-row flex-center">
+                                <div className="board-card-control-label flex-noshrink">Assigned to</div>
+                                <TeamView teamId={bugBashItem.teamId} className="board-card-control-inner scroll-hidden flex-grow" />
+                            </div>
+                        )}
+                        {isAccepted && (
+                            <div className="board-card-control flex-row flex-center">
+                                <div className="board-card-control-label flex-noshrink">Area path</div>
+                                <div className="board-card-control-inner text-ellipsis scroll-hidden flex-grow">
+                                    {acceptedWorkItem!.fields[CoreFieldRefNames.AreaPath].substr(
+                                        acceptedWorkItem!.fields[CoreFieldRefNames.AreaPath].lastIndexOf("\\") + 1
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
-        </div>
+                </div>
+            )}
+        </Draggable>
     );
 }
 

@@ -29,6 +29,10 @@ $cellItemVerticalMargin: 5px;
             .board-contents-cell {
                 width: $cellWidth;
                 border-right: 1px solid $neutral-10;
+
+                &.cell--hovered {
+                    background-color: $neutral-2;
+                }
             }
         }
     }
