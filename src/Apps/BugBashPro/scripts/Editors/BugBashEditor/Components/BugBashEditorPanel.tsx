@@ -87,7 +87,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
         }
     }, [bugBashId]);
 
-    const dismissPanel = () => {
+    const dismissPanel = React.useCallback(() => {
         if (isDirty) {
             confirmAction(Resources.ConfirmPanelTitle, Resources.ConfirmPanelClose_Content, (ok: boolean) => {
                 if (ok) {
@@ -97,7 +97,22 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
         } else {
             onDismiss();
         }
-    };
+    }, [isDirty, onDismiss]);
+
+    const saveBugBash = React.useCallback(() => {
+        requestDraftSave(bugBashId);
+    }, [bugBashId]);
+
+    const getDatesError = React.useCallback(() => {
+        if (draftBugBash) {
+            const { startTime, endTime } = draftBugBash;
+            if (startTime && endTime && defaultDateComparer(startTime, endTime) >= 0) {
+                return Resources.BugBashWrongDatesError;
+            }
+        }
+
+        return undefined;
+    }, [draftBugBash]);
 
     if (!draftBugBash) {
         return (
@@ -134,18 +149,6 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
         updateDraft({ ...draftBugBash, acceptTemplateTeam: option ? option.id : value || "", acceptTemplateId: undefined });
     const onTemplateChange = (option: WorkItemTemplate, value?: string) =>
         updateDraft({ ...draftBugBash, acceptTemplateId: option ? option.id : value || "" });
-
-    const saveBugBash = () => {
-        requestDraftSave(bugBashId);
-    };
-
-    const getDatesError = () => {
-        const { startTime, endTime } = draftBugBash;
-        if (startTime && endTime && defaultDateComparer(startTime, endTime) >= 0) {
-            return Resources.BugBashWrongDatesError;
-        }
-        return undefined;
-    };
 
     return (
         <Mousetrapped

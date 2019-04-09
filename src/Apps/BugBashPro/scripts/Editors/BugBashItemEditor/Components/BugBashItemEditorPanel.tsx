@@ -11,6 +11,7 @@ import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { useBugBash } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBash";
 import { Resources } from "BugBashPro/Resources";
+import { BugBashRichEditor } from "BugBashPro/Shared/Components/BugBashRichEditor";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getCommentsModule } from "BugBashPro/Shared/Redux/Comments/Module";
@@ -27,6 +28,7 @@ import { useMappedState } from "Common/Hooks/useMappedState";
 import { useThrottle } from "Common/Hooks/useThrottle";
 import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
 import { FadeAwayNotification } from "Common/Notifications/Components/FadeAwayNotification";
+import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
@@ -36,7 +38,6 @@ import { BugBashItemEditorActions } from "../Redux/Actions";
 import { IBugBashItemEditorAwareState } from "../Redux/Contracts";
 import { getBugBashItemEditorModule } from "../Redux/Module";
 import { getDraftBugBashItem, getDraftComment, getDraftInitializeError, isDraftDirty, isDraftSaving, isDraftValid } from "../Redux/Selectors";
-import { BugBashRichEditor } from "./BugBashRichEditor";
 import { CommentsList } from "./CommentsList";
 
 interface IBugBashItemEditorPanelOwnProps {
@@ -60,7 +61,8 @@ const Actions = {
     updateDraft: BugBashItemEditorActions.updateDraft,
     updateDraftComment: BugBashItemEditorActions.updateDraftComment,
     requestDraftInitialize: BugBashItemEditorActions.requestDraftInitialize,
-    requestDraftAccept: BugBashItemEditorActions.requestDraftAccept
+    requestDraftAccept: BugBashItemEditorActions.requestDraftAccept,
+    pushError: KeyValuePairActions.pushEntry
 };
 
 function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) {
@@ -79,7 +81,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
         [bugBashItemId]
     );
     const { draftBugBashItem, isValid, isDirty, draftComment, isSaving, draftInitializeError } = useMappedState(mapStateToProps);
-    const { requestDraftSave, updateDraft, updateDraftComment, requestDraftInitialize, requestDraftAccept } = useActionCreators(Actions);
+    const { requestDraftSave, updateDraft, updateDraftComment, requestDraftInitialize, requestDraftAccept, pushError } = useActionCreators(Actions);
     const { bugBash } = useBugBash(bugBashId);
 
     if (!bugBash) {
@@ -95,7 +97,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
         }
     }, [bugBashItemId]);
 
-    const dismissPanel = () => {
+    const dismissPanel = React.useCallback(() => {
         if (isDirty) {
             confirmAction(Resources.ConfirmPanelTitle, Resources.ConfirmPanelClose_Content, (ok: boolean) => {
                 if (ok) {
@@ -105,7 +107,17 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
         } else {
             onDismiss();
         }
-    };
+    }, [isDirty, onDismiss]);
+
+    const onImageUploadError = React.useCallback((error: string) => {
+        pushError(BugBashItemEditorErrorKey, error);
+    }, []);
+    const saveBugBashItem = React.useCallback(() => {
+        requestDraftSave(bugBash, bugBashItemId);
+    }, [bugBash, bugBashItemId]);
+    const acceptBugBashItem = React.useCallback(() => {
+        requestDraftAccept(bugBash, bugBashItemId);
+    }, [bugBash, bugBashItemId]);
 
     if (!draftBugBashItem) {
         return (
@@ -148,14 +160,6 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
         updateDraft({ ...draftBugBashItem, teamId: option ? option.id : value || "" });
     const onCommentChange = (value: string) => {
         throttledOnDraftCommentChanged(bugBashItemId, value);
-    };
-
-    const saveBugBashItem = () => {
-        requestDraftSave(bugBash, bugBashItemId);
-    };
-
-    const acceptBugBashItem = () => {
-        requestDraftAccept(bugBash, bugBashItemId);
     };
 
     return (
@@ -249,6 +253,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
                             disabled={isSaving}
                             value={draftBugBashItem.description || ""}
                             onChange={onDescriptionChange}
+                            onImageUploadError={onImageUploadError}
                         />
                         <BugBashRichEditor
                             bugBashId={draftBugBashItem.bugBashId}
@@ -257,6 +262,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
                             disabled={isSaving}
                             value={draftComment || ""}
                             onChange={onCommentChange}
+                            onImageUploadError={onImageUploadError}
                         />
                         <ConditionalChildren renderChildren={!isNew}>
                             <CommentsList bugBashItemId={bugBashItemId!} />

@@ -6,25 +6,18 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";
 import { LoadStatus } from "Common/Contracts";
-import { useActionCreators } from "Common/Hooks/useActionCreators";
-import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { getProjectUrlAsync } from "Common/Utilities/UrlHelper";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 import * as React from "react";
-import { BugBashItemEditorErrorKey } from "../Constants";
 
 interface IBugBashRichEditorProps extends IRichEditorProps {
     bugBashId: string;
+    onImageUploadError?: (error: string) => void;
 }
 
-const Actions = {
-    pushError: KeyValuePairActions.pushEntry
-};
-
 function BugBashRichEditorInternal(props: IBugBashRichEditorProps) {
-    const { bugBashId } = props;
+    const { bugBashId, onImageUploadError } = props;
     const { projectSetting, status } = useProjectSetting();
-    const { pushError } = useActionCreators(Actions);
 
     if (!projectSetting || status === LoadStatus.Loading) {
         return <Loading />;
@@ -70,7 +63,9 @@ function BugBashRichEditorInternal(props: IBugBashRichEditorProps) {
                             )}&version=GBmaster&contentOnly=true`
                         );
                     } catch (e) {
-                        pushError(BugBashItemEditorErrorKey, `Image copy failed. Error: ${e.message}`);
+                        if (onImageUploadError) {
+                            onImageUploadError(`Image copy failed. Error: ${e.message}`);
+                        }
                         resolve("");
                     }
                 };
