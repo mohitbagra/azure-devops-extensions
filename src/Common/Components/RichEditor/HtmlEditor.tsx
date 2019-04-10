@@ -4,12 +4,31 @@ import { TimerManagement } from "azure-devops-ui/Core/TimerManagement";
 import { css } from "azure-devops-ui/Util";
 import * as React from "react";
 import {
-    Browser, ContentChangedPlugin, DoubleClickImagePlugin, EditorPlugin, EditorViewState,
-    EmojiPaneProps, EmojiPlugin, EmojiPluginOptions, FocusEventHandler, FocusOutShell, fromHtml,
-    IgnorePasteImagePlugin, ImageManager, ImageManagerOptions, ImageResize, isNodeEmpty,
-    LeanRooster, PasteImagePlugin, RoosterCommandBar, RoosterCommandBarButton,
-    RoosterCommandBarPlugin, RoosterCommandBarPluginOptions, RoosterCommmandBarButtonKeys,
-    TableResize, UndoWithImagePlugin
+    Browser,
+    ContentChangedPlugin,
+    DoubleClickImagePlugin,
+    EditorPlugin,
+    EditorViewState,
+    EmojiPaneProps,
+    EmojiPlugin,
+    EmojiPluginOptions,
+    FocusEventHandler,
+    FocusOutShell,
+    fromHtml,
+    IgnorePasteImagePlugin,
+    ImageManager,
+    ImageManagerOptions,
+    ImageResize,
+    isNodeEmpty,
+    LeanRooster,
+    PasteImagePlugin,
+    RoosterCommandBar,
+    RoosterCommandBarButton,
+    RoosterCommandBarPlugin,
+    RoosterCommandBarPluginOptions,
+    RoosterCommmandBarButtonKeys,
+    TableResize,
+    UndoWithImagePlugin
 } from "roosterjs-react";
 import { Resources } from "./Resources";
 import { CommandBarLocaleStrings, SearchForEmoji } from "./Strings";
@@ -47,7 +66,7 @@ interface IHtmlEditorProps {
     placeholder?: string;
     readonly?: boolean;
     uploadImageHandler?: (file: File) => Promise<string>;
-    height?: number;
+    height?: number | string;
     autoFocus?: boolean;
 }
 

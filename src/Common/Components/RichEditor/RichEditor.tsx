@@ -9,7 +9,7 @@ import { HtmlEditor } from "./HtmlEditor";
 export interface IRichEditorProps extends ILabelledComponentProps, IInputComponentProps<string> {
     placeholder?: string;
     uploadImageHandler?: (file: File) => Promise<string>;
-    height?: number;
+    height?: number | string;
     autoFocus?: boolean;
 }
 

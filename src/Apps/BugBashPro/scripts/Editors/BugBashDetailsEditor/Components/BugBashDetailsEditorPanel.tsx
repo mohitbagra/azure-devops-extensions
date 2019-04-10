@@ -1,15 +1,22 @@
+import "./BugBashDetailsEditorPanel.scss";
+
 import { Button } from "azure-devops-ui/Button";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
+import { equals } from "azure-devops-ui/Core/Util/String";
 import { CustomHeader, HeaderTitleArea } from "azure-devops-ui/Header";
+import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { CustomPanel, PanelCloseButton, PanelContent, PanelFooter } from "azure-devops-ui/Panel";
 import { Status, Statuses, StatusSize } from "azure-devops-ui/Status";
 import { Resources } from "BugBashPro/Resources";
 import { BugBashRichEditor } from "BugBashPro/Shared/Components/BugBashRichEditor";
 import { useBugBashDetails } from "BugBashPro/Shared/Hooks/useBugBashDetails";
+import { BugBashDetailActions } from "BugBashPro/Shared/Redux/BugBashDetails/Actions";
 import { getBugBashDetailsModule } from "BugBashPro/Shared/Redux/BugBashDetails/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
+import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { useControlledState } from "Common/Hooks/useControlledState";
 import { useThrottle } from "Common/Hooks/useThrottle";
 import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
 import { FadeAwayNotification } from "Common/Notifications/Components/FadeAwayNotification";
@@ -24,25 +31,20 @@ interface IBugBashDetailsEditorPanelOwnProps {
 }
 
 const Actions = {
-    pushError: KeyValuePairActions.pushEntry
+    pushError: KeyValuePairActions.pushEntry,
+    saveDetails: BugBashDetailActions.BugBashDetailsUpdateRequested
 };
 
 function BugBashDetailsEditorPanelInternal(props: IBugBashDetailsEditorPanelOwnProps) {
     const { bugBashId, onDismiss } = props;
-    const { details } = useBugBashDetails(bugBashId);
-    const { pushError } = useActionCreators(Actions);
+    const { details, status, error } = useBugBashDetails(bugBashId);
+    const { pushError, saveDetails } = useActionCreators(Actions);
+
+    const [value, setValue] = useControlledState<string>(details ? details.text : "");
+    const throttledOnDraftChanged = useThrottle(setValue, 200);
 
     const isLoading = !details;
-    const detailsText = details && details.text;
-
-    const updateDraft = React.useCallback((value: string) => {
-        console.log(value);
-    }, []);
-
-    const throttledOnDraftChanged = useThrottle(updateDraft, 200);
-    const [isDirty, setIsDirty] = React.useState(false);
-    const [isValid, setIsValid] = React.useState(true);
-    const [isSaving, setIsSaving] = React.useState(false);
+    const isDirty = !equals((details && details.text) || "", value, true);
 
     const dismissPanel = React.useCallback(() => {
         if (isDirty) {
@@ -55,14 +57,16 @@ function BugBashDetailsEditorPanelInternal(props: IBugBashDetailsEditorPanelOwnP
             onDismiss();
         }
     }, [isDirty, onDismiss]);
+
     const onImageUploadError = React.useCallback((error: string) => {
         pushError(BugBashDetailsEditorErrorKey, error);
     }, []);
-    const saveBugBashDetails = React.useCallback(() => {
-        setIsDirty(false);
-        setIsValid(true);
-        setIsSaving(true);
-    }, [bugBashId]);
+
+    const saveBugBashDetails = () => {
+        if (isDirty && status === LoadStatus.Ready) {
+            saveDetails(bugBashId, { ...details, text: value });
+        }
+    };
 
     return (
         <CustomPanel blurDismiss={false} className="bugbash-details-editor-panel" size={ContentSize.Large} onDismiss={dismissPanel}>
@@ -73,19 +77,27 @@ function BugBashDetailsEditorPanelInternal(props: IBugBashDetailsEditorPanelOwnP
                         <PanelCloseButton className="bugbash-details-editor-panel--closeButton" onDismiss={dismissPanel} />
                     </div>
                     <ErrorMessageBox className="bugbash-details-editor-error" errorKey={BugBashDetailsEditorErrorKey} />
+                    {error && (
+                        <MessageCard className="error-message" severity={MessageCardSeverity.Error}>
+                            {error}
+                        </MessageCard>
+                    )}
                 </HeaderTitleArea>
             </CustomHeader>
             <PanelContent>
                 {isLoading && <Loading />}
                 {!isLoading && (
-                    <div className="bugbash-details-editor-contents">
+                    <div className="bugbash-details-editor-panel-contents flex-grow flex-column scroll-auto">
                         <BugBashRichEditor
+                            autoFocus={true}
                             bugBashId={bugBashId}
-                            className="bugbash-details-editor-control"
-                            disabled={false}
-                            value={detailsText || ""}
+                            className="bugbash-details-editor-control flex-grow"
+                            disabled={status !== LoadStatus.Ready}
+                            value={value}
                             onChange={throttledOnDraftChanged}
                             onImageUploadError={onImageUploadError}
+                            placeholder="Enter bug bash details"
+                            height="100%"
                         />
                     </div>
                 )}
@@ -98,7 +110,7 @@ function BugBashDetailsEditorPanelInternal(props: IBugBashDetailsEditorPanelOwnP
                     <Button className="footer-button" onClick={dismissPanel}>
                         Cancel
                     </Button>
-                    <Button className="footer-button" primary={true} onClick={saveBugBashDetails} disabled={!isValid || !isDirty || isSaving}>
+                    <Button className="footer-button" primary={true} onClick={saveBugBashDetails} disabled={!isDirty || status !== LoadStatus.Ready}>
                         Save
                     </Button>
                 </div>

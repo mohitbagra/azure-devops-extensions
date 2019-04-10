@@ -29,6 +29,11 @@ $editorMaxHeight: $roosterMaxHeight + $buttonHeight;
             flex-basis: auto; // IE11
             background-color: $backgroundColor;
 
+            &::before {
+                color: $neutral-60;
+                font-style: normal;
+            }
+
             &.readonly {
                 color: $disabled-text;
                 background-color: $neutral-4;

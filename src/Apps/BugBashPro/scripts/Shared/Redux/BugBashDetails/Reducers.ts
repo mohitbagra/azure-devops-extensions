@@ -23,6 +23,30 @@ export function bugBashDetailsReducer(state: IBugBashDetailsState | undefined, a
                 };
                 break;
             }
+
+            case BugBashDetailActionTypes.BeginUpdateBugBashDetails: {
+                const { bugBashId, bugBashDetails } = action.payload;
+
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].error = undefined;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].status = LoadStatus.Updating;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].details = bugBashDetails;
+                break;
+            }
+
+            case BugBashDetailActionTypes.BugBashDetailsUpdateFailed: {
+                const { bugBashId, bugBashDetails, error } = action.payload;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].error = error;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].status = LoadStatus.UpdateFailed;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].details = bugBashDetails;
+                break;
+            }
+
+            case BugBashDetailActionTypes.BugBashDetailsUpdated: {
+                const { bugBashId, bugBashDetails } = action.payload;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].error = undefined;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].status = LoadStatus.Ready;
+                draft.detailsMap[resolveNullableMapKey(bugBashId)].details = bugBashDetails;
+            }
         }
     });
 }
