@@ -1,14 +1,14 @@
 import { WorkItemClassificationNode } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { AreaPathActions, AreaPathActionTypes, IterationPathActions, IterationPathActionTypes } from "./Actions";
 import { fetchAreaPaths, fetchIterationPaths } from "./DataSource";
 import { getAreaPathStatus, getIterationPathStatus } from "./Selectors";
 
 export function* classificationNodesSaga(): SagaIterator {
-    yield takeEvery(AreaPathActionTypes.LoadRequested, loadAreaPaths);
-    yield takeEvery(IterationPathActionTypes.LoadRequested, loadIterationPaths);
+    yield takeLeading(AreaPathActionTypes.LoadRequested, loadAreaPaths);
+    yield takeLeading(IterationPathActionTypes.LoadRequested, loadIterationPaths);
 }
 
 function* loadAreaPaths(): SagaIterator {

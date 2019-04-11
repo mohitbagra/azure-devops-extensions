@@ -2,13 +2,13 @@ import { WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-ext
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
 import { FieldActions, FieldActionTypes, WorkItemTypeFieldActions, WorkItemTypeFieldActionTypes } from "./Actions";
 import { fetchFields, fetchWorkItemTypeFields } from "./DataSource";
 import { getFieldsStatus, getWorkItemTypeFieldsStatus } from "./Selectors";
 
 export function* fieldsSaga(): SagaIterator {
-    yield takeEvery(FieldActionTypes.LoadRequested, loadFields);
+    yield takeLeading(FieldActionTypes.LoadRequested, loadFields);
     yield takeEvery(WorkItemTypeFieldActionTypes.LoadRequested, loadWorkItemTypeFields);
 }
 

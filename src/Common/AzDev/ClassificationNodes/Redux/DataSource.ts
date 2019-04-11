@@ -1,22 +1,13 @@
 import { getClient } from "azure-devops-extension-api/Common/Client";
-import {
-    TreeStructureGroup, WorkItemTrackingRestClient
-} from "azure-devops-extension-api/WorkItemTracking";
-import { memoizePromise } from "Common/Utilities/Memoize";
+import { TreeStructureGroup, WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 
-export const fetchAreaPaths = memoizePromise(
-    async () => {
-        const projectId = await getCurrentProjectId();
-        return getClient(WorkItemTrackingRestClient).getClassificationNode(projectId, TreeStructureGroup.Areas, undefined, 5);
-    },
-    () => "areaPaths"
-);
+export async function fetchAreaPaths() {
+    const projectId = await getCurrentProjectId();
+    return getClient(WorkItemTrackingRestClient).getClassificationNode(projectId, TreeStructureGroup.Areas, undefined, 5);
+}
 
-export const fetchIterationPaths = memoizePromise(
-    async () => {
-        const projectId = await getCurrentProjectId();
-        return getClient(WorkItemTrackingRestClient).getClassificationNode(projectId, TreeStructureGroup.Iterations, undefined, 5);
-    },
-    () => "iterationPaths"
-);
+export async function fetchIterationPaths() {
+    const projectId = await getCurrentProjectId();
+    return getClient(WorkItemTrackingRestClient).getClassificationNode(projectId, TreeStructureGroup.Iterations, undefined, 5);
+}
