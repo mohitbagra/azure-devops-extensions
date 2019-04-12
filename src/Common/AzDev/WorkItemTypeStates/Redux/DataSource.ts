@@ -8,5 +8,5 @@ export const fetchWorkItemTypeStates = memoizePromise(
         const projectId = await getCurrentProjectId();
         return getClient(WorkItemTrackingRestClient).getWorkItemTypeStates(projectId, workItemTypeName);
     },
-    (workItemTypeName: string) => workItemTypeName.toLowerCase()
+    (workItemTypeName: string) => `workItemTypeStates_${workItemTypeName}`
 );

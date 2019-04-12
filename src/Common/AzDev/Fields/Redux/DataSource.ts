@@ -4,12 +4,15 @@ import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 
-export async function fetchFields() {
-    const projectId = await getCurrentProjectId();
-    const fields = await getClient(WorkItemTrackingRestClient).getFields(projectId);
-    fields.sort((a: WorkItemField, b: WorkItemField) => localeIgnoreCaseComparer(a.name, b.name));
-    return fields;
-}
+export const fetchFields = memoizePromise(
+    async () => {
+        const projectId = await getCurrentProjectId();
+        const fields = await getClient(WorkItemTrackingRestClient).getFields(projectId);
+        fields.sort((a: WorkItemField, b: WorkItemField) => localeIgnoreCaseComparer(a.name, b.name));
+        return fields;
+    },
+    () => "allFields"
+);
 
 export const fetchWorkItemTypeFields = memoizePromise(
     async (workItemTypeName: string) => {
@@ -20,5 +23,5 @@ export const fetchWorkItemTypeFields = memoizePromise(
             WorkItemTypeFieldsExpandLevel.AllowedValues
         );
     },
-    (workItemTypeName: string) => workItemTypeName.toLowerCase()
+    (workItemTypeName: string) => `workItemTypeFields_${workItemTypeName}`
 );

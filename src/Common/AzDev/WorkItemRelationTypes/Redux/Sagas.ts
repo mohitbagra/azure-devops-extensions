@@ -1,13 +1,13 @@
 import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { WorkItemRelationTypeActions, WorkItemRelationTypeActionTypes } from "./Actions";
 import { fetchWorkItemRelationTypes } from "./DataSource";
 import { getWorkItemRelationTypesStatus } from "./Selectors";
 
 export function* workItemRelationTypesSaga(): SagaIterator {
-    yield takeEvery(WorkItemRelationTypeActionTypes.LoadRequested, loadRelationTypes);
+    yield takeLeading(WorkItemRelationTypeActionTypes.LoadRequested, loadRelationTypes);
 }
 
 function* loadRelationTypes(): SagaIterator {

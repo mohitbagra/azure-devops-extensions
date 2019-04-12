@@ -1,12 +1,12 @@
 import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { TagActions, TagActionTypes } from "./Actions";
 import { fetchTags } from "./DataSource";
 import { getTagsStatus } from "./Selectors";
 
 export function* tagsSaga(): SagaIterator {
-    yield takeEvery(TagActionTypes.LoadRequested, loadTags);
+    yield takeLeading(TagActionTypes.LoadRequested, loadTags);
 }
 
 function* loadTags(): SagaIterator {

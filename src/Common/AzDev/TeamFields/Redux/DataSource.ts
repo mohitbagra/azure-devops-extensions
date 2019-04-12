@@ -16,5 +16,5 @@ export const fetchTeamFieldValues = memoizePromise(
 
         return getClient(WorkRestClient).getTeamFieldValues(teamContext);
     },
-    (teamId: string) => teamId.toLowerCase()
+    (teamId: string) => `teamFieldValues_${teamId}`
 );

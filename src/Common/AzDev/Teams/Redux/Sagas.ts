@@ -1,13 +1,13 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { LoadStatus } from "Common/Contracts";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { TeamActions, TeamActionTypes } from "./Actions";
 import { fetchTeams } from "./DataSource";
 import { getTeamsStatus } from "./Selectors";
 
 export function* teamsSaga(): SagaIterator {
-    yield takeEvery(TeamActionTypes.LoadRequested, loadTeams);
+    yield takeLeading(TeamActionTypes.LoadRequested, loadTeams);
 }
 
 function* loadTeams(): SagaIterator {

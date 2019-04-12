@@ -1,12 +1,23 @@
-export function memoizePromise<T>(func: (...args: any[]) => Promise<T>, generateKey: (...args: any[]) => string) {
-    const cache: { [key: string]: Promise<T> } = {};
+export function memoizePromise<TResult, P extends any[]>(func: (...args: P) => Promise<TResult>, generateKey: (...args: P) => string) {
+    const cache: { [key: string]: Promise<TResult> } = {};
 
-    return (...args: any[]) => {
-        const key = generateKey(...args);
+    const fn = async (cacheKey: string, ...args: P) => {
+        try {
+            const result = await func(...args);
+            delete cache[cacheKey];
+            return result;
+        } catch (e) {
+            delete cache[cacheKey];
+            throw e;
+        }
+    };
+
+    return (...args: P) => {
+        const key = generateKey(...args).toLowerCase();
         if (cache[key]) {
             return cache[key];
         } else {
-            const promise = func(...args);
+            const promise = fn(key, ...args);
             cache[key] = promise;
             return promise;
         }

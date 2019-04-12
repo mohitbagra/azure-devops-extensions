@@ -1,7 +1,5 @@
 import { getClient } from "azure-devops-extension-api/Common/Client";
-import {
-    WorkItemTemplateReference, WorkItemTrackingRestClient
-} from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemTemplateReference, WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking";
 import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
@@ -13,7 +11,7 @@ export const fetchTeamTemplates = memoizePromise(
         workItemTemplates.sort((a: WorkItemTemplateReference, b: WorkItemTemplateReference) => localeIgnoreCaseComparer(a.name, b.name));
         return workItemTemplates;
     },
-    (teamId: string) => teamId.toLowerCase()
+    (teamId: string) => `teamTemplates_${teamId}`
 );
 
 export const fetchTemplate = memoizePromise(
@@ -21,5 +19,5 @@ export const fetchTemplate = memoizePromise(
         const projectId = await getCurrentProjectId();
         return getClient(WorkItemTrackingRestClient).getTemplate(projectId, teamId, templateId);
     },
-    (teamId: string, templateId: string) => `${teamId}_${templateId}`.toLowerCase()
+    (teamId: string, templateId: string) => `workItemTemplate_${teamId}_${templateId}`
 );
