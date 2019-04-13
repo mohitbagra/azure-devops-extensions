@@ -10,15 +10,15 @@ import { ActionsOfType } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
-import { all, call, put, select, take, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, take, takeEvery, takeLeading } from "redux-saga/effects";
 import { BugBashEditorErrorKey, BugBashEditorNotificationKey } from "../Constants";
 import { getNewBugBashInstance } from "../Helpers";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { getDraftBugBash, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 
 export function* bugBashEditorSaga(): SagaIterator {
-    yield takeEvery(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
-    yield takeEvery(BugBashEditorActionTypes.RequestDraftSave, requestDraftSave);
+    yield takeLeading(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
+    yield takeLeading(BugBashEditorActionTypes.RequestDraftSave, requestDraftSave);
 
     yield takeEvery(BugBashesActionTypes.BugBashCreateFailed, bugBashCreateAndUpdateFailed);
     yield takeEvery(BugBashesActionTypes.BugBashUpdateFailed, bugBashCreateAndUpdateFailed);

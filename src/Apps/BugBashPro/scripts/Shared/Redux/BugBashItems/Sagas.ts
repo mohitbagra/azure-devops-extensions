@@ -13,7 +13,7 @@ import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, take, takeEvery } from "redux-saga/effects";
+import { call, put, select, take, takeEvery, takeLeading } from "redux-saga/effects";
 import { BugBashItemsActions, BugBashItemsActionTypes } from "./Actions";
 import {
     createBugBashItemAsync,
@@ -27,7 +27,7 @@ import {
 import { getBugBashItemsStatus, getBugBashItemStatus, getResolvedWorkItem } from "./Selectors";
 
 export function* bugBashItemsSaga(): SagaIterator {
-    yield takeEvery(BugBashItemsActionTypes.BugBashItemsLoadRequested, loadBugBashItems);
+    yield takeLeading(BugBashItemsActionTypes.BugBashItemsLoadRequested, loadBugBashItems);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemLoadRequested, loadBugBashItem);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemCreateRequested, createBugBashItem);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemUpdateRequested, updateBugBashItem);

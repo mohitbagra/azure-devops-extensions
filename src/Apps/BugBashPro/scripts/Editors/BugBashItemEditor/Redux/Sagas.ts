@@ -8,16 +8,16 @@ import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
-import { all, call, put, race, select, take, takeEvery } from "redux-saga/effects";
+import { all, call, put, race, select, take, takeEvery, takeLeading } from "redux-saga/effects";
 import { BugBashItemEditorErrorKey, BugBashItemEditorNotificationKey } from "../Constants";
 import { getNewBugBashItemInstance } from "../Helpers";
 import { BugBashItemEditorActions, BugBashItemEditorActionTypes } from "./Actions";
 import { getDraftBugBashItem, getDraftComment, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 
 export function* bugBashItemEditorSaga(): SagaIterator {
-    yield takeEvery(BugBashItemEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
-    yield takeEvery(BugBashItemEditorActionTypes.RequestDraftSave, requestDraftSave);
-    yield takeEvery(BugBashItemEditorActionTypes.RequestDraftAccept, requestDraftAccept);
+    yield takeLeading(BugBashItemEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
+    yield takeLeading(BugBashItemEditorActionTypes.RequestDraftSave, requestDraftSave);
+    yield takeLeading(BugBashItemEditorActionTypes.RequestDraftAccept, requestDraftAccept);
 
     yield takeEvery(BugBashItemsActionTypes.BugBashItemCreateFailed, bugBashItemCreateAndUpdateFailed);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemUpdateFailed, bugBashItemCreateAndUpdateFailed);

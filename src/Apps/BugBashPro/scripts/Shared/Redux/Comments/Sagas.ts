@@ -2,13 +2,13 @@ import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
 import { CommentActions, CommentActionTypes } from "./Actions";
 import { createCommentAsync, fetchCommentsAsync } from "./DataSource";
 import { getCommentsStatus } from "./Selectors";
 
 export function* commentsSaga(): SagaIterator {
-    yield takeEvery(CommentActionTypes.CommentsLoadRequested, loadComments);
+    yield takeLeading(CommentActionTypes.CommentsLoadRequested, loadComments);
     yield takeEvery(CommentActionTypes.CommentCreateRequested, createComment);
 }
 

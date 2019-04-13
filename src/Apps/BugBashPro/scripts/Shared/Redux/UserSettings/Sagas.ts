@@ -2,14 +2,14 @@ import { IUserSetting } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { UserSettingActions, UserSettingActionTypes } from "./Actions";
 import { fetchUserSettingsAsync, updateUserSettingAsync } from "./DataSource";
 import { getUserSettingsStatus } from "./Selectors";
 
 export function* userSettingSaga(): SagaIterator {
-    yield takeEvery(UserSettingActionTypes.UserSettingsLoadRequested, loadUserSettings);
-    yield takeEvery(UserSettingActionTypes.UserSettingUpdateRequested, updateUserSetting);
+    yield takeLeading(UserSettingActionTypes.UserSettingsLoadRequested, loadUserSettings);
+    yield takeLeading(UserSettingActionTypes.UserSettingUpdateRequested, updateUserSetting);
 }
 
 function* loadUserSettings(): SagaIterator {

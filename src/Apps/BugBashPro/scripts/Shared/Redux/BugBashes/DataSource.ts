@@ -1,34 +1,65 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBash } from "BugBashPro/Shared/Contracts";
-import {
-    createDocument, deleteDocument, readDocument, readDocuments, updateDocument
-} from "Common/ServiceWrappers/ExtensionDataManager";
+import { createDocument, deleteDocument, readDocument, readDocuments, updateDocument } from "Common/ServiceWrappers/ExtensionDataManager";
+import { memoizePromise } from "Common/Utilities/Memoize";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 
-export async function fetchBugBashesAsync(): Promise<IBugBash[]> {
-    let bugBashModels = await readDocuments<IBugBash>(getCollectionKey(), false);
+export const fetchBugBashesAsync = memoizePromise(
+    async (): Promise<IBugBash[]> => {
+        let bugBashModels = await readDocuments<IBugBash>(getCollectionKey(), false);
+        const projectId = await getCurrentProjectId();
+        bugBashModels = bugBashModels.filter(b => equals(projectId, b.projectId, true));
 
-    const projectId = await getCurrentProjectId();
-    bugBashModels = bugBashModels.filter(b => equals(projectId, b.projectId, true));
+        for (const bugBashModel of bugBashModels) {
+            preProcessBugBash(bugBashModel);
+        }
 
-    for (const bugBashModel of bugBashModels) {
-        preProcessBugBash(bugBashModel);
-    }
+        return bugBashModels;
+    },
+    () => "fetchBugBashes"
+);
 
-    return bugBashModels;
-}
+export const fetchBugBashAsync = memoizePromise(
+    async (bugBashId: string) => {
+        const bugBashModel = await readDocument<IBugBash>(getCollectionKey(), bugBashId, undefined, false);
+        const projectId = await getCurrentProjectId();
+        if (bugBashModel && equals(bugBashModel.projectId, projectId, true)) {
+            preProcessBugBash(bugBashModel);
+            return bugBashModel;
+        } else {
+            throw new Error(`Bug Bash "${bugBashId}" does not exist or it belongs to a different project.`);
+        }
+    },
+    (bugBashId: string) => `fetchBugBash_${bugBashId}`
+);
 
-export async function fetchBugBashAsync(bugBashId: string): Promise<IBugBash> {
-    const bugBashModel = await readDocument<IBugBash>(getCollectionKey(), bugBashId, undefined, false);
-    const projectId = await getCurrentProjectId();
-    if (bugBashModel && equals(bugBashModel.projectId, projectId, true)) {
-        preProcessBugBash(bugBashModel);
-        return bugBashModel;
-    } else {
-        throw new Error(`Bug Bash "${bugBashId}" does not exist or it belongs to a different project.`);
-    }
-}
+export const updateBugBashAsync = memoizePromise(
+    async (bugBash: IBugBash) => {
+        try {
+            const updatedBugBash = await updateDocument<IBugBash>(getCollectionKey(), bugBash, false);
+            preProcessBugBash(updatedBugBash);
+
+            return updatedBugBash;
+        } catch (e) {
+            throw new Error(
+                "This bug bash instance has been modified by some one else. Please refresh the instance to get the latest version and try updating it again."
+            );
+        }
+    },
+    (bugBash: IBugBash) => `updateBugBash_${bugBash.id}`
+);
+
+export const deleteBugBashAsync = memoizePromise(
+    async (bugBashId: string) => {
+        try {
+            await deleteDocument(getCollectionKey(), bugBashId, false);
+        } catch (e) {
+            throw new Error(`Cannot delete bug bash. Reason: ${e.message}`);
+        }
+    },
+    (bugBashId: string) => `deleteBugBash_${bugBashId}`
+);
 
 export async function createBugBashAsync(bugBash: IBugBash): Promise<IBugBash> {
     try {
@@ -39,27 +70,6 @@ export async function createBugBashAsync(bugBash: IBugBash): Promise<IBugBash> {
         return createdBugBash;
     } catch (e) {
         throw new Error(`Cannot create bug bash. Reason: ${e.message}`);
-    }
-}
-
-export async function updateBugBashAsync(bugBash: IBugBash): Promise<IBugBash> {
-    try {
-        const updatedBugBash = await updateDocument<IBugBash>(getCollectionKey(), bugBash, false);
-        preProcessBugBash(updatedBugBash);
-
-        return updatedBugBash;
-    } catch (e) {
-        throw new Error(
-            "This bug bash instance has been modified by some one else. Please refresh the instance to get the latest version and try updating it again."
-        );
-    }
-}
-
-export async function deleteBugBashAsync(bugBashId: string): Promise<void> {
-    try {
-        await deleteDocument(getCollectionKey(), bugBashId, false);
-    } catch (e) {
-        throw new Error(`Cannot delete bug bash. Reason: ${e.message}`);
     }
 }
 

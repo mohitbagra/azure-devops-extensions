@@ -2,14 +2,14 @@ import { ILongText } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { BugBashDetailActions, BugBashDetailActionTypes } from "./Actions";
-import { addOrUpdateDetailsAsync, fetchBugBashDetailsAsync } from "./DataSource";
+import { addOrUpdateBugBashDetailsAsync, fetchBugBashDetailsAsync } from "./DataSource";
 import { getBugBashDetailsStatus } from "./Selectors";
 
 export function* bugBashDetailsSaga(): SagaIterator {
-    yield takeEvery(BugBashDetailActionTypes.BugBashDetailsLoadRequested, loadBugBashDetails);
-    yield takeEvery(BugBashDetailActionTypes.BugBashDetailsUpdateRequested, updateBugBashDetails);
+    yield takeLeading(BugBashDetailActionTypes.BugBashDetailsLoadRequested, loadBugBashDetails);
+    yield takeLeading(BugBashDetailActionTypes.BugBashDetailsUpdateRequested, updateBugBashDetails);
 }
 
 function* loadBugBashDetails(action: ActionsOfType<BugBashDetailActions, BugBashDetailActionTypes.BugBashDetailsLoadRequested>): SagaIterator {
@@ -31,7 +31,7 @@ function* updateBugBashDetails(action: ActionsOfType<BugBashDetailActions, BugBa
         yield put(BugBashDetailActions.beginUpdateBugBashDetails(bugBashId, bugBashDetails));
 
         try {
-            const updatedDetails: ILongText = yield call(addOrUpdateDetailsAsync, bugBashDetails);
+            const updatedDetails: ILongText = yield call(addOrUpdateBugBashDetailsAsync, bugBashDetails);
             yield put(BugBashDetailActions.BugBashDetailsUpdated(bugBashId, updatedDetails));
         } catch (e) {
             yield put(BugBashDetailActions.BugBashDetailsUpdateFailed(bugBashId, bugBashDetails, e.message));

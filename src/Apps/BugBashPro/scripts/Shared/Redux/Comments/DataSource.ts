@@ -4,30 +4,34 @@ import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
 import { createDocument, readDocuments } from "Common/ServiceWrappers/ExtensionDataManager";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { getCurrentUser, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
+import { memoizePromise } from "Common/Utilities/Memoize";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 
-export async function fetchCommentsAsync(bugBashItemId: string): Promise<IBugBashItemComment[]> {
-    const comments = await readDocuments<IBugBashItemComment>(getCollectionKey(bugBashItemId), false);
-    for (const comment of comments) {
-        preProcessModel(comment);
-    }
-
-    comments.sort((c1, c2) => {
-        const v1 = c1.createdDate;
-        const v2 = c2.createdDate;
-
-        if (v1 == null && v2 == null) {
-            return 0;
-        } else if (v1 == null && v2 != null) {
-            return -1;
-        } else if (v1 != null && v2 == null) {
-            return 1;
-        } else {
-            return defaultDateComparer(v1, v2);
+export const fetchCommentsAsync = memoizePromise(
+    async (bugBashItemId: string) => {
+        const comments = await readDocuments<IBugBashItemComment>(getCollectionKey(bugBashItemId), false);
+        for (const comment of comments) {
+            preProcessModel(comment);
         }
-    });
-    return comments;
-}
+
+        comments.sort((c1, c2) => {
+            const v1 = c1.createdDate;
+            const v2 = c2.createdDate;
+
+            if (v1 == null && v2 == null) {
+                return 0;
+            } else if (v1 == null && v2 != null) {
+                return -1;
+            } else if (v1 != null && v2 == null) {
+                return 1;
+            } else {
+                return defaultDateComparer(v1, v2);
+            }
+        });
+        return comments;
+    },
+    (bugBashItemId: string) => `fetchComments_${bugBashItemId}`
+);
 
 export async function createCommentAsync(bugBashItemId: string, commentText: string): Promise<IBugBashItemComment> {
     try {

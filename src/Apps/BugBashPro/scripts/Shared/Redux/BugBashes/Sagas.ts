@@ -2,13 +2,13 @@ import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
 import { BugBashesActions, BugBashesActionTypes } from "./Actions";
 import { createBugBashAsync, deleteBugBashAsync, fetchBugBashAsync, fetchBugBashesAsync, updateBugBashAsync } from "./DataSource";
 import { getBugBashesStatus, getBugBashStatus } from "./Selectors";
 
 export function* bugBashesSaga(): SagaIterator {
-    yield takeEvery(BugBashesActionTypes.BugBashesLoadRequested, loadBugBashes);
+    yield takeLeading(BugBashesActionTypes.BugBashesLoadRequested, loadBugBashes);
     yield takeEvery(BugBashesActionTypes.BugBashLoadRequested, loadBugBash);
     yield takeEvery(BugBashesActionTypes.BugBashCreateRequested, createBugBash);
     yield takeEvery(BugBashesActionTypes.BugBashUpdateRequested, updateBugBash);

@@ -2,14 +2,14 @@ import { IProjectSetting } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select, takeLeading } from "redux-saga/effects";
 import { ProjectSettingActions, ProjectSettingActionTypes } from "./Actions";
 import { fetchProjectSettingAsync, updateProjectSettingAsync } from "./DataSource";
 import { getProjectSettingStatus } from "./Selectors";
 
 export function* projectSettingSaga(): SagaIterator {
-    yield takeEvery(ProjectSettingActionTypes.ProjectSettingLoadRequested, loadProjectSetting);
-    yield takeEvery(ProjectSettingActionTypes.ProjectSettingUpdateRequested, updateProjectSetting);
+    yield takeLeading(ProjectSettingActionTypes.ProjectSettingLoadRequested, loadProjectSetting);
+    yield takeLeading(ProjectSettingActionTypes.ProjectSettingUpdateRequested, updateProjectSetting);
 }
 
 function* loadProjectSetting(): SagaIterator {

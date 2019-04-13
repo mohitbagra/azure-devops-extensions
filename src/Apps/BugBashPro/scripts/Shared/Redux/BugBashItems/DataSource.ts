@@ -1,38 +1,65 @@
 import { getClient } from "azure-devops-extension-api/Common/Client";
-import {
-    IdentityRef, JsonPatchDocument, JsonPatchOperation, Operation
-} from "azure-devops-extension-api/WebApi/WebApi";
-import {
-    WorkItem, WorkItemErrorPolicy, WorkItemTrackingRestClient
-} from "azure-devops-extension-api/WorkItemTracking";
+import { IdentityRef, JsonPatchDocument, JsonPatchOperation, Operation } from "azure-devops-extension-api/WebApi/WebApi";
+import { WorkItem, WorkItemErrorPolicy, WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking";
 import { isGuid } from "azure-devops-ui/Core/Util/String";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { CoreFieldRefNames } from "Common/Constants";
-import {
-    createDocument, deleteDocument, readDocument, readDocuments, updateDocument
-} from "Common/ServiceWrappers/ExtensionDataManager";
+import { createDocument, deleteDocument, readDocument, readDocuments, updateDocument } from "Common/ServiceWrappers/ExtensionDataManager";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
+import { memoizePromise } from "Common/Utilities/Memoize";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 
-export async function fetchBugBashItemsAsync(bugBashId: string): Promise<IBugBashItem[]> {
-    const bugBashItemModels = await readDocuments<IBugBashItem>(getCollectionKey(bugBashId), false);
-    for (const bugBashItemModel of bugBashItemModels) {
-        preProcessBugBashItem(bugBashItemModel);
-    }
+export const fetchBugBashItemsAsync = memoizePromise(
+    async (bugBashId: string) => {
+        const bugBashItemModels = await readDocuments<IBugBashItem>(getCollectionKey(bugBashId), false);
+        for (const bugBashItemModel of bugBashItemModels) {
+            preProcessBugBashItem(bugBashItemModel);
+        }
 
-    return bugBashItemModels;
-}
+        return bugBashItemModels;
+    },
+    (bugBashId: string) => `fetchBugBashItems_${bugBashId}`
+);
 
-export async function fetchBugBashItemAsync(bugBashId: string, bugBashItemId: string): Promise<IBugBashItem> {
-    const bugBashItemModel = await readDocument<IBugBashItem>(getCollectionKey(bugBashId), bugBashItemId, undefined, false);
-    if (bugBashItemModel) {
-        preProcessBugBashItem(bugBashItemModel);
-        return bugBashItemModel;
-    } else {
-        throw new Error(`Bug Bash Item "${bugBashItemId}" does not exist.`);
-    }
-}
+export const fetchBugBashItemAsync = memoizePromise(
+    async (bugBashId: string, bugBashItemId: string) => {
+        const bugBashItemModel = await readDocument<IBugBashItem>(getCollectionKey(bugBashId), bugBashItemId, undefined, false);
+        if (bugBashItemModel) {
+            preProcessBugBashItem(bugBashItemModel);
+            return bugBashItemModel;
+        } else {
+            throw new Error(`Bug Bash Item "${bugBashItemId}" does not exist.`);
+        }
+    },
+    (bugBashId: string, bugBashItemId: string) => `fetchBugBashItem_${bugBashId}_${bugBashItemId}`
+);
+
+export const updateBugBashItemAsync = memoizePromise(
+    async (bugBashId: string, bugBashItem: IBugBashItem) => {
+        try {
+            const updatedBugBashItem = await updateDocument<IBugBashItem>(getCollectionKey(bugBashId), bugBashItem, false);
+            preProcessBugBashItem(updatedBugBashItem);
+            return updatedBugBashItem;
+        } catch (e) {
+            throw new Error(
+                "This bug bash item has been modified by some one else. Please refresh the item to get the latest version and try updating it again."
+            );
+        }
+    },
+    (bugBashId: string, bugBashItem: IBugBashItem) => `updateBugBashItem_${bugBashId}_${bugBashItem.id}`
+);
+
+export const deleteBugBashItemAsync = memoizePromise(
+    async (bugBashId: string, bugBashItemId: string) => {
+        try {
+            await deleteDocument(getCollectionKey(bugBashId), bugBashItemId, false);
+        } catch (e) {
+            throw new Error(`Cannot delete bug bash item. Reason: ${e.message}`);
+        }
+    },
+    (bugBashId: string, bugBashItemId: string) => `deleteBugBashItem_${bugBashId}_${bugBashItemId}`
+);
 
 export async function createBugBashItemAsync(bugBashId: string, bugBashItem: IBugBashItem): Promise<IBugBashItem> {
     try {
@@ -45,26 +72,6 @@ export async function createBugBashItemAsync(bugBashId: string, bugBashItem: IBu
         return createdBugBashItem;
     } catch (e) {
         throw new Error(`Cannot create bug bash item. Reason: ${e.message}`);
-    }
-}
-
-export async function updateBugBashItemAsync(bugBashId: string, bugBashItem: IBugBashItem): Promise<IBugBashItem> {
-    try {
-        const updatedBugBashItem = await updateDocument<IBugBashItem>(getCollectionKey(bugBashId), bugBashItem, false);
-        preProcessBugBashItem(updatedBugBashItem);
-        return updatedBugBashItem;
-    } catch (e) {
-        throw new Error(
-            "This bug bash item has been modified by some one else. Please refresh the item to get the latest version and try updating it again."
-        );
-    }
-}
-
-export async function deleteBugBashItemAsync(bugBashId: string, bugBashItemId: string): Promise<void> {
-    try {
-        await deleteDocument(getCollectionKey(bugBashId), bugBashItemId, false);
-    } catch (e) {
-        throw new Error(`Cannot delete bug bash item. Reason: ${e.message}`);
     }
 }
 
