@@ -16,15 +16,18 @@ import { getNewBugBashInstance } from "../Helpers";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { getDraftBugBash, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 
-export function* bugBashEditorSaga(): SagaIterator {
-    yield takeLeading(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
+export function* bugBashEditorSaga(bugBashId: string | undefined): SagaIterator {
+    yield takeLeading(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize, bugBashId);
     yield takeLeading(BugBashEditorActionTypes.RequestDraftSave, requestDraftSave);
 
     yield takeEvery([BugBashesActionTypes.BugBashUpdateFailed, BugBashesActionTypes.BugBashCreateFailed], bugBashCreateAndUpdateFailed);
 }
 
-function* requestDraftInitialize(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftInitialize>): SagaIterator {
-    const { bugBashId, readFromCache } = action.payload;
+function* requestDraftInitialize(
+    bugBashId: string | undefined,
+    action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftInitialize>
+): SagaIterator {
+    const readFromCache = action.payload;
 
     if (!bugBashId) {
         yield put(BugBashEditorActions.initializeDraft({ ...getNewBugBashInstance() }));
@@ -53,23 +56,22 @@ function* requestDraftInitialize(action: ActionsOfType<BugBashEditorActions, Bug
                 yield put(BugBashEditorActions.initializeDraft(loadedAction.payload));
             } else {
                 const error = loadedAction.payload.error;
-                yield put(BugBashEditorActions.draftInitializeFailed(bugBashId, error));
+                yield put(BugBashEditorActions.draftInitializeFailed(error));
             }
         }
     }
 }
 
-function* requestDraftSave(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftSave>): SagaIterator {
-    const bugBashId = action.payload;
+function* requestDraftSave(): SagaIterator {
     const [isDirty, isValid, isSaving, draftBugBash] = yield all([
-        select(isDraftDirty, bugBashId),
-        select(isDraftValid, bugBashId),
-        select(isDraftSaving, bugBashId),
-        select(getDraftBugBash, bugBashId)
+        select(isDraftDirty),
+        select(isDraftValid),
+        select(isDraftSaving),
+        select(getDraftBugBash)
     ]);
 
-    if (isValid && isDirty && !isSaving) {
-        if (isNullOrWhiteSpace(bugBashId)) {
+    if (draftBugBash && isValid && isDirty && !isSaving) {
+        if (isNullOrWhiteSpace(draftBugBash.id)) {
             yield call(requestDraftCreate, draftBugBash);
         } else {
             yield call(requestDraftUpdate, draftBugBash);

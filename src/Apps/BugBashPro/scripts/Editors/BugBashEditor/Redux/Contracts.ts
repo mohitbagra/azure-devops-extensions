@@ -6,14 +6,10 @@ export interface IBugBashEditorAwareState {
 }
 
 export interface IBugBashEditorState {
-    draftBugBashMap: { [bugBashId: string]: IDraftBugBash };
+    draftBugBash: IDraftBugBash | undefined;
 }
 
 export interface IDraftBugBash extends IChangeableValue<IBugBash | undefined> {
     isSaving?: boolean;
     initializeError?: string;
 }
-
-export const defaultBugBashEditorState: IBugBashEditorState = {
-    draftBugBashMap: {}
-};
