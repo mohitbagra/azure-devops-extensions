@@ -20,8 +20,7 @@ export function* bugBashEditorSaga(): SagaIterator {
     yield takeLeading(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
     yield takeLeading(BugBashEditorActionTypes.RequestDraftSave, requestDraftSave);
 
-    yield takeEvery(BugBashesActionTypes.BugBashCreateFailed, bugBashCreateAndUpdateFailed);
-    yield takeEvery(BugBashesActionTypes.BugBashUpdateFailed, bugBashCreateAndUpdateFailed);
+    yield takeEvery([BugBashesActionTypes.BugBashUpdateFailed, BugBashesActionTypes.BugBashCreateFailed], bugBashCreateAndUpdateFailed);
 }
 
 function* requestDraftInitialize(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftInitialize>): SagaIterator {
