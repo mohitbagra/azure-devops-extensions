@@ -24,7 +24,7 @@ import {
     getWorkItemsAsync,
     updateBugBashItemAsync
 } from "./DataSource";
-import { getBugBashItemsStatus, getBugBashItemStatus, getResolvedWorkItem } from "./Selectors";
+import { getBugBashItem, getBugBashItemsStatus, getBugBashItemStatus, getResolvedWorkItem } from "./Selectors";
 
 export function* bugBashItemsSaga(): SagaIterator {
     yield takeLeading(BugBashItemsActionTypes.BugBashItemsLoadRequested, loadBugBashItems);
@@ -152,9 +152,10 @@ function* deleteBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 }
 
 function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemAcceptRequested>): SagaIterator {
-    const { bugBashItem, bugBash, acceptingDuringCreation } = action.payload;
+    const { bugBashItemId, bugBash, acceptingDuringCreation } = action.payload;
+    const bugBashItem: IBugBashItem = yield select(getBugBashItem, bugBashItemId);
 
-    if (isNullOrWhiteSpace(bugBashItem.bugBashId)) {
+    if (!bugBashItem || isNullOrWhiteSpace(bugBashItem.bugBashId)) {
         throw new Error("This bug bash item is not associated with any bug bash");
     }
 

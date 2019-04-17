@@ -39,8 +39,8 @@ export const BugBashItemsActions = {
     bugBashItemDeleteFailed: (bugBashItemId: string, error: string) =>
         createAction(BugBashItemsActionTypes.BugBashItemDeleteFailed, { bugBashItemId, error }),
 
-    bugBashItemAcceptRequested: (bugBash: IBugBash, bugBashItem: IBugBashItem, acceptingDuringCreation: boolean) =>
-        createAction(BugBashItemsActionTypes.BugBashItemAcceptRequested, { bugBash, bugBashItem, acceptingDuringCreation })
+    bugBashItemAcceptRequested: (bugBash: IBugBash, bugBashItemId: string, acceptingDuringCreation: boolean) =>
+        createAction(BugBashItemsActionTypes.BugBashItemAcceptRequested, { bugBash, bugBashItemId, acceptingDuringCreation })
 };
 
 export const enum BugBashItemsActionTypes {

@@ -1,7 +1,7 @@
 import "./BoardCard.scss";
 
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
-import { IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
+import { BugBashViewActions } from "BugBashPro/Hubs/BugBashView//Redux/Actions";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { getBugBashItemUrlAsync } from "BugBashPro/Shared/NavHelpers";
@@ -15,21 +15,21 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { BugBashViewActions } from "../../Redux/Actions";
 
 const Actions = {
     editBugBashItemRequested: BugBashViewActions.editBugBashItemRequested,
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
-interface IBoardCardProps extends IBugBashViewBaseProps {
+interface IBoardCardProps {
     bugBashItem: IBugBashItem;
     acceptedWorkItem: WorkItem | undefined;
     index: number;
 }
 
 export function BoardCard(props: IBoardCardProps) {
-    const { bugBashId, bugBashItem, index, acceptedWorkItem } = props;
+    const { bugBashItem, index, acceptedWorkItem } = props;
+
     const { editBugBashItemRequested } = useActionCreators(Actions);
     const isAccepted = isBugBashItemAccepted(bugBashItem) && acceptedWorkItem !== undefined;
 
@@ -37,14 +37,14 @@ export function BoardCard(props: IBoardCardProps) {
         (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
             if (!e.ctrlKey) {
                 e.preventDefault();
-                editBugBashItemRequested(bugBashId, bugBashItem.id!);
+                editBugBashItemRequested(bugBashItem.id!);
             }
         },
-        [bugBashId, bugBashItem.id]
+        [bugBashItem.id]
     );
 
     return (
-        <Draggable draggableId={`card_${bugBashItem.id}`} key={`card_${bugBashItem.id}`} type="board-card" index={index} isDragDisabled={true}>
+        <Draggable draggableId={`card_${bugBashItem.id}`} key={`card_${bugBashItem.id}`} type="board-card" index={index} isDragDisabled={isAccepted}>
             {(provided, _snapshot) => (
                 <div
                     className="board-card scroll-hidden flex-column"

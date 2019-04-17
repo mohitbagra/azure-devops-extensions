@@ -10,10 +10,8 @@ import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems/Action
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
-import { BugBashViewHeaderCommands } from "../Constants";
-import { useBugBash } from "../Hooks/useBugBash";
+import { BugBashViewContext, BugBashViewHeaderCommands } from "../Constants";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
-import { IBugBashViewBaseProps } from "../Interfaces";
 
 const Actions = {
     openBugBashPortal: BugBashPortalActions.openBugBashPortal,
@@ -22,10 +20,10 @@ const Actions = {
     loadBugBashItems: BugBashItemsActions.bugBashItemsLoadRequested
 };
 
-export function BugBashViewHeader(props: IBugBashViewBaseProps) {
-    const { bugBashId } = props;
+export function BugBashViewHeader() {
+    const bugBash = React.useContext(BugBashViewContext);
+    const bugBashId = bugBash.id as string;
     const { status } = useFilteredBugBashItems(bugBashId);
-    const { bugBash } = useBugBash(bugBashId);
     const { openBugBashPortal, openBugBashItemPortal, openDetailsPortal, loadBugBashItems } = useActionCreators(Actions);
 
     if (!bugBash) {

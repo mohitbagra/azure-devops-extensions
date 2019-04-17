@@ -12,7 +12,7 @@ import { getTeamsMap } from "Common/AzDev/Teams/Redux/Selectors";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { ActionsOfType } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
-import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
+import { openNewWindow, reloadPage } from "Common/ServiceWrappers/HostNavigationService";
 import { openWorkItem } from "Common/ServiceWrappers/WorkItemNavigationService";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import { Channel, channel, SagaIterator } from "redux-saga";
@@ -23,16 +23,17 @@ import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";
 import { BugBashViewMode } from "./Contracts";
 import { getBugBashItemsFilterState, getBugBashItemsSortState, getBugBashViewMode } from "./Selectors";
 
-export function* bugBashViewSaga(): SagaIterator {
+export function* bugBashViewSaga(bugBashId: string): SagaIterator {
     yield takeEvery(BugBashViewActionTypes.Initialize, initializeView);
     yield takeEvery(BugBashViewActionTypes.SetViewMode, setViewMode);
     yield takeEvery(BugBashViewActionTypes.ApplyFilter, applyFilter);
     yield takeEvery(BugBashViewActionTypes.ApplySort, applySort);
     yield takeEvery(BugBashViewActionTypes.ClearSortAndFilter, clearSortAndFilter);
-    yield takeEvery(BugBashViewActionTypes.EditBugBashItemRequested, editBugBashItemRequested);
-    yield takeEvery(BugBashViewActionTypes.DismissBugBashItemPortalRequested, onBugBashItemPortalDismissed);
+    yield takeEvery(BugBashViewActionTypes.EditBugBashItemRequested, editBugBashItemRequested, bugBashId);
+    yield takeEvery(BugBashViewActionTypes.DismissBugBashItemPortalRequested, onBugBashItemPortalDismissed, bugBashId);
 
-    yield takeEvery([BugBashesActionTypes.BugBashLoaded, BugBashesActionTypes.BugBashUpdated], bugBashLoaded);
+    yield takeEvery(BugBashesActionTypes.BugBashLoaded, bugBashLoaded);
+    yield takeEvery(BugBashesActionTypes.BugBashUpdated, bugBashUpdated);
 
     yield takeEvery(BugBashItemsActionTypes.BugBashItemsLoaded, bugBashItemsLoaded);
     yield takeEvery(BugBashItemsActionTypes.BugBashItemDeleteFailed, bugBashItemDeleteFailed);
@@ -49,7 +50,7 @@ export function* bugBashViewSaga(): SagaIterator {
 }
 
 function* initializeView(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.Initialize>) {
-    const { bugBashId, initialBugBashItemId } = action.payload;
+    const initialBugBashItemId = action.payload;
 
     if (initialBugBashItemId) {
         const { bugBashItemsLoaded } = yield race({
@@ -58,12 +59,12 @@ function* initializeView(action: ActionsOfType<BugBashViewActions, BugBashViewAc
         });
 
         if (bugBashItemsLoaded) {
-            yield put(BugBashViewActions.editBugBashItemRequested(bugBashId, initialBugBashItemId));
+            yield put(BugBashViewActions.editBugBashItemRequested(initialBugBashItemId));
         }
     }
 }
 
-function* bugBashLoaded(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashLoaded | BugBashesActionTypes.BugBashUpdated>) {
+function* bugBashLoaded(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashLoaded>) {
     const bugBash = action.payload;
 
     if (bugBash.autoAccept) {
@@ -72,6 +73,10 @@ function* bugBashLoaded(action: ActionsOfType<BugBashesActions, BugBashesActionT
             yield put(BugBashViewActions.setViewMode(BugBashViewMode.Accepted));
         }
     }
+}
+
+function* bugBashUpdated() {
+    yield call(reloadPage);
 }
 
 function* setViewMode(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.SetViewMode>): SagaIterator {
@@ -155,8 +160,8 @@ function* bugBashItemLoadedOrCreatedOrUpdatedOrDeleted(): SagaIterator {
     yield put(BugBashViewActions.setFilterData(filterData));
 }
 
-function* editBugBashItemRequested(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.EditBugBashItemRequested>) {
-    const { bugBashId, bugBashItemId } = action.payload;
+function* editBugBashItemRequested(bugBashId: string, action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.EditBugBashItemRequested>) {
+    const bugBashItemId = action.payload;
     const bugBashItem: IBugBashItem | undefined = yield select(getBugBashItem, bugBashItemId);
 
     if (bugBashItem && isBugBashItemAccepted(bugBashItem)) {
@@ -167,8 +172,11 @@ function* editBugBashItemRequested(action: ActionsOfType<BugBashViewActions, Bug
     }
 }
 
-function* onBugBashItemPortalDismissed(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.DismissBugBashItemPortalRequested>) {
-    const { bugBashId, bugBashItemId, workItemId } = action.payload;
+function* onBugBashItemPortalDismissed(
+    bugBashId: string,
+    action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.DismissBugBashItemPortalRequested>
+) {
+    const { bugBashItemId, workItemId } = action.payload;
     if (workItemId) {
         const workItemUrl: string = yield call(getWorkItemUrlAsync, workItemId);
         yield call(addToast, {
