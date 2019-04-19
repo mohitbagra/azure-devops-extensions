@@ -5,7 +5,7 @@ import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/
 import { getBugBashItem } from "BugBashPro/Shared/Redux/BugBashItems/Selectors";
 import { CommentActions, CommentActionTypes } from "BugBashPro/Shared/Redux/Comments/Actions";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
-import { ActionsOfType } from "Common/Redux";
+import { ActionsOfType, RT } from "Common/Redux";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { all, call, put, race, select, take, takeEvery, takeLeading } from "redux-saga/effects";
@@ -31,7 +31,7 @@ function* requestDraftInitialize(action: ActionsOfType<BugBashItemEditorActions,
     if (!bugBashItemId) {
         yield put(BugBashItemEditorActions.initializeDraft({ ...getNewBugBashItemInstance(bugBash.id!, bugBash.defaultTeam) }));
     } else {
-        const existingBugBashItem: IBugBashItem | undefined = yield select(getBugBashItem, bugBashItemId);
+        const existingBugBashItem: RT<typeof getBugBashItem> = yield select(getBugBashItem, bugBashItemId);
         if (existingBugBashItem && readFromCache) {
             yield put(BugBashItemEditorActions.initializeDraft(existingBugBashItem));
         } else {
@@ -71,7 +71,13 @@ function* requestDraftInitialize(action: ActionsOfType<BugBashItemEditorActions,
 
 function* requestDraftSave(action: ActionsOfType<BugBashItemEditorActions, BugBashItemEditorActionTypes.RequestDraftSave>): SagaIterator {
     const { bugBash, bugBashItemId } = action.payload;
-    const [isDirty, isValid, isSaving, draftBugBashItem, draftComment] = yield all([
+    const [isDirty, isValid, isSaving, draftBugBashItem, draftComment]: [
+        RT<typeof isDraftDirty>,
+        RT<typeof isDraftValid>,
+        RT<typeof isDraftSaving>,
+        RT<typeof getDraftBugBashItem>,
+        RT<typeof getDraftComment>
+    ] = yield all([
         select(isDraftDirty, bugBashItemId),
         select(isDraftValid, bugBashItemId),
         select(isDraftSaving, bugBashItemId),
@@ -79,7 +85,7 @@ function* requestDraftSave(action: ActionsOfType<BugBashItemEditorActions, BugBa
         select(getDraftComment, bugBashItemId)
     ]);
 
-    if (isValid && isDirty && !isSaving) {
+    if (draftBugBashItem && isValid && isDirty && !isSaving) {
         if (isNullOrWhiteSpace(bugBashItemId)) {
             yield call(requestDraftCreate, bugBash, draftBugBashItem, draftComment);
         } else {

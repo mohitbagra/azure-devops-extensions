@@ -10,7 +10,7 @@ import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/
 import { getAllBugBashItems, getBugBashItem, getResolvedWorkItemsMap } from "BugBashPro/Shared/Redux/BugBashItems/Selectors";
 import { getTeamsMap } from "Common/AzDev/Teams/Redux/Selectors";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
-import { ActionsOfType } from "Common/Redux";
+import { ActionsOfType, RT } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { openNewWindow, reloadPage } from "Common/ServiceWrappers/HostNavigationService";
 import { openWorkItem } from "Common/ServiceWrappers/WorkItemNavigationService";
@@ -68,7 +68,7 @@ function* bugBashLoaded(action: ActionsOfType<BugBashesActions, BugBashesActionT
     const bugBash = action.payload;
 
     if (bugBash.autoAccept) {
-        const viewMode: BugBashViewMode = yield select(getBugBashViewMode);
+        const viewMode: RT<typeof getBugBashViewMode> = yield select(getBugBashViewMode);
         if (viewMode !== BugBashViewMode.Accepted) {
             yield put(BugBashViewActions.setViewMode(BugBashViewMode.Accepted));
         }
@@ -81,7 +81,13 @@ function* bugBashUpdated() {
 
 function* setViewMode(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.SetViewMode>): SagaIterator {
     const viewMode = action.payload;
-    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, filterState, sortState] = yield all([
+    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, filterState, sortState]: [
+        RT<typeof getAllBugBashItems>,
+        RT<typeof getResolvedWorkItemsMap>,
+        RT<typeof getTeamsMap>,
+        RT<typeof getBugBashItemsFilterState>,
+        RT<typeof getBugBashItemsSortState>
+    ] = yield all([
         select(getAllBugBashItems),
         select(getResolvedWorkItemsMap),
         select(getTeamsMap),
@@ -93,7 +99,13 @@ function* setViewMode(action: ActionsOfType<BugBashViewActions, BugBashViewActio
 
 function* applyFilter(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.ApplyFilter>): SagaIterator {
     const filterState = action.payload;
-    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode, sortState] = yield all([
+    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode, sortState]: [
+        RT<typeof getAllBugBashItems>,
+        RT<typeof getResolvedWorkItemsMap>,
+        RT<typeof getTeamsMap>,
+        RT<typeof getBugBashViewMode>,
+        RT<typeof getBugBashItemsSortState>
+    ] = yield all([
         select(getAllBugBashItems),
         select(getResolvedWorkItemsMap),
         select(getTeamsMap),
@@ -105,7 +117,13 @@ function* applyFilter(action: ActionsOfType<BugBashViewActions, BugBashViewActio
 
 function* applySort(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.ApplySort>): SagaIterator {
     const sortState = action.payload;
-    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode, filterState] = yield all([
+    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode, filterState]: [
+        RT<typeof getAllBugBashItems>,
+        RT<typeof getResolvedWorkItemsMap>,
+        RT<typeof getTeamsMap>,
+        RT<typeof getBugBashViewMode>,
+        RT<typeof getBugBashItemsFilterState>
+    ] = yield all([
         select(getAllBugBashItems),
         select(getResolvedWorkItemsMap),
         select(getTeamsMap),
@@ -116,12 +134,12 @@ function* applySort(action: ActionsOfType<BugBashViewActions, BugBashViewActionT
 }
 
 function* clearSortAndFilter(): SagaIterator {
-    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode] = yield all([
-        select(getAllBugBashItems),
-        select(getResolvedWorkItemsMap),
-        select(getTeamsMap),
-        select(getBugBashViewMode)
-    ]);
+    const [allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode]: [
+        RT<typeof getAllBugBashItems>,
+        RT<typeof getResolvedWorkItemsMap>,
+        RT<typeof getTeamsMap>,
+        RT<typeof getBugBashViewMode>
+    ] = yield all([select(getAllBugBashItems), select(getResolvedWorkItemsMap), select(getTeamsMap), select(getBugBashViewMode)]);
     yield call(refreshFilteredItems, allBugBashItems, resolvedWorkItemsMap, teamsMap, viewMode, undefined, undefined);
 }
 
@@ -132,12 +150,12 @@ function* bugBashItemDeleteFailed(action: ActionsOfType<BugBashItemsActions, Bug
 
 function* bugBashItemsLoaded(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemsLoaded>): SagaIterator {
     const { bugBashItems, resolvedWorkItems } = action.payload;
-    const [filterState, sortState, teamsMap, viewMode] = yield all([
-        select(getBugBashItemsFilterState),
-        select(getBugBashItemsSortState),
-        select(getTeamsMap),
-        select(getBugBashViewMode)
-    ]);
+    const [filterState, sortState, teamsMap, viewMode]: [
+        RT<typeof getBugBashItemsFilterState>,
+        RT<typeof getBugBashItemsSortState>,
+        RT<typeof getTeamsMap>,
+        RT<typeof getBugBashViewMode>
+    ] = yield all([select(getBugBashItemsFilterState), select(getBugBashItemsSortState), select(getTeamsMap), select(getBugBashViewMode)]);
     yield call(refreshFilteredItems, bugBashItems, resolvedWorkItems, teamsMap, viewMode, filterState, sortState);
 
     const filterData = getBugBashItemsFilterData(bugBashItems, resolvedWorkItems);
@@ -145,7 +163,14 @@ function* bugBashItemsLoaded(action: ActionsOfType<BugBashItemsActions, BugBashI
 }
 
 function* bugBashItemLoadedOrCreatedOrUpdatedOrDeleted(): SagaIterator {
-    const [allBugBashItems, resolvedWorkItemsMap, filterState, sortState, teamsMap, viewMode] = yield all([
+    const [allBugBashItems, resolvedWorkItemsMap, filterState, sortState, teamsMap, viewMode]: [
+        RT<typeof getAllBugBashItems>,
+        RT<typeof getResolvedWorkItemsMap>,
+        RT<typeof getBugBashItemsFilterState>,
+        RT<typeof getBugBashItemsSortState>,
+        RT<typeof getTeamsMap>,
+        RT<typeof getBugBashViewMode>
+    ] = yield all([
         select(getAllBugBashItems),
         select(getResolvedWorkItemsMap),
         select(getBugBashItemsFilterState),
@@ -162,10 +187,10 @@ function* bugBashItemLoadedOrCreatedOrUpdatedOrDeleted(): SagaIterator {
 
 function* editBugBashItemRequested(bugBashId: string, action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.EditBugBashItemRequested>) {
     const bugBashItemId = action.payload;
-    const bugBashItem: IBugBashItem | undefined = yield select(getBugBashItem, bugBashItemId);
+    const bugBashItem: RT<typeof getBugBashItem> = yield select(getBugBashItem, bugBashItemId);
 
     if (bugBashItem && isBugBashItemAccepted(bugBashItem)) {
-        const workItem: WorkItem = yield call(openWorkItem, bugBashItem.workItemId!);
+        const workItem: RT<typeof openWorkItem> = yield call(openWorkItem, bugBashItem.workItemId!);
         yield put(BugBashItemsActions.bugBashItemUpdated(bugBashItem, workItem));
     } else {
         yield put(BugBashPortalActions.openBugBashItemPortal(bugBashId, bugBashItemId, { readFromCache: false }));
@@ -178,7 +203,7 @@ function* onBugBashItemPortalDismissed(
 ) {
     const { bugBashItemId, workItemId } = action.payload;
     if (workItemId) {
-        const workItemUrl: string = yield call(getWorkItemUrlAsync, workItemId);
+        const workItemUrl: RT<typeof getWorkItemUrlAsync> = yield call(getWorkItemUrlAsync, workItemId);
         yield call(addToast, {
             message: Resources.BugBashAcceptedCreatedMessage,
             callToAction: Resources.View,

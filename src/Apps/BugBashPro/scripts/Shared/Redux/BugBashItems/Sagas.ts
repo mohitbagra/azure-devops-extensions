@@ -3,14 +3,12 @@ import { WorkItem, WorkItemTemplate } from "azure-devops-extension-api/WorkItemT
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IBugBash, IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { TeamFieldActions, TeamFieldActionTypes } from "Common/AzDev/TeamFields/Redux/Actions";
-import { ITeamFieldValues } from "Common/AzDev/TeamFields/Redux/Contracts";
 import { getTeamFieldValues } from "Common/AzDev/TeamFields/Redux/Selectors";
 import { WorkItemTemplateActions, WorkItemTemplateActionTypes } from "Common/AzDev/WorkItemTemplates/Redux/Actions";
-import { IWorkItemTemplate } from "Common/AzDev/WorkItemTemplates/Redux/Contracts";
 import { getTemplateState } from "Common/AzDev/WorkItemTemplates/Redux/Selectors";
 import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
-import { ActionsOfType } from "Common/Redux";
+import { ActionsOfType, RT } from "Common/Redux";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, take, takeEvery, takeLeading } from "redux-saga/effects";
@@ -37,11 +35,11 @@ export function* bugBashItemsSaga(): SagaIterator {
 
 function* loadBugBashItems(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemsLoadRequested>): SagaIterator {
     const bugBashId = action.payload;
-    const status: LoadStatus = yield select(getBugBashItemsStatus);
+    const status: RT<typeof getBugBashItemsStatus> = yield select(getBugBashItemsStatus);
 
     if (status !== LoadStatus.Loading) {
         yield put(BugBashItemsActions.beginLoadBugBashItems());
-        let bugBashItems: IBugBashItem[] = yield call(fetchBugBashItemsAsync, bugBashId);
+        let bugBashItems: RT<typeof fetchBugBashItemsAsync> = yield call(fetchBugBashItemsAsync, bugBashId);
 
         const workItemIdsToLoad: number[] = [];
         for (const bugBashItem of bugBashItems) {
@@ -49,7 +47,7 @@ function* loadBugBashItems(action: ActionsOfType<BugBashItemsActions, BugBashIte
                 workItemIdsToLoad.push(bugBashItem.workItemId);
             }
         }
-        const resolvedWorkItems: WorkItem[] = yield call(getWorkItemsAsync, workItemIdsToLoad);
+        const resolvedWorkItems: RT<typeof getWorkItemsAsync> = yield call(getWorkItemsAsync, workItemIdsToLoad);
         const workItemsMap: { [id: number]: WorkItem } = {};
         resolvedWorkItems.forEach(w => {
             workItemsMap[w.id] = w;
@@ -62,19 +60,19 @@ function* loadBugBashItems(action: ActionsOfType<BugBashItemsActions, BugBashIte
 
 function* loadBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemLoadRequested>): SagaIterator {
     const { bugBashId, bugBashItemId } = action.payload;
-    const status: LoadStatus = yield select(getBugBashItemStatus, bugBashItemId);
+    const status: RT<typeof getBugBashItemStatus> = yield select(getBugBashItemStatus, bugBashItemId);
 
     if (status !== LoadStatus.Loading && status !== LoadStatus.Updating) {
         yield put(BugBashItemsActions.beginLoadBugBashItem(bugBashItemId));
         try {
-            const data: IBugBashItem = yield call(fetchBugBashItemAsync, bugBashId, bugBashItemId);
+            const data: RT<typeof fetchBugBashItemAsync> = yield call(fetchBugBashItemAsync, bugBashId, bugBashItemId);
 
             // try to load resolved work item
             if (data.workItemId) {
-                const cachedWorkItem: WorkItem = yield select(getResolvedWorkItem, data.workItemId);
+                const cachedWorkItem: RT<typeof getResolvedWorkItem> = yield select(getResolvedWorkItem, data.workItemId);
                 if (!cachedWorkItem) {
                     // if work item is not already loaded, try to load it.
-                    const resolvedWorkItems: WorkItem[] = yield call(getWorkItemsAsync, [data.workItemId]);
+                    const resolvedWorkItems: RT<typeof getWorkItemsAsync> = yield call(getWorkItemsAsync, [data.workItemId]);
                     if (resolvedWorkItems && resolvedWorkItems.length === 1) {
                         yield put(BugBashItemsActions.bugBashItemLoaded(data, resolvedWorkItems[0]));
                     } else {
@@ -108,7 +106,7 @@ function* createBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 
     yield put(BugBashItemsActions.beginCreateBugBashItem(bugBashItem));
     try {
-        const createdBugBashItem: IBugBashItem = yield call(createBugBashItemAsync, bugBashItem.bugBashId, bugBashItem);
+        const createdBugBashItem: RT<typeof createBugBashItemAsync> = yield call(createBugBashItemAsync, bugBashItem.bugBashId, bugBashItem);
         yield put(BugBashItemsActions.bugBashItemCreated(createdBugBashItem, undefined));
     } catch (e) {
         yield put(BugBashItemsActions.bugBashItemCreateFailed(bugBashItem, e.message));
@@ -122,12 +120,12 @@ function* updateBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
         throw new Error("This bug bash item is not associated with any bug bash");
     }
 
-    const status: LoadStatus = yield select(getBugBashItemStatus, bugBashItem.id!);
+    const status: RT<typeof getBugBashItemStatus> = yield select(getBugBashItemStatus, bugBashItem.id!);
 
     if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed) {
         yield put(BugBashItemsActions.beginUpdateBugBashItem(bugBashItem));
         try {
-            const updatedBugBashItem: IBugBashItem = yield call(updateBugBashItemAsync, bugBashItem.bugBashId, bugBashItem);
+            const updatedBugBashItem: RT<typeof updateBugBashItemAsync> = yield call(updateBugBashItemAsync, bugBashItem.bugBashId, bugBashItem);
             yield put(BugBashItemsActions.bugBashItemUpdated(updatedBugBashItem, undefined));
         } catch (e) {
             yield put(BugBashItemsActions.bugBashItemUpdateFailed(bugBashItem, e.message));
@@ -138,7 +136,7 @@ function* updateBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 function* deleteBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemDeleteRequested>): SagaIterator {
     const { bugBashId, bugBashItemId } = action.payload;
 
-    const status: LoadStatus = yield select(getBugBashItemStatus, bugBashItemId);
+    const status: RT<typeof getBugBashItemStatus> = yield select(getBugBashItemStatus, bugBashItemId);
 
     if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed || status === LoadStatus.LoadFailed) {
         yield put(BugBashItemsActions.beginDeleteBugBashItem(bugBashItemId));
@@ -153,14 +151,14 @@ function* deleteBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 
 function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashItemsActionTypes.BugBashItemAcceptRequested>): SagaIterator {
     const { bugBashItemId, bugBash, acceptingDuringCreation } = action.payload;
-    const bugBashItem: IBugBashItem = yield select(getBugBashItem, bugBashItemId);
+    const bugBashItem: RT<typeof getBugBashItem> = yield select(getBugBashItem, bugBashItemId);
 
     if (!bugBashItem || isNullOrWhiteSpace(bugBashItem.bugBashId)) {
         throw new Error("This bug bash item is not associated with any bug bash");
     }
 
     if (bugBashItem.id && !bugBashItem.workItemId) {
-        const status: LoadStatus = yield select(getBugBashItemStatus, bugBashItem.id);
+        const status: RT<typeof getBugBashItemStatus> = yield select(getBugBashItemStatus, bugBashItem.id);
 
         if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed) {
             yield put(BugBashItemsActions.beginUpdateBugBashItem(bugBashItem));
@@ -189,7 +187,7 @@ function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
                 }
 
                 // attempt to save work item
-                const acceptedWorkItem = yield call(createWorkItemAsync, bugBash.workItemType, fieldValues);
+                const acceptedWorkItem: RT<typeof createWorkItemAsync> = yield call(createWorkItemAsync, bugBash.workItemType, fieldValues);
 
                 // update bug bash item again with work item id
                 updatedBugBashItem = yield call(updateBugBashItemAsync, bugBashItem.bugBashId, {
@@ -212,7 +210,7 @@ function* acceptBugBashItem(action: ActionsOfType<BugBashItemsActions, BugBashIt
 }
 
 function* loadTemplate(templateId: string, teamId: string) {
-    const template: IWorkItemTemplate | undefined = yield select(getTemplateState, templateId);
+    const template: RT<typeof getTemplateState> = yield select(getTemplateState, templateId);
 
     if (template && template.status === LoadStatus.Ready && !template.error) {
         return yield template.template;
@@ -248,7 +246,7 @@ function* loadTemplate(templateId: string, teamId: string) {
 }
 
 function* loadTeamFieldValues(teamId: string) {
-    const teamFieldValues: ITeamFieldValues | undefined = yield select(getTeamFieldValues, teamId);
+    const teamFieldValues: RT<typeof getTeamFieldValues> = yield select(getTeamFieldValues, teamId);
 
     if (teamFieldValues && teamFieldValues.status === LoadStatus.Ready && !teamFieldValues.error) {
         return yield teamFieldValues;

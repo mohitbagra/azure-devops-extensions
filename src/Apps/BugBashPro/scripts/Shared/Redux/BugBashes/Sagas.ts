@@ -1,6 +1,6 @@
 import { IBugBash } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
-import { ActionsOfType } from "Common/Redux";
+import { ActionsOfType, RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
 import { BugBashesActions, BugBashesActionTypes } from "./Actions";
@@ -16,7 +16,7 @@ export function* bugBashesSaga(): SagaIterator {
 }
 
 function* loadBugBashes(): SagaIterator {
-    const status: LoadStatus = yield select(getBugBashesStatus);
+    const status: RT<typeof getBugBashesStatus> = yield select(getBugBashesStatus);
 
     if (status !== LoadStatus.Loading) {
         yield put(BugBashesActions.beginLoadBugBashes());
@@ -27,12 +27,12 @@ function* loadBugBashes(): SagaIterator {
 
 function* loadBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashLoadRequested>): SagaIterator {
     const bugBashId = action.payload;
-    const status: LoadStatus = yield select(getBugBashStatus, bugBashId);
+    const status: RT<typeof getBugBashStatus> = yield select(getBugBashStatus, bugBashId);
 
     if (status !== LoadStatus.Loading && status !== LoadStatus.Updating) {
         yield put(BugBashesActions.beginLoadBugBash(bugBashId));
         try {
-            const data: IBugBash = yield call(fetchBugBashAsync, bugBashId);
+            const data: RT<typeof fetchBugBashAsync> = yield call(fetchBugBashAsync, bugBashId);
             yield put(BugBashesActions.bugBashLoaded(data));
         } catch (e) {
             yield put(BugBashesActions.bugBashLoadFailed(bugBashId, e.message));
@@ -45,7 +45,7 @@ function* createBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionT
 
     yield put(BugBashesActions.beginCreateBugBash(bugBash));
     try {
-        const createdBugBash: IBugBash = yield call(createBugBashAsync, bugBash);
+        const createdBugBash: RT<typeof createBugBashAsync> = yield call(createBugBashAsync, bugBash);
         yield put(BugBashesActions.bugBashCreated(createdBugBash));
     } catch (e) {
         yield put(BugBashesActions.bugBashCreateFailed(bugBash, e.message));
@@ -55,11 +55,11 @@ function* createBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionT
 function* updateBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashUpdateRequested>): SagaIterator {
     const bugBash = action.payload;
 
-    const status: LoadStatus = yield select(getBugBashStatus, bugBash.id!);
+    const status: RT<typeof getBugBashStatus> = yield select(getBugBashStatus, bugBash.id!);
     if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed) {
         yield put(BugBashesActions.beginUpdateBugBash(bugBash));
         try {
-            const updatedBugBash: IBugBash = yield call(updateBugBashAsync, bugBash);
+            const updatedBugBash: RT<typeof updateBugBashAsync> = yield call(updateBugBashAsync, bugBash);
             yield put(BugBashesActions.bugBashUpdated(updatedBugBash));
         } catch (e) {
             yield put(BugBashesActions.bugBashUpdateFailed(bugBash, e.message));
@@ -70,7 +70,7 @@ function* updateBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionT
 function* deleteBugBash(action: ActionsOfType<BugBashesActions, BugBashesActionTypes.BugBashDeleteRequested>): SagaIterator {
     const bugBashId = action.payload;
 
-    const status: LoadStatus = yield select(getBugBashStatus, bugBashId);
+    const status: RT<typeof getBugBashStatus> = yield select(getBugBashStatus, bugBashId);
     if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed || status === LoadStatus.LoadFailed) {
         yield put(BugBashesActions.beginDeleteBugBash(bugBashId));
         try {

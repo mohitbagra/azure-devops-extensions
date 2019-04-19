@@ -6,7 +6,7 @@ import { navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { getBugBash } from "BugBashPro/Shared/Redux/BugBashes/Selectors";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
-import { ActionsOfType } from "Common/Redux";
+import { ActionsOfType, RT } from "Common/Redux";
 import { addToast } from "Common/ServiceWrappers/GlobalMessageService";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
@@ -32,7 +32,7 @@ function* requestDraftInitialize(
     if (!bugBashId) {
         yield put(BugBashEditorActions.initializeDraft({ ...getNewBugBashInstance() }));
     } else {
-        const existingBugBash: IBugBash | undefined = yield select(getBugBash, bugBashId);
+        const existingBugBash: RT<typeof getBugBash> = yield select(getBugBash, bugBashId);
         if (existingBugBash && readFromCache) {
             yield put(BugBashEditorActions.initializeDraft(existingBugBash));
         } else {
@@ -63,12 +63,12 @@ function* requestDraftInitialize(
 }
 
 function* requestDraftSave(): SagaIterator {
-    const [isDirty, isValid, isSaving, draftBugBash] = yield all([
-        select(isDraftDirty),
-        select(isDraftValid),
-        select(isDraftSaving),
-        select(getDraftBugBash)
-    ]);
+    const [isDirty, isValid, isSaving, draftBugBash]: [
+        RT<typeof isDraftDirty>,
+        RT<typeof isDraftValid>,
+        RT<typeof isDraftSaving>,
+        RT<typeof getDraftBugBash>
+    ] = yield all([select(isDraftDirty), select(isDraftValid), select(isDraftSaving), select(getDraftBugBash)]);
 
     if (draftBugBash && isValid && isDirty && !isSaving) {
         if (isNullOrWhiteSpace(draftBugBash.id)) {

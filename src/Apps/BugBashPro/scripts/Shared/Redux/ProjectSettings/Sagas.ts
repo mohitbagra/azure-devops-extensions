@@ -1,6 +1,5 @@
-import { IProjectSetting } from "BugBashPro/Shared/Contracts";
 import { LoadStatus } from "Common/Contracts";
-import { ActionsOfType } from "Common/Redux";
+import { ActionsOfType, RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeLeading } from "redux-saga/effects";
 import { ProjectSettingActions, ProjectSettingActionTypes } from "./Actions";
@@ -13,21 +12,21 @@ export function* projectSettingSaga(): SagaIterator {
 }
 
 function* loadProjectSetting(): SagaIterator {
-    const status: LoadStatus = yield select(getProjectSettingStatus);
+    const status: RT<typeof getProjectSettingStatus> = yield select(getProjectSettingStatus);
 
     if (status !== LoadStatus.Loading) {
         yield put(ProjectSettingActions.beginLoadProjectSetting());
-        const data: IProjectSetting = yield call(fetchProjectSettingAsync);
+        const data: RT<typeof fetchProjectSettingAsync> = yield call(fetchProjectSettingAsync);
         yield put(ProjectSettingActions.projectSettingLoaded(data));
     }
 }
 
 function* updateProjectSetting(action: ActionsOfType<ProjectSettingActions, ProjectSettingActionTypes.ProjectSettingUpdateRequested>): SagaIterator {
     const projectSetting = action.payload;
-    const status: LoadStatus = yield select(getProjectSettingStatus);
+    const status: RT<typeof getProjectSettingStatus> = yield select(getProjectSettingStatus);
 
     if (status !== LoadStatus.Loading) {
-        const data: IProjectSetting = yield call(updateProjectSettingAsync, projectSetting);
+        const data: RT<typeof updateProjectSettingAsync> = yield call(updateProjectSettingAsync, projectSetting);
         yield put(ProjectSettingActions.projectSettingUpdated(data));
     }
 }
