@@ -68,14 +68,14 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
             state: IBugBashEditorAwareState & ITeamAwareState & IFieldAwareState & IWorkItemTypeAwareState & IWorkItemTemplateAwareState
         ): IBugBashEditorPanelStateProps => {
             return {
-                draftBugBash: getDraftBugBash(state),
-                draftInitializeError: getDraftInitializeError(state),
-                isValid: isDraftValid(state),
-                isDirty: isDraftDirty(state),
-                isSaving: isDraftSaving(state)
+                draftBugBash: getDraftBugBash(state, bugBashId),
+                draftInitializeError: getDraftInitializeError(state, bugBashId),
+                isValid: isDraftValid(state, bugBashId),
+                isDirty: isDraftDirty(state, bugBashId),
+                isSaving: isDraftSaving(state, bugBashId)
             };
         },
-        []
+        [bugBashId]
     );
     const { draftBugBash, isValid, isDirty, isSaving, draftInitializeError } = useMappedState(mapStateToProps);
     const { requestDraftSave, updateDraft, requestDraftInitialize } = useActionCreators(Actions);
@@ -83,9 +83,9 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
     const throttledOnDraftChanged = useThrottle(updateDraft, 200);
     React.useEffect(() => {
         if (!draftBugBash) {
-            requestDraftInitialize(readFromCache);
+            requestDraftInitialize(bugBashId, readFromCache);
         }
-    }, []);
+    }, [bugBashId]);
 
     const dismissPanel = React.useCallback(() => {
         if (isDirty) {
@@ -100,8 +100,8 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
     }, [isDirty, onDismiss]);
 
     const saveBugBash = React.useCallback(() => {
-        requestDraftSave();
-    }, []);
+        requestDraftSave(bugBashId);
+    }, [bugBashId]);
 
     const getDatesError = React.useCallback(() => {
         if (draftBugBash) {
@@ -296,7 +296,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
 
 export function BugBashEditorPanel(props: IBugBashEditorPanelOwnProps) {
     return (
-        <DynamicModuleLoader modules={[getBugBashEditorModule(props.bugBashId)]} cleanOnUnmount={true}>
+        <DynamicModuleLoader modules={[getBugBashEditorModule()]} cleanOnUnmount={true}>
             <BugBashEditorPanelInternal {...props} />
         </DynamicModuleLoader>
     );

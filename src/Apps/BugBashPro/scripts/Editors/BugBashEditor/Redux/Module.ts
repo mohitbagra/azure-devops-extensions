@@ -5,7 +5,7 @@ import { IBugBashEditorAwareState } from "./Contracts";
 import { bugBashEditorReducer } from "./Reducers";
 import { bugBashEditorSaga } from "./Sagas";
 
-export function getBugBashEditorModule(bugBashId: string | undefined): ISagaModule<IBugBashEditorAwareState> {
+export function getBugBashEditorModule(): ISagaModule<IBugBashEditorAwareState> {
     const reducerMap: ReducersMapObject<IBugBashEditorAwareState, BugBashEditorActions> = {
         bugBashEditorState: bugBashEditorReducer
     };
@@ -13,9 +13,6 @@ export function getBugBashEditorModule(bugBashId: string | undefined): ISagaModu
     return {
         id: "bugBashEditor",
         reducerMap,
-        sagas: [{
-            saga: bugBashEditorSaga,
-            argument: bugBashId
-        }]
+        sagas: [bugBashEditorSaga]
     };
 }

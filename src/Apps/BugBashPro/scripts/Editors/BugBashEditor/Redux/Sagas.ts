@@ -16,18 +16,15 @@ import { getNewBugBashInstance } from "../Helpers";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { getDraftBugBash, isDraftDirty, isDraftSaving, isDraftValid } from "./Selectors";
 
-export function* bugBashEditorSaga(bugBashId: string | undefined): SagaIterator {
-    yield takeLeading(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize, bugBashId);
+export function* bugBashEditorSaga(): SagaIterator {
+    yield takeLeading(BugBashEditorActionTypes.RequestDraftInitialize, requestDraftInitialize);
     yield takeLeading(BugBashEditorActionTypes.RequestDraftSave, requestDraftSave);
 
     yield takeEvery([BugBashesActionTypes.BugBashUpdateFailed, BugBashesActionTypes.BugBashCreateFailed], bugBashCreateAndUpdateFailed);
 }
 
-function* requestDraftInitialize(
-    bugBashId: string | undefined,
-    action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftInitialize>
-): SagaIterator {
-    const readFromCache = action.payload;
+function* requestDraftInitialize(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftInitialize>): SagaIterator {
+    const { bugBashId, readFromCache } = action.payload;
 
     if (!bugBashId) {
         yield put(BugBashEditorActions.initializeDraft({ ...getNewBugBashInstance() }));
@@ -56,19 +53,26 @@ function* requestDraftInitialize(
                 yield put(BugBashEditorActions.initializeDraft(loadedAction.payload));
             } else {
                 const error = loadedAction.payload.error;
-                yield put(BugBashEditorActions.draftInitializeFailed(error));
+                yield put(BugBashEditorActions.draftInitializeFailed(bugBashId, error));
             }
         }
     }
 }
 
-function* requestDraftSave(): SagaIterator {
+function* requestDraftSave(action: ActionsOfType<BugBashEditorActions, BugBashEditorActionTypes.RequestDraftSave>): SagaIterator {
+    const bugBashId = action.payload;
+
     const [isDirty, isValid, isSaving, draftBugBash]: [
         RT<typeof isDraftDirty>,
         RT<typeof isDraftValid>,
         RT<typeof isDraftSaving>,
         RT<typeof getDraftBugBash>
-    ] = yield all([select(isDraftDirty), select(isDraftValid), select(isDraftSaving), select(getDraftBugBash)]);
+    ] = yield all([
+        select(isDraftDirty, bugBashId),
+        select(isDraftValid, bugBashId),
+        select(isDraftSaving, bugBashId),
+        select(getDraftBugBash, bugBashId)
+    ]);
 
     if (draftBugBash && isValid && isDirty && !isSaving) {
         if (isNullOrWhiteSpace(draftBugBash.id)) {

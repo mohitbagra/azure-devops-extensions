@@ -6,7 +6,7 @@ export interface IBugBashEditorAwareState {
 }
 
 export interface IBugBashEditorState {
-    draftBugBash: IDraftBugBash | undefined;
+    draftBugBashMap: { [bugBashId: string]: IDraftBugBash };
 }
 
 export interface IDraftBugBash extends IChangeableValue<IBugBash | undefined> {

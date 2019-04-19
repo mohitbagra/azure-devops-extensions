@@ -1,11 +1,11 @@
-import { equals } from "azure-devops-ui/Core/Util/String";
+import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { produce } from "immer";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { IBugBashEditorState } from "./Contracts";
 
 const defaultState: IBugBashEditorState = {
-    draftBugBash: undefined
+    draftBugBashMap: {}
 };
 
 export function bugBashEditorReducer(state: IBugBashEditorState | undefined, action: BugBashEditorActions | BugBashesActions): IBugBashEditorState {
@@ -13,7 +13,8 @@ export function bugBashEditorReducer(state: IBugBashEditorState | undefined, act
         switch (action.type) {
             case BugBashEditorActionTypes.InitializeDraft: {
                 const bugBash = action.payload;
-                draft.draftBugBash = {
+                const id = resolveNullableMapKey(bugBash.id);
+                draft.draftBugBashMap[id] = {
                     originalValue: { ...bugBash },
                     draftValue: { ...bugBash }
                 };
@@ -21,8 +22,9 @@ export function bugBashEditorReducer(state: IBugBashEditorState | undefined, act
             }
 
             case BugBashEditorActionTypes.DraftInitializeFailed: {
-                const error = action.payload;
-                draft.draftBugBash = {
+                const { bugBashId, error } = action.payload;
+                const id = resolveNullableMapKey(bugBashId);
+                draft.draftBugBashMap[id] = {
                     initializeError: error,
                     originalValue: undefined,
                     draftValue: undefined
@@ -32,27 +34,20 @@ export function bugBashEditorReducer(state: IBugBashEditorState | undefined, act
 
             case BugBashEditorActionTypes.UpdateDraft: {
                 const bugBash = action.payload;
-                if (
-                    draft.draftBugBash &&
-                    draft.draftBugBash.originalValue &&
-                    equals(bugBash.id || "", draft.draftBugBash.originalValue.id || "", true)
-                ) {
-                    draft.draftBugBash.draftValue = { ...bugBash };
+                const id = resolveNullableMapKey(bugBash.id);
+                if (draft.draftBugBashMap[id]) {
+                    draft.draftBugBashMap[id].draftValue = { ...bugBash };
                 }
-
                 break;
             }
 
             case BugBashEditorActionTypes.DraftSaveSucceeded: {
                 const updatedBugBash = action.payload;
-                if (
-                    draft.draftBugBash &&
-                    draft.draftBugBash.originalValue &&
-                    equals(updatedBugBash.id || "", draft.draftBugBash.originalValue.id || "", true)
-                ) {
-                    draft.draftBugBash.draftValue = { ...updatedBugBash };
-                    draft.draftBugBash.originalValue = { ...updatedBugBash };
-                    draft.draftBugBash.isSaving = false;
+                const id = resolveNullableMapKey(updatedBugBash.id);
+                if (draft.draftBugBashMap[id]) {
+                    draft.draftBugBashMap[id].draftValue = { ...updatedBugBash };
+                    draft.draftBugBashMap[id].originalValue = { ...updatedBugBash };
+                    draft.draftBugBashMap[id].isSaving = false;
                 }
 
                 break;
@@ -61,12 +56,9 @@ export function bugBashEditorReducer(state: IBugBashEditorState | undefined, act
             case BugBashesActionTypes.BeginCreateBugBash:
             case BugBashesActionTypes.BeginUpdateBugBash: {
                 const bugBash = action.payload;
-                if (
-                    draft.draftBugBash &&
-                    draft.draftBugBash.originalValue &&
-                    equals(bugBash.id || "", draft.draftBugBash.originalValue.id || "", true)
-                ) {
-                    draft.draftBugBash.isSaving = true;
+                const id = resolveNullableMapKey(bugBash.id);
+                if (draft.draftBugBashMap[id]) {
+                    draft.draftBugBashMap[id].isSaving = true;
                 }
             }
         }
