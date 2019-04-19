@@ -2,15 +2,15 @@ import "./BugBashItemsBoard.scss";
 
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { css } from "azure-devops-ui/Util";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
+import { IBugBashItemProviderParams } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted, isBugBashItemPending, isBugBashItemRejected } from "BugBashPro/Shared/Helpers";
 import * as React from "react";
 import { DragDropContext, DragStart, Droppable, DropResult } from "react-beautiful-dnd";
 import { BoardCard } from "./BoardCard";
 
-export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
-    const { bugBashId, filteredBugBashItems, workItemsMap } = props;
+export function BugBashItemsBoard(props: IBugBashItemProviderParams) {
+    const { filteredBugBashItems, workItemsMap } = props;
 
     const [draggingFromColumn, setDraggingFromColumn] = React.useState("");
     const pendingItems = filteredBugBashItems.filter(b => isBugBashItemPending(b));
@@ -22,9 +22,18 @@ export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemPro
     }, []);
 
     const onDragEnd = React.useCallback((result: DropResult) => {
-        const source = result.source.droppableId;
-        const target = result.destination && result.destination.droppableId;
-        if (source !== target) {
+        const { reason, draggableId, source, destination } = result;
+        if (reason === "DROP") {
+            const sourceId = source.droppableId;
+            const targetId = destination && destination.droppableId;
+            if (sourceId !== targetId) {
+                const bugBashItemId = draggableId.replace("card_", "");
+                console.log(bugBashItemId);
+                if (targetId === "pending") {
+                } else if (targetId === "rejected") {
+                } else {
+                }
+            }
         }
     }, []);
 
@@ -34,11 +43,9 @@ export function BugBashItemsBoard(props: IBugBashViewBaseProps & IBugBashItemPro
             if (isBugBashItemAccepted(bugBashItem) && workItemsMap) {
                 acceptedWorkItem = workItemsMap[bugBashItem.workItemId!];
             }
-            return (
-                <BoardCard key={bugBashItem.id} index={index} bugBashItem={bugBashItem} acceptedWorkItem={acceptedWorkItem} bugBashId={bugBashId} />
-            );
+            return <BoardCard key={bugBashItem.id} index={index} bugBashItem={bugBashItem} acceptedWorkItem={acceptedWorkItem} />;
         },
-        [bugBashId, workItemsMap]
+        [workItemsMap]
     );
 
     return (

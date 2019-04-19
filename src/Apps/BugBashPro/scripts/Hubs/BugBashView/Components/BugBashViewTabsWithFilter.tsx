@@ -16,23 +16,23 @@ import { LoadStatus } from "Common/Contracts";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { SelectionMode } from "office-ui-fabric-react/lib/utilities/selection/interfaces";
 import * as React from "react";
-import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
-import { useBugBash } from "../Hooks/useBugBash";
+import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewContext, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
 import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
-import { IBugBashViewBaseProps } from "../Interfaces";
 import { BugBashItemsFilterData, BugBashViewMode } from "../Redux/Contracts";
 
-interface IBugBashViewTabsWithFilterProps extends IBugBashViewBaseProps {
+interface IBugBashViewTabsWithFilterProps {
     view: AppView;
 }
 
 export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps) {
-    const { bugBashId, view } = props;
+    const { view } = props;
+    const bugBash = React.useContext(BugBashViewContext);
+    const bugBashId = bugBash.id as string;
+
     const { teamsMap } = useTeams();
     const { status, filterData } = useFilteredBugBashItems(bugBashId);
-    const { bugBash } = useBugBash(bugBashId);
     const { viewMode, setViewMode } = useBugBashViewMode();
     const { setFilter } = useBugBashItemsFilter();
 

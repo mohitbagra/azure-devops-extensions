@@ -2,10 +2,12 @@ import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTr
 import { IMenuItem } from "azure-devops-ui/Components/Menu/Menu.Props";
 import { ListSelection } from "azure-devops-ui/List";
 import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, ITableRow, SortOrder } from "azure-devops-ui/Table";
+import { BugBashViewActions } from "BugBashPro/Hubs/BugBashView//Redux/Actions";
+import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView//Redux/Contracts";
 import { BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
 import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashItemsSort";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
+import { IBugBashItemProviderParams } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { Resources } from "BugBashPro/Resources";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
@@ -18,8 +20,6 @@ import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { getQueryUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
-import { BugBashViewActions } from "../../Redux/Actions";
-import { BugBashViewMode } from "../../Redux/Contracts";
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
 const Actions = {
@@ -27,19 +27,17 @@ const Actions = {
     deleteBugBashItem: BugBashItemsActions.bugBashItemDeleteRequested
 };
 
-export function BugBashItemsTable(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
-    const { bugBashId, filteredBugBashItems, workItemsMap } = props;
+export function BugBashItemsTable(props: IBugBashItemProviderParams) {
+    const { filteredBugBashItems, workItemsMap } = props;
+
     const { editBugBashItemRequested, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
     const selectionRef = React.useRef(new ListSelection(true));
     const columnSelect = React.useMemo(() => new ColumnSelect(), [viewMode]);
-    const onEditBugBashItem = React.useCallback(
-        (bugBashItemId: string) => {
-            editBugBashItemRequested(bugBashId, bugBashItemId);
-        },
-        [bugBashId]
-    );
+    const onEditBugBashItem = React.useCallback((bugBashItemId: string) => {
+        editBugBashItemRequested(bugBashItemId);
+    }, []);
 
     const columnMore = React.useMemo(
         () =>

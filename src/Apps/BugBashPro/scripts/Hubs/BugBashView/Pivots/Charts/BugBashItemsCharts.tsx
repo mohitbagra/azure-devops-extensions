@@ -3,7 +3,7 @@ import "./BugBashItemCharts.scss";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "BugBashPro/Hubs/BugBashView/Interfaces";
+import { IBugBashItemProviderParams } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView/Redux/Contracts";
 import { isBugBashItemAccepted } from "BugBashPro/Shared/Helpers";
 import { useUserSettings } from "BugBashPro/Shared/Hooks/useUserSettings";
@@ -17,7 +17,7 @@ import { getDistinctNameFromIdentityRef, parseUniquefiedIdentityName } from "Com
 import * as React from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-function BugBashItemsChartsInternal(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
+function BugBashItemsChartsInternal(props: IBugBashItemProviderParams) {
     const { filteredBugBashItems, workItemsMap } = props;
     const [groupedByTeam, setGroupedByTeam] = React.useState(false);
     const { userSettingsMap } = useUserSettings();
@@ -200,7 +200,7 @@ const CustomTooltip: React.StatelessComponent<any> = (props: any): JSX.Element |
     }
 };
 
-export function BugBashItemsCharts(props: IBugBashViewBaseProps & IBugBashItemProviderParams) {
+export function BugBashItemsCharts(props: IBugBashItemProviderParams) {
     return (
         <DynamicModuleLoader modules={[getBugBashUserSettingsModule(), getTeamModule()]}>
             <BugBashItemsChartsInternal {...props} />

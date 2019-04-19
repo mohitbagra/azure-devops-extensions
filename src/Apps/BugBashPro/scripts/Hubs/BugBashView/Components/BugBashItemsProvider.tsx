@@ -4,19 +4,21 @@ import { AppView } from "BugBashPro/Shared/Constants";
 import { Loading } from "Common/Components/Loading";
 import { LoadStatus } from "Common/Contracts";
 import * as React from "react";
+import { BugBashViewContext } from "../Constants";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
-import { IBugBashItemProviderParams, IBugBashViewBaseProps } from "../Interfaces";
+import { IBugBashItemProviderParams } from "../Interfaces";
 import { BugBashViewMode } from "../Redux/Contracts";
 
-interface IBugBashItemProviderProps extends IBugBashViewBaseProps {
+interface IBugBashItemProviderProps {
     view: AppView;
     children: (params: IBugBashItemProviderParams) => JSX.Element;
 }
 
 export function BugBashItemProvider(props: IBugBashItemProviderProps) {
-    const { bugBashId, view, children } = props;
-    const { filteredBugBashItems, workItemsMap, status, filterData } = useFilteredBugBashItems(bugBashId);
+    const { view, children } = props;
+    const bugBash = React.useContext(BugBashViewContext);
+    const { filteredBugBashItems, workItemsMap, status, filterData } = useFilteredBugBashItems(bugBash.id!);
     const { viewMode, setViewMode } = useBugBashViewMode();
 
     React.useEffect(() => {
