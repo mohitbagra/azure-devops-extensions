@@ -118,7 +118,7 @@ function* requestDraftCreate(bugBash: IBugBash, draftBugBashItem: IBugBashItem, 
         if (bugBash.autoAccept) {
             yield call(acceptBugBashItem, bugBash, createdBugBashItem, true);
         } else {
-            yield put(BugBashViewActions.dismissBugBashItemPortalRequested(createdBugBashItem.id!, undefined));
+            yield put(BugBashViewActions.dismissBugBashItemPortalRequested(bugBash.id!, createdBugBashItem.id!, undefined));
         }
     }
 }
@@ -195,6 +195,6 @@ function* acceptBugBashItem(bugBash: IBugBash, bugBashItem: IBugBashItem, accept
 
     if (itemUpdatedAction.type === BugBashItemsActionTypes.BugBashItemUpdated) {
         const { bugBashItem: acceptedBugBashItem } = itemUpdatedAction.payload;
-        yield put(BugBashViewActions.dismissBugBashItemPortalRequested(acceptedBugBashItem.id!, acceptedBugBashItem.workItemId));
+        yield put(BugBashViewActions.dismissBugBashItemPortalRequested(bugBash.id!, acceptedBugBashItem.id!, acceptedBugBashItem.workItemId));
     }
 }

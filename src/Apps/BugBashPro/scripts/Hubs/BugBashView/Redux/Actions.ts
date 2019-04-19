@@ -4,7 +4,8 @@ import { ActionsUnion, createAction } from "Common/Redux";
 import { BugBashItemsFilterData, BugBashViewMode } from "./Contracts";
 
 export const BugBashViewActions = {
-    initialize: (initialBugBashItemId: string | undefined) => createAction(BugBashViewActionTypes.Initialize, initialBugBashItemId),
+    initialize: (bugBashId: string, initialBugBashItemId: string | undefined) =>
+        createAction(BugBashViewActionTypes.Initialize, { bugBashId, initialBugBashItemId }),
     setFilteredItems: (filteredBugBashItems: IBugBashItem[] | undefined) =>
         createAction(BugBashViewActionTypes.SetFilteredItems, filteredBugBashItems),
     setFilterData: (filterData: BugBashItemsFilterData) => createAction(BugBashViewActionTypes.SetFilterData, filterData),
@@ -13,10 +14,11 @@ export const BugBashViewActions = {
     applySort: (sortState: ISortState) => createAction(BugBashViewActionTypes.ApplySort, sortState),
     clearSortAndFilter: () => createAction(BugBashViewActionTypes.ClearSortAndFilter),
 
-    editBugBashItemRequested: (bugBashItemId: string) => createAction(BugBashViewActionTypes.EditBugBashItemRequested, bugBashItemId),
+    editBugBashItemRequested: (bugBashId: string, bugBashItemId: string) =>
+        createAction(BugBashViewActionTypes.EditBugBashItemRequested, { bugBashId, bugBashItemId }),
 
-    dismissBugBashItemPortalRequested: (bugBashItemId: string, workItemId: number | undefined) =>
-        createAction(BugBashViewActionTypes.DismissBugBashItemPortalRequested, { bugBashItemId, workItemId })
+    dismissBugBashItemPortalRequested: (bugBashId: string, bugBashItemId: string, workItemId: number | undefined) =>
+        createAction(BugBashViewActionTypes.DismissBugBashItemPortalRequested, { bugBashId, bugBashItemId, workItemId })
 };
 
 export const enum BugBashViewActionTypes {

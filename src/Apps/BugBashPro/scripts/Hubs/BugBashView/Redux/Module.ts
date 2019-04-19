@@ -13,12 +13,7 @@ export function getBugBashViewModule(bugBashId: string, initialBugBashItemId: st
     return {
         id: "bugBashView",
         reducerMap,
-        initialActions: [BugBashViewActions.initialize(initialBugBashItemId)],
-        sagas: [
-            {
-                saga: bugBashViewSaga,
-                argument: bugBashId
-            }
-        ]
+        initialActions: [BugBashViewActions.initialize(bugBashId, initialBugBashItemId)],
+        sagas: [bugBashViewSaga]
     };
 }

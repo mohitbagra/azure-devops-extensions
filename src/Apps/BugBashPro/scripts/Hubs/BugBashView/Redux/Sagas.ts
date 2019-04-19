@@ -23,14 +23,14 @@ import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";
 import { BugBashViewMode } from "./Contracts";
 import { getBugBashItemsFilterState, getBugBashItemsSortState, getBugBashViewMode } from "./Selectors";
 
-export function* bugBashViewSaga(bugBashId: string): SagaIterator {
+export function* bugBashViewSaga(): SagaIterator {
     yield takeEvery(BugBashViewActionTypes.Initialize, initializeView);
     yield takeEvery(BugBashViewActionTypes.SetViewMode, setViewMode);
     yield takeEvery(BugBashViewActionTypes.ApplyFilter, applyFilter);
     yield takeEvery(BugBashViewActionTypes.ApplySort, applySort);
     yield takeEvery(BugBashViewActionTypes.ClearSortAndFilter, clearSortAndFilter);
-    yield takeEvery(BugBashViewActionTypes.EditBugBashItemRequested, editBugBashItemRequested, bugBashId);
-    yield takeEvery(BugBashViewActionTypes.DismissBugBashItemPortalRequested, onBugBashItemPortalDismissed, bugBashId);
+    yield takeEvery(BugBashViewActionTypes.EditBugBashItemRequested, editBugBashItemRequested);
+    yield takeEvery(BugBashViewActionTypes.DismissBugBashItemPortalRequested, onBugBashItemPortalDismissed);
 
     yield takeEvery(BugBashesActionTypes.BugBashLoaded, bugBashLoaded);
     yield takeEvery(BugBashesActionTypes.BugBashUpdated, bugBashUpdated);
@@ -50,7 +50,7 @@ export function* bugBashViewSaga(bugBashId: string): SagaIterator {
 }
 
 function* initializeView(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.Initialize>) {
-    const initialBugBashItemId = action.payload;
+    const { bugBashId, initialBugBashItemId } = action.payload;
 
     if (initialBugBashItemId) {
         const { bugBashItemsLoaded } = yield race({
@@ -59,7 +59,7 @@ function* initializeView(action: ActionsOfType<BugBashViewActions, BugBashViewAc
         });
 
         if (bugBashItemsLoaded) {
-            yield put(BugBashViewActions.editBugBashItemRequested(initialBugBashItemId));
+            yield put(BugBashViewActions.editBugBashItemRequested(bugBashId, initialBugBashItemId));
         }
     }
 }
@@ -185,8 +185,8 @@ function* bugBashItemLoadedOrCreatedOrUpdatedOrDeleted(): SagaIterator {
     yield put(BugBashViewActions.setFilterData(filterData));
 }
 
-function* editBugBashItemRequested(bugBashId: string, action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.EditBugBashItemRequested>) {
-    const bugBashItemId = action.payload;
+function* editBugBashItemRequested(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.EditBugBashItemRequested>) {
+    const { bugBashId, bugBashItemId } = action.payload;
     const bugBashItem: RT<typeof getBugBashItem> = yield select(getBugBashItem, bugBashItemId);
 
     if (bugBashItem && isBugBashItemAccepted(bugBashItem)) {
@@ -197,11 +197,8 @@ function* editBugBashItemRequested(bugBashId: string, action: ActionsOfType<BugB
     }
 }
 
-function* onBugBashItemPortalDismissed(
-    bugBashId: string,
-    action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.DismissBugBashItemPortalRequested>
-) {
-    const { bugBashItemId, workItemId } = action.payload;
+function* onBugBashItemPortalDismissed(action: ActionsOfType<BugBashViewActions, BugBashViewActionTypes.DismissBugBashItemPortalRequested>) {
+    const { bugBashId, bugBashItemId, workItemId } = action.payload;
     if (workItemId) {
         const workItemUrl: RT<typeof getWorkItemUrlAsync> = yield call(getWorkItemUrlAsync, workItemId);
         yield call(addToast, {

@@ -26,10 +26,6 @@ export function BugBashViewHeader() {
     const { status } = useFilteredBugBashItems(bugBashId);
     const { openBugBashPortal, openBugBashItemPortal, openDetailsPortal, loadBugBashItems } = useActionCreators(Actions);
 
-    if (!bugBash) {
-        throw new Error("Bug Bash is not initialized yet");
-    }
-
     const renderHeaderTitle = React.useMemo(() => onRenderHeaderTitle(bugBash), [bugBash]);
     const isLoading = status !== LoadStatus.Ready;
 

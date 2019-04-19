@@ -15,6 +15,7 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { BugBashViewContext } from "../../Constants";
 
 const Actions = {
     editBugBashItemRequested: BugBashViewActions.editBugBashItemRequested,
@@ -29,6 +30,8 @@ interface IBoardCardProps {
 
 export function BoardCard(props: IBoardCardProps) {
     const { bugBashItem, index, acceptedWorkItem } = props;
+    const bugBash = React.useContext(BugBashViewContext);
+    const bugBashId = bugBash.id as string;
 
     const { editBugBashItemRequested } = useActionCreators(Actions);
     const isAccepted = isBugBashItemAccepted(bugBashItem) && acceptedWorkItem !== undefined;
@@ -37,10 +40,10 @@ export function BoardCard(props: IBoardCardProps) {
         (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
             if (!e.ctrlKey) {
                 e.preventDefault();
-                editBugBashItemRequested(bugBashItem.id!);
+                editBugBashItemRequested(bugBashId, bugBashItem.id!);
             }
         },
-        [bugBashItem.id]
+        [bugBashId, bugBashItem.id]
     );
 
     return (

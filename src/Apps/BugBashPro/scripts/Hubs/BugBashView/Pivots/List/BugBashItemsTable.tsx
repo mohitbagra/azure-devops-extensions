@@ -4,7 +4,7 @@ import { ListSelection } from "azure-devops-ui/List";
 import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, ITableRow, SortOrder } from "azure-devops-ui/Table";
 import { BugBashViewActions } from "BugBashPro/Hubs/BugBashView//Redux/Actions";
 import { BugBashViewMode } from "BugBashPro/Hubs/BugBashView//Redux/Contracts";
-import { BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
+import { BugBashItemFieldNames, BugBashViewContext, WorkItemFieldNames } from "BugBashPro/Hubs/BugBashView/Constants";
 import { useBugBashItemsSort } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashItemsSort";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
 import { IBugBashItemProviderParams } from "BugBashPro/Hubs/BugBashView/Interfaces";
@@ -29,15 +29,20 @@ const Actions = {
 
 export function BugBashItemsTable(props: IBugBashItemProviderParams) {
     const { filteredBugBashItems, workItemsMap } = props;
+    const bugBash = React.useContext(BugBashViewContext);
+    const bugBashId = bugBash.id as string;
 
     const { editBugBashItemRequested, deleteBugBashItem } = useActionCreators(Actions);
     const { viewMode } = useBugBashViewMode();
     const { applySort, sortColumn, isSortedDescending } = useBugBashItemsSort();
     const selectionRef = React.useRef(new ListSelection(true));
     const columnSelect = React.useMemo(() => new ColumnSelect(), [viewMode]);
-    const onEditBugBashItem = React.useCallback((bugBashItemId: string) => {
-        editBugBashItemRequested(bugBashItemId);
-    }, []);
+    const onEditBugBashItem = React.useCallback(
+        (bugBashItemId: string) => {
+            editBugBashItemRequested(bugBashId, bugBashItemId);
+        },
+        [bugBashId]
+    );
 
     const columnMore = React.useMemo(
         () =>

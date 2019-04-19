@@ -36,10 +36,6 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps
     const { viewMode, setViewMode } = useBugBashViewMode();
     const { setFilter } = useBugBashItemsFilter();
 
-    if (!bugBash) {
-        throw new Error("Bug Bash is not initialized yet");
-    }
-
     const filterRef = React.useRef<Filter>(
         new Filter({
             useApplyMode: false
