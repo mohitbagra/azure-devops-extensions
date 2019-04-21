@@ -1,0 +1,56 @@
+{
+    "manifestVersion": 1,
+    "id": "workitem-checklist",
+    "version": "3.1.1",
+    "name": "Work item checklist",
+    "description": "Manage personal or shared checklist for a workitem.",
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "scopes": ["vso.work", "vso.work_write", "vso.profile"],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        }
+    ],
+    "tags": ["Work Item", "Check list", "Form", "Group"],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/azure-devops-extensions"
+    },
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "categories": ["Azure Boards"],
+    "contributions": [
+        {
+            "id": "work-item-checklist-group-hub",
+            "type": "ms.vss-work-web.work-item-form-group",
+            "description": "Work item checklist extension",
+            "targets": ["ms.vss-work-web.work-item-form"],
+            "includes": ["ms.vss-tfs-web.tfs-page-data-service", "ms.vss-features.extension-data-service"],
+            "properties": {
+                "name": "Checklist",
+                "uri": "html/index.html"
+            }
+        },
+        {
+            "id": "settings-hub",
+            "type": "ms.vss-web.hub",
+            "description": "Customize work item checklists",
+            "targets": ["ms.vss-web.project-admin-hub-group"],
+            "includes": ["ms.vss-tfs-web.tfs-page-data-service", "ms.vss-features.extension-data-service"],
+            "properties": {
+                "name": "Work item checklists",
+                "order": 100,
+                "uri": "html/settings.html"
+            }
+        }
+    ]
+}
