@@ -213,9 +213,10 @@ function getContextMenuItems(
 function getAllColumns(): ITableColumn<IBugBashItem>[] {
     return [
         getColumn(BugBashItemFieldNames.Status, "", [40, 40, 40]),
-        getColumn(BugBashItemFieldNames.Title, "Title", [-50, 300, 1500]),
-        getColumn(BugBashItemFieldNames.CreatedBy, "Created By", [-25, 150, 500]),
-        getColumn(BugBashItemFieldNames.CreatedDate, "Created Date", [-25, 150, 500])
+        getColumn(BugBashItemFieldNames.Title, "Title", [-40, 300, 1500]),
+        getColumn(BugBashItemFieldNames.TeamId, "Assigned to team", [-20, 150, 500]),
+        getColumn(BugBashItemFieldNames.CreatedBy, "Created By", [-20, 150, 500]),
+        getColumn(BugBashItemFieldNames.CreatedDate, "Created Date", [-20, 150, 500])
     ];
 }
 

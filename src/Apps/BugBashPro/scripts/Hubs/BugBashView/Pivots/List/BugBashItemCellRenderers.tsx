@@ -12,6 +12,7 @@ import { WorkItemTitleView } from "Common/AzDev/WorkItemTitleView";
 import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 import { IdentityView } from "Common/Components/IdentityView";
+import { CoreFieldRefNames } from "Common/Constants";
 import * as format from "date-fns/format";
 import * as React from "react";
 
@@ -67,7 +68,15 @@ export function onRenderBugBashItemCell(
     } else if (key === WorkItemFieldNames.State && isAccepted) {
         innerElement = <WorkItemStateView stateName={value as string} workItemTypeName={acceptedWorkItem!.fields[WorkItemFieldNames.WorkItemType]} />;
     } else if (key === BugBashItemFieldNames.TeamId) {
-        innerElement = <TeamView teamId={value} />;
+        if (isAccepted) {
+            innerElement = (
+                <Tooltip overflowOnly={true}>
+                    <span className="text-ellipsis">{acceptedWorkItem!.fields[CoreFieldRefNames.AreaPath]}</span>
+                </Tooltip>
+            );
+        } else {
+            innerElement = <TeamView teamId={value} />;
+        }
     } else if (BugBashItemKeyTypes[key] === "identityRef") {
         innerElement = <IdentityView value={value} />;
     } else if (BugBashItemKeyTypes[key] === "date") {
