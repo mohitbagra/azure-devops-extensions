@@ -25,7 +25,7 @@ interface IBugBashPortalStateProps {
     portalProps: IBugBashEditPortalProps | IBugBashItemEditPortalProps | IBugBashDetailsEditPortalProps | undefined;
 }
 
-function mapStateToProps(state: IBugBashPortalAwareState): IBugBashPortalStateProps {
+function mapState(state: IBugBashPortalAwareState): IBugBashPortalStateProps {
     return {
         portalOpen: isPortalOpen(state),
         portalType: getPortalType(state),
@@ -43,7 +43,7 @@ const settingsEditorLoader = async () => import("BugBashPro/Editors/BugBashSetti
 const bugBashDetailsEditorLoader = async () => import("BugBashPro/Editors/BugBashDetailsEditor");
 
 function BugBashPortalInternal() {
-    const { portalOpen, portalProps, portalType } = useMappedState(mapStateToProps);
+    const { portalOpen, portalProps, portalType } = useMappedState(mapState);
     const { dismissPortal } = useActionCreators(Actions);
 
     if (!portalOpen || portalType === undefined) {
