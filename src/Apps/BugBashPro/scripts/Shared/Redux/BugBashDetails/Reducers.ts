@@ -1,5 +1,5 @@
-import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
 import { LoadStatus } from "Common/Contracts";
+import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
 import { BugBashDetailActions, BugBashDetailActionTypes } from "./Actions";
 import { defaultState, IBugBashDetailsState } from "./Contracts";

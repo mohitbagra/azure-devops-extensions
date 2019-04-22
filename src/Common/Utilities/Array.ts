@@ -151,7 +151,7 @@ export function arrayEquals<T>(source: T[], target: T[], comparer?: (s: T, t: T)
 }
 
 export function toDictionary<TArray, TValue>(
-    array: TArray[],
+    array: TArray[] | undefined,
     getKey: (item: TArray, index?: number) => string,
     getValue: (item: TArray, index?: number) => TValue
 ): { [key: string]: TValue } {

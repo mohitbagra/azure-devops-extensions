@@ -1,5 +1,5 @@
-import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
 import { LoadStatus } from "Common/Contracts";
+import { resolveNullableMapKey } from "Common/Utilities/String";
 import { createSelector } from "reselect";
 import { IBugBashDetailsAwareState, IBugBashDetailsState, IBugBashDetailsStateModel } from "./Contracts";
 

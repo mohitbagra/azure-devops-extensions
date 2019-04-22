@@ -1,5 +1,9 @@
 import * as format from "date-fns/format";
 
+export function resolveNullableMapKey(key: string | undefined): string {
+    return (key || "").toLowerCase();
+}
+
 export function htmlEncode(str: string): string {
     const div = document.createElement("div");
     div.appendChild(document.createTextNode(str));

@@ -1,4 +1,5 @@
 import { LoadStatus } from "Common/Contracts";
+import { toDictionary } from "Common/Utilities/Array";
 import { produce } from "immer";
 import { WorkItemChecklistActions, WorkItemChecklistActionTypes } from "./Actions";
 import { IWorkItemChecklistState } from "./Contracts";
@@ -15,6 +16,35 @@ export function workItemChecklistReducer(state: IWorkItemChecklistState | undefi
                 draft.workItemChecklistsMap[workItemId] = {
                     status: LoadStatus.Loading
                 };
+                break;
+            }
+
+            case WorkItemChecklistActionTypes.WorkItemChecklistLoaded: {
+                const { workItemChecklist, workItemId } = action.payload;
+                draft.workItemChecklistsMap[workItemId] = {
+                    status: LoadStatus.Ready,
+                    checklist: workItemChecklist,
+                    checklistItemsMap: toDictionary(workItemChecklist.checklistItems, item => item.id, item => item)
+                };
+                break;
+            }
+
+            case WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklist: {
+                const workItemId = action.payload;
+                if (draft.workItemChecklistsMap[workItemId]) {
+                    draft.workItemChecklistsMap[workItemId].status = LoadStatus.Updating;
+                }
+
+                break;
+            }
+
+            case WorkItemChecklistActionTypes.WorkItemChecklistUpdateFailed: {
+                const { workItemId, error } = action.payload;
+                if (draft.workItemChecklistsMap[workItemId]) {
+                    draft.workItemChecklistsMap[workItemId].status = LoadStatus.UpdateFailed;
+                    draft.workItemChecklistsMap[workItemId].error = error;
+                }
+
                 break;
             }
         }

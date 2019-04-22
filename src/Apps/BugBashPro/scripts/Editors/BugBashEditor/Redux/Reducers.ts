@@ -1,5 +1,5 @@
-import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
+import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { IBugBashEditorState } from "./Contracts";

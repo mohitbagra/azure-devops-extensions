@@ -9,8 +9,13 @@ export interface IWorkItemChecklistState {
     workItemChecklistsMap: { [workItemId: number]: IWorkItemChecklistStateModel };
 }
 
+export interface IWorkItemTypeChecklistState {
+    workItemTypeChecklistsMap: { [workItemType: string]: IWorkItemChecklistStateModel };
+}
+
 export interface IWorkItemChecklistStateModel {
     status: LoadStatus;
+    error?: string;
     checklist?: IWorkItemChecklist;
     checklistItemsMap?: { [id: string]: IChecklistItem };
 }

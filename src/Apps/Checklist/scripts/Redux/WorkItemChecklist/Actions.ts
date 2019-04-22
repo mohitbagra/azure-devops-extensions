@@ -9,30 +9,14 @@ export const WorkItemChecklistActions = {
 
     workItemChecklistItemCreateRequested: (workItemId: number, checklistItem: IChecklistItem) =>
         createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemCreateRequested, { workItemId, checklistItem }),
-    beginCreateWorkItemChecklistItem: (workItemId: number, checklistItem: IChecklistItem) =>
-        createAction(WorkItemChecklistActionTypes.BeginCreateWorkItemChecklistItem, { workItemId, checklistItem }),
-    workItemChecklistItemCreated: (workItemId: number, checklistItem: IChecklistItem) =>
-        createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemCreated, { workItemId, checklistItem }),
-    workItemChecklistItemCreateFailed: (workItemId: number, checklistItem: IChecklistItem, error: string) =>
-        createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemCreateFailed, { workItemId, checklistItem, error }),
-
     workItemChecklistItemUpdateRequested: (workItemId: number, checklistItem: IChecklistItem) =>
         createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemUpdateRequested, { workItemId, checklistItem }),
-    beginUpdateWorkItemChecklistItem: (workItemId: number, checklistItem: IChecklistItem) =>
-        createAction(WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklistItem, { workItemId, checklistItem }),
-    workItemChecklistItemUpdated: (workItemId: number, checklistItem: IChecklistItem) =>
-        createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemUpdated, { workItemId, checklistItem }),
-    workItemChecklistItemUpdateFailed: (workItemId: number, checklistItem: IChecklistItem, error: string) =>
-        createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemUpdateFailed, { workItemId, checklistItem, error }),
-
     workItemChecklistItemDeleteRequested: (workItemId: number, checklistItemId: string) =>
         createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested, { workItemId, checklistItemId }),
-    beginDeleteWorkItemChecklistItem: (workItemId: number, checklistItemId: string) =>
-        createAction(WorkItemChecklistActionTypes.BeginDeleteWorkItemChecklistItem, { workItemId, checklistItemId }),
-    workItemChecklistItemDeleted: (workItemId: number, checklistItemId: string) =>
-        createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemDeleted, { workItemId, checklistItemId }),
-    workItemChecklistItemDeleteFailed: (workItemId: number, checklistItemId: string, error: string) =>
-        createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteFailed, { workItemId, checklistItemId, error })
+
+    beginUpdateWorkItemChecklist: (workItemId: number) => createAction(WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklist, workItemId),
+    workItemChecklistUpdateFailed: (workItemId: number, error: string) =>
+        createAction(WorkItemChecklistActionTypes.WorkItemChecklistUpdateFailed, { workItemId, error })
 };
 
 export const enum WorkItemChecklistActionTypes {
@@ -41,19 +25,11 @@ export const enum WorkItemChecklistActionTypes {
     WorkItemChecklistLoaded = "WorkItemChecklistAction/WorkItemChecklistLoaded",
 
     WorkItemChecklistItemCreateRequested = "WorkItemChecklistAction/WorkItemChecklistItemCreateRequested",
-    BeginCreateWorkItemChecklistItem = "WorkItemChecklistAction/BeginCreateWorkItemChecklistItem",
-    WorkItemChecklistItemCreated = "WorkItemChecklistAction/WorkItemChecklistItemCreated",
-    WorkItemChecklistItemCreateFailed = "WorkItemChecklistAction/WorkItemChecklistItemCreateFailed",
-
     WorkItemChecklistItemUpdateRequested = "WorkItemChecklistAction/WorkItemChecklistItemUpdateRequested",
-    BeginUpdateWorkItemChecklistItem = "WorkItemChecklistAction/BeginUpdateWorkItemChecklistItem",
-    WorkItemChecklistItemUpdated = "WorkItemChecklistAction/WorkItemChecklistItemUpdated",
-    WorkItemChecklistItemUpdateFailed = "WorkItemChecklistAction/WorkItemChecklistItemUpdateFailed",
-
     WorkItemChecklistItemDeleteRequested = "WorkItemChecklistAction/WorkItemChecklistItemDeleteRequested",
-    BeginDeleteWorkItemChecklistItem = "WorkItemChecklistAction/BeginDeleteWorkItemChecklistItem",
-    WorkItemChecklistItemDeleted = "WorkItemChecklistAction/WorkItemChecklistItemDeleted",
-    WorkItemChecklistItemDeleteFailed = "WorkItemChecklistAction/WorkItemChecklistItemDeleteFailed"
+
+    BeginUpdateWorkItemChecklist = "WorkItemChecklistAction/BeginUpdateWorkItemChecklist",
+    WorkItemChecklistUpdateFailed = "WorkItemChecklistAction/WorkItemChecklistUpdateFailed"
 }
 
 export type WorkItemChecklistActions = ActionsUnion<typeof WorkItemChecklistActions>;

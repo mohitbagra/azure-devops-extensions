@@ -2,10 +2,6 @@ import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { IBugBash, IBugBashItem, ISortState } from "./Contracts";
 
-export function resolveNullableMapKey(key: string | undefined): string {
-    return (key || "").toLowerCase();
-}
-
 export function applyFilterAndSort<T>(
     items: T[],
     filterState: IFilterState | undefined,
