@@ -3,6 +3,7 @@ export interface IWorkItemFormAwareState {
 }
 
 export interface IWorkItemFormState {
+    hasActiveWorkItem: boolean;
     activeWorkItemId: number | undefined;
     isNew?: boolean;
     isReadOnly?: boolean;

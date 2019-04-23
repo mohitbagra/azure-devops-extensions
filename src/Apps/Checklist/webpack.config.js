@@ -3,8 +3,8 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        App: "./src/Apps/Checklist/scripts/App.tsx",
-        SettingsApp: "./src/Apps/Checklist/scripts/SettingsApp.tsx"
+        App: "./src/Apps/Checklist/scripts/Components/App.tsx",
+        SettingsApp: "./src/Apps/Checklist/scripts/Components/SettingsApp/SettingsApp.tsx"
     },
     resolve: {
         alias: {

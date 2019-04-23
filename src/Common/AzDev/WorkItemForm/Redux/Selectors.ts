@@ -4,6 +4,10 @@ export function getWorkItemFormState(state: IWorkItemFormAwareState): IWorkItemF
     return state.workItemFormState;
 }
 
+export function hasActiveWorkItem(state: IWorkItemFormAwareState): boolean {
+    return !!(state.workItemFormState && state.workItemFormState.hasActiveWorkItem);
+}
+
 export function getActiveWorkItemId(state: IWorkItemFormAwareState): number | undefined {
     return state.workItemFormState && state.workItemFormState.activeWorkItemId;
 }

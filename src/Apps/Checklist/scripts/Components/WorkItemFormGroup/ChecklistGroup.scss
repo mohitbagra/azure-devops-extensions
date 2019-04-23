@@ -1,0 +1,17 @@
+@import "_CommonStyles.scss";
+
+.checklist-container {
+    .checklist-message {
+        margin: 5px;
+    }
+
+    .checklist-tabbar {
+        padding: 0;
+    }
+
+    .checklist-commandbar {
+        .checklist-command-item {
+            color: $communication-foreground;
+        }
+    }
+}

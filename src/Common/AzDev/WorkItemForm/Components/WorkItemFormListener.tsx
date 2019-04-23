@@ -12,14 +12,14 @@ import * as React from "react";
 import { WorkItemFormActions } from "../Redux/Actions";
 import { IWorkItemFormAwareState } from "../Redux/Contracts";
 import { getWorkItemFormModule } from "../Redux/Module";
-import { getActiveWorkItemId, isActiveWorkItemNew, isActiveWorkItemReadOnly } from "../Redux/Selectors";
+import { getActiveWorkItemId, hasActiveWorkItem, isActiveWorkItemNew, isActiveWorkItemReadOnly } from "../Redux/Selectors";
 
 interface IWorkItemFormListenerProps {
-    instanceId: string;
     children: (workItemId: number, isNew: boolean, isReadOnly: boolean) => JSX.Element | null;
 }
 
 interface IWorkItemFormListenerStateProps {
+    hasActiveWorkItem: boolean;
     activeWorkItemId: number | undefined;
     isNew: boolean;
     isReadOnly: boolean;
@@ -27,6 +27,7 @@ interface IWorkItemFormListenerStateProps {
 
 function mapState(state: IWorkItemFormAwareState): IWorkItemFormListenerStateProps {
     return {
+        hasActiveWorkItem: hasActiveWorkItem(state),
         activeWorkItemId: getActiveWorkItemId(state),
         isNew: isActiveWorkItemNew(state),
         isReadOnly: isActiveWorkItemReadOnly(state)
@@ -43,39 +44,39 @@ const Actions = {
 };
 
 function WorkItemFormListenerInternal(props: IWorkItemFormListenerProps) {
-    const { instanceId, children } = props;
-    const { activeWorkItemId, isNew, isReadOnly } = useMappedState(mapState);
+    const { children } = props;
+    const { hasActiveWorkItem, activeWorkItemId, isNew, isReadOnly } = useMappedState(mapState);
     const { workItemFieldChanged, workItemLoaded, workItemRefreshed, workItemReset, workItemSaved, workItemUnloaded } = useActionCreators(Actions);
 
     React.useEffect(() => {
-        SDK.register(instanceId, {
-            onLoaded: (args: IWorkItemLoadedArgs) => {
-                workItemLoaded(args);
-            },
-            onUnloaded: (args: IWorkItemChangedArgs) => {
-                workItemUnloaded(args);
-            },
-            onSaved: (args: IWorkItemChangedArgs) => {
-                workItemSaved(args);
-            },
-            onRefreshed: (args: IWorkItemChangedArgs) => {
-                workItemRefreshed(args);
-            },
-            onReset: (args: IWorkItemChangedArgs) => {
-                workItemReset(args);
-            },
-            onFieldChanged: (args: IWorkItemFieldChangedArgs) => {
-                workItemFieldChanged(args);
-            }
-        } as IWorkItemNotificationListener);
-
-        return SDK.unregister(instanceId);
+        SDK.init({ applyTheme: true }).then(() => {
+            SDK.register(SDK.getContributionId(), {
+                onLoaded: (args: IWorkItemLoadedArgs) => {
+                    workItemLoaded(args);
+                },
+                onUnloaded: (args: IWorkItemChangedArgs) => {
+                    workItemUnloaded(args);
+                },
+                onSaved: (args: IWorkItemChangedArgs) => {
+                    workItemSaved(args);
+                },
+                onRefreshed: (args: IWorkItemChangedArgs) => {
+                    workItemRefreshed(args);
+                },
+                onReset: (args: IWorkItemChangedArgs) => {
+                    workItemReset(args);
+                },
+                onFieldChanged: (args: IWorkItemFieldChangedArgs) => {
+                    workItemFieldChanged(args);
+                }
+            } as IWorkItemNotificationListener);
+        });
     }, []);
 
-    if (!activeWorkItemId) {
+    if (!hasActiveWorkItem) {
         return null;
     } else {
-        return children(activeWorkItemId, isNew, isReadOnly);
+        return children(activeWorkItemId!, isNew, isReadOnly);
     }
 }
 
