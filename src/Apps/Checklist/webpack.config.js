@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        App: "./src/Apps/Checklist/scripts/Components/App.tsx",
+        App: "./src/Apps/Checklist/scripts/Components/WorkItemFormGroup/App.tsx",
         SettingsApp: "./src/Apps/Checklist/scripts/Components/SettingsApp/SettingsApp.tsx"
     },
     resolve: {

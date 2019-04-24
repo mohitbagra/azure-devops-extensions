@@ -37,3 +37,8 @@ export const enum ChecklistType {
     Shared,
     WitDefault
 }
+
+export const enum ChecklistTabIds {
+    Personal = "personal",
+    Shared = "shared"
+}

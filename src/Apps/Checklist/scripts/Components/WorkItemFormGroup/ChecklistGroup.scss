@@ -1,8 +1,16 @@
 @import "_CommonStyles.scss";
 
-.checklist-container {
+.checklist-group {
     .checklist-message {
-        margin: 5px;
+        &.new-workitem-message {
+            margin: 5px;
+        }
+
+        &.compact {
+            > div {
+                padding: 2px;
+            }
+        }
     }
 
     .checklist-tabbar {
@@ -10,7 +18,8 @@
     }
 
     .checklist-view-container {
-        margin-top: 5px;
+        margin: 5px;
+        margin-bottom: 0;
     }
 
     .checklist-commandbar {
