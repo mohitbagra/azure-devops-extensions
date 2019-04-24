@@ -30,9 +30,15 @@ export function workItemChecklistReducer(state: IWorkItemChecklistState | undefi
             }
 
             case WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklist: {
-                const workItemId = action.payload;
+                const { workItemId, unSavedWorkItemChecklist } = action.payload;
                 if (draft.workItemChecklistsMap[workItemId]) {
                     draft.workItemChecklistsMap[workItemId].status = LoadStatus.Updating;
+                    draft.workItemChecklistsMap[workItemId].checklist = unSavedWorkItemChecklist;
+                    draft.workItemChecklistsMap[workItemId].checklistItemsMap = toDictionary(
+                        unSavedWorkItemChecklist.checklistItems,
+                        item => item.id,
+                        item => item
+                    );
                 }
 
                 break;

@@ -14,7 +14,8 @@ export const WorkItemChecklistActions = {
     workItemChecklistItemDeleteRequested: (workItemId: number, checklistItemId: string) =>
         createAction(WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested, { workItemId, checklistItemId }),
 
-    beginUpdateWorkItemChecklist: (workItemId: number) => createAction(WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklist, workItemId),
+    beginUpdateWorkItemChecklist: (workItemId: number, unSavedWorkItemChecklist: IWorkItemChecklist) =>
+        createAction(WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklist, { workItemId, unSavedWorkItemChecklist }),
     workItemChecklistUpdateFailed: (workItemId: number, error: string) =>
         createAction(WorkItemChecklistActionTypes.WorkItemChecklistUpdateFailed, { workItemId, error })
 };

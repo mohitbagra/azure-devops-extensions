@@ -39,9 +39,9 @@ export function ChecklistView(props: IChecklistViewProps) {
                     No checklist items added.
                 </MessageCard>
             </ConditionalChildren>
-            <div className="checklist-items-container">
-                {checklist.checklistItems.map((checklistItem: IChecklistItem, index: number) => (
-                    <ChecklistItem key={index} checklistItem={checklistItem} />
+            <div className="checklist-items-container flex-column">
+                {checklist.checklistItems.map((checklistItem: IChecklistItem) => (
+                    <ChecklistItem key={`checklist_${checklistItem.id}`} className="checklist-item-container" checklistItem={checklistItem} />
                 ))}
             </div>
             <ChecklistItemEditor />
