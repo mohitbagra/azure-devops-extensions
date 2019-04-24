@@ -31,7 +31,7 @@ function ChecklistGroupInternal() {
                     {!isNew && (
                         <WorkItemChecklistContext.Provider value={activeWorkItemId}>
                             <TabBar
-                                className="checklist-tabbar flex-noshrink"
+                                className="checklist-tabbar"
                                 tabSize={TabSize.Compact}
                                 selectedTabId={selectedTabId}
                                 onSelectedTabChanged={onSelectedTabChanged}
@@ -40,7 +40,7 @@ function ChecklistGroupInternal() {
                                 <Tab name="Shared" id="shared" />
                                 <Tab name="Personal" id="personal" />
                             </TabBar>
-                            <div className="checklist-view-container flex-column flex-grow">
+                            <div className="checklist-view-container flex-column flex-grow scroll-auto">
                                 <ChecklistView key={selectedTabId} className="flex-grow" />
                             </div>
                         </WorkItemChecklistContext.Provider>
