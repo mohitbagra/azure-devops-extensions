@@ -1,0 +1,11 @@
+@import "_CommonStyles.scss";
+
+.checklist-item-editor {
+    .checklist-item-input {
+        margin-bottom: 5px;
+    }
+
+    .checklist-command-item {
+        font-size: $fontSizeML;
+    }
+}

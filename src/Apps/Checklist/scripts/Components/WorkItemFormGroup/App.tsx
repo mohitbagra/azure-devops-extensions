@@ -1,3 +1,5 @@
+import "../Root.scss";
+
 import { ReduxHooksStoreProvider } from "Common/Redux";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
