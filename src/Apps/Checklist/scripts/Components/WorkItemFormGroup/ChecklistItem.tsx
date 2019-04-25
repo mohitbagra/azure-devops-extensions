@@ -4,6 +4,7 @@ import * as React from "react";
 
 interface IChecklistItemProps {
     checklistItem: IChecklistItem;
+    disabled?: boolean;
     className?: string;
 }
 

@@ -1,7 +1,5 @@
 import { IIconProps } from "azure-devops-ui/Components/Icon/Icon.Props";
-import {
-    ITextFieldProps as VSSUI_TextFieldProps, TextField as VSSUI_TextField
-} from "azure-devops-ui/TextField";
+import { ITextFieldProps as VSSUI_TextFieldProps, TextField as VSSUI_TextField } from "azure-devops-ui/TextField";
 import { css } from "azure-devops-ui/Util";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
 import { LabelledComponent } from "Common/Components/LabelledComponent";
@@ -19,6 +17,7 @@ interface ITextFieldProps extends ILabelledComponentProps, IInputComponentProps<
     onBlur?: () => void;
     onFocus?: (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
 export function TextField(props: ITextFieldProps) {
@@ -49,6 +48,7 @@ export function TextField(props: ITextFieldProps) {
         onBlur: props.onBlur,
         onFocus: props.onFocus,
         onKeyDown: props.onKeyDown,
+        onKeyUp: props.onKeyUp,
         disabled: props.disabled,
         value: value || "",
         onChange: onTextChanged,

@@ -1,15 +1,17 @@
+import { resize } from "azure-devops-extension-sdk";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { IWorkItemChecklist } from "Checklist/Interfaces";
+import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkItemForm/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
-import { SagaIterator } from "redux-saga";
-import { call, put, select, takeLeading } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
 import { WorkItemChecklistActions, WorkItemChecklistActionTypes } from "./Actions";
 import { fetchWorkItemChecklistAsync, updateWorkItemChecklistAsync } from "./DataSources";
 import { getWorkItemChecklist, getWorkItemChecklistStatus } from "./Selectors";
 
-export function* workItemChecklistSaga(): SagaIterator {
-    yield takeLeading(WorkItemChecklistActionTypes.WorkItemChecklistLoadRequested, loadWorkItemChecklist);
+export function* workItemChecklistSaga() {
+    yield takeEvery(WorkItemChecklistActionTypes.WorkItemChecklistLoadRequested, loadWorkItemChecklist);
+    yield takeEvery(WorkItemFormActionTypes.WorkItemRefreshed, onWorkItemRefresh);
     yield takeLeading(
         [WorkItemChecklistActionTypes.WorkItemChecklistItemCreateRequested, WorkItemChecklistActionTypes.WorkItemChecklistItemUpdateRequested],
         addOrUpdateChecklistItem
@@ -17,22 +19,17 @@ export function* workItemChecklistSaga(): SagaIterator {
     yield takeLeading(WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested, deleteChecklistItem);
 }
 
-function* loadWorkItemChecklist(
-    action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistLoadRequested>
-): SagaIterator {
-    const workItemId = action.payload;
-    const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
+function* loadWorkItemChecklist(action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistLoadRequested>) {
+    yield call(refreshChecklist, action.payload);
+}
 
-    if (status !== LoadStatus.Loading && status !== LoadStatus.Updating) {
-        yield put(WorkItemChecklistActions.beginLoadWorkItemChecklist(workItemId));
-        const checklist: RT<typeof fetchWorkItemChecklistAsync> = yield call(fetchWorkItemChecklistAsync, workItemId);
-        yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, checklist));
-    }
+function* onWorkItemRefresh(action: ActionsOfType<WorkItemFormActions, WorkItemFormActionTypes.WorkItemRefreshed>) {
+    yield call(refreshChecklist, action.payload.id);
 }
 
 function* addOrUpdateChecklistItem(
     action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistItemCreateRequested>
-): SagaIterator {
+) {
     const { workItemId, checklistItem } = action.payload;
     const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
 
@@ -53,25 +50,15 @@ function* addOrUpdateChecklistItem(
                 };
             }
 
-            const unsavedChecklist: IWorkItemChecklist = {
+            yield call(updateChecklist, workItemId, {
                 ...checklist,
                 checklistItems: newChecklistItems
-            };
-
-            yield put(WorkItemChecklistActions.beginUpdateWorkItemChecklist(workItemId, unsavedChecklist));
-            try {
-                const updatedChecklist: RT<typeof updateWorkItemChecklistAsync> = yield call(updateWorkItemChecklistAsync, unsavedChecklist);
-                yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, updatedChecklist));
-            } catch (e) {
-                yield put(WorkItemChecklistActions.workItemChecklistUpdateFailed(workItemId, e.message));
-            }
+            });
         }
     }
 }
 
-function* deleteChecklistItem(
-    action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested>
-): SagaIterator {
+function* deleteChecklistItem(action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested>) {
     const { workItemId, checklistItemId } = action.payload;
     const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
 
@@ -80,19 +67,38 @@ function* deleteChecklistItem(
 
         if (checklist) {
             const newChecklistItems = checklist.checklistItems.filter(item => !equals(item.id, checklistItemId, true));
-
-            const unsavedChecklist: IWorkItemChecklist = {
+            yield call(updateChecklist, workItemId, {
                 ...checklist,
                 checklistItems: newChecklistItems
-            };
-
-            yield put(WorkItemChecklistActions.beginUpdateWorkItemChecklist(workItemId, unsavedChecklist));
-            try {
-                const updatedChecklist: RT<typeof updateWorkItemChecklistAsync> = yield call(updateWorkItemChecklistAsync, unsavedChecklist);
-                yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, updatedChecklist));
-            } catch (e) {
-                yield put(WorkItemChecklistActions.workItemChecklistUpdateFailed(workItemId, e.message));
-            }
+            });
         }
     }
+}
+
+function* refreshChecklist(workItemId: number) {
+    const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
+
+    if (status !== LoadStatus.Loading && status !== LoadStatus.Updating) {
+        yield put(WorkItemChecklistActions.beginLoadWorkItemChecklist(workItemId));
+        const checklist: RT<typeof fetchWorkItemChecklistAsync> = yield call(fetchWorkItemChecklistAsync, workItemId);
+        yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, checklist));
+        yield call(resizeIframe);
+    }
+}
+
+function* updateChecklist(workItemId: number, newChecklist: IWorkItemChecklist) {
+    yield put(WorkItemChecklistActions.beginUpdateWorkItemChecklist(workItemId, newChecklist));
+    try {
+        const updatedChecklist: RT<typeof updateWorkItemChecklistAsync> = yield call(updateWorkItemChecklistAsync, newChecklist);
+        yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, updatedChecklist));
+    } catch (e) {
+        yield put(WorkItemChecklistActions.workItemChecklistUpdateFailed(workItemId, e.message));
+    }
+
+    yield call(resizeIframe);
+}
+
+function* resizeIframe() {
+    const bodyElement = document.getElementsByTagName("body").item(0) as HTMLBodyElement;
+    yield call(resize, undefined, bodyElement.scrollHeight);
 }

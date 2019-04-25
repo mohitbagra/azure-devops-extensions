@@ -21,9 +21,15 @@ export const fetchWorkItemChecklistAsync = memoizePromise(
 
 export const updateWorkItemChecklistAsync = memoizePromise(
     async (checklist: IWorkItemChecklist) => {
-        const updatedChecklist = await addOrUpdateDocument<IWorkItemChecklist>("CheckListItems", checklist, false);
-        preprocessChecklist(updatedChecklist);
-        return updatedChecklist;
+        try {
+            const updatedChecklist = await addOrUpdateDocument<IWorkItemChecklist>("CheckListItems", checklist, false);
+            preprocessChecklist(updatedChecklist);
+            return updatedChecklist;
+        } catch (e) {
+            throw new Error(
+                "The current version of checklist doesn't match the version of checklist in this workitem. Please refresh the workitem or the checklist to get the latest Checklist data."
+            );
+        }
     },
     (checklist: IWorkItemChecklist) => `updateWorkItemChecklistAsync_${checklist.id}`
 );

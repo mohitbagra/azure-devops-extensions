@@ -13,9 +13,15 @@ export function workItemChecklistReducer(state: IWorkItemChecklistState | undefi
         switch (action.type) {
             case WorkItemChecklistActionTypes.BeginLoadWorkItemChecklist: {
                 const workItemId = action.payload;
-                draft.workItemChecklistsMap[workItemId] = {
-                    status: LoadStatus.Loading
-                };
+
+                if (draft.workItemChecklistsMap[workItemId]) {
+                    draft.workItemChecklistsMap[workItemId].status = LoadStatus.Loading;
+                } else {
+                    draft.workItemChecklistsMap[workItemId] = {
+                        status: LoadStatus.Loading
+                    };
+                }
+
                 break;
             }
 

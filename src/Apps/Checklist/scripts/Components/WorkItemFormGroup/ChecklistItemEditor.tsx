@@ -2,18 +2,18 @@ import "./ChecklistItemEditor.scss";
 
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
+import { KeyCode } from "azure-devops-ui/Util";
 import { WorkItemChecklistContext } from "Checklist/Constants";
-import { useWorkItemChecklist } from "Checklist/Hooks/useWorkItemChecklist";
 import { IChecklistItem } from "Checklist/Interfaces";
 import { WorkItemChecklistActions } from "Checklist/Redux/WorkItemChecklist/Actions";
 import { TextField } from "Common/Components/TextField";
-import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 
 interface IChecklistItemEditorProps {
     checklistItem?: IChecklistItem;
+    disabled?: boolean;
 }
 
 const newChecklistItem: IChecklistItem = {
@@ -28,26 +28,39 @@ const Actions = {
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem } = props;
+    const { checklistItem, disabled } = props;
     const workItemId = React.useContext(WorkItemChecklistContext);
     const [draftChecklistItem, updateDraftChecklistItem] = React.useState<IChecklistItem>(
         checklistItem ? { ...checklistItem } : { ...newChecklistItem }
     );
     const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
-    const { status } = useWorkItemChecklist(workItemId, false);
 
     const cancelEdit = React.useCallback(() => {
         updateDraftChecklistItem(checklistItem ? { ...checklistItem } : { ...newChecklistItem });
     }, [checklistItem]);
 
     const onSave = React.useCallback(() => {
-        if (draftChecklistItem.id) {
-            updateChecklistItem(workItemId, draftChecklistItem);
-        } else {
-            createChecklistItem(workItemId, draftChecklistItem);
+        if (!isNullOrWhiteSpace(draftChecklistItem.text)) {
+            if (draftChecklistItem.id) {
+                updateChecklistItem(workItemId, draftChecklistItem);
+            } else {
+                createChecklistItem(workItemId, draftChecklistItem);
+            }
+            cancelEdit();
         }
-        cancelEdit();
     }, [draftChecklistItem, workItemId]);
+
+    const onInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (e.keyCode === KeyCode.enter) {
+            e.preventDefault();
+            e.stopPropagation();
+            onSave();
+        } else if (e.keyCode === KeyCode.escape) {
+            e.preventDefault();
+            e.stopPropagation();
+            cancelEdit();
+        }
+    };
 
     const onTextChange = React.useCallback(
         (newText: string) => {
@@ -63,17 +76,21 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
         [draftChecklistItem]
     );
 
-    const isLoading = status === LoadStatus.Loading || status === LoadStatus.Updating || status === LoadStatus.UpdateFailed;
-
     return (
         <div className="checklist-item-editor flex-column">
             <div className="checklist-item-input">
-                <TextField placeholder="Add new item" disabled={isLoading} value={draftChecklistItem.text} onChange={onTextChange} />
+                <TextField
+                    placeholder="Add new item"
+                    onKeyUp={onInputKeyUp}
+                    disabled={disabled}
+                    value={draftChecklistItem.text}
+                    onChange={onTextChange}
+                />
             </div>
             <div className="checklist-item-props flex-row flex-center">
                 <Checkbox
                     className="flex-grow"
-                    disabled={isLoading}
+                    disabled={disabled}
                     checked={!!draftChecklistItem.required}
                     onChange={onRequiredChange}
                     label="Mandatory?"
@@ -83,13 +100,14 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                         className="checklist-command-item"
                         subtle={true}
                         onClick={onSave}
-                        disabled={isNullOrWhiteSpace(draftChecklistItem.text) || isLoading}
+                        disabled={isNullOrWhiteSpace(draftChecklistItem.text) || disabled}
                         iconProps={{ iconName: "CompletedSolid" }}
                         tooltipProps={{ text: "Save" }}
                     />
                     <Button
                         className="checklist-command-item error-item"
                         subtle={true}
+                        disabled={disabled}
                         onClick={cancelEdit}
                         iconProps={{ iconName: "StatusErrorFull" }}
                         tooltipProps={{ text: "Cancel" }}

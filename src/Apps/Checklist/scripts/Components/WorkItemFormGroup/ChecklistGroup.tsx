@@ -22,7 +22,7 @@ function ChecklistGroupInternal() {
     return (
         <WorkItemFormListener>
             {(activeWorkItemId: number, isNew: boolean, _isReadOnly: boolean) => (
-                <Page className="checklist-group flex-grow flex-column">
+                <Page className="checklist-group">
                     {isNew && (
                         <MessageCard className="checklist-message new-workitem-message" severity={MessageCardSeverity.Info}>
                             Save the work item before working with checklist.
@@ -40,8 +40,8 @@ function ChecklistGroupInternal() {
                                 <Tab name="Shared" id="shared" />
                                 <Tab name="Personal" id="personal" />
                             </TabBar>
-                            <div className="checklist-view-container flex-column flex-grow scroll-auto">
-                                <ChecklistView key={selectedTabId} className="flex-grow" />
+                            <div className="checklist-view-container">
+                                <ChecklistView key={selectedTabId} />
                             </div>
                         </WorkItemChecklistContext.Provider>
                     )}

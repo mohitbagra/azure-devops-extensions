@@ -13,7 +13,7 @@ const Actions = {
 
 export function ChecklistCommandBar() {
     const workItemId = React.useContext(WorkItemChecklistContext);
-    const { status } = useWorkItemChecklist(workItemId);
+    const { status } = useWorkItemChecklist(workItemId, false);
     const { loadWorkItemChecklist } = useActionCreators(Actions);
 
     const onRefresh = React.useCallback(() => {

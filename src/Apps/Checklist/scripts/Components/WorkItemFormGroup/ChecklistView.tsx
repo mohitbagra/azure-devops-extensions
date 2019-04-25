@@ -1,6 +1,5 @@
 import "./ChecklistView.scss";
 
-import * as SDK from "azure-devops-extension-sdk";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { css } from "azure-devops-ui/Util";
@@ -19,44 +18,18 @@ interface IChecklistViewProps {
     className?: string;
 }
 
-const WIDTH_DELTA = 10;
-const MIN_HEIGHT_THRESHOLD = 10;
-
 export function ChecklistView(props: IChecklistViewProps) {
     const { className } = props;
     const workItemId = React.useContext(WorkItemChecklistContext);
     const { checklist, status, error } = useWorkItemChecklist(workItemId);
-    const [width, setWidth] = React.useState(window.innerWidth);
 
-    React.useEffect(() => {
-        fillBodyHeight();
-    }, []);
-
-    React.useEffect(() => {
-        let timeout: number;
-        const handleResize = () => {
-            if (Math.abs(width - window.innerWidth) > WIDTH_DELTA) {
-                clearTimeout(timeout);
-                timeout = window.setTimeout(() => {
-                    setWidth(window.innerWidth);
-                    fillBodyHeight();
-                }, 50);
-            }
-        };
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            clearTimeout(timeout);
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
-    if (!checklist || status === LoadStatus.NotLoaded || status === LoadStatus.Loading) {
+    if (!checklist || status === LoadStatus.NotLoaded) {
         return <Loading />;
     }
 
+    const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
     return (
-        <div className={css("checklist-view flex-column scroll-hidden", className)}>
+        <div className={css("checklist-view", className)}>
             <ConditionalChildren renderChildren={!isNullOrWhiteSpace(error)}>
                 <MessageCard className="checklist-message compact" severity={MessageCardSeverity.Error}>
                     {error}
@@ -67,19 +40,17 @@ export function ChecklistView(props: IChecklistViewProps) {
                     No checklist items added.
                 </MessageCard>
             </ConditionalChildren>
-            <div className="checklist-items-container flex-column flex-grow scroll-auto">
+            <div className="checklist-items-container">
                 {checklist.checklistItems.map((checklistItem: IChecklistItem) => (
-                    <ChecklistItem key={`checklist_${checklistItem.id}`} className="checklist-item-container" checklistItem={checklistItem} />
+                    <ChecklistItem
+                        key={`checklist_${checklistItem.id}`}
+                        disabled={disabled}
+                        className="checklist-item-container"
+                        checklistItem={checklistItem}
+                    />
                 ))}
             </div>
-            <ChecklistItemEditor />
+            <ChecklistItemEditor disabled={disabled} />
         </div>
     );
-}
-
-function fillBodyHeight() {
-    const bodyElement = document.getElementsByTagName("body").item(0) as HTMLBodyElement;
-    if (bodyElement.offsetHeight > MIN_HEIGHT_THRESHOLD) {
-        SDK.resize(undefined, bodyElement.offsetHeight);
-    }
 }
