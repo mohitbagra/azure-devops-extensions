@@ -7,7 +7,7 @@ import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { WorkItemChecklistContext } from "Checklist/Constants";
 import { ChecklistItemState, IChecklistItem } from "Checklist/Interfaces";
-import { WorkItemChecklistActions } from "Checklist/Redux/WorkItemChecklist/Actions";
+import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 

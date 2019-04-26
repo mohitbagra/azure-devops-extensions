@@ -5,7 +5,7 @@ import { Checkbox } from "azure-devops-ui/Checkbox";
 import { KeyCode } from "azure-devops-ui/Util";
 import { WorkItemChecklistContext } from "Checklist/Constants";
 import { IChecklistItem } from "Checklist/Interfaces";
-import { WorkItemChecklistActions } from "Checklist/Redux/WorkItemChecklist/Actions";
+import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
 import { TextField } from "Common/Components/TextField";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";

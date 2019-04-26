@@ -1,7 +1,7 @@
 import { HeaderCommandBar } from "azure-devops-ui/HeaderCommandBar";
 import { WorkItemChecklistContext } from "Checklist/Constants";
 import { useWorkItemChecklist } from "Checklist/Hooks/useWorkItemChecklist";
-import { WorkItemChecklistActions } from "Checklist/Redux/WorkItemChecklist/Actions";
+import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getMarketplaceUrl } from "Common/Utilities/UrlHelper";

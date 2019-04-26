@@ -1,7 +1,7 @@
 import { IWorkItemChecklist } from "Checklist/Interfaces";
-import { WorkItemChecklistActions } from "Checklist/Redux/WorkItemChecklist/Actions";
-import { IWorkItemChecklistAwareState } from "Checklist/Redux/WorkItemChecklist/Contracts";
-import { getWorkItemChecklist, getWorkItemChecklistError, getWorkItemChecklistStatus } from "Checklist/Redux/WorkItemChecklist/Selectors";
+import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
+import { IWorkItemChecklistAwareState } from "Checklist/Redux/Contracts";
+import { getWorkItemChecklist, getWorkItemChecklistError, getWorkItemChecklistStatus } from "Checklist/Redux/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";

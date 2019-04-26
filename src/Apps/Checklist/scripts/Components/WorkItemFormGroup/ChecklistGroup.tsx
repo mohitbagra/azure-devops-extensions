@@ -5,7 +5,7 @@ import { Page } from "azure-devops-ui/Page";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
 import { WorkItemChecklistContext } from "Checklist/Constants";
 import { ChecklistTabIds } from "Checklist/Interfaces";
-import { getWorkItemChecklistModule } from "Checklist/Redux/WorkItemChecklist/Module";
+import { getWorkItemChecklistModule } from "Checklist/Redux/Module";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import * as React from "react";
