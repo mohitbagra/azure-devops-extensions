@@ -14,6 +14,7 @@ import * as React from "react";
 interface IChecklistItemEditorProps {
     checklistItem?: IChecklistItem;
     disabled?: boolean;
+    autoFocus?: boolean;
 }
 
 const newChecklistItem: IChecklistItem = {
@@ -28,7 +29,7 @@ const Actions = {
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem, disabled } = props;
+    const { checklistItem, disabled, autoFocus } = props;
     const workItemId = React.useContext(WorkItemChecklistContext);
     const [draftChecklistItem, updateDraftChecklistItem] = React.useState<IChecklistItem>(
         checklistItem ? { ...checklistItem } : { ...newChecklistItem }
@@ -40,7 +41,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     }, [checklistItem]);
 
     const onSave = React.useCallback(() => {
-        if (!isNullOrWhiteSpace(draftChecklistItem.text)) {
+        if (!isNullOrWhiteSpace(draftChecklistItem.text) && draftChecklistItem.text.length <= 128) {
             if (draftChecklistItem.id) {
                 updateChecklistItem(workItemId, draftChecklistItem);
             } else {
@@ -81,6 +82,8 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
             <div className="checklist-item-input">
                 <TextField
                     placeholder="Add new item"
+                    autoFocus={autoFocus}
+                    maxLength={128}
                     onKeyUp={onInputKeyUp}
                     disabled={disabled}
                     value={draftChecklistItem.text}
@@ -100,7 +103,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                         className="checklist-command-item"
                         subtle={true}
                         onClick={onSave}
-                        disabled={isNullOrWhiteSpace(draftChecklistItem.text) || disabled}
+                        disabled={isNullOrWhiteSpace(draftChecklistItem.text) || draftChecklistItem.text.length > 128 || disabled}
                         iconProps={{ iconName: "CompletedSolid" }}
                         tooltipProps={{ text: "Save" }}
                     />

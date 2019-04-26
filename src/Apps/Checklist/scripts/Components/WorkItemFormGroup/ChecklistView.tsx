@@ -29,7 +29,7 @@ export function ChecklistView(props: IChecklistViewProps) {
 
     const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
     return (
-        <div className={css("checklist-view", className)}>
+        <div className={css("checklist-view flex-column", className)}>
             <ConditionalChildren renderChildren={!isNullOrWhiteSpace(error)}>
                 <MessageCard className="checklist-message compact" severity={MessageCardSeverity.Error}>
                     {error}
@@ -40,14 +40,9 @@ export function ChecklistView(props: IChecklistViewProps) {
                     No checklist items added.
                 </MessageCard>
             </ConditionalChildren>
-            <div className="checklist-items-container">
+            <div className="checklist-items-container flex-grow scroll-auto">
                 {checklist.checklistItems.map((checklistItem: IChecklistItem) => (
-                    <ChecklistItem
-                        key={`checklist_${checklistItem.id}`}
-                        disabled={disabled}
-                        className="checklist-item-container"
-                        checklistItem={checklistItem}
-                    />
+                    <ChecklistItem key={`checklist_${checklistItem.id}`} disabled={disabled} checklistItem={checklistItem} />
                 ))}
             </div>
             <ChecklistItemEditor disabled={disabled} />

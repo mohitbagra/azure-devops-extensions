@@ -1,16 +1,8 @@
 .checklist-view {
     margin-top: 10px;
-    display: flex;
-    flex-direction: column;
 
     .checklist-items-container {
-        flex: 1;
         max-height: 300px;
-        overflow: auto;
-
-        .checklist-item-container {
-            margin-bottom: 5px;
-        }
     }
 
     .checklist-item-editor {
