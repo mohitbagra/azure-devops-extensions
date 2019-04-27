@@ -1,6 +1,8 @@
 @import "_CommonStyles.scss";
 
 .checklist-item-editor {
+    max-width: 300px;
+
     .checklist-item-input {
         margin-bottom: 5px;
     }

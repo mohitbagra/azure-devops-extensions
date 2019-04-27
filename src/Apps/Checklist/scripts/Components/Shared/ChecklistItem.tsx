@@ -30,12 +30,14 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
 
     const onItemClick = React.useCallback(() => {
-        updateChecklistItem(
-            idOrType,
-            { ...checklistItem, state: isCompleted ? ChecklistItemState.New : ChecklistItemState.Completed },
-            checklistType
-        );
-    }, [idOrType, isCompleted, checklistItem]);
+        if (!disabled) {
+            updateChecklistItem(
+                idOrType,
+                { ...checklistItem, state: isCompleted ? ChecklistItemState.New : ChecklistItemState.Completed },
+                checklistType
+            );
+        }
+    }, [idOrType, disabled, isCompleted, checklistItem]);
 
     const onCheckboxChange = React.useCallback(
         (e: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {

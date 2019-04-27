@@ -11,9 +11,11 @@
 }
 
 .checklist-message {
+    margin: 5px;
+
     &.compact {
         > div {
-            padding: 2px;
+            padding: 10px;
         }
     }
 }
