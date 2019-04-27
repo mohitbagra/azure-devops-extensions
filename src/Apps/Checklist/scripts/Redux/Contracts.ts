@@ -1,21 +1,15 @@
-import { IChecklistItem, IWorkItemChecklist } from "Checklist/Interfaces";
+import { IGroupedChecklists } from "Checklist/Interfaces";
 import { LoadStatus } from "Common/Contracts";
 
-export interface IWorkItemChecklistAwareState {
-    workItemChecklistState: IWorkItemChecklistState;
+export interface IChecklistAwareState {
+    checklistState: IChecklistState;
 }
 
-export interface IWorkItemChecklistState {
-    workItemChecklistsMap: { [workItemId: number]: IWorkItemChecklistStateModel };
+export interface IChecklistState {
+    checklistsMap: { [idOrType: string]: IChecklistStateModel };
 }
 
-export interface IWorkItemTypeChecklistState {
-    workItemTypeChecklistsMap: { [workItemType: string]: IWorkItemChecklistStateModel };
-}
-
-export interface IWorkItemChecklistStateModel {
+export interface IChecklistStateModel extends IGroupedChecklists {
     status: LoadStatus;
     error?: string;
-    checklist?: IWorkItemChecklist;
-    checklistItemsMap?: { [id: string]: IChecklistItem };
 }

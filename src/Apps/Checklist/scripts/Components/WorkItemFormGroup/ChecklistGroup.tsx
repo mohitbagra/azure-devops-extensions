@@ -3,19 +3,19 @@ import "./ChecklistGroup.scss";
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { Page } from "azure-devops-ui/Page";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
-import { WorkItemChecklistContext } from "Checklist/Constants";
-import { ChecklistTabIds } from "Checklist/Interfaces";
-import { getWorkItemChecklistModule } from "Checklist/Redux/Module";
+import { ChecklistView } from "Checklist/Components/Shared/ChecklistView";
+import { ChecklistContext } from "Checklist/Constants";
+import { ChecklistType } from "Checklist/Interfaces";
+import { getChecklistModule } from "Checklist/Redux/Module";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import * as React from "react";
 import { ChecklistCommandBar } from "./ChecklistCommandBar";
-import { ChecklistView } from "./ChecklistView";
 
 function ChecklistGroupInternal() {
-    const [selectedTabId, setSelectedTabId] = React.useState(ChecklistTabIds.Shared);
+    const [selectedTabId, setSelectedTabId] = React.useState(ChecklistType.Shared);
 
-    const onSelectedTabChanged = React.useCallback((selectedTab: ChecklistTabIds) => {
+    const onSelectedTabChanged = React.useCallback((selectedTab: ChecklistType) => {
         setSelectedTabId(selectedTab);
     }, []);
 
@@ -29,7 +29,7 @@ function ChecklistGroupInternal() {
                         </MessageCard>
                     )}
                     {!isNew && (
-                        <WorkItemChecklistContext.Provider value={activeWorkItemId}>
+                        <ChecklistContext.Provider value={activeWorkItemId}>
                             <TabBar
                                 className="checklist-tabbar"
                                 tabSize={TabSize.Compact}
@@ -37,13 +37,13 @@ function ChecklistGroupInternal() {
                                 onSelectedTabChanged={onSelectedTabChanged}
                                 renderAdditionalContent={renderTabBarCommands}
                             >
-                                <Tab name="Shared" id="shared" />
-                                <Tab name="Personal" id="personal" />
+                                <Tab name="Shared" id={ChecklistType.Shared} />
+                                <Tab name="Personal" id={ChecklistType.Personal} />
                             </TabBar>
                             <div className="checklist-view-container">
-                                <ChecklistView key={selectedTabId} />
+                                <ChecklistView checklistType={selectedTabId} />
                             </div>
-                        </WorkItemChecklistContext.Provider>
+                        </ChecklistContext.Provider>
                     )}
                 </Page>
             )}
@@ -57,7 +57,7 @@ function renderTabBarCommands() {
 
 export function ChecklistGroup() {
     return (
-        <DynamicModuleLoader modules={[getWorkItemChecklistModule()]} cleanOnUnmount={true}>
+        <DynamicModuleLoader modules={[getChecklistModule()]} cleanOnUnmount={true}>
             <ChecklistGroupInternal />
         </DynamicModuleLoader>
     );

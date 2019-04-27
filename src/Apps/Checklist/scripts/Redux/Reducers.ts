@@ -1,64 +1,95 @@
+import { ChecklistType, IChecklist } from "Checklist/Interfaces";
 import { LoadStatus } from "Common/Contracts";
-import { toDictionary } from "Common/Utilities/Array";
 import { produce } from "immer";
-import { WorkItemChecklistActions, WorkItemChecklistActionTypes } from "./Actions";
-import { IWorkItemChecklistState } from "./Contracts";
+import { ChecklistActions, ChecklistActionTypes } from "./Actions";
+import { IChecklistState } from "./Contracts";
 
-const defaultState: IWorkItemChecklistState = {
-    workItemChecklistsMap: {}
+const defaultState: IChecklistState = {
+    checklistsMap: {}
 };
 
-export function workItemChecklistReducer(state: IWorkItemChecklistState | undefined, action: WorkItemChecklistActions): IWorkItemChecklistState {
+export function checklistReducer(state: IChecklistState | undefined, action: ChecklistActions): IChecklistState {
     return produce(state || defaultState, draft => {
         switch (action.type) {
-            case WorkItemChecklistActionTypes.BeginLoadWorkItemChecklist: {
-                const workItemId = action.payload;
+            case ChecklistActionTypes.BeginLoadChecklist: {
+                const idOrType = action.payload;
+                const mapKey = idOrType.toString().toLowerCase();
 
-                if (draft.workItemChecklistsMap[workItemId]) {
-                    draft.workItemChecklistsMap[workItemId].status = LoadStatus.Loading;
+                if (draft.checklistsMap[mapKey]) {
+                    draft.checklistsMap[mapKey].status = LoadStatus.Loading;
                 } else {
-                    draft.workItemChecklistsMap[workItemId] = {
-                        status: LoadStatus.Loading
+                    draft.checklistsMap[mapKey] = {
+                        status: LoadStatus.Loading,
+                        personalChecklist: undefined,
+                        sharedChecklist: undefined,
+                        witDefaultChecklist: undefined
                     };
                 }
 
                 break;
             }
 
-            case WorkItemChecklistActionTypes.WorkItemChecklistLoaded: {
-                const { workItemChecklist, workItemId } = action.payload;
-                draft.workItemChecklistsMap[workItemId] = {
+            case ChecklistActionTypes.ChecklistLoaded: {
+                const { idOrType, groupedChecklists } = action.payload;
+                const { personalChecklist, sharedChecklist, witDefaultChecklist } = groupedChecklists;
+                const mapKey = idOrType.toString().toLowerCase();
+
+                draft.checklistsMap[mapKey] = {
                     status: LoadStatus.Ready,
-                    checklist: workItemChecklist,
-                    checklistItemsMap: toDictionary(workItemChecklist.checklistItems, item => item.id, item => item)
+                    personalChecklist,
+                    sharedChecklist,
+                    witDefaultChecklist
                 };
                 break;
             }
 
-            case WorkItemChecklistActionTypes.BeginUpdateWorkItemChecklist: {
-                const { workItemId, unSavedWorkItemChecklist } = action.payload;
-                if (draft.workItemChecklistsMap[workItemId]) {
-                    draft.workItemChecklistsMap[workItemId].status = LoadStatus.Updating;
-                    draft.workItemChecklistsMap[workItemId].checklist = unSavedWorkItemChecklist;
-                    draft.workItemChecklistsMap[workItemId].checklistItemsMap = toDictionary(
-                        unSavedWorkItemChecklist.checklistItems,
-                        item => item.id,
-                        item => item
-                    );
-                }
-
+            case ChecklistActionTypes.BeginUpdateChecklist: {
+                const { idOrType, unsavedChecklist, checklistType } = action.payload;
+                updateChecklist(draft, idOrType, unsavedChecklist, checklistType, LoadStatus.Updating);
                 break;
             }
 
-            case WorkItemChecklistActionTypes.WorkItemChecklistUpdateFailed: {
-                const { workItemId, error } = action.payload;
-                if (draft.workItemChecklistsMap[workItemId]) {
-                    draft.workItemChecklistsMap[workItemId].status = LoadStatus.UpdateFailed;
-                    draft.workItemChecklistsMap[workItemId].error = error;
+            case ChecklistActionTypes.ChecklistUpdated: {
+                const { idOrType, checklist, checklistType } = action.payload;
+                updateChecklist(draft, idOrType, checklist, checklistType, LoadStatus.Ready);
+                break;
+            }
+
+            case ChecklistActionTypes.ChecklistUpdateFailed: {
+                const { idOrType, error } = action.payload;
+                const mapKey = idOrType.toString().toLowerCase();
+
+                if (draft.checklistsMap[mapKey]) {
+                    draft.checklistsMap[mapKey].status = LoadStatus.UpdateFailed;
+                    draft.checklistsMap[mapKey].error = error;
                 }
 
                 break;
             }
         }
     });
+}
+
+function updateChecklist(draft: IChecklistState, idOrType: number | string, checklist: IChecklist, checklistType: ChecklistType, status: LoadStatus) {
+    const mapKey = idOrType.toString().toLowerCase();
+
+    if (draft.checklistsMap[mapKey]) {
+        draft.checklistsMap[mapKey].status = status;
+        draft.checklistsMap[mapKey].error = undefined;
+
+        switch (checklistType) {
+            case ChecklistType.Personal: {
+                draft.checklistsMap[mapKey].personalChecklist = checklist;
+                break;
+            }
+            case ChecklistType.Shared: {
+                draft.checklistsMap[mapKey].sharedChecklist = checklist;
+                break;
+            }
+            case ChecklistType.WitDefault: {
+                draft.checklistsMap[mapKey].witDefaultChecklist = checklist;
+                break;
+            }
+        }
+    }
 }

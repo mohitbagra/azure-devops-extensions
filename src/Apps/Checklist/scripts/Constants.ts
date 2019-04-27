@@ -1,7 +1,8 @@
 import { createContext } from "react";
 import { ChecklistItemState, IChecklistItemState } from "./Interfaces";
 
-export const WorkItemChecklistContext = createContext<number>(-1);
+// context value will be wither work item id (as string) or work item type
+export const ChecklistContext = createContext<number | string>("");
 
 export const ChecklistItemStates: { [checklistItemState: string]: IChecklistItemState } = {
     [ChecklistItemState.New]: {

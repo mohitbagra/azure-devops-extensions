@@ -1,24 +1,25 @@
 import { HeaderCommandBar } from "azure-devops-ui/HeaderCommandBar";
-import { WorkItemChecklistContext } from "Checklist/Constants";
-import { useWorkItemChecklist } from "Checklist/Hooks/useWorkItemChecklist";
-import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
+import { ChecklistContext } from "Checklist/Constants";
+import { useChecklist } from "Checklist/Hooks/useChecklist";
+import { ChecklistType } from "Checklist/Interfaces";
+import { ChecklistActions } from "Checklist/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getMarketplaceUrl } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 
 const Actions = {
-    loadWorkItemChecklist: WorkItemChecklistActions.workItemChecklistLoadRequested
+    loadChecklist: ChecklistActions.checklistLoadRequested
 };
 
 export function ChecklistCommandBar() {
-    const workItemId = React.useContext(WorkItemChecklistContext);
-    const { status } = useWorkItemChecklist(workItemId, false);
-    const { loadWorkItemChecklist } = useActionCreators(Actions);
+    const idOrType = React.useContext(ChecklistContext);
+    const { status } = useChecklist(idOrType, ChecklistType.Personal, false);
+    const { loadChecklist } = useActionCreators(Actions);
 
     const onRefresh = React.useCallback(() => {
-        loadWorkItemChecklist(workItemId);
-    }, [workItemId]);
+        loadChecklist(idOrType);
+    }, [idOrType]);
 
     return (
         <HeaderCommandBar

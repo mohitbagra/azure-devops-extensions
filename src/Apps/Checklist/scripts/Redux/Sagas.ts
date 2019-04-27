@@ -1,25 +1,27 @@
 import { resize } from "azure-devops-extension-sdk";
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { IWorkItemChecklist } from "Checklist/Interfaces";
+import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "Checklist/Interfaces";
 import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkItemForm/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
-import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
-import { WorkItemChecklistActions, WorkItemChecklistActionTypes } from "./Actions";
-import { fetchWorkItemChecklistAsync, updateWorkItemChecklistAsync } from "./DataSources";
-import { getWorkItemChecklist, getWorkItemChecklistStatus } from "./Selectors";
+import { getWorkItemProjectId, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
+import { isNullOrWhiteSpace } from "Common/Utilities/String";
+import { all, call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
+import { ChecklistActions, ChecklistActionTypes } from "./Actions";
+import { fetchWorkItemChecklistAsync, fetchWorkItemDefaultChecklist, fetchWorkItemTypeChecklistAsync, updateChecklistAsync } from "./DataSources";
+import { getChecklist, getChecklistStatus } from "./Selectors";
 
-export function* workItemChecklistSaga() {
-    yield takeEvery(WorkItemChecklistActionTypes.WorkItemChecklistLoadRequested, loadWorkItemChecklist);
+export function* checklistSaga() {
+    yield takeEvery(ChecklistActionTypes.ChecklistLoadRequested, loadChecklist);
     yield takeEvery(WorkItemFormActionTypes.WorkItemRefreshed, onWorkItemRefresh);
     yield takeLeading(
-        [WorkItemChecklistActionTypes.WorkItemChecklistItemCreateRequested, WorkItemChecklistActionTypes.WorkItemChecklistItemUpdateRequested],
+        [ChecklistActionTypes.ChecklistItemCreateRequested, ChecklistActionTypes.ChecklistItemUpdateRequested],
         addOrUpdateChecklistItem
     );
-    yield takeLeading(WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested, deleteChecklistItem);
+    yield takeLeading(ChecklistActionTypes.ChecklistItemDeleteRequested, deleteChecklistItem);
 }
 
-function* loadWorkItemChecklist(action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistLoadRequested>) {
+function* loadChecklist(action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ChecklistLoadRequested>) {
     yield call(refreshChecklist, action.payload);
 }
 
@@ -28,71 +30,129 @@ function* onWorkItemRefresh(action: ActionsOfType<WorkItemFormActions, WorkItemF
 }
 
 function* addOrUpdateChecklistItem(
-    action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistItemCreateRequested>
+    action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ChecklistItemCreateRequested | ChecklistActionTypes.ChecklistItemUpdateRequested>
 ) {
-    const { workItemId, checklistItem } = action.payload;
-    const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
+    const { idOrType, checklistItem, checklistType } = action.payload;
+    const status: RT<typeof getChecklistStatus> = yield select(getChecklistStatus, idOrType);
 
     if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed || status === LoadStatus.LoadFailed) {
-        const checklist: RT<typeof getWorkItemChecklist> = yield select(getWorkItemChecklist, workItemId);
+        const checklist: RT<typeof getChecklist> = yield select(getChecklist, idOrType, checklistType);
 
         if (checklist) {
+            let needsUpdate = true;
             let newChecklistItems = [...checklist.checklistItems];
-            const index = newChecklistItems.findIndex(item => equals(item.id, checklistItem.id, true));
-            if (index === -1) {
+
+            if (isNullOrWhiteSpace(checklistItem.id)) {
                 newChecklistItems = newChecklistItems.concat({ ...checklistItem, id: `${Date.now()}` });
             } else {
-                newChecklistItems[index] = {
-                    ...newChecklistItems[index],
-                    text: checklistItem.text,
-                    required: checklistItem.required,
-                    state: checklistItem.state
-                };
+                const index = newChecklistItems.findIndex(item => equals(item.id, checklistItem.id, true));
+                if (index !== -1) {
+                    newChecklistItems[index] = {
+                        ...newChecklistItems[index],
+                        text: checklistItem.text,
+                        required: checklistItem.required,
+                        state: checklistItem.state
+                    };
+                } else {
+                    needsUpdate = false;
+                }
             }
 
-            yield call(updateChecklist, workItemId, {
-                ...checklist,
-                checklistItems: newChecklistItems
-            });
+            if (needsUpdate) {
+                yield call(
+                    updateChecklist,
+                    idOrType,
+                    {
+                        ...checklist,
+                        checklistItems: newChecklistItems
+                    },
+                    checklistType
+                );
+            }
         }
     }
 }
 
-function* deleteChecklistItem(action: ActionsOfType<WorkItemChecklistActions, WorkItemChecklistActionTypes.WorkItemChecklistItemDeleteRequested>) {
-    const { workItemId, checklistItemId } = action.payload;
-    const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
+function* deleteChecklistItem(action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ChecklistItemDeleteRequested>) {
+    const { idOrType, checklistItemId, checklistType } = action.payload;
+    const status: RT<typeof getChecklistStatus> = yield select(getChecklistStatus, idOrType);
 
     if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed || status === LoadStatus.LoadFailed) {
-        const checklist: RT<typeof getWorkItemChecklist> = yield select(getWorkItemChecklist, workItemId);
+        const checklist: RT<typeof getChecklist> = yield select(getChecklist, idOrType, checklistType);
 
         if (checklist) {
             const newChecklistItems = checklist.checklistItems.filter(item => !equals(item.id, checklistItemId, true));
-            yield call(updateChecklist, workItemId, {
-                ...checklist,
-                checklistItems: newChecklistItems
-            });
+            if (newChecklistItems.length < checklist.checklistItems.length) {
+                yield call(
+                    updateChecklist,
+                    idOrType,
+                    {
+                        ...checklist,
+                        checklistItems: newChecklistItems
+                    },
+                    checklistType
+                );
+            }
         }
     }
 }
 
-function* refreshChecklist(workItemId: number) {
-    const status: RT<typeof getWorkItemChecklistStatus> = yield select(getWorkItemChecklistStatus, workItemId);
+function* refreshChecklist(idOrType: number | string) {
+    const status: RT<typeof getChecklistStatus> = yield select(getChecklistStatus, idOrType);
 
     if (status !== LoadStatus.Loading && status !== LoadStatus.Updating) {
-        yield put(WorkItemChecklistActions.beginLoadWorkItemChecklist(workItemId));
-        const checklist: RT<typeof fetchWorkItemChecklistAsync> = yield call(fetchWorkItemChecklistAsync, workItemId);
-        yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, checklist));
+        yield put(ChecklistActions.beginLoadChecklist(idOrType));
+        let groupedChecklists: IGroupedChecklists;
+
+        if (typeof idOrType === "number") {
+            const [workItemTypeName, workItemProjectId]: [RT<typeof getWorkItemTypeName>, RT<typeof getWorkItemProjectId>] = yield all([
+                call(getWorkItemTypeName),
+                call(getWorkItemProjectId)
+            ]);
+
+            const [personalChecklist, sharedChecklist, witDefaultChecklist, workItemTypeChecklist]: [
+                RT<typeof fetchWorkItemChecklistAsync>,
+                RT<typeof fetchWorkItemChecklistAsync>,
+                RT<typeof fetchWorkItemDefaultChecklist>,
+                RT<typeof fetchWorkItemTypeChecklistAsync>
+            ] = yield all([
+                call(fetchWorkItemChecklistAsync, idOrType, true),
+                call(fetchWorkItemChecklistAsync, idOrType, false),
+                call(fetchWorkItemDefaultChecklist, idOrType),
+                call(fetchWorkItemTypeChecklistAsync, workItemTypeName, workItemProjectId)
+            ]);
+
+            groupedChecklists = {
+                personalChecklist: personalChecklist,
+                sharedChecklist: sharedChecklist,
+                witDefaultChecklist: mergeDefaultChecklists(workItemTypeChecklist, witDefaultChecklist)
+            };
+        } else {
+            const workItemTypeChecklist: RT<typeof fetchWorkItemTypeChecklistAsync> = yield call(fetchWorkItemTypeChecklistAsync, idOrType);
+            groupedChecklists = {
+                personalChecklist: undefined,
+                sharedChecklist: undefined,
+                witDefaultChecklist: workItemTypeChecklist
+            };
+        }
+
+        yield put(ChecklistActions.checklistLoaded(idOrType, groupedChecklists));
         yield call(resizeIframe);
     }
 }
 
-function* updateChecklist(workItemId: number, newChecklist: IWorkItemChecklist) {
-    yield put(WorkItemChecklistActions.beginUpdateWorkItemChecklist(workItemId, newChecklist));
+function* updateChecklist(idOrType: number | string, newChecklist: IChecklist, checklistType: ChecklistType) {
+    yield put(ChecklistActions.beginUpdateChecklist(idOrType, newChecklist, checklistType));
     try {
-        const updatedChecklist: RT<typeof updateWorkItemChecklistAsync> = yield call(updateWorkItemChecklistAsync, newChecklist);
-        yield put(WorkItemChecklistActions.workItemChecklistLoaded(workItemId, updatedChecklist));
+        const updatedChecklist: RT<typeof updateChecklistAsync> = yield call(
+            updateChecklistAsync,
+            newChecklist,
+            checklistType,
+            typeof idOrType === "string"
+        );
+        yield put(ChecklistActions.checklistUpdated(idOrType, updatedChecklist, checklistType));
     } catch (e) {
-        yield put(WorkItemChecklistActions.workItemChecklistUpdateFailed(workItemId, e.message));
+        yield put(ChecklistActions.checklistUpdateFailed(idOrType, e.message));
     }
 
     yield call(resizeIframe);
@@ -101,4 +161,25 @@ function* updateChecklist(workItemId: number, newChecklist: IWorkItemChecklist) 
 function* resizeIframe() {
     const bodyElement = document.getElementsByTagName("body").item(0) as HTMLBodyElement;
     yield call(resize, undefined, bodyElement.scrollHeight);
+}
+
+function mergeDefaultChecklists(workItemTypeChecklist: IChecklist, workItemChecklist: IChecklist): IChecklist {
+    const mergedChecklist: IChecklist = { ...workItemChecklist, checklistItems: [] };
+
+    const workItemChecklistItemsMap: { [key: string]: IChecklistItem } = {};
+    for (const checklistItem of workItemChecklist.checklistItems) {
+        workItemChecklistItemsMap[checklistItem.id.toLowerCase()] = checklistItem;
+    }
+
+    for (const checklistItem of workItemTypeChecklist.checklistItems) {
+        const key = checklistItem.id.toLowerCase();
+        if (workItemChecklistItemsMap[key] == null) {
+            mergedChecklist.checklistItems.push(checklistItem);
+        } else {
+            const workItemChecklistItem = workItemChecklistItemsMap[key];
+            mergedChecklist.checklistItems.push({ ...workItemChecklistItem, text: checklistItem.text, required: checklistItem.required });
+        }
+    }
+
+    return mergedChecklist;
 }

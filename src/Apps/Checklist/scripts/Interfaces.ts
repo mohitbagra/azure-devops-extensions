@@ -1,4 +1,4 @@
-export interface IWorkItemChecklist {
+export interface IChecklist {
     id: string;
     __etag?: number;
     checklistItems: IChecklistItem[];
@@ -9,7 +9,6 @@ export interface IChecklistItem {
     text: string;
     required?: boolean;
     state?: ChecklistItemState;
-    isDefault?: boolean;
 }
 
 export const enum ChecklistItemState {
@@ -26,19 +25,14 @@ export interface IChecklistItemState {
     foregroundColor: string;
 }
 
-export interface IWorkItemChecklists {
-    personal: IWorkItemChecklist;
-    shared: IWorkItemChecklist;
-    witDefault: IWorkItemChecklist;
+export interface IGroupedChecklists {
+    personalChecklist: IChecklist | undefined;
+    sharedChecklist: IChecklist | undefined;
+    witDefaultChecklist: IChecklist | undefined;
 }
 
 export const enum ChecklistType {
-    Personal = 0,
-    Shared,
-    WitDefault
-}
-
-export const enum ChecklistTabIds {
     Personal = "personal",
-    Shared = "shared"
+    Shared = "shared",
+    WitDefault = "witDefault"
 }

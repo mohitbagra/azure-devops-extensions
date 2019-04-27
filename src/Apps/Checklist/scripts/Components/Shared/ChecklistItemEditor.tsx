@@ -3,9 +3,9 @@ import "./ChecklistItemEditor.scss";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { KeyCode } from "azure-devops-ui/Util";
-import { WorkItemChecklistContext } from "Checklist/Constants";
-import { IChecklistItem } from "Checklist/Interfaces";
-import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
+import { ChecklistContext } from "Checklist/Constants";
+import { ChecklistType, IChecklistItem } from "Checklist/Interfaces";
+import { ChecklistActions } from "Checklist/Redux/Actions";
 import { TextField } from "Common/Components/TextField";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
@@ -13,6 +13,7 @@ import * as React from "react";
 
 interface IChecklistItemEditorProps {
     checklistItem?: IChecklistItem;
+    checklistType: ChecklistType;
     disabled?: boolean;
     autoFocus?: boolean;
 }
@@ -24,13 +25,13 @@ const newChecklistItem: IChecklistItem = {
 };
 
 const Actions = {
-    createChecklistItem: WorkItemChecklistActions.workItemChecklistItemCreateRequested,
-    updateChecklistItem: WorkItemChecklistActions.workItemChecklistItemUpdateRequested
+    createChecklistItem: ChecklistActions.checklistItemCreateRequested,
+    updateChecklistItem: ChecklistActions.checklistItemUpdateRequested
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem, disabled, autoFocus } = props;
-    const workItemId = React.useContext(WorkItemChecklistContext);
+    const { checklistItem, disabled, autoFocus, checklistType } = props;
+    const idOrType = React.useContext(ChecklistContext);
     const [draftChecklistItem, updateDraftChecklistItem] = React.useState<IChecklistItem>(
         checklistItem ? { ...checklistItem } : { ...newChecklistItem }
     );
@@ -43,13 +44,13 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     const onSave = React.useCallback(() => {
         if (!isNullOrWhiteSpace(draftChecklistItem.text) && draftChecklistItem.text.length <= 128) {
             if (draftChecklistItem.id) {
-                updateChecklistItem(workItemId, draftChecklistItem);
+                updateChecklistItem(idOrType, draftChecklistItem, checklistType);
             } else {
-                createChecklistItem(workItemId, draftChecklistItem);
+                createChecklistItem(idOrType, draftChecklistItem, checklistType);
             }
             cancelEdit();
         }
-    }, [draftChecklistItem, workItemId]);
+    }, [draftChecklistItem, idOrType]);
 
     const onInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (e.keyCode === KeyCode.enter) {

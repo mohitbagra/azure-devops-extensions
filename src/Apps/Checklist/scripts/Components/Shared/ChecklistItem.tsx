@@ -5,47 +5,56 @@ import { Checkbox } from "azure-devops-ui/Checkbox";
 import { Icon } from "azure-devops-ui/Icon";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
-import { WorkItemChecklistContext } from "Checklist/Constants";
-import { ChecklistItemState, IChecklistItem } from "Checklist/Interfaces";
-import { WorkItemChecklistActions } from "Checklist/Redux/Actions";
+import { ChecklistContext } from "Checklist/Constants";
+import { ChecklistItemState, ChecklistType, IChecklistItem } from "Checklist/Interfaces";
+import { ChecklistActions } from "Checklist/Redux/Actions";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 
 interface IChecklistItemProps {
     checklistItem: IChecklistItem;
+    checklistType: ChecklistType;
     disabled?: boolean;
     className?: string;
 }
 
 const Actions = {
-    deleteChecklistItem: WorkItemChecklistActions.workItemChecklistItemDeleteRequested,
-    updateChecklistItem: WorkItemChecklistActions.workItemChecklistItemUpdateRequested
+    deleteChecklistItem: ChecklistActions.checklistItemDeleteRequested,
+    updateChecklistItem: ChecklistActions.checklistItemUpdateRequested
 };
 
 export function ChecklistItem(props: IChecklistItemProps) {
-    const { checklistItem, className, disabled } = props;
-    const workItemId = React.useContext(WorkItemChecklistContext);
+    const { checklistItem, checklistType, className, disabled } = props;
+    const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
 
     const onItemClick = React.useCallback(() => {
-        updateChecklistItem(workItemId, { ...checklistItem, state: isCompleted ? ChecklistItemState.New : ChecklistItemState.Completed });
-    }, [workItemId, isCompleted, checklistItem]);
+        updateChecklistItem(
+            idOrType,
+            { ...checklistItem, state: isCompleted ? ChecklistItemState.New : ChecklistItemState.Completed },
+            checklistType
+        );
+    }, [idOrType, isCompleted, checklistItem]);
 
     const onCheckboxChange = React.useCallback(
         (e: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {
             e.stopPropagation();
-            updateChecklistItem(workItemId, { ...checklistItem, state: checked ? ChecklistItemState.Completed : ChecklistItemState.New });
+            updateChecklistItem(
+                idOrType,
+                { ...checklistItem, state: checked ? ChecklistItemState.Completed : ChecklistItemState.New },
+                checklistType
+            );
         },
-        [workItemId, checklistItem]
+        [idOrType, checklistItem]
     );
 
     const onDeleteClick = React.useCallback(
         (e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation();
-            deleteChecklistItem(workItemId, checklistItem.id);
+            deleteChecklistItem(idOrType, checklistItem.id, checklistType);
         },
-        [checklistItem.id]
+        [idOrType, checklistItem.id]
     );
 
     const onEditClick = React.useCallback(
@@ -53,7 +62,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
             e.stopPropagation();
             console.log("edit");
         },
-        [workItemId, isCompleted, checklistItem]
+        [idOrType, isCompleted, checklistItem]
     );
 
     return (

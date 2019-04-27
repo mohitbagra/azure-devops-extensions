@@ -1,40 +1,41 @@
-import { IChecklistItem } from "Checklist/Interfaces";
+import { ChecklistType, IChecklist } from "Checklist/Interfaces";
 import { LoadStatus } from "Common/Contracts";
-import { resolveNullableMapKey } from "Common/Utilities/String";
 import { createSelector } from "reselect";
-import { IWorkItemChecklistAwareState, IWorkItemChecklistState, IWorkItemChecklistStateModel } from "./Contracts";
+import { IChecklistAwareState, IChecklistState, IChecklistStateModel } from "./Contracts";
 
-export function getWorkItemChecklistState(state: IWorkItemChecklistAwareState): IWorkItemChecklistState | undefined {
-    return state.workItemChecklistState;
+export function getChecklistState(state: IChecklistAwareState): IChecklistState | undefined {
+    return state.checklistState;
 }
 
-export function getWorkItemChecklistStateModel(state: IWorkItemChecklistAwareState, workItemId: number): IWorkItemChecklistStateModel | undefined {
-    const checklistState = getWorkItemChecklistState(state);
-    return checklistState && checklistState.workItemChecklistsMap && checklistState.workItemChecklistsMap[workItemId];
+export function getChecklistStateModel(state: IChecklistAwareState, idOrType: number | string): IChecklistStateModel | undefined {
+    const checklistState = getChecklistState(state);
+    return checklistState && checklistState.checklistsMap && checklistState.checklistsMap[idOrType.toString().toLowerCase()];
 }
 
-export const getWorkItemChecklistStatus = createSelector(
-    getWorkItemChecklistStateModel,
+export const getChecklistStatus = createSelector(
+    getChecklistStateModel,
     state => (state && state.status) || LoadStatus.NotLoaded
 );
 
-export const getWorkItemChecklistError = createSelector(
-    getWorkItemChecklistStateModel,
+export const getChecklistError = createSelector(
+    getChecklistStateModel,
     state => state && state.error
 );
 
-export const getWorkItemChecklist = createSelector(
-    getWorkItemChecklistStateModel,
-    state => state && state.checklist
-);
-
-export function getWorkItemChecklistItem(
-    state: IWorkItemChecklistAwareState,
-    workItemId: number,
-    checklistItemId: string
-): IChecklistItem | undefined {
-    const checklistStateModel = getWorkItemChecklistStateModel(state, workItemId);
-    return (
-        checklistStateModel && checklistStateModel.checklistItemsMap && checklistStateModel.checklistItemsMap[resolveNullableMapKey(checklistItemId)]
-    );
+export function getChecklist(state: IChecklistAwareState, idOrType: number | string, checklistType: ChecklistType): IChecklist | undefined {
+    const checklistStateModel = getChecklistStateModel(state, idOrType);
+    if (checklistStateModel) {
+        switch (checklistType) {
+            case ChecklistType.Personal: {
+                return checklistStateModel.personalChecklist;
+            }
+            case ChecklistType.Shared: {
+                return checklistStateModel.sharedChecklist;
+            }
+            case ChecklistType.WitDefault: {
+                return checklistStateModel.witDefaultChecklist;
+            }
+        }
+    }
+    return undefined;
 }
