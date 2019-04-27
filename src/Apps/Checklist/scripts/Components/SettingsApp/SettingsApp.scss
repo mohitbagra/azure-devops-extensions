@@ -1,0 +1,20 @@
+@import "_CommonStyles.scss";
+@import "../Root.scss";
+
+.checklist-group {
+    .checklist-tabbar {
+        height: 100%;
+        max-width: 200px;
+        padding: 10px 0;
+
+        .tab-icon {
+            margin-right: 5px;
+        }
+    }
+
+    .checklist-view-container {
+        height: 100%;
+        margin-left: 20px;
+        padding: 10px 0;
+    }
+}
