@@ -1,3 +1,5 @@
+import { getClient } from "azure-devops-extension-api/Common/Client";
+import { CoreRestClient } from "azure-devops-extension-api/Core";
 import { WorkItemField } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IWorkItemFormService, WorkItemTrackingServiceIds } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices";
 import * as SDK from "azure-devops-extension-sdk";
@@ -6,6 +8,9 @@ import { CoreFieldRefNames } from "Common/Constants";
 import { first } from "Common/Utilities/Array";
 
 let workItemFormService: IWorkItemFormService;
+let workItemProjectId: string;
+let workItemProjectName: string;
+let workItemTypeName: string;
 
 export async function getWorkItemFormService(): Promise<IWorkItemFormService> {
     if (!workItemFormService) {
@@ -15,14 +20,30 @@ export async function getWorkItemFormService(): Promise<IWorkItemFormService> {
     return workItemFormService;
 }
 
-export async function getWorkItemType(): Promise<string> {
-    const service = await getWorkItemFormService();
-    return (await service.getFieldValue(CoreFieldRefNames.WorkItemType, true)) as string;
+export async function getWorkItemTypeName(): Promise<string> {
+    if (!workItemTypeName) {
+        const service = await getWorkItemFormService();
+        workItemTypeName = (await service.getFieldValue(CoreFieldRefNames.WorkItemType, true)) as string;
+    }
+    return workItemTypeName;
 }
 
-export async function getWorkItemProject(): Promise<string> {
-    const service = await getWorkItemFormService();
-    return (await service.getFieldValue(CoreFieldRefNames.TeamProject, true)) as string;
+export async function getWorkItemProjectName(): Promise<string> {
+    if (!workItemProjectName) {
+        const service = await getWorkItemFormService();
+        workItemProjectName = (await service.getFieldValue(CoreFieldRefNames.TeamProject, true)) as string;
+    }
+    return workItemProjectName;
+}
+
+export async function getWorkItemProjectId(): Promise<string> {
+    if (!workItemProjectId) {
+        const projectName = await getWorkItemProjectName();
+        const client = await getClient(CoreRestClient);
+        const project = await client.getProject(projectName);
+        workItemProjectId = project.id;
+    }
+    return workItemProjectId;
 }
 
 export async function getWorkItemField(fieldName: string): Promise<WorkItemField> {

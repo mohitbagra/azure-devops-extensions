@@ -67,7 +67,7 @@ const Actions = {
 
 function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) {
     const { onDismiss, bugBashItemId, bugBashId, readFromCache } = props;
-    const mapStateToProps = React.useCallback(
+    const mapState = React.useCallback(
         (state: IBugBashItemEditorAwareState & ITeamAwareState): IBugBashItemEditorPanelStateProps => {
             return {
                 draftBugBashItem: getDraftBugBashItem(state, bugBashItemId),
@@ -80,7 +80,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
         },
         [bugBashItemId]
     );
-    const { draftBugBashItem, isValid, isDirty, draftComment, isSaving, draftInitializeError } = useMappedState(mapStateToProps);
+    const { draftBugBashItem, isValid, isDirty, draftComment, isSaving, draftInitializeError } = useMappedState(mapState);
     const { requestDraftSave, updateDraft, updateDraftComment, requestDraftInitialize, requestDraftAccept, pushError } = useActionCreators(Actions);
     const { bugBash } = useBugBash(bugBashId);
 

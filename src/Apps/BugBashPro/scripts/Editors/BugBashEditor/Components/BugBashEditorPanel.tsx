@@ -63,7 +63,7 @@ const Actions = {
 
 function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
     const { onDismiss, bugBashId, readFromCache } = props;
-    const mapStateToProps = React.useCallback(
+    const mapState = React.useCallback(
         (
             state: IBugBashEditorAwareState & ITeamAwareState & IFieldAwareState & IWorkItemTypeAwareState & IWorkItemTemplateAwareState
         ): IBugBashEditorPanelStateProps => {
@@ -77,7 +77,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
         },
         [bugBashId]
     );
-    const { draftBugBash, isValid, isDirty, isSaving, draftInitializeError } = useMappedState(mapStateToProps);
+    const { draftBugBash, isValid, isDirty, isSaving, draftInitializeError } = useMappedState(mapState);
     const { requestDraftSave, updateDraft, requestDraftInitialize } = useActionCreators(Actions);
 
     const throttledOnDraftChanged = useThrottle(updateDraft, 200);

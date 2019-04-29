@@ -1,0 +1,45 @@
+@import "_CommonStyles.scss";
+
+.checklist-item-container {
+    height: 32px;
+
+    &:hover {
+        .checklist-item {
+            border: 1px solid $neutral-20;
+        }
+    }
+
+    .checklist-item {
+        border: 1px solid transparent;
+        padding: 0 5px;
+        cursor: pointer;
+
+        .required-item {
+            color: $error-text;
+            margin-top: -5px;
+            font-weight: 600;
+            font-size: 18px;
+            @include UserSelectNone();
+        }
+
+        .checklist-item-text {
+            margin: 0 5px;
+            @include UserSelectNone();
+        }
+    }
+
+    .drag-handle {
+        margin-right: 5px;
+        cursor: move;
+    }
+
+    &:not(:hover) {
+        .checklist-commandbar {
+            display: none;
+        }
+
+        .drag-handle {
+            visibility: hidden;
+        }
+    }
+}

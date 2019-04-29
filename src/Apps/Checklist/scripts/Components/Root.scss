@@ -1,0 +1,21 @@
+@import "_CommonStyles.scss";
+
+.checklist-commandbar {
+    .checklist-command-item:not(.disabled) {
+        color: $communication-foreground;
+
+        &.error-item {
+            color: $error-text;
+        }
+    }
+}
+
+.checklist-message {
+    margin: 5px;
+
+    &.compact {
+        > div {
+            padding: 10px;
+        }
+    }
+}

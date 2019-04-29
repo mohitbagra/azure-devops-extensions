@@ -1,0 +1,16 @@
+@import "_CommonStyles.scss";
+
+.checklist-item-editor {
+    max-width: 300px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 10px;
+
+    .checklist-item-input {
+        margin-bottom: 5px;
+    }
+
+    .checklist-command-item {
+        font-size: $fontSizeML;
+    }
+}

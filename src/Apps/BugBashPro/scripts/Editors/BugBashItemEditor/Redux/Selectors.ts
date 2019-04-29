@@ -1,6 +1,6 @@
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
-import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
 import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
+import { resolveNullableMapKey } from "Common/Utilities/String";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import { createSelector } from "reselect";
 import { isBugBashItemDirty, isBugBashItemValid } from "../Helpers";

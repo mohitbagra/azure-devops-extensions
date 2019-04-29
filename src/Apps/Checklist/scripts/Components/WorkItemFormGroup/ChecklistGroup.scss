@@ -1,0 +1,20 @@
+@import "_CommonStyles.scss";
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: block;
+}
+
+.checklist-group {
+    display: block;
+
+    .checklist-tabbar {
+        padding: 0;
+    }
+
+    .checklist-view-container {
+        margin-top: 5px;
+    }
+}

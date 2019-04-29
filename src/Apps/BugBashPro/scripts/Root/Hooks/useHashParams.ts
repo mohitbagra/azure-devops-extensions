@@ -1,7 +1,7 @@
 import { AppView } from "BugBashPro/Shared/Constants";
-import { resolveNullableMapKey } from "BugBashPro/Shared/Helpers";
 import { switchToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { attachNavigate } from "Common/ServiceWrappers/HostNavigationService";
+import { resolveNullableMapKey } from "Common/Utilities/String";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 
