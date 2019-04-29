@@ -26,8 +26,7 @@
         "paths": {
             "OfficeFabric/*": ["node_modules/office-ui-fabric-react/lib/*"],
             "Common/*": ["src/Common/*"],
-            "BugBashPro/*": ["src/Apps/BugBashPro/scripts/*"],
-            "Checklist/*": ["src/Apps/Checklist/scripts/*"]
+            "BugBashPro/*": ["src/Apps/BugBashPro/scripts/*"]
         },
         "types": ["react", "react-dom"],
         "plugins": [

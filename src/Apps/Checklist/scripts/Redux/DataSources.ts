@@ -1,8 +1,8 @@
-import { ChecklistItemState, ChecklistType, IChecklist } from "Checklist/Interfaces";
 import { addOrUpdateDocument, readDocument } from "Common/ServiceWrappers/ExtensionDataManager";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
+import { ChecklistItemState, ChecklistType, IChecklist } from "../Interfaces";
 
 export const fetchWorkItemChecklistAsync = memoizePromise(
     async (workItemId: number, personal: boolean): Promise<IChecklist> => {

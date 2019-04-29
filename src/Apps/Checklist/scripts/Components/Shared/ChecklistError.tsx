@@ -1,12 +1,11 @@
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
-import { ChecklistContext } from "Checklist/Constants";
-import { useChecklist } from "Checklist/Hooks/useChecklist";
-import { ChecklistType } from "Checklist/Interfaces";
 import * as React from "react";
+import { ChecklistContext } from "../../Constants";
+import { useChecklistError } from "../../Hooks/useChecklistError";
 
 export function ChecklistError() {
     const idOrType = React.useContext(ChecklistContext);
-    const { error } = useChecklist(idOrType, ChecklistType.Personal, false);
+    const error = useChecklistError(idOrType);
 
     if (error) {
         return (

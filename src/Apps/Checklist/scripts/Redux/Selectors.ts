@@ -1,6 +1,6 @@
-import { ChecklistType, IChecklist } from "Checklist/Interfaces";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
+import { ChecklistType, IChecklist } from "../Interfaces";
 import { IChecklistAwareState, IChecklistState, IChecklistStateModel } from "./Contracts";
 
 export function getChecklistState(state: IChecklistAwareState): IChecklistState | undefined {
@@ -20,6 +20,18 @@ export const getChecklistStatus = createSelector(
 export const getChecklistError = createSelector(
     getChecklistStateModel,
     state => state && state.error
+);
+
+export const getChecklists = createSelector(
+    getChecklistStateModel,
+    state =>
+        state
+            ? {
+                  personalChecklist: state.personalChecklist,
+                  sharedChecklist: state.sharedChecklist,
+                  witDefaultChecklist: state.witDefaultChecklist
+              }
+            : undefined
 );
 
 export function getChecklist(state: IChecklistAwareState, idOrType: number | string, checklistType: ChecklistType): IChecklist | undefined {

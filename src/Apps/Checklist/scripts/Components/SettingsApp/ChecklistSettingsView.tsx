@@ -1,11 +1,11 @@
 import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Tab, TabList, TabSize } from "azure-devops-ui/Tabs";
-import { ChecklistItemEditor } from "Checklist/Components/Shared/ChecklistItemEditor";
-import { ChecklistView } from "Checklist/Components/Shared/ChecklistView";
-import { ChecklistContext } from "Checklist/Constants";
-import { ChecklistType } from "Checklist/Interfaces";
 import { WorkItemTypeIcon } from "Common/AzDev/WorkItemTypes/Components/WorkItemTypeIcon";
 import * as React from "react";
+import { ChecklistContext } from "../../Constants";
+import { ChecklistType } from "../../Interfaces";
+import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
+import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistSettingsHeader } from "./ChecklistSettingsHeader";
 
 interface IChecklistSettingsViewProps {

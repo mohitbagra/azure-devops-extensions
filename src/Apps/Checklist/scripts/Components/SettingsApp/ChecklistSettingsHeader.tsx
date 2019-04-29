@@ -1,11 +1,10 @@
 import { Header, TitleSize } from "azure-devops-ui/Header";
-import { ChecklistContext } from "Checklist/Constants";
-import { useChecklist } from "Checklist/Hooks/useChecklist";
-import { ChecklistType } from "Checklist/Interfaces";
-import { ChecklistActions } from "Checklist/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
+import { ChecklistContext } from "../../Constants";
+import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
+import { ChecklistActions } from "../../Redux/Actions";
 
 const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested
@@ -13,7 +12,7 @@ const Actions = {
 
 export function ChecklistSettingsHeader() {
     const selectedWorkItemType = React.useContext(ChecklistContext) as string;
-    const { status } = useChecklist(selectedWorkItemType, ChecklistType.WitDefault, false);
+    const status = useChecklistStatus(selectedWorkItemType);
     const { loadChecklist } = useActionCreators(Actions);
 
     const onRefresh = React.useCallback(() => {

@@ -1,12 +1,11 @@
 import { HeaderCommandBar } from "azure-devops-ui/HeaderCommandBar";
-import { ChecklistContext } from "Checklist/Constants";
-import { useChecklist } from "Checklist/Hooks/useChecklist";
-import { ChecklistType } from "Checklist/Interfaces";
-import { ChecklistActions } from "Checklist/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getMarketplaceUrl } from "Common/Utilities/UrlHelper";
 import * as React from "react";
+import { ChecklistContext } from "../../Constants";
+import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
+import { ChecklistActions } from "../../Redux/Actions";
 
 const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested
@@ -14,7 +13,7 @@ const Actions = {
 
 export function ChecklistCommandBar() {
     const idOrType = React.useContext(ChecklistContext);
-    const { status } = useChecklist(idOrType, ChecklistType.Personal, false);
+    const status = useChecklistStatus(idOrType);
     const { loadChecklist } = useActionCreators(Actions);
 
     const onRefresh = React.useCallback(() => {

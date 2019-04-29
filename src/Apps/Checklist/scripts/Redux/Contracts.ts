@@ -1,5 +1,5 @@
-import { IGroupedChecklists } from "Checklist/Interfaces";
 import { LoadStatus } from "Common/Contracts";
+import { IGroupedChecklists } from "../Interfaces";
 
 export interface IChecklistAwareState {
     checklistState: IChecklistState;

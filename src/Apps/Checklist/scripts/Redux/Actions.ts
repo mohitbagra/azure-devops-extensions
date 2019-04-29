@@ -1,5 +1,5 @@
-import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "Checklist/Interfaces";
 import { ActionsUnion, createAction } from "Common/Redux";
+import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../Interfaces";
 
 export const ChecklistActions = {
     checklistLoadRequested: (idOrType: number | string) => createAction(ChecklistActionTypes.ChecklistLoadRequested, idOrType),

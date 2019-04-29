@@ -1,12 +1,12 @@
 import { resize } from "azure-devops-extension-sdk";
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "Checklist/Interfaces";
 import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkItemForm/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
 import { getWorkItemProjectId, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { all, call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
+import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { fetchWorkItemChecklistAsync, fetchWorkItemDefaultChecklist, fetchWorkItemTypeChecklistAsync, updateChecklistAsync } from "./DataSources";
 import { getChecklist, getChecklistStatus } from "./Selectors";

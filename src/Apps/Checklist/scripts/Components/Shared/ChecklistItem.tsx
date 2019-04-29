@@ -5,18 +5,17 @@ import { Checkbox } from "azure-devops-ui/Checkbox";
 import { Icon } from "azure-devops-ui/Icon";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
-import { ChecklistContext } from "Checklist/Constants";
-import { useChecklist } from "Checklist/Hooks/useChecklist";
-import { ChecklistItemState, ChecklistType, IChecklistItem } from "Checklist/Interfaces";
-import { ChecklistActions } from "Checklist/Redux/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
+import { ChecklistContext } from "../../Constants";
+import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
+import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
+import { ChecklistActions } from "../../Redux/Actions";
 
 interface IChecklistItemProps {
     checklistItem: IChecklistItem;
     checklistType: ChecklistType;
-    className?: string;
 }
 
 const Actions = {
@@ -25,10 +24,10 @@ const Actions = {
 };
 
 export function ChecklistItem(props: IChecklistItemProps) {
-    const { checklistItem, checklistType, className } = props;
+    const { checklistItem, checklistType } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
-    const { status } = useChecklist(idOrType, checklistType, false);
+    const status = useChecklistStatus(idOrType);
 
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
     const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
@@ -72,7 +71,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
     );
 
     return (
-        <div className={css("checklist-item-container scroll-hidden flex-row flex-center", className, isCompleted && "completed")}>
+        <div className={css("checklist-item-container scroll-hidden flex-row flex-center", isCompleted && "completed")}>
             <Icon className="drag-handle flex-noshrink" iconName="Cancel" />
             <div className="checklist-item scroll-hidden flex-row flex-center flex-grow" onClick={onItemClick}>
                 <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />

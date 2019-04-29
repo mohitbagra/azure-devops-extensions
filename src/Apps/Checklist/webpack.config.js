@@ -6,11 +6,6 @@ module.exports = {
         App: "./src/Apps/Checklist/scripts/Components/WorkItemFormGroup/App.tsx",
         SettingsApp: "./src/Apps/Checklist/scripts/Components/SettingsApp/SettingsApp.tsx"
     },
-    resolve: {
-        alias: {
-            Checklist: path.resolve(__dirname, "./scripts")
-        }
-    },
     optimization: {
         splitChunks: {
             chunks: "all",

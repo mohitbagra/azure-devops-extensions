@@ -1,46 +1,35 @@
-import { ChecklistType, IChecklist } from "Checklist/Interfaces";
-import { ChecklistActions } from "Checklist/Redux/Actions";
-import { IChecklistAwareState } from "Checklist/Redux/Contracts";
-import { getChecklist, getChecklistError, getChecklistStatus } from "Checklist/Redux/Selectors";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
+import { ChecklistType, IChecklist } from "../Interfaces";
+import { ChecklistActions } from "../Redux/Actions";
+import { IChecklistAwareState } from "../Redux/Contracts";
+import { getChecklist, getChecklistStatus } from "../Redux/Selectors";
 
-export function useChecklist(
-    idOrType: number | string,
-    checklistType: ChecklistType,
-    loadIfNotLoaded: boolean = true
-): IUseWorkItemChecklistHookMappedState {
+export function useChecklist(idOrType: number | string, checklistType: ChecklistType): IChecklist | undefined {
     const mapState = useCallback(
-        (state: IChecklistAwareState): IUseWorkItemChecklistHookMappedState => {
+        (state: IChecklistAwareState) => {
             return {
                 checklist: getChecklist(state, idOrType, checklistType),
-                error: getChecklistError(state, idOrType),
                 status: getChecklistStatus(state, idOrType)
             };
         },
         [idOrType, checklistType]
     );
 
-    const { checklist, status, error } = useMappedState(mapState);
+    const { checklist, status } = useMappedState(mapState);
     const { loadChecklist } = useActionCreators(Actions);
 
     useEffect(() => {
-        if (loadIfNotLoaded && status === LoadStatus.NotLoaded) {
+        if (status === LoadStatus.NotLoaded) {
             loadChecklist(idOrType);
         }
     }, [idOrType]);
 
-    return { checklist, status, error };
+    return checklist;
 }
 
 const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested
 };
-
-interface IUseWorkItemChecklistHookMappedState {
-    status: LoadStatus;
-    error: string | undefined;
-    checklist: IChecklist | undefined;
-}
