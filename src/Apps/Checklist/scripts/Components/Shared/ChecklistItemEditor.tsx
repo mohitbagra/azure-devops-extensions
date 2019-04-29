@@ -4,9 +4,11 @@ import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { KeyCode } from "azure-devops-ui/Util";
 import { ChecklistContext } from "Checklist/Constants";
+import { useChecklist } from "Checklist/Hooks/useChecklist";
 import { ChecklistType, IChecklistItem } from "Checklist/Interfaces";
 import { ChecklistActions } from "Checklist/Redux/Actions";
 import { TextField } from "Common/Components/TextField";
+import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
@@ -14,7 +16,6 @@ import * as React from "react";
 interface IChecklistItemEditorProps {
     checklistItem?: IChecklistItem;
     checklistType: ChecklistType;
-    disabled?: boolean;
     autoFocus?: boolean;
 }
 
@@ -30,12 +31,16 @@ const Actions = {
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem, disabled, autoFocus, checklistType } = props;
+    const { checklistItem, autoFocus, checklistType } = props;
     const idOrType = React.useContext(ChecklistContext);
+    const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
+    const { status } = useChecklist(idOrType, checklistType, false);
+
     const [draftChecklistItem, updateDraftChecklistItem] = React.useState<IChecklistItem>(
         checklistItem ? { ...checklistItem } : { ...newChecklistItem }
     );
-    const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
+
+    const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
 
     const cancelEdit = React.useCallback(() => {
         updateDraftChecklistItem(checklistItem ? { ...checklistItem } : { ...newChecklistItem });

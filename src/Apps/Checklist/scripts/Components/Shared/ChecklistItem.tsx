@@ -6,15 +6,16 @@ import { Icon } from "azure-devops-ui/Icon";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { ChecklistContext } from "Checklist/Constants";
+import { useChecklist } from "Checklist/Hooks/useChecklist";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "Checklist/Interfaces";
 import { ChecklistActions } from "Checklist/Redux/Actions";
+import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 
 interface IChecklistItemProps {
     checklistItem: IChecklistItem;
     checklistType: ChecklistType;
-    disabled?: boolean;
     className?: string;
 }
 
@@ -24,10 +25,13 @@ const Actions = {
 };
 
 export function ChecklistItem(props: IChecklistItemProps) {
-    const { checklistItem, checklistType, className, disabled } = props;
+    const { checklistItem, checklistType, className } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
+    const { status } = useChecklist(idOrType, checklistType, false);
+
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
+    const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
 
     const onItemClick = React.useCallback(() => {
         if (!disabled) {

@@ -10,6 +10,8 @@ import { getChecklistModule } from "Checklist/Redux/Module";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import * as React from "react";
+import { ChecklistError } from "../Shared/ChecklistError";
+import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
 import { ChecklistCommandBar } from "./ChecklistCommandBar";
 
 function ChecklistGroupInternal() {
@@ -40,9 +42,16 @@ function ChecklistGroupInternal() {
                                 <Tab name="Shared" id={ChecklistType.Shared} />
                                 <Tab name="Personal" id={ChecklistType.Personal} />
                             </TabBar>
+                            <ChecklistError />
+                            {selectedTabId === ChecklistType.Shared && (
+                                <div className="checklist-view-container">
+                                    <ChecklistView checklistType={ChecklistType.WitDefault} />
+                                </div>
+                            )}
                             <div className="checklist-view-container">
                                 <ChecklistView checklistType={selectedTabId} />
                             </div>
+                            <ChecklistItemEditor checklistType={selectedTabId} />
                         </ChecklistContext.Provider>
                     )}
                 </Page>

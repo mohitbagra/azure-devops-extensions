@@ -1,5 +1,6 @@
 import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Tab, TabList, TabSize } from "azure-devops-ui/Tabs";
+import { ChecklistItemEditor } from "Checklist/Components/Shared/ChecklistItemEditor";
 import { ChecklistView } from "Checklist/Components/Shared/ChecklistView";
 import { ChecklistContext } from "Checklist/Constants";
 import { ChecklistType } from "Checklist/Interfaces";
@@ -43,6 +44,7 @@ export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
                 <div className="checklist-view-container flex-grow">
                     <ChecklistView checklistType={ChecklistType.WitDefault} />
                 </div>
+                <ChecklistItemEditor checklistType={ChecklistType.WitDefault} />
             </div>
         </ChecklistContext.Provider>
     );
