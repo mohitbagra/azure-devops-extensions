@@ -36,3 +36,7 @@ export const enum ChecklistType {
     Shared = "shared",
     WitDefault = "witDefault"
 }
+
+export interface IBaseProps {
+    className?: string;
+}

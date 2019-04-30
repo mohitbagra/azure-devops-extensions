@@ -31,7 +31,11 @@ export const getChecklists = createSelector(
                   sharedChecklist: state.sharedChecklist,
                   witDefaultChecklist: state.witDefaultChecklist
               }
-            : undefined
+            : {
+                  personalChecklist: undefined,
+                  sharedChecklist: undefined,
+                  witDefaultChecklist: undefined
+              }
 );
 
 export function getChecklist(state: IChecklistAwareState, idOrType: number | string, checklistType: ChecklistType): IChecklist | undefined {

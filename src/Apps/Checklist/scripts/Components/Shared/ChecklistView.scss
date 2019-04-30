@@ -1,7 +1,7 @@
-.checklist-view {
-    margin-top: 10px;
+@import "_CommonStyles.scss";
 
-    .checklist-items-container {
-        max-height: 300px;
+.checklist-view {
+    .checklist-items-group.witdefault {
+        border-bottom: 1px solid $neutral-20;
     }
 }

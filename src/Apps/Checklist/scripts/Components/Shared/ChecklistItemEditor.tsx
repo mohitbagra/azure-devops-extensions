@@ -2,7 +2,7 @@ import "./ChecklistItemEditor.scss";
 
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
-import { KeyCode } from "azure-devops-ui/Util";
+import { css, KeyCode } from "azure-devops-ui/Util";
 import { TextField } from "Common/Components/TextField";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -10,10 +10,10 @@ import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
-import { ChecklistType, IChecklistItem } from "../../Interfaces";
+import { ChecklistType, IBaseProps, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
 
-interface IChecklistItemEditorProps {
+interface IChecklistItemEditorProps extends IBaseProps {
     checklistItem?: IChecklistItem;
     checklistType: ChecklistType;
     autoFocus?: boolean;
@@ -31,7 +31,7 @@ const Actions = {
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem, autoFocus, checklistType } = props;
+    const { checklistItem, autoFocus, checklistType, className } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
@@ -84,7 +84,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     );
 
     return (
-        <div className="checklist-item-editor flex-column">
+        <div className={css("checklist-item-editor flex-column", className)}>
             <div className="checklist-item-input">
                 <TextField
                     placeholder="Add new item"

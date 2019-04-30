@@ -10,10 +10,10 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
-import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
+import { ChecklistItemState, ChecklistType, IBaseProps, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
 
-interface IChecklistItemProps {
+interface IChecklistItemProps extends IBaseProps {
     checklistItem: IChecklistItem;
     checklistType: ChecklistType;
 }
@@ -24,7 +24,7 @@ const Actions = {
 };
 
 export function ChecklistItem(props: IChecklistItemProps) {
-    const { checklistItem, checklistType } = props;
+    const { checklistItem, checklistType, className } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
@@ -71,7 +71,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
     );
 
     return (
-        <div className={css("checklist-item-container scroll-hidden flex-row flex-center", isCompleted && "completed")}>
+        <div className={css("checklist-item-container scroll-hidden flex-row flex-center", className, isCompleted && "completed")}>
             <Icon className="drag-handle flex-noshrink" iconName="Cancel" />
             <div className="checklist-item scroll-hidden flex-row flex-center flex-grow" onClick={onItemClick}>
                 <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />

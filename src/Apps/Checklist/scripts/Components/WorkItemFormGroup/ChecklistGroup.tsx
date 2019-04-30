@@ -13,7 +13,6 @@ import { ChecklistError } from "../Shared/ChecklistError";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
 import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistCommandBar } from "./ChecklistCommandBar";
-import { SharedChecklistView } from "./SharedChecklistView";
 
 function ChecklistGroupInternal() {
     const [selectedTabId, setSelectedTabId] = React.useState(ChecklistType.Shared);
@@ -25,9 +24,9 @@ function ChecklistGroupInternal() {
     return (
         <WorkItemFormListener>
             {(activeWorkItemId: number, isNew: boolean, _isReadOnly: boolean) => (
-                <Page className="checklist-group">
+                <Page className="checklist-form-group">
                     {isNew && (
-                        <MessageCard className="checklist-message new-workitem-message" severity={MessageCardSeverity.Info}>
+                        <MessageCard className="checklist-message" severity={MessageCardSeverity.Info}>
                             Save the work item before working with checklist.
                         </MessageCard>
                     )}
@@ -43,10 +42,11 @@ function ChecklistGroupInternal() {
                                 <Tab name="Shared" id={ChecklistType.Shared} />
                                 <Tab name="Personal" id={ChecklistType.Personal} />
                             </TabBar>
-                            <ChecklistError />
-                            {selectedTabId === ChecklistType.Shared && <SharedChecklistView />}
-                            {selectedTabId === ChecklistType.Personal && <ChecklistView checklistType={selectedTabId} />}
-                            <ChecklistItemEditor checklistType={selectedTabId} />
+                            <div className="checklist-contents flex-column">
+                                <ChecklistError className="flex-noshrink" />
+                                <ChecklistView checklistType={selectedTabId} className="flex-grow scroll-auto" />
+                                <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" />
+                            </div>
                         </ChecklistContext.Provider>
                     )}
                 </Page>

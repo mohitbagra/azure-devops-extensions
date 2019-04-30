@@ -2,23 +2,23 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
-import { ChecklistType, IChecklist } from "../Interfaces";
+import { IGroupedChecklists } from "../Interfaces";
 import { ChecklistActions } from "../Redux/Actions";
 import { IChecklistAwareState } from "../Redux/Contracts";
-import { getChecklist, getChecklistStatus } from "../Redux/Selectors";
+import { getChecklists, getChecklistStatus } from "../Redux/Selectors";
 
-export function useChecklist(idOrType: number | string, checklistType: ChecklistType): IChecklist | undefined {
+export function useChecklists(idOrType: number | string): IGroupedChecklists {
     const mapState = useCallback(
         (state: IChecklistAwareState) => {
             return {
-                checklist: getChecklist(state, idOrType, checklistType),
+                checklists: getChecklists(state, idOrType),
                 status: getChecklistStatus(state, idOrType)
             };
         },
-        [idOrType, checklistType]
+        [idOrType]
     );
 
-    const { checklist, status } = useMappedState(mapState);
+    const { checklists, status } = useMappedState(mapState);
     const { loadChecklist } = useActionCreators(Actions);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export function useChecklist(idOrType: number | string, checklistType: Checklist
         }
     }, [idOrType]);
 
-    return checklist;
+    return checklists;
 }
 
 const Actions = {

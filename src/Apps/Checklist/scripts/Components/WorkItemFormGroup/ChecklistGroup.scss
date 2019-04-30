@@ -7,14 +7,16 @@ body {
     display: block;
 }
 
-.checklist-group {
+.checklist-form-group {
     display: block;
 
     .checklist-tabbar {
         padding: 0;
     }
 
-    .checklist-view-container {
-        margin-top: 5px;
+    .checklist-contents {
+        .checklist-view {
+            max-height: 300px;
+        }
     }
 }
