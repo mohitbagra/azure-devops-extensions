@@ -12,7 +12,8 @@ export const WorkItemFormActions = {
     workItemReset: (undoEventArgs: IWorkItemChangedArgs) => createAction(WorkItemFormActionTypes.WorkItemReset, undoEventArgs),
     workItemRefreshed: (refreshEventArgs: IWorkItemChangedArgs) => createAction(WorkItemFormActionTypes.WorkItemRefreshed, refreshEventArgs),
     workItemFieldChanged: (fieldChangedArgs: IWorkItemFieldChangedArgs) =>
-        createAction(WorkItemFormActionTypes.WorkItemFieldChanged, fieldChangedArgs)
+        createAction(WorkItemFormActionTypes.WorkItemFieldChanged, fieldChangedArgs),
+    resize: (height: number) => createAction(WorkItemFormActionTypes.Resize, { height })
 };
 
 export const enum WorkItemFormActionTypes {
@@ -21,7 +22,8 @@ export const enum WorkItemFormActionTypes {
     WorkItemSaved = "WorkItemFormAction/WorkItemSaved",
     WorkItemReset = "WorkItemFormAction/WorkItemReset",
     WorkItemRefreshed = "WorkItemFormAction/WorkItemRefreshed",
-    WorkItemFieldChanged = "WorkItemFormAction/WorkItemFieldChanged"
+    WorkItemFieldChanged = "WorkItemFormAction/WorkItemFieldChanged",
+    Resize = "WorkItemFormAction/Resize"
 }
 
 export type WorkItemFormActions = ActionsUnion<typeof WorkItemFormActions>;

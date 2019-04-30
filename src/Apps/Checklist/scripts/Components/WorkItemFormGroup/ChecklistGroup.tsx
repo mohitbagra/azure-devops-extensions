@@ -5,20 +5,29 @@ import { Page } from "azure-devops-ui/Page";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
+import { ChecklistActions } from "../../Redux/Actions";
 import { getChecklistModule } from "../../Redux/Module";
 import { ChecklistError } from "../Shared/ChecklistError";
+import { ChecklistInitializer } from "../Shared/ChecklistInitializer";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
 import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistCommandBar } from "./ChecklistCommandBar";
 
+const Actions = {
+    resizeIframe: ChecklistActions.resizeIframe
+};
+
 function ChecklistGroupInternal() {
     const [selectedTabId, setSelectedTabId] = React.useState(ChecklistType.Shared);
+    const { resizeIframe } = useActionCreators(Actions);
 
     const onSelectedTabChanged = React.useCallback((selectedTab: ChecklistType) => {
         setSelectedTabId(selectedTab);
+        resizeIframe(50);
     }, []);
 
     return (
@@ -43,9 +52,13 @@ function ChecklistGroupInternal() {
                                 <Tab name="Personal" id={ChecklistType.Personal} />
                             </TabBar>
                             <div className="checklist-contents flex-column">
-                                <ChecklistError className="flex-noshrink" />
-                                <ChecklistView checklistType={selectedTabId} className="flex-grow scroll-auto" />
-                                <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" />
+                                <ChecklistInitializer>
+                                    <>
+                                        <ChecklistError className="flex-noshrink" />
+                                        <ChecklistView checklistType={selectedTabId} className="flex-grow scroll-auto" />
+                                        <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" />
+                                    </>
+                                </ChecklistInitializer>
                             </div>
                         </ChecklistContext.Provider>
                     )}

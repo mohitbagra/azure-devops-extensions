@@ -2,7 +2,6 @@ import "./ChecklistView.scss";
 
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { css } from "azure-devops-ui/Util";
-import { Loading } from "Common/Components/Loading";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklists } from "../../Hooks/useChecklists";
@@ -19,7 +18,7 @@ export function ChecklistView(props: IChecklistViewProps) {
     const { personalChecklist, sharedChecklist, witDefaultChecklist } = useChecklists(idOrType);
 
     if (!personalChecklist || !sharedChecklist || !witDefaultChecklist) {
-        return <Loading />;
+        throw new Error("Checklists must be initialized before calling ChecklistView");
     }
 
     const isEmpty =
@@ -41,29 +40,27 @@ export function ChecklistView(props: IChecklistViewProps) {
             <>
                 {witDefaultChecklist.checklistItems.length > 0 && (
                     <div className="checklist-items-group witdefault">
-                        {witDefaultChecklist.checklistItems.map((checklistItem: IChecklistItem) => (
-                            <ChecklistItem key={`checklist_${checklistItem.id}`} checklistItem={checklistItem} checklistType={ChecklistType.Shared} />
-                        ))}
+                        {witDefaultChecklist.checklistItems.map(renderChecklistItem(ChecklistType.WitDefault))}
                     </div>
                 )}
                 {sharedChecklist.checklistItems.length > 0 && (
-                    <div className="checklist-items-group">
-                        {sharedChecklist.checklistItems.map((checklistItem: IChecklistItem) => (
-                            <ChecklistItem key={`checklist_${checklistItem.id}`} checklistItem={checklistItem} checklistType={ChecklistType.Shared} />
-                        ))}
-                    </div>
+                    <div className="checklist-items-group">{sharedChecklist.checklistItems.map(renderChecklistItem(ChecklistType.Shared))}</div>
                 )}
             </>
         );
     } else {
         const checklist = checklistType === ChecklistType.Personal ? personalChecklist : witDefaultChecklist;
-        innerElement = (
-            <div className="checklist-items-group">
-                {checklist.checklistItems.map((checklistItem: IChecklistItem) => (
-                    <ChecklistItem key={`checklist_${checklistItem.id}`} checklistItem={checklistItem} checklistType={ChecklistType.Shared} />
-                ))}
-            </div>
-        );
+        innerElement = <div className="checklist-items-group">{checklist.checklistItems.map(renderChecklistItem(ChecklistType.Personal))}</div>;
     }
-    return <div className={css("checklist-view flex-column", className)}>{innerElement}</div>;
+    return (
+        <div className={css("checklist-view flex-column", className)} id="checklist-view">
+            {innerElement}
+        </div>
+    );
+}
+
+function renderChecklistItem(checklistType: ChecklistType) {
+    return (checklistItem: IChecklistItem) => (
+        <ChecklistItem key={`checklist_${checklistItem.id}`} checklistItem={checklistItem} checklistType={checklistType} />
+    );
 }

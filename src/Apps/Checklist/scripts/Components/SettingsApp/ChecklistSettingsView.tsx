@@ -4,6 +4,7 @@ import { WorkItemTypeIcon } from "Common/AzDev/WorkItemTypes/Components/WorkItem
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
+import { ChecklistError } from "../Shared/ChecklistError";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
 import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistSettingsHeader } from "./ChecklistSettingsHeader";
@@ -41,10 +42,12 @@ export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
             </TabList>
             <div className="flex-column flex-grow">
                 <ChecklistSettingsHeader />
-                <div className="checklist-view-container flex-grow">
-                    <ChecklistView checklistType={ChecklistType.WitDefault} />
+
+                <div className="checklist-view-container flex-grow flex-column">
+                    <ChecklistError className="flex-noshrink" />
+                    <ChecklistView checklistType={ChecklistType.WitDefault} className="flex-grow scroll-auto" />
+                    <ChecklistItemEditor checklistType={ChecklistType.WitDefault} className="flex-noshrink" />
                 </div>
-                <ChecklistItemEditor checklistType={ChecklistType.WitDefault} />
             </div>
         </ChecklistContext.Provider>
     );
