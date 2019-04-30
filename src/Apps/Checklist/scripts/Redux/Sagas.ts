@@ -14,11 +14,16 @@ export function* checklistSaga() {
     yield takeLeading(ChecklistActionTypes.ResizeIframe, resizeIframe);
     yield takeEvery(ChecklistActionTypes.ChecklistLoadRequested, loadChecklist);
     yield takeEvery(WorkItemFormActionTypes.WorkItemRefreshed, onWorkItemRefresh);
+    yield takeEvery(WorkItemFormActionTypes.WorkItemLoaded, onWorkItemLoaded);
     yield takeLeading(
         [ChecklistActionTypes.ChecklistItemCreateRequested, ChecklistActionTypes.ChecklistItemUpdateRequested],
         addOrUpdateChecklistItem
     );
     yield takeLeading(ChecklistActionTypes.ChecklistItemDeleteRequested, deleteChecklistItem);
+}
+
+function* onWorkItemLoaded() {
+    yield put(ChecklistActions.resizeIframe(50));
 }
 
 function* resizeIframe(action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ResizeIframe>) {
