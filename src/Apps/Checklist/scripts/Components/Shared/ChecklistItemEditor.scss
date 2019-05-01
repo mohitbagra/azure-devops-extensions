@@ -2,7 +2,7 @@
 
 .checklist-item-editor {
     max-width: 300px;
-    margin-top: 10px;
+    margin-top: 15px;
     margin-left: 20px;
     margin-right: 10px;
 
@@ -12,5 +12,37 @@
 
     .checklist-command-item {
         font-size: $fontSizeML;
+    }
+
+    .checklist-item-state-control {
+        margin: 0 5px;
+        font-size: $fontSize;
+    }
+}
+
+.checklist-item-state {
+    &-new {
+        background-color: #ffb900;
+        color: #222222;
+    }
+
+    &-inprogress {
+        background-color: #cbe3f3;
+        color: #007acc;
+    }
+
+    &-blocked {
+        background-color: #ebb4b4;
+        color: #a80000;
+    }
+
+    &-na {
+        background-color: #eaeaea;
+        color: #3c3c3c;
+    }
+
+    &-completed {
+        background-color: #c0e5c0;
+        color: #159715;
     }
 }

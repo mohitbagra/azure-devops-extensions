@@ -9,7 +9,7 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { ChecklistContext } from "../../Constants";
+import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
@@ -113,7 +113,14 @@ export function ChecklistItem(props: IChecklistItemProps) {
                         {canUpdateItemState && (
                             <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />
                         )}
-                        {checklistItem.required && <div className="required-item">*</div>}
+                        {checklistItem.required && <div className="required-item flex-noshrink">*</div>}
+                        {checklistItem.state &&
+                            checklistItem.state !== ChecklistItemState.Completed &&
+                            checklistItem.state !== ChecklistItemState.New && (
+                                <div className={css("checklist-item-state flex-noshrink", ChecklistItemStates[checklistItem.state].className)}>
+                                    {checklistItem.state}
+                                </div>
+                            )}
                         <Tooltip overflowOnly={true} text={checklistItem.text}>
                             <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
                         </Tooltip>

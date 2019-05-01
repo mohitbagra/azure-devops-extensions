@@ -2,15 +2,16 @@ import "./ChecklistItemEditor.scss";
 
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
+import { IMenuItem, MenuButton } from "azure-devops-ui/Menu";
 import { css, KeyCode } from "azure-devops-ui/Util";
 import { TextField } from "Common/Components/TextField";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
-import { ChecklistContext } from "../../Constants";
+import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
-import { ChecklistType, IChecklistItem } from "../../Interfaces";
+import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
 import { IBaseProps } from "../Props";
 
@@ -24,7 +25,8 @@ interface IChecklistItemEditorProps extends IBaseProps {
 const newChecklistItem: IChecklistItem = {
     id: "",
     text: "",
-    required: true
+    required: true,
+    state: ChecklistItemState.New
 };
 
 const Actions = {
@@ -33,7 +35,7 @@ const Actions = {
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem, autoFocus, checklistType, className } = props;
+    const { checklistItem, autoFocus, checklistType, className, canUpdateItemState } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
@@ -43,6 +45,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     );
 
     const disabled = status !== LoadStatus.Ready;
+    const checklistItemState = ChecklistItemStates[draftChecklistItem.state];
 
     const cancelEdit = React.useCallback(() => {
         if (!disabled) {
@@ -96,6 +99,15 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
         [disabled, draftChecklistItem]
     );
 
+    const onChangeState = React.useCallback(
+        (menuItem: IMenuItem) => {
+            if (!disabled) {
+                updateDraftChecklistItem({ ...draftChecklistItem, state: menuItem.id as ChecklistItemState });
+            }
+        },
+        [disabled, draftChecklistItem]
+    );
+
     return (
         <div className={css("checklist-item-editor flex-column", className)}>
             <div className="checklist-item-input">
@@ -117,6 +129,23 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                     onChange={onRequiredChange}
                     label="Mandatory?"
                 />
+                {canUpdateItemState && (
+                    <MenuButton
+                        className={css("checklist-item-state-control", checklistItemState.className)}
+                        text={checklistItemState.name}
+                        disabled={disabled}
+                        contextualMenuProps={{
+                            onActivate: onChangeState,
+                            menuProps: {
+                                id: "test",
+                                items: Object.keys(ChecklistItemStates).map(state => ({
+                                    id: ChecklistItemStates[state].name,
+                                    text: ChecklistItemStates[state].name
+                                }))
+                            }
+                        }}
+                    />
+                )}
                 <div className="checklist-commandbar">
                     <Button
                         className="checklist-command-item"

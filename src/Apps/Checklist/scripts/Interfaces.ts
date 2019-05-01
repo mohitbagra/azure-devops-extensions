@@ -8,7 +8,7 @@ export interface IChecklistItem {
     id: string;
     text: string;
     required?: boolean;
-    state?: ChecklistItemState;
+    state: ChecklistItemState;
 }
 
 export const enum ChecklistItemState {
@@ -21,8 +21,7 @@ export const enum ChecklistItemState {
 
 export interface IChecklistItemState {
     name: ChecklistItemState;
-    backgroundColor: string;
-    foregroundColor: string;
+    className: string;
 }
 
 export interface IGroupedChecklists {

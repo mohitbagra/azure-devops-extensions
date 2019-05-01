@@ -7,27 +7,22 @@ export const ChecklistContext = createContext<number | string>("");
 export const ChecklistItemStates: { [checklistItemState: string]: IChecklistItemState } = {
     [ChecklistItemState.New]: {
         name: ChecklistItemState.New,
-        backgroundColor: "#ffb900",
-        foregroundColor: "#222222"
+        className: "checklist-item-state-new"
     },
     [ChecklistItemState.InProgress]: {
         name: ChecklistItemState.InProgress,
-        backgroundColor: "#cbe3f3",
-        foregroundColor: "#007acc"
+        className: "checklist-item-state-inprogress"
     },
     [ChecklistItemState.Blocked]: {
         name: ChecklistItemState.Blocked,
-        backgroundColor: "#ebb4b4",
-        foregroundColor: "#a80000"
+        className: "checklist-item-state-blocked"
     },
     [ChecklistItemState.NA]: {
         name: ChecklistItemState.NA,
-        backgroundColor: "#eaeaea",
-        foregroundColor: "#3c3c3c"
+        className: "checklist-item-state-na"
     },
     [ChecklistItemState.Completed]: {
         name: ChecklistItemState.Completed,
-        backgroundColor: "#c0e5c0",
-        foregroundColor: "#159715"
+        className: "checklist-item-state-completed"
     }
 };

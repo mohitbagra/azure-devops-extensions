@@ -1,11 +1,18 @@
 @import "_CommonStyles.scss";
 
 .checklist-item-container {
-    height: 32px;
+    min-height: 32px;
     padding: 0 1px;
 
     &.drag-disabled {
         padding-left: 20px;
+    }
+
+    &.completed {
+        .checklist-item-text {
+            text-decoration: line-through;
+            color: $secondary-text;
+        }
     }
 
     &:hover,
@@ -25,6 +32,16 @@
             margin-top: -5px;
             font-weight: 600;
             font-size: 18px;
+            @include UserSelectNone();
+        }
+
+        .checklist-item-state {
+            margin-left: 2px;
+            font-weight: $fontWeightSemiBold;
+            border-radius: 3px;
+            padding: 2px 4px;
+            line-height: $fontSizeS;
+            font-size: $fontSizeS;
             @include UserSelectNone();
         }
 
