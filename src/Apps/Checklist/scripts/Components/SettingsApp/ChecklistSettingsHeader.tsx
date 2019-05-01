@@ -21,6 +21,7 @@ export function ChecklistSettingsHeader() {
 
     return (
         <Header
+            className="checklist-settings-header"
             title={`Default checklist items for "${selectedWorkItemType}"`}
             commandBarItems={[
                 {

@@ -30,7 +30,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const status = useChecklistStatus(idOrType);
 
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
-    const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
+    const disabled = status !== LoadStatus.Ready;
 
     const onItemClick = React.useCallback(() => {
         if (!disabled) {
@@ -40,34 +40,40 @@ export function ChecklistItem(props: IChecklistItemProps) {
                 checklistType
             );
         }
-    }, [idOrType, disabled, isCompleted, checklistItem]);
+    }, [idOrType, disabled, isCompleted, checklistItem, checklistType]);
 
     const onCheckboxChange = React.useCallback(
         (e: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {
-            e.stopPropagation();
-            updateChecklistItem(
-                idOrType,
-                { ...checklistItem, state: checked ? ChecklistItemState.Completed : ChecklistItemState.New },
-                checklistType
-            );
+            if (!disabled) {
+                e.stopPropagation();
+                updateChecklistItem(
+                    idOrType,
+                    { ...checklistItem, state: checked ? ChecklistItemState.Completed : ChecklistItemState.New },
+                    checklistType
+                );
+            }
         },
-        [idOrType, checklistItem]
+        [disabled, idOrType, checklistItem, checklistType]
     );
 
     const onDeleteClick = React.useCallback(
         (e: React.MouseEvent<HTMLElement>) => {
-            e.stopPropagation();
-            deleteChecklistItem(idOrType, checklistItem.id, checklistType);
+            if (!disabled) {
+                e.stopPropagation();
+                deleteChecklistItem(idOrType, checklistItem.id, checklistType);
+            }
         },
-        [idOrType, checklistItem.id]
+        [disabled, idOrType, checklistItem.id, checklistType]
     );
 
     const onEditClick = React.useCallback(
         (e: React.MouseEvent<HTMLElement>) => {
-            e.stopPropagation();
-            console.log("edit");
+            if (!disabled) {
+                e.stopPropagation();
+                console.log("edit");
+            }
         },
-        [idOrType, isCompleted, checklistItem]
+        [disabled, idOrType, checklistItem.id, checklistType]
     );
 
     return (

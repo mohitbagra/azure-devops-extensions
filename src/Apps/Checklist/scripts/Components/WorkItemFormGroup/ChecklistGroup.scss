@@ -16,8 +16,16 @@ body {
     }
 
     .checklist-contents {
-        .checklist-view {
-            max-height: 300px;
+        margin-top: 7px;
+
+        .checklists-container {
+            max-height: 320px;
+
+            .checklist-view:nth-child(2) {
+                border-top: 1px solid $neutral-20;
+                margin-top: 5px;
+                padding-top: 5px;
+            }
         }
     }
 }

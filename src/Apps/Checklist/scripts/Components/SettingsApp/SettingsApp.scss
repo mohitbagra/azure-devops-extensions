@@ -1,11 +1,12 @@
 @import "_CommonStyles.scss";
 @import "../Root.scss";
 
-.checklist-group {
+.checklist-settings {
     .checklist-tabbar {
         height: 100%;
         max-width: 250px;
         padding: 10px 0;
+        margin-right: 15px;
 
         .tab-icon {
             margin-right: 5px;
@@ -16,13 +17,14 @@
         }
     }
 
-    .checklist-view-container {
-        height: 100%;
+    .checklist-settings-header {
+        padding-bottom: 5px;
+        border-bottom: 1px solid $neutral-20;
+    }
+
+    .checklist-contents {
         margin: 0 20px;
         padding: 10px 0;
-
-        .checklist-view {
-            width: 600px;
-        }
+        width: 600px;
     }
 }

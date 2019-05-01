@@ -40,14 +40,16 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
         checklistItem ? { ...checklistItem } : { ...newChecklistItem }
     );
 
-    const disabled = status === LoadStatus.Loading || status === LoadStatus.UpdateFailed || status === LoadStatus.Updating;
+    const disabled = status !== LoadStatus.Ready;
 
     const cancelEdit = React.useCallback(() => {
-        updateDraftChecklistItem(checklistItem ? { ...checklistItem } : { ...newChecklistItem });
-    }, [checklistItem]);
+        if (!disabled) {
+            updateDraftChecklistItem(checklistItem ? { ...checklistItem } : { ...newChecklistItem });
+        }
+    }, [disabled, checklistItem]);
 
     const onSave = React.useCallback(() => {
-        if (!isNullOrWhiteSpace(draftChecklistItem.text) && draftChecklistItem.text.length <= 128) {
+        if (!disabled && !isNullOrWhiteSpace(draftChecklistItem.text) && draftChecklistItem.text.length <= 128) {
             if (draftChecklistItem.id) {
                 updateChecklistItem(idOrType, draftChecklistItem, checklistType);
             } else {
@@ -55,32 +57,41 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
             }
             cancelEdit();
         }
-    }, [draftChecklistItem, idOrType]);
+    }, [disabled, draftChecklistItem, idOrType, checklistType]);
 
-    const onInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (e.keyCode === KeyCode.enter) {
-            e.preventDefault();
-            e.stopPropagation();
-            onSave();
-        } else if (e.keyCode === KeyCode.escape) {
-            e.preventDefault();
-            e.stopPropagation();
-            cancelEdit();
-        }
-    };
+    const onInputKeyUp = React.useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            if (!disabled) {
+                if (e.keyCode === KeyCode.enter) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onSave();
+                } else if (e.keyCode === KeyCode.escape) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    cancelEdit();
+                }
+            }
+        },
+        [disabled, onSave, cancelEdit]
+    );
 
     const onTextChange = React.useCallback(
         (newText: string) => {
-            updateDraftChecklistItem({ ...draftChecklistItem, text: newText });
+            if (!disabled) {
+                updateDraftChecklistItem({ ...draftChecklistItem, text: newText });
+            }
         },
-        [draftChecklistItem]
+        [disabled, draftChecklistItem]
     );
 
     const onRequiredChange = React.useCallback(
         (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {
-            updateDraftChecklistItem({ ...draftChecklistItem, required: checked });
+            if (!disabled) {
+                updateDraftChecklistItem({ ...draftChecklistItem, required: checked });
+            }
         },
-        [draftChecklistItem]
+        [disabled, draftChecklistItem]
     );
 
     return (

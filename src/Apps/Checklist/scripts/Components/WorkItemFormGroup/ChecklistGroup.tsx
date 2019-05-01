@@ -12,8 +12,8 @@ import { ChecklistType } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
 import { getChecklistModule } from "../../Redux/Module";
 import { ChecklistError } from "../Shared/ChecklistError";
-import { ChecklistInitializer } from "../Shared/ChecklistInitializer";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
+import { ChecklistItemsProvider } from "../Shared/ChecklistItemsProvider";
 import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistCommandBar } from "./ChecklistCommandBar";
 
@@ -52,13 +52,23 @@ function ChecklistGroupInternal() {
                                 <Tab name="Personal" id={ChecklistType.Personal} />
                             </TabBar>
                             <div className="checklist-contents flex-column">
-                                <ChecklistInitializer>
-                                    <>
-                                        <ChecklistError className="flex-noshrink" />
-                                        <ChecklistView checklistType={selectedTabId} className="flex-grow scroll-auto" />
-                                        <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" />
-                                    </>
-                                </ChecklistInitializer>
+                                <ChecklistError className="flex-noshrink" />
+                                <ChecklistItemsProvider checklistType={selectedTabId}>
+                                    {({ personal, shared, witDefault }) => {
+                                        const selectedChecklist = selectedTabId === ChecklistType.Shared ? shared : personal;
+                                        return (
+                                            <div className="checklists-container flex-grow scroll-auto">
+                                                {selectedTabId === ChecklistType.Shared && witDefault.length > 0 && (
+                                                    <ChecklistView checklistType={ChecklistType.WitDefault} checklistItems={witDefault} />
+                                                )}
+                                                {selectedChecklist.length > 0 && (
+                                                    <ChecklistView checklistType={selectedTabId} checklistItems={selectedChecklist} />
+                                                )}
+                                            </div>
+                                        );
+                                    }}
+                                </ChecklistItemsProvider>
+                                <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" />
                             </div>
                         </ChecklistContext.Provider>
                     )}

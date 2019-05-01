@@ -145,8 +145,8 @@ function* refreshChecklist(idOrType: number | string) {
         } else {
             const workItemTypeChecklist: RT<typeof fetchWorkItemTypeChecklistAsync> = yield call(fetchWorkItemTypeChecklistAsync, idOrType);
             groupedChecklists = {
-                personalChecklist: undefined,
-                sharedChecklist: undefined,
+                personalChecklist: { id: idOrType, checklistItems: [] },
+                sharedChecklist: { id: idOrType, checklistItems: [] },
                 witDefaultChecklist: workItemTypeChecklist
             };
         }

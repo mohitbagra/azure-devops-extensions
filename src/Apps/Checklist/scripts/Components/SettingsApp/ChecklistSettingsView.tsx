@@ -6,6 +6,7 @@ import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
 import { ChecklistError } from "../Shared/ChecklistError";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
+import { ChecklistItemsProvider } from "../Shared/ChecklistItemsProvider";
 import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistSettingsHeader } from "./ChecklistSettingsHeader";
 
@@ -43,9 +44,13 @@ export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
             <div className="flex-column flex-grow">
                 <ChecklistSettingsHeader />
 
-                <div className="checklist-view-container flex-grow flex-column">
+                <div className="checklist-contents flex-grow flex-column">
                     <ChecklistError className="flex-noshrink" />
-                    <ChecklistView checklistType={ChecklistType.WitDefault} className="flex-grow scroll-auto" />
+                    <ChecklistItemsProvider checklistType={ChecklistType.WitDefault}>
+                        {({ witDefault }) => {
+                            return <ChecklistView checklistType={ChecklistType.WitDefault} checklistItems={witDefault} />;
+                        }}
+                    </ChecklistItemsProvider>
                     <ChecklistItemEditor checklistType={ChecklistType.WitDefault} className="flex-noshrink" />
                 </div>
             </div>

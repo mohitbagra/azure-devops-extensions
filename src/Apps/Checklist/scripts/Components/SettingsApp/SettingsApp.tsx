@@ -22,7 +22,7 @@ function ChecklistSettingsInternal() {
     }, []);
 
     return (
-        <Page className="checklist-group flex-row flex-start flex-grow">
+        <Page className="checklist-settings flex-row flex-start flex-grow">
             {!workItemTypes && <Loading />}
             {workItemTypes && <ChecklistSettingsView workItemTypes={workItemTypes} />}
         </Page>
