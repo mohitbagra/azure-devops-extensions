@@ -2,7 +2,6 @@ import "./ChecklistItem.scss";
 
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
-import { Icon } from "azure-devops-ui/Icon";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { LoadStatus } from "Common/Contracts";
@@ -103,7 +102,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
                 >
                     {!isDragDisabled && (
                         <div className="drag-handle flex-noshrink" {...provided.dragHandleProps}>
-                            <Icon iconName="Cancel" />
+                            <div className="gripper" />
                         </div>
                     )}
                     <div
