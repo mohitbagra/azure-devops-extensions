@@ -4,7 +4,12 @@
     height: 32px;
     padding: 0 1px;
 
-    &:hover {
+    &.drag-disabled {
+        padding-left: 19px;
+    }
+
+    &:hover,
+    &.is-dragging {
         .checklist-item {
             border: 1px solid $neutral-20;
         }

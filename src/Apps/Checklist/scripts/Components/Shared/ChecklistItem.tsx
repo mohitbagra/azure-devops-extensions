@@ -8,6 +8,7 @@ import { css } from "azure-devops-ui/Util";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
@@ -17,6 +18,8 @@ import { IBaseProps, IChecklistItemCommonProps } from "../Props";
 interface IChecklistItemProps extends IBaseProps, IChecklistItemCommonProps {
     checklistItem: IChecklistItem;
     checklistType: ChecklistType;
+    index: number;
+    disableDrag?: boolean;
 }
 
 const Actions = {
@@ -25,13 +28,14 @@ const Actions = {
 };
 
 export function ChecklistItem(props: IChecklistItemProps) {
-    const { checklistItem, checklistType, className, canDeleteItem, canEditItem, canUpdateItemState } = props;
+    const { checklistItem, checklistType, className, canDeleteItem, canEditItem, canUpdateItemState, index, disableDrag } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
 
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
     const disabled = status !== LoadStatus.Ready;
+    const isDragDisabled = disableDrag || disabled;
 
     const onItemClick = React.useCallback(() => {
         if (!disabled && canUpdateItemState) {
@@ -78,48 +82,77 @@ export function ChecklistItem(props: IChecklistItemProps) {
     );
 
     return (
-        <div className={css("checklist-item-container scroll-hidden flex-row flex-center", className, isCompleted && "completed")}>
-            <Icon className="drag-handle flex-noshrink" iconName="Cancel" />
-            <div className="checklist-item scroll-hidden flex-row flex-center flex-grow" onClick={canUpdateItemState ? onItemClick : undefined}>
-                {canUpdateItemState && <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />}
-                {checklistItem.required && <div className="required-item">*</div>}
-                <Tooltip overflowOnly={true} text={checklistItem.text}>
-                    <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
-                </Tooltip>
-                <div className="flex-noshrink checklist-commandbar">
-                    {!canEditItem && !canDeleteItem && (
-                        <Button
-                            subtle={true}
-                            className="checklist-command-item"
-                            iconProps={{ iconName: "Info" }}
-                            tooltipProps={{
-                                text:
-                                    "This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
-                            }}
-                        />
+        <Draggable
+            draggableId={`item_${checklistItem.id}`}
+            key={`item_${checklistItem.id}`}
+            type={`checklistItems_${checklistType}`}
+            index={index}
+            isDragDisabled={isDragDisabled}
+        >
+            {(provided, snapshot) => (
+                <div
+                    className={css(
+                        "checklist-item-container scroll-hidden flex-row flex-center",
+                        className,
+                        isCompleted && "completed",
+                        snapshot.isDragging && "is-dragging",
+                        isDragDisabled && "drag-disabled"
                     )}
-                    {canEditItem && (
-                        <Button
-                            disabled={disabled}
-                            subtle={true}
-                            onClick={onEditClick}
-                            className="checklist-command-item"
-                            iconProps={{ iconName: "Edit" }}
-                            tooltipProps={{ text: "Edit" }}
-                        />
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                >
+                    {!isDragDisabled && (
+                        <div className="drag-handle flex-noshrink" {...provided.dragHandleProps}>
+                            <Icon iconName="Cancel" />
+                        </div>
                     )}
-                    {canDeleteItem && (
-                        <Button
-                            subtle={true}
-                            disabled={disabled}
-                            onClick={onDeleteClick}
-                            className="checklist-command-item error-item"
-                            iconProps={{ iconName: "Delete" }}
-                            tooltipProps={{ text: "Delete" }}
-                        />
-                    )}
+                    <div
+                        className="checklist-item scroll-hidden flex-row flex-center flex-grow"
+                        onClick={canUpdateItemState ? onItemClick : undefined}
+                    >
+                        {canUpdateItemState && (
+                            <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />
+                        )}
+                        {checklistItem.required && <div className="required-item">*</div>}
+                        <Tooltip overflowOnly={true} text={checklistItem.text}>
+                            <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
+                        </Tooltip>
+                        <div className="flex-noshrink checklist-commandbar">
+                            {!canEditItem && !canDeleteItem && (
+                                <Button
+                                    subtle={true}
+                                    className="checklist-command-item"
+                                    iconProps={{ iconName: "Info" }}
+                                    tooltipProps={{
+                                        text:
+                                            "This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
+                                    }}
+                                />
+                            )}
+                            {canEditItem && (
+                                <Button
+                                    disabled={disabled}
+                                    subtle={true}
+                                    onClick={onEditClick}
+                                    className="checklist-command-item"
+                                    iconProps={{ iconName: "Edit" }}
+                                    tooltipProps={{ text: "Edit" }}
+                                />
+                            )}
+                            {canDeleteItem && (
+                                <Button
+                                    subtle={true}
+                                    disabled={disabled}
+                                    onClick={onDeleteClick}
+                                    className="checklist-command-item error-item"
+                                    iconProps={{ iconName: "Delete" }}
+                                    tooltipProps={{ text: "Delete" }}
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </Draggable>
     );
 }

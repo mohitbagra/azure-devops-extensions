@@ -1,7 +1,7 @@
 @import "_CommonStyles.scss";
 
 .checklist-view {
-    .checklist-items-group.witdefault {
-        border-bottom: 1px solid $neutral-20;
+    &.cell--hovered {
+        background-color: $neutral-8;
     }
 }
