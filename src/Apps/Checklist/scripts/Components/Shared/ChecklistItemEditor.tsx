@@ -10,13 +10,15 @@ import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
-import { ChecklistType, IBaseProps, IChecklistItem } from "../../Interfaces";
+import { ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
+import { IBaseProps } from "../Props";
 
 interface IChecklistItemEditorProps extends IBaseProps {
     checklistItem?: IChecklistItem;
     checklistType: ChecklistType;
     autoFocus?: boolean;
+    canUpdateItemState?: boolean;
 }
 
 const newChecklistItem: IChecklistItem = {

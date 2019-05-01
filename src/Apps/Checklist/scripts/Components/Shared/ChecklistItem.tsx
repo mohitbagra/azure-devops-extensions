@@ -10,10 +10,11 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
-import { ChecklistItemState, ChecklistType, IBaseProps, IChecklistItem } from "../../Interfaces";
+import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
+import { IBaseProps, IChecklistItemCommonProps } from "../Props";
 
-interface IChecklistItemProps extends IBaseProps {
+interface IChecklistItemProps extends IBaseProps, IChecklistItemCommonProps {
     checklistItem: IChecklistItem;
     checklistType: ChecklistType;
 }
@@ -24,7 +25,7 @@ const Actions = {
 };
 
 export function ChecklistItem(props: IChecklistItemProps) {
-    const { checklistItem, checklistType, className } = props;
+    const { checklistItem, checklistType, className, canDeleteItem, canEditItem, canUpdateItemState } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
@@ -33,18 +34,18 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const disabled = status !== LoadStatus.Ready;
 
     const onItemClick = React.useCallback(() => {
-        if (!disabled) {
+        if (!disabled && canUpdateItemState) {
             updateChecklistItem(
                 idOrType,
                 { ...checklistItem, state: isCompleted ? ChecklistItemState.New : ChecklistItemState.Completed },
                 checklistType
             );
         }
-    }, [idOrType, disabled, isCompleted, checklistItem, checklistType]);
+    }, [canUpdateItemState, idOrType, disabled, isCompleted, checklistItem, checklistType]);
 
     const onCheckboxChange = React.useCallback(
         (e: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {
-            if (!disabled) {
+            if (!disabled && canUpdateItemState) {
                 e.stopPropagation();
                 updateChecklistItem(
                     idOrType,
@@ -53,55 +54,70 @@ export function ChecklistItem(props: IChecklistItemProps) {
                 );
             }
         },
-        [disabled, idOrType, checklistItem, checklistType]
+        [canUpdateItemState, disabled, idOrType, checklistItem, checklistType]
     );
 
     const onDeleteClick = React.useCallback(
         (e: React.MouseEvent<HTMLElement>) => {
-            if (!disabled) {
+            if (!disabled && canDeleteItem) {
                 e.stopPropagation();
                 deleteChecklistItem(idOrType, checklistItem.id, checklistType);
             }
         },
-        [disabled, idOrType, checklistItem.id, checklistType]
+        [disabled, canDeleteItem, idOrType, checklistItem.id, checklistType]
     );
 
     const onEditClick = React.useCallback(
         (e: React.MouseEvent<HTMLElement>) => {
-            if (!disabled) {
+            if (!disabled && canEditItem) {
                 e.stopPropagation();
                 console.log("edit");
             }
         },
-        [disabled, idOrType, checklistItem.id, checklistType]
+        [disabled, canEditItem, idOrType, checklistItem.id, checklistType]
     );
 
     return (
         <div className={css("checklist-item-container scroll-hidden flex-row flex-center", className, isCompleted && "completed")}>
             <Icon className="drag-handle flex-noshrink" iconName="Cancel" />
-            <div className="checklist-item scroll-hidden flex-row flex-center flex-grow" onClick={onItemClick}>
-                <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />
+            <div className="checklist-item scroll-hidden flex-row flex-center flex-grow" onClick={canUpdateItemState ? onItemClick : undefined}>
+                {canUpdateItemState && <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />}
                 {checklistItem.required && <div className="required-item">*</div>}
                 <Tooltip overflowOnly={true} text={checklistItem.text}>
                     <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
                 </Tooltip>
                 <div className="flex-noshrink checklist-commandbar">
-                    <Button
-                        disabled={disabled}
-                        subtle={true}
-                        onClick={onEditClick}
-                        className="checklist-command-item "
-                        iconProps={{ iconName: "Edit" }}
-                        tooltipProps={{ text: "Edit" }}
-                    />
-                    <Button
-                        subtle={true}
-                        disabled={disabled}
-                        onClick={onDeleteClick}
-                        className="checklist-command-item error-item"
-                        iconProps={{ iconName: "Delete" }}
-                        tooltipProps={{ text: "Delete" }}
-                    />
+                    {!canEditItem && !canDeleteItem && (
+                        <Button
+                            subtle={true}
+                            className="checklist-command-item"
+                            iconProps={{ iconName: "Info" }}
+                            tooltipProps={{
+                                text:
+                                    "This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
+                            }}
+                        />
+                    )}
+                    {canEditItem && (
+                        <Button
+                            disabled={disabled}
+                            subtle={true}
+                            onClick={onEditClick}
+                            className="checklist-command-item"
+                            iconProps={{ iconName: "Edit" }}
+                            tooltipProps={{ text: "Edit" }}
+                        />
+                    )}
+                    {canDeleteItem && (
+                        <Button
+                            subtle={true}
+                            disabled={disabled}
+                            onClick={onDeleteClick}
+                            className="checklist-command-item error-item"
+                            iconProps={{ iconName: "Delete" }}
+                            tooltipProps={{ text: "Delete" }}
+                        />
+                    )}
                 </div>
             </div>
         </div>

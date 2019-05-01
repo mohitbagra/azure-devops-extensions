@@ -59,16 +59,33 @@ function ChecklistGroupInternal() {
                                         return (
                                             <div className="checklists-container flex-grow scroll-auto">
                                                 {selectedTabId === ChecklistType.Shared && witDefault.length > 0 && (
-                                                    <ChecklistView checklistType={ChecklistType.WitDefault} checklistItems={witDefault} />
+                                                    <ChecklistView
+                                                        checklistType={ChecklistType.WitDefault}
+                                                        checklistItems={witDefault}
+                                                        itemProps={{
+                                                            canDeleteItem: false,
+                                                            canEditItem: false,
+                                                            canUpdateItemState: true
+                                                        }}
+                                                        disableDragDrop={true}
+                                                    />
                                                 )}
                                                 {selectedChecklist.length > 0 && (
-                                                    <ChecklistView checklistType={selectedTabId} checklistItems={selectedChecklist} />
+                                                    <ChecklistView
+                                                        checklistType={selectedTabId}
+                                                        checklistItems={selectedChecklist}
+                                                        itemProps={{
+                                                            canDeleteItem: true,
+                                                            canEditItem: true,
+                                                            canUpdateItemState: true
+                                                        }}
+                                                    />
                                                 )}
                                             </div>
                                         );
                                     }}
                                 </ChecklistItemsProvider>
-                                <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" />
+                                <ChecklistItemEditor checklistType={selectedTabId} className="flex-noshrink" canUpdateItemState={false} />
                             </div>
                         </ChecklistContext.Provider>
                     )}

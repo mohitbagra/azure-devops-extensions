@@ -3,7 +3,7 @@ import { css } from "azure-devops-ui/Util";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistError } from "../../Hooks/useChecklistError";
-import { IBaseProps } from "../../Interfaces";
+import { IBaseProps } from "../Props";
 
 export function ChecklistError(props: IBaseProps) {
     const { className } = props;

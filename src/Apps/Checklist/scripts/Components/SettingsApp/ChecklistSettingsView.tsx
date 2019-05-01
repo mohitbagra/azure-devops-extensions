@@ -48,7 +48,17 @@ export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
                     <ChecklistError className="flex-noshrink" />
                     <ChecklistItemsProvider checklistType={ChecklistType.WitDefault}>
                         {({ witDefault }) => {
-                            return <ChecklistView checklistType={ChecklistType.WitDefault} checklistItems={witDefault} />;
+                            return (
+                                <ChecklistView
+                                    checklistType={ChecklistType.WitDefault}
+                                    checklistItems={witDefault}
+                                    itemProps={{
+                                        canDeleteItem: true,
+                                        canEditItem: true,
+                                        canUpdateItemState: false
+                                    }}
+                                />
+                            );
                         }}
                     </ChecklistItemsProvider>
                     <ChecklistItemEditor checklistType={ChecklistType.WitDefault} className="flex-noshrink" />
