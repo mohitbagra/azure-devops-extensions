@@ -8,6 +8,7 @@ import { isNullOrEmpty } from "Common/Utilities/String";
 import * as React from "react";
 
 interface ITextFieldProps extends ILabelledComponentProps, IInputComponentProps<string> {
+    inputId?: string;
     autoFocus?: boolean;
     inputClassName?: string;
     maxLength?: number;
@@ -52,6 +53,7 @@ export function TextField(props: ITextFieldProps) {
         disabled: props.disabled,
         value: value || "",
         onChange: onTextChanged,
+        inputId: props.inputId,
         className: "text-field-input"
     };
 

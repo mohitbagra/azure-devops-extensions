@@ -2,8 +2,10 @@ import "./ChecklistItem.scss";
 
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
+import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
+import { CustomDialog } from "azure-devops-ui/Dialog";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
-import { css } from "azure-devops-ui/Util";
+import { css, getSafeId } from "azure-devops-ui/Util";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
@@ -13,6 +15,7 @@ import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Actions";
 import { IBaseProps, IChecklistItemCommonProps } from "../Props";
+import { ChecklistItemEditor } from "./ChecklistItemEditor";
 
 interface IChecklistItemProps extends IBaseProps, IChecklistItemCommonProps {
     checklistItem: IChecklistItem;
@@ -31,6 +34,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
+    const [editorOpen, setEditorOpen] = React.useState(false);
 
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
     const disabled = status !== LoadStatus.Ready;
@@ -74,91 +78,118 @@ export function ChecklistItem(props: IChecklistItemProps) {
         (e: React.MouseEvent<HTMLElement>) => {
             if (!disabled && canEditItem) {
                 e.stopPropagation();
-                console.log("edit");
+                setEditorOpen(true);
             }
         },
-        [disabled, canEditItem, idOrType, checklistItem.id, checklistType]
+        [disabled, canEditItem]
     );
 
+    const onEditorDismiss = React.useCallback(() => {
+        setEditorOpen(false);
+    }, []);
+
     return (
-        <Draggable
-            draggableId={`item_${checklistItem.id}`}
-            key={`item_${checklistItem.id}`}
-            type={`checklistItems_${checklistType}`}
-            index={index}
-            isDragDisabled={isDragDisabled}
-        >
-            {(provided, snapshot) => (
-                <div
-                    className={css(
-                        "checklist-item-container scroll-hidden flex-row flex-center",
-                        className,
-                        isCompleted && "completed",
-                        snapshot.isDragging && "is-dragging",
-                        isDragDisabled && "drag-disabled"
-                    )}
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
+        <>
+            {editorOpen && (
+                <CustomDialog
+                    onDismiss={onEditorDismiss}
+                    defaultActiveElement={`#${getSafeId("checklist-item-text")}`}
+                    modal={true}
+                    escDismiss={true}
+                    contentSize={ContentSize.Small}
+                    className="item-editor-dialog"
                 >
-                    {!isDragDisabled && (
-                        <div className="drag-handle flex-noshrink" {...provided.dragHandleProps}>
-                            <div className="gripper" />
-                        </div>
-                    )}
+                    <ChecklistItemEditor
+                        checklistType={checklistType}
+                        canUpdateItemState={canUpdateItemState}
+                        checklistItem={checklistItem}
+                        onDismiss={onEditorDismiss}
+                    />
+                </CustomDialog>
+            )}
+            <Draggable
+                draggableId={`item_${checklistItem.id}`}
+                key={`item_${checklistItem.id}`}
+                type={`checklistItems_${checklistType}`}
+                index={index}
+                isDragDisabled={isDragDisabled}
+            >
+                {(provided, snapshot) => (
                     <div
-                        className="checklist-item scroll-hidden flex-row flex-center flex-grow"
-                        onClick={canUpdateItemState ? onItemClick : undefined}
-                    >
-                        {canUpdateItemState && (
-                            <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />
+                        className={css(
+                            "checklist-item-container scroll-hidden flex-row flex-center",
+                            className,
+                            isCompleted && "completed",
+                            snapshot.isDragging && "is-dragging",
+                            isDragDisabled && "drag-disabled"
                         )}
-                        {checklistItem.required && <div className="required-item flex-noshrink">*</div>}
-                        {checklistItem.state &&
-                            checklistItem.state !== ChecklistItemState.Completed &&
-                            checklistItem.state !== ChecklistItemState.New && (
-                                <div className={css("checklist-item-state flex-noshrink", ChecklistItemStates[checklistItem.state].className)}>
-                                    {checklistItem.state}
-                                </div>
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                    >
+                        {!isDragDisabled && (
+                            <div className="drag-handle flex-noshrink" {...provided.dragHandleProps}>
+                                <div className="gripper" />
+                            </div>
+                        )}
+                        <div
+                            className="checklist-item scroll-hidden flex-row flex-center flex-grow"
+                            onClick={canUpdateItemState ? onItemClick : undefined}
+                        >
+                            {canUpdateItemState && (
+                                <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />
                             )}
-                        <Tooltip overflowOnly={true} text={checklistItem.text}>
-                            <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
-                        </Tooltip>
-                        <div className="flex-noshrink checklist-commandbar">
-                            {!canEditItem && !canDeleteItem && (
-                                <Button
-                                    subtle={true}
-                                    className="checklist-command-item"
-                                    iconProps={{ iconName: "Info" }}
-                                    tooltipProps={{
-                                        text:
-                                            "This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
-                                    }}
-                                />
-                            )}
-                            {canEditItem && (
-                                <Button
-                                    disabled={disabled}
-                                    subtle={true}
-                                    onClick={onEditClick}
-                                    className="checklist-command-item"
-                                    iconProps={{ iconName: "Edit" }}
-                                    tooltipProps={{ text: "Edit" }}
-                                />
-                            )}
-                            {canDeleteItem && (
-                                <Button
-                                    subtle={true}
-                                    disabled={disabled}
-                                    onClick={onDeleteClick}
-                                    className="checklist-command-item error-item"
-                                    iconProps={{ iconName: "Delete" }}
-                                    tooltipProps={{ text: "Delete" }}
-                                />
-                            )}
+
+                            {checklistItem.required && <div className="required-item flex-noshrink">*</div>}
+
+                            {checklistItem.state &&
+                                checklistItem.state !== ChecklistItemState.Completed &&
+                                checklistItem.state !== ChecklistItemState.New && (
+                                    <div className={css("checklist-item-state flex-noshrink", ChecklistItemStates[checklistItem.state].className)}>
+                                        {checklistItem.state}
+                                    </div>
+                                )}
+
+                            <Tooltip overflowOnly={true} text={checklistItem.text}>
+                                <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
+                            </Tooltip>
+
+                            <div className="flex-noshrink checklist-commandbar">
+                                {!canEditItem && !canDeleteItem && (
+                                    <Button
+                                        subtle={true}
+                                        className="checklist-command-item"
+                                        iconProps={{ iconName: "Info" }}
+                                        tooltipProps={{
+                                            text:
+                                                "This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
+                                        }}
+                                    />
+                                )}
+                                {canEditItem && (
+                                    <Button
+                                        disabled={disabled}
+                                        subtle={true}
+                                        onClick={onEditClick}
+                                        className="checklist-command-item"
+                                        iconProps={{ iconName: "Edit" }}
+                                        tooltipProps={{ text: "Edit" }}
+                                    />
+                                )}
+                                {canDeleteItem && (
+                                    <Button
+                                        subtle={true}
+                                        disabled={disabled}
+                                        onClick={onDeleteClick}
+                                        className="checklist-command-item error-item"
+                                        iconProps={{ iconName: "Delete" }}
+                                        tooltipProps={{ text: "Delete" }}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </Draggable>
+                )}
+            </Draggable>
+        </>
     );
 }

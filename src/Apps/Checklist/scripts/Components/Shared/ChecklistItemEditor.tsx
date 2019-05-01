@@ -18,8 +18,8 @@ import { IBaseProps } from "../Props";
 interface IChecklistItemEditorProps extends IBaseProps {
     checklistItem?: IChecklistItem;
     checklistType: ChecklistType;
-    autoFocus?: boolean;
     canUpdateItemState?: boolean;
+    onDismiss?: () => void;
 }
 
 const newChecklistItem: IChecklistItem = {
@@ -35,7 +35,7 @@ const Actions = {
 };
 
 export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
-    const { checklistItem, autoFocus, checklistType, className, canUpdateItemState } = props;
+    const { checklistItem, checklistType, className, canUpdateItemState, onDismiss } = props;
     const idOrType = React.useContext(ChecklistContext);
     const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
@@ -49,6 +49,9 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
 
     const cancelEdit = React.useCallback(() => {
         if (!disabled) {
+            if (onDismiss) {
+                onDismiss();
+            }
             updateDraftChecklistItem(checklistItem ? { ...checklistItem } : { ...newChecklistItem });
         }
     }, [disabled, checklistItem]);
@@ -112,8 +115,8 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
         <div className={css("checklist-item-editor flex-column", className)}>
             <div className="checklist-item-input">
                 <TextField
+                    inputId="checklist-item-text"
                     placeholder="Add new item"
-                    autoFocus={autoFocus}
                     maxLength={128}
                     onKeyUp={onInputKeyUp}
                     disabled={disabled}
