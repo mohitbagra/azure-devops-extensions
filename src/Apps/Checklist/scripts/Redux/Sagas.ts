@@ -20,6 +20,7 @@ export function* checklistSaga() {
         addOrUpdateChecklistItem
     );
     yield takeLeading(ChecklistActionTypes.ChecklistItemDeleteRequested, deleteChecklistItem);
+    yield takeLeading(ChecklistActionTypes.ChecklistItemReorderRequested, reorderChecklistItem);
 }
 
 function* onWorkItemLoaded() {
@@ -98,6 +99,35 @@ function* deleteChecklistItem(action: ActionsOfType<ChecklistActions, ChecklistA
         if (checklist) {
             const newChecklistItems = checklist.checklistItems.filter(item => !equals(item.id, checklistItemId, true));
             if (newChecklistItems.length < checklist.checklistItems.length) {
+                yield call(
+                    updateChecklist,
+                    idOrType,
+                    {
+                        ...checklist,
+                        checklistItems: newChecklistItems
+                    },
+                    checklistType
+                );
+            }
+        }
+    }
+}
+
+function* reorderChecklistItem(action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ChecklistItemReorderRequested>) {
+    const { idOrType, checklistItemId, checklistType, newIndex } = action.payload;
+    const status: RT<typeof getChecklistStatus> = yield select(getChecklistStatus, idOrType);
+
+    if (status === LoadStatus.Ready || status === LoadStatus.UpdateFailed || status === LoadStatus.LoadFailed) {
+        const checklist: RT<typeof getChecklist> = yield select(getChecklist, idOrType, checklistType);
+
+        if (checklist) {
+            const checklistItemIndex = checklist.checklistItems.findIndex(item => equals(item.id, checklistItemId, true));
+            if (checklistItemIndex !== -1) {
+                const item = checklist.checklistItems[checklistItemIndex];
+                const newChecklistItems = [...checklist.checklistItems];
+                newChecklistItems.splice(checklistItemIndex, 1);
+                newChecklistItems.splice(newIndex, 0, item);
+
                 yield call(
                     updateChecklist,
                     idOrType,

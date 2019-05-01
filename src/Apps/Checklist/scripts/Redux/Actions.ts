@@ -14,6 +14,8 @@ export const ChecklistActions = {
         createAction(ChecklistActionTypes.ChecklistItemUpdateRequested, { idOrType, checklistItem, checklistType }),
     checklistItemDeleteRequested: (idOrType: number | string, checklistItemId: string, checklistType: ChecklistType) =>
         createAction(ChecklistActionTypes.ChecklistItemDeleteRequested, { idOrType, checklistItemId, checklistType }),
+    checklistItemReorderRequested: (idOrType: number | string, checklistItemId: string, checklistType: ChecklistType, newIndex: number) =>
+        createAction(ChecklistActionTypes.ChecklistItemReorderRequested, { idOrType, checklistItemId, checklistType, newIndex }),
 
     beginUpdateChecklist: (idOrType: number | string, unsavedChecklist: IChecklist, checklistType: ChecklistType) =>
         createAction(ChecklistActionTypes.BeginUpdateChecklist, { idOrType, unsavedChecklist, checklistType }),
@@ -32,6 +34,7 @@ export const enum ChecklistActionTypes {
     ChecklistItemCreateRequested = "ChecklistAction/ChecklistItemCreateRequested",
     ChecklistItemUpdateRequested = "ChecklistAction/ChecklistItemUpdateRequested",
     ChecklistItemDeleteRequested = "ChecklistAction/ChecklistItemDeleteRequested",
+    ChecklistItemReorderRequested = "ChecklistAction/ChecklistItemReorderRequested",
 
     BeginUpdateChecklist = "ChecklistAction/BeginUpdateChecklist",
     ChecklistUpdated = "ChecklistAction/ChecklistUpdated",

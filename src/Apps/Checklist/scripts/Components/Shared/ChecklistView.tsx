@@ -1,9 +1,12 @@
 import "./ChecklistView.scss";
 
 import { css } from "azure-devops-ui/Util";
+import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { ChecklistContext } from "../../Constants";
 import { ChecklistType, IChecklistItem } from "../../Interfaces";
+import { ChecklistActions } from "../../Redux/Actions";
 import { IBaseProps, IChecklistItemCommonProps } from "../Props";
 import { ChecklistItem } from "./ChecklistItem";
 
@@ -14,24 +17,26 @@ interface IChecklistViewProps extends IBaseProps {
     itemProps: IChecklistItemCommonProps;
 }
 
+const Actions = {
+    reorderChecklistItem: ChecklistActions.checklistItemReorderRequested
+};
+
 export function ChecklistView(props: IChecklistViewProps) {
     const { checklistItems, checklistType, className, itemProps, disableDragDrop } = props;
+    const idOrType = React.useContext(ChecklistContext);
+    const { reorderChecklistItem } = useActionCreators(Actions);
 
-    const onDragEnd = React.useCallback((result: DropResult) => {
-        const { reason, draggableId, source, destination } = result;
-        if (reason === "DROP") {
-            const sourceId = source.droppableId;
-            const targetId = destination && destination.droppableId;
-            if (sourceId !== targetId) {
-                const bugBashItemId = draggableId.replace("card_", "");
-                console.log(bugBashItemId);
-                if (targetId === "pending") {
-                } else if (targetId === "rejected") {
-                } else {
-                }
+    const onDragEnd = React.useCallback(
+        (result: DropResult) => {
+            const { reason, draggableId, source, destination } = result;
+            if (reason === "DROP" && destination && source.droppableId === destination.droppableId) {
+                const newIndex = destination.index;
+                const checklistItemId = draggableId.replace("item_", "");
+                reorderChecklistItem(idOrType, checklistItemId, checklistType, newIndex);
             }
-        }
-    }, []);
+        },
+        [idOrType, checklistType]
+    );
 
     const isDragDropDisabled = disableDragDrop || checklistItems.length <= 1;
 
