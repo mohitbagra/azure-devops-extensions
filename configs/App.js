@@ -1,4 +1,3 @@
-//module.exports = "ExamplesApp";
 //module.exports = "BugBashPro";
 module.exports = "Checklist";
 // module.exports = "ControlsLibrary";
