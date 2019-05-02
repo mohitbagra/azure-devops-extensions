@@ -44,7 +44,7 @@
             font-weight: $fontWeightSemiBold;
             border-radius: 3px;
             padding: 2px 4px;
-            line-height: $fontSizeS;
+            line-height: $fontSize;
             font-size: $fontSizeS;
             @include UserSelectNone();
         }

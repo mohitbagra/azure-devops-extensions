@@ -3,9 +3,11 @@ import "./ChecklistItem.scss";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
-import { CustomDialog } from "azure-devops-ui/Dialog";
+import * as CustomDialog_Async from "azure-devops-ui/Dialog";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css, getSafeId } from "azure-devops-ui/Util";
+import { AsyncComponent } from "Common/Components/AsyncComponent";
+import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
@@ -28,6 +30,8 @@ const Actions = {
     deleteChecklistItem: ChecklistActions.checklistItemDeleteRequested,
     updateChecklistItem: ChecklistActions.checklistItemUpdateRequested
 };
+
+const dialogLoader = async () => import("azure-devops-ui/Dialog");
 
 export function ChecklistItem(props: IChecklistItemProps) {
     const { checklistItem, checklistType, className, canDeleteItem, canEditItem, canUpdateItemState, index, disableDrag } = props;
@@ -91,21 +95,25 @@ export function ChecklistItem(props: IChecklistItemProps) {
     return (
         <>
             {editorOpen && (
-                <CustomDialog
-                    onDismiss={onEditorDismiss}
-                    defaultActiveElement={`#${getSafeId("checklist-item-text")}`}
-                    modal={true}
-                    escDismiss={true}
-                    contentSize={ContentSize.Small}
-                    className="item-editor-dialog"
-                >
-                    <ChecklistItemEditor
-                        checklistType={checklistType}
-                        canUpdateItemState={canUpdateItemState}
-                        checklistItem={checklistItem}
-                        onDismiss={onEditorDismiss}
-                    />
-                </CustomDialog>
+                <AsyncComponent loader={dialogLoader} loadingComponent={emptyRenderer}>
+                    {(m: typeof CustomDialog_Async) => (
+                        <m.CustomDialog
+                            onDismiss={onEditorDismiss}
+                            defaultActiveElement={`#${getSafeId("checklist-item-text")}`}
+                            modal={true}
+                            escDismiss={true}
+                            contentSize={ContentSize.Small}
+                            className="item-editor-dialog"
+                        >
+                            <ChecklistItemEditor
+                                checklistType={checklistType}
+                                canUpdateItemState={canUpdateItemState}
+                                checklistItem={checklistItem}
+                                onDismiss={onEditorDismiss}
+                            />
+                        </m.CustomDialog>
+                    )}
+                </AsyncComponent>
             )}
             <Draggable
                 draggableId={`item_${checklistItem.id}`}
