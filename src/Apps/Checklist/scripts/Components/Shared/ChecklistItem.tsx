@@ -10,6 +10,7 @@ import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
+import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
@@ -72,7 +73,11 @@ export function ChecklistItem(props: IChecklistItemProps) {
         (e: React.MouseEvent<HTMLElement>) => {
             if (!disabled && canDeleteItem) {
                 e.stopPropagation();
-                deleteChecklistItem(idOrType, checklistItem.id, checklistType);
+                confirmAction("Are you sure you want to delete this item?", "", (ok: boolean) => {
+                    if (ok) {
+                        deleteChecklistItem(idOrType, checklistItem.id, checklistType);
+                    }
+                });
             }
         },
         [disabled, canDeleteItem, idOrType, checklistItem.id, checklistType]
