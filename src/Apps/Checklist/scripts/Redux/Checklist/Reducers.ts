@@ -1,6 +1,6 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
-import { ChecklistType, IChecklist } from "../Interfaces";
+import { ChecklistType, IChecklist } from "../../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { IChecklistState } from "./Contracts";
 

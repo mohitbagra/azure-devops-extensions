@@ -4,7 +4,7 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
-import { ChecklistActions } from "../../Redux/Actions";
+import { ChecklistActions } from "../../Redux/Checklist/Actions";
 
 const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested

@@ -6,7 +6,7 @@ import * as React from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType, IChecklistItem } from "../../Interfaces";
-import { ChecklistActions } from "../../Redux/Actions";
+import { ChecklistActions } from "../../Redux/Checklist/Actions";
 import { IBaseProps, IChecklistItemCommonProps } from "../Props";
 import { ChecklistItem } from "./ChecklistItem";
 

@@ -3,9 +3,9 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback, useEffect } from "react";
 import { IGroupedChecklists } from "../Interfaces";
-import { ChecklistActions } from "../Redux/Actions";
-import { IChecklistAwareState } from "../Redux/Contracts";
-import { getChecklists, getChecklistStatus } from "../Redux/Selectors";
+import { ChecklistActions } from "../Redux/Checklist/Actions";
+import { IChecklistAwareState } from "../Redux/Checklist/Contracts";
+import { getChecklists, getChecklistStatus } from "../Redux/Checklist/Selectors";
 
 export function useChecklists(idOrType: number | string): IGroupedChecklists {
     const mapState = useCallback(

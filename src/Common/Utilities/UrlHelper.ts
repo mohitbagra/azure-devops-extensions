@@ -23,12 +23,11 @@ export function getMarketplaceUrl(): string {
     return `https://marketplace.visualstudio.com/items?itemName=${extensionId}`;
 }
 
-export async function getContributionHubUrlAsync(): Promise<string> {
+export async function getContributionHubUrlAsync(contributionId?: string): Promise<string> {
     const projectName = await getCurrentProjectName();
-    const contributionId = SDK.getContributionId();
     const hostName = SDK.getHost().name;
 
-    return `https://dev.azure.com/${hostName}/${projectName}/_apps/hub/${contributionId}`;
+    return `https://dev.azure.com/${hostName}/${projectName}/_apps/hub/${contributionId || SDK.getContributionId()}`;
 }
 
 export async function getProjectUrlAsync(): Promise<string> {

@@ -16,7 +16,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
-import { ChecklistActions } from "../../Redux/Actions";
+import { ChecklistActions } from "../../Redux/Checklist/Actions";
 import { IBaseProps, IChecklistItemCommonProps } from "../Props";
 import { ChecklistItemEditor } from "./ChecklistItemEditor";
 

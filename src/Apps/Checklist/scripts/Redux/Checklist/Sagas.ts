@@ -5,7 +5,7 @@ import { ActionsOfType, RT } from "Common/Redux";
 import { getWorkItemProjectId, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { all, call, delay as delayEffect, put, select, takeEvery, takeLeading } from "redux-saga/effects";
-import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../Interfaces";
+import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { fetchWorkItemChecklistAsync, fetchWorkItemDefaultChecklist, fetchWorkItemTypeChecklistAsync, updateChecklistAsync } from "./DataSources";
 import { getChecklist, getChecklistStatus } from "./Selectors";

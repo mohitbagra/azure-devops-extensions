@@ -12,7 +12,7 @@ import * as React from "react";
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
-import { ChecklistActions } from "../../Redux/Actions";
+import { ChecklistActions } from "../../Redux/Checklist/Actions";
 import { IBaseProps } from "../Props";
 
 interface IChecklistItemEditorProps extends IBaseProps {

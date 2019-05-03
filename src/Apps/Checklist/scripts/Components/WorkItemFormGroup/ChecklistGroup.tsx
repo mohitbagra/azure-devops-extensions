@@ -9,8 +9,9 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
-import { ChecklistActions } from "../../Redux/Actions";
-import { getChecklistModule } from "../../Redux/Module";
+import { ChecklistActions } from "../../Redux/Checklist/Actions";
+import { getChecklistModule } from "../../Redux/Checklist/Module";
+import { getChecklistSettingsModule } from "../../Redux/Settings/Module";
 import { ChecklistError } from "../Shared/ChecklistError";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
 import { ChecklistItemsProvider } from "../Shared/ChecklistItemsProvider";
@@ -101,7 +102,7 @@ function renderTabBarCommands() {
 
 export function ChecklistGroup() {
     return (
-        <DynamicModuleLoader modules={[getChecklistModule()]} cleanOnUnmount={true}>
+        <DynamicModuleLoader modules={[getChecklistModule(), getChecklistSettingsModule()]} cleanOnUnmount={true}>
             <ChecklistGroupInternal />
         </DynamicModuleLoader>
     );

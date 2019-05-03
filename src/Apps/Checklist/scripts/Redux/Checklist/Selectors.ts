@@ -1,6 +1,6 @@
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
-import { ChecklistType, IChecklist } from "../Interfaces";
+import { ChecklistType, IChecklist } from "../../Interfaces";
 import { IChecklistAwareState, IChecklistState, IChecklistStateModel } from "./Contracts";
 
 export function getChecklistState(state: IChecklistAwareState): IChecklistState | undefined {

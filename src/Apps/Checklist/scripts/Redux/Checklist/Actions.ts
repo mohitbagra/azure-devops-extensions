@@ -1,5 +1,5 @@
 import { ActionsUnion, createAction } from "Common/Redux";
-import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../Interfaces";
+import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 
 export const ChecklistActions = {
     resizeIframe: (delay?: number) => createAction(ChecklistActionTypes.ResizeIframe, { delay }),
