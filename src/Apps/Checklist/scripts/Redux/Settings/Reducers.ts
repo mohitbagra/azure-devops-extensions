@@ -13,11 +13,13 @@ export function checklistSettingsReducer(state: IChecklistSettingsState | undefi
     return produce(state || defaultState, draft => {
         switch (action.type) {
             case ChecklistSettingsActionTypes.Initialize: {
-                const wordWrapLocalData = readLocalSetting("checklist_wordWrap", "0");
-                const hideCompletedItemsLocalData = readLocalSetting("checklist_hideCompletedItems", "0");
-                draft.wordWrap = wordWrapLocalData === "0" ? false : true;
-                draft.hideCompletedItems = hideCompletedItemsLocalData === "0" ? false : true;
-                draft.initialized = true;
+                if (!draft.initialized) {
+                    const wordWrapLocalData = readLocalSetting("checklist_wordWrap", "0");
+                    const hideCompletedItemsLocalData = readLocalSetting("checklist_hideCompletedItems", "0");
+                    draft.wordWrap = wordWrapLocalData === "0" ? false : true;
+                    draft.hideCompletedItems = hideCompletedItemsLocalData === "0" ? false : true;
+                    draft.initialized = true;
+                }
                 break;
             }
 

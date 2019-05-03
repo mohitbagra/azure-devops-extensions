@@ -14,6 +14,7 @@ import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
+import { useChecklistSettings } from "../../Hooks/useChecklistSettings";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";
@@ -39,6 +40,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const idOrType = React.useContext(ChecklistContext);
     const { deleteChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
+    const { wordWrap, hideCompletedItems } = useChecklistSettings();
     const [editorOpen, setEditorOpen] = React.useState(false);
 
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
@@ -97,6 +99,10 @@ export function ChecklistItem(props: IChecklistItemProps) {
         setEditorOpen(false);
     }, []);
 
+    if (hideCompletedItems && isCompleted) {
+        return null;
+    }
+
     return (
         <>
             {editorOpen && (
@@ -132,6 +138,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
                         className={css(
                             "checklist-item-container scroll-hidden flex-row flex-center",
                             className,
+                            wordWrap && "wrap-text",
                             isCompleted && "completed",
                             snapshot.isDragging && "is-dragging",
                             isDragDisabled && "drag-disabled"
@@ -163,7 +170,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
                                 )}
 
                             <Tooltip overflowOnly={true} text={checklistItem.text}>
-                                <div className="checklist-item-text flex-grow text-ellipsis">{checklistItem.text}</div>
+                                <div className={css("checklist-item-text flex-grow", !wordWrap && "text-ellipsis")}>{checklistItem.text}</div>
                             </Tooltip>
 
                             <div className="flex-noshrink checklist-commandbar">
