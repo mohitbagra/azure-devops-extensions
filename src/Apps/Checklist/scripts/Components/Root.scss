@@ -20,4 +20,12 @@
     }
 }
 
+.communication-foreground {
+    color: $communication-foreground;
+}
+
+.error-text {
+    color: $error-text;
+}
+
 @include scrollbars(11px, 2px);

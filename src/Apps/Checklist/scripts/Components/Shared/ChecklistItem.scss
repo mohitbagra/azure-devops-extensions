@@ -29,7 +29,6 @@
     .checklist-item {
         border: 1px solid transparent;
         padding: 0 2px;
-        cursor: pointer;
 
         .required-item {
             color: $error-text;
@@ -50,6 +49,8 @@
         }
 
         .checklist-item-text {
+            cursor: pointer;
+            line-height: 28px;
             margin: 0 5px;
             @include UserSelectNone();
         }
@@ -67,7 +68,7 @@
     }
 
     &:not(:hover) {
-        .checklist-commandbar {
+        .checklist-item-context-menu {
             display: none;
         }
 
