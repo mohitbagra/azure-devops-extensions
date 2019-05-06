@@ -3,9 +3,10 @@ import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkI
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
 import { getWorkItemProjectId, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
+import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { all, call, delay as delayEffect, put, select, takeEvery, takeLeading } from "redux-saga/effects";
-import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
+import { ChecklistItemState, ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { fetchWorkItemChecklistAsync, fetchWorkItemDefaultChecklist, fetchWorkItemTypeChecklistAsync, updateChecklistAsync } from "./DataSources";
 import { getChecklist, getChecklistStatus } from "./Selectors";
@@ -32,7 +33,6 @@ function* resizeIframe(action: ActionsOfType<ChecklistActions, ChecklistActionTy
     if (delay && delay > 0) {
         yield delayEffect(delay);
     }
-    // const bodyElement = document.getElementById("ext-container");
     const bodyElement = document.getElementsByTagName("body").item(0) as HTMLBodyElement;
     yield put(WorkItemFormActions.resize(bodyElement.offsetHeight));
 }
@@ -63,12 +63,23 @@ function* addOrUpdateChecklistItem(
             } else {
                 const index = newChecklistItems.findIndex(item => equals(item.id, checklistItem.id, true));
                 if (index !== -1) {
+                    const stateChanged = newChecklistItems[index].state !== checklistItem.state;
+
                     newChecklistItems[index] = {
                         ...newChecklistItems[index],
                         text: checklistItem.text,
                         required: checklistItem.required,
                         state: checklistItem.state
                     };
+                    if (stateChanged) {
+                        if (checklistItem.state === ChecklistItemState.Completed) {
+                            newChecklistItems[index].completedBy = getCurrentUser();
+                            newChecklistItems[index].completedDate = new Date();
+                        } else {
+                            newChecklistItems[index].completedBy = undefined;
+                            newChecklistItems[index].completedDate = undefined;
+                        }
+                    }
                 } else {
                     needsUpdate = false;
                 }

@@ -7,6 +7,7 @@ import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
+import * as format from "date-fns/format";
 import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
@@ -98,7 +99,22 @@ export function ChecklistItem(props: IChecklistItemProps) {
                     )}
                     <div className="checklist-item scroll-hidden flex-row flex-center flex-grow">
                         {canUpdateItemState && (
-                            <Checkbox className="flex-noshrink" disabled={disabled} checked={isCompleted} onChange={onCheckboxChange} />
+                            <Checkbox
+                                className="flex-noshrink"
+                                tooltipProps={
+                                    isCompleted && checklistItem.completedBy && checklistItem.completedDate
+                                        ? {
+                                              text: `Completed by ${checklistItem.completedBy.displayName} at ${format(
+                                                  checklistItem.completedDate,
+                                                  "MMMM DD, YYYY, hh:mm A"
+                                              )}`
+                                          }
+                                        : undefined
+                                }
+                                disabled={disabled}
+                                checked={isCompleted}
+                                onChange={onCheckboxChange}
+                            />
                         )}
 
                         {checklistItem.required && <div className="required-item flex-noshrink">*</div>}

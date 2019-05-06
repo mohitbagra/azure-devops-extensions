@@ -1,3 +1,5 @@
+import { IdentityRef } from "azure-devops-extension-api/WebApi/WebApi";
+
 export interface IChecklist {
     id: string;
     __etag?: number;
@@ -9,6 +11,8 @@ export interface IChecklistItem {
     text: string;
     required?: boolean;
     state: ChecklistItemState;
+    completedBy?: IdentityRef;
+    completedDate?: Date;
 }
 
 export const enum ChecklistItemState {

@@ -37,7 +37,7 @@ export async function createCommentAsync(bugBashItemId: string, commentText: str
     try {
         const comment: IBugBashItemComment = {
             createdBy: getCurrentUser(),
-            createdDate: new Date(Date.now()),
+            createdDate: new Date(),
             content: commentText
         };
 
