@@ -30,6 +30,12 @@ module.exports = {
                     name: "redux",
                     chunks: "all",
                     priority: 8
+                },
+                ui: {
+                    test: /[\\/]node_modules[\\/](azure-devops-ui)[\\/]/,
+                    name: "ui",
+                    chunks: "all",
+                    priority: 7
                 }
             }
         }
