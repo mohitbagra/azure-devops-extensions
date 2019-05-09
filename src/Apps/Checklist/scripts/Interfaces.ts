@@ -1,4 +1,5 @@
 import { IdentityRef } from "azure-devops-extension-api/WebApi/WebApi";
+import { IColor } from "azure-devops-ui/Utilities/Color";
 
 export interface IChecklist {
     id: string;
@@ -25,6 +26,7 @@ export const enum ChecklistItemState {
 
 export interface IChecklistItemState {
     name: ChecklistItemState;
+    color: IColor;
     className: string;
 }
 

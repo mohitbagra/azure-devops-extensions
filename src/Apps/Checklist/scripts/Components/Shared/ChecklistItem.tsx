@@ -1,6 +1,7 @@
 import "./ChecklistItem.scss";
 
 import { Checkbox } from "azure-devops-ui/Checkbox";
+import { Pill, PillSize, PillVariant } from "azure-devops-ui/Pill";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
@@ -122,9 +123,14 @@ export function ChecklistItem(props: IChecklistItemProps) {
                         {checklistItem.state &&
                             checklistItem.state !== ChecklistItemState.Completed &&
                             checklistItem.state !== ChecklistItemState.New && (
-                                <div className={css("checklist-item-state flex-noshrink", ChecklistItemStates[checklistItem.state].className)}>
+                                <Pill
+                                    className="checklist-item-state flex-noshrink"
+                                    size={PillSize.compact}
+                                    variant={PillVariant.colored}
+                                    color={ChecklistItemStates[checklistItem.state].color}
+                                >
                                     {checklistItem.state}
-                                </div>
+                                </Pill>
                             )}
 
                         <Tooltip overflowOnly={true} text={checklistItem.text}>

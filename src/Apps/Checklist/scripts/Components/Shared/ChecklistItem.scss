@@ -40,17 +40,10 @@
 
         .checklist-item-state {
             margin-left: 2px;
-            font-weight: $fontWeightSemiBold;
-            border-radius: 3px;
-            padding: 2px 4px;
-            line-height: $fontSize;
-            font-size: $fontSizeS;
-            @include UserSelectNone();
         }
 
         .checklist-item-text {
             cursor: pointer;
-            line-height: 28px;
             margin: 0 5px;
             @include UserSelectNone();
         }
