@@ -228,7 +228,12 @@ function mergeDefaultChecklists(workItemTypeChecklist: IChecklist, workItemCheck
             mergedChecklist.checklistItems.push(checklistItem);
         } else {
             const workItemChecklistItem = workItemChecklistItemsMap[key];
-            mergedChecklist.checklistItems.push({ ...workItemChecklistItem, text: checklistItem.text, required: checklistItem.required });
+            mergedChecklist.checklistItems.push({
+                ...workItemChecklistItem,
+                text: checklistItem.text,
+                required: checklistItem.required,
+                labels: checklistItem.labels
+            });
         }
     }
 

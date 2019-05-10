@@ -14,6 +14,7 @@ export interface IChecklistItem {
     state: ChecklistItemState;
     completedBy?: IdentityRef;
     completedDate?: Date;
+    labels?: string[];
 }
 
 export const enum ChecklistItemState {

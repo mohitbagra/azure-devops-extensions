@@ -14,6 +14,7 @@ import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";
 import { IBaseProps } from "../Props";
+import { ChecklistLabelPicker } from "./ChecklistLabelPicker";
 
 interface IChecklistItemEditorProps extends IBaseProps {
     checklistItem?: IChecklistItem;
@@ -84,28 +85,37 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
         [disabled, onSave, cancelEdit]
     );
 
-    const onTextChange = React.useCallback(
-        (newText: string) => {
+    const onTextChanged = React.useCallback(
+        (text: string) => {
             if (!disabled) {
-                updateDraftChecklistItem({ ...draftChecklistItem, text: newText });
+                updateDraftChecklistItem({ ...draftChecklistItem, text });
             }
         },
         [disabled, draftChecklistItem]
     );
 
-    const onRequiredChange = React.useCallback(
-        (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {
+    const onRequiredChanged = React.useCallback(
+        (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, required: boolean) => {
             if (!disabled) {
-                updateDraftChecklistItem({ ...draftChecklistItem, required: checked });
+                updateDraftChecklistItem({ ...draftChecklistItem, required });
             }
         },
         [disabled, draftChecklistItem]
     );
 
-    const onChangeState = React.useCallback(
+    const onStateChanged = React.useCallback(
         (menuItem: IMenuItem) => {
             if (!disabled) {
                 updateDraftChecklistItem({ ...draftChecklistItem, state: menuItem.id as ChecklistItemState });
+            }
+        },
+        [disabled, draftChecklistItem]
+    );
+
+    const onLabelsChanged = React.useCallback(
+        (labels: string[]) => {
+            if (!disabled) {
+                updateDraftChecklistItem({ ...draftChecklistItem, labels });
             }
         },
         [disabled, draftChecklistItem]
@@ -121,15 +131,16 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                     onKeyUp={onInputKeyUp}
                     disabled={disabled}
                     value={draftChecklistItem.text}
-                    onChange={onTextChange}
+                    onChange={onTextChanged}
                 />
             </div>
+            {draftChecklistItem.id && <ChecklistLabelPicker values={draftChecklistItem.labels} onSelectionChanged={onLabelsChanged} />}
             <div className="checklist-item-props flex-row flex-center">
                 <Checkbox
                     className="flex-grow"
                     disabled={disabled}
                     checked={!!draftChecklistItem.required}
-                    onChange={onRequiredChange}
+                    onChange={onRequiredChanged}
                     label="Mandatory?"
                 />
                 {canUpdateItemState && (
@@ -138,7 +149,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                         text={checklistItemState.name}
                         disabled={disabled}
                         contextualMenuProps={{
-                            onActivate: onChangeState,
+                            onActivate: onStateChanged,
                             menuProps: {
                                 id: "test",
                                 items: Object.keys(ChecklistItemStates).map(state => ({
