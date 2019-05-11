@@ -4,6 +4,7 @@ import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { IMenuItem, MenuButton } from "azure-devops-ui/Menu";
 import { css, KeyCode } from "azure-devops-ui/Util";
+import { IBaseProps } from "Common/Components/Contracts";
 import { TextField } from "Common/Components/TextField";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -13,7 +14,6 @@ import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";
-import { IBaseProps } from "../Props";
 import { ChecklistLabelPicker } from "./ChecklistLabelPicker";
 
 interface IChecklistItemEditorProps extends IBaseProps {
@@ -134,7 +134,14 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                     onChange={onTextChanged}
                 />
             </div>
-            {draftChecklistItem.id && <ChecklistLabelPicker values={draftChecklistItem.labels} onSelectionChanged={onLabelsChanged} />}
+            {draftChecklistItem.id && (
+                <ChecklistLabelPicker
+                    className="checklist-label-picker"
+                    disabled={disabled}
+                    values={draftChecklistItem.labels}
+                    onSelectionChanged={onLabelsChanged}
+                />
+            )}
             <div className="checklist-item-props flex-row flex-center">
                 <Checkbox
                     className="flex-grow"

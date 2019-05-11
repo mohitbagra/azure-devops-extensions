@@ -69,7 +69,8 @@ function* addOrUpdateChecklistItem(
                         ...newChecklistItems[index],
                         text: checklistItem.text,
                         required: checklistItem.required,
-                        state: checklistItem.state
+                        state: checklistItem.state,
+                        labels: checklistItem.labels
                     };
                     if (stateChanged) {
                         if (checklistItem.state === ChecklistItemState.Completed) {

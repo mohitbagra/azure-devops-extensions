@@ -1,13 +1,14 @@
 import "./ChecklistView.scss";
 
 import { css } from "azure-devops-ui/Util";
+import { IBaseProps } from "Common/Components/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";
-import { IBaseProps, IChecklistItemCommonProps } from "../Props";
+import { IChecklistItemCommonProps } from "../Props";
 import { ChecklistItem } from "./ChecklistItem";
 
 interface IChecklistViewProps extends IBaseProps {

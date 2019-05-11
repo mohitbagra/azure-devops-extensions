@@ -5,6 +5,7 @@ import { Pill, PillSize, PillVariant } from "azure-devops-ui/Pill";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
+import { IBaseProps } from "Common/Components/Contracts";
 import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -16,7 +17,7 @@ import { useChecklistSettings } from "../../Hooks/useChecklistSettings";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";
-import { IBaseProps, IChecklistItemCommonProps } from "../Props";
+import { IChecklistItemCommonProps } from "../Props";
 import * as ChecklistItemContextMenu_Async from "./ChecklistItemContextMenu";
 
 interface IChecklistItemProps extends IBaseProps, IChecklistItemCommonProps {

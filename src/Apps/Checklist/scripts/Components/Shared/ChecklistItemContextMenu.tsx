@@ -3,6 +3,7 @@ import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { CustomDialog } from "azure-devops-ui/Components/Dialog/CustomDialog";
 import { MoreButton } from "azure-devops-ui/Components/Menu/MoreButton";
 import { css, getSafeId } from "azure-devops-ui/Util";
+import { IBaseProps } from "Common/Components/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
@@ -11,7 +12,7 @@ import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistType, IChecklistItem } from "../../Interfaces";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";
-import { IBaseProps, IChecklistItemCommonProps } from "../Props";
+import { IChecklistItemCommonProps } from "../Props";
 import { ChecklistItemEditor } from "./ChecklistItemEditor";
 
 interface IChecklistItemContextMenuProps extends IBaseProps, IChecklistItemCommonProps {
