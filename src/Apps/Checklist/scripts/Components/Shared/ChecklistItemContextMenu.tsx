@@ -54,7 +54,7 @@ export function ChecklistItemContextMenu(props: IChecklistItemContextMenuProps) 
     }, [disabled, canEditItem]);
 
     return (
-        <div className={css("checklist-item-context-menu checklist-commandbar", className)}>
+        <div className={css("checklist-item-context-menu", className)}>
             <>
                 {editorOpen && (
                     <CustomDialog
@@ -78,7 +78,6 @@ export function ChecklistItemContextMenu(props: IChecklistItemContextMenuProps) 
             {!canEditItem && !canDeleteItem && (
                 <Button
                     subtle={true}
-                    className="checklist-command-item"
                     iconProps={{ iconName: "Info" }}
                     tooltipProps={{
                         text: "This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."

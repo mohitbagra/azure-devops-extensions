@@ -167,9 +167,9 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                         }}
                     />
                 )}
-                <div className="checklist-commandbar">
+                <div className="flex-row flex-center">
                     <Button
-                        className="checklist-command-item"
+                        className="communication-foreground checklist-command-item"
                         subtle={true}
                         onClick={onSave}
                         disabled={isNullOrWhiteSpace(draftChecklistItem.text) || draftChecklistItem.text.length > 128 || disabled}
@@ -177,7 +177,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                         tooltipProps={{ text: "Save" }}
                     />
                     <Button
-                        className="checklist-command-item error-item"
+                        className="error-text checklist-command-item"
                         subtle={true}
                         disabled={disabled}
                         onClick={cancelEdit}

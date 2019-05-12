@@ -2,7 +2,6 @@ import "./ChecklistGroup.scss";
 
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { Page } from "azure-devops-ui/Page";
-import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -16,7 +15,7 @@ import { ChecklistError } from "../Shared/ChecklistError";
 import { ChecklistItemEditor } from "../Shared/ChecklistItemEditor";
 import { ChecklistItemsProvider } from "../Shared/ChecklistItemsProvider";
 import { ChecklistView } from "../Shared/ChecklistView";
-import { ChecklistCommandBar } from "./ChecklistCommandBar";
+import { ChecklistGroupTabBar } from "./ChecklistGroupTabBar";
 
 const Actions = {
     resizeIframe: ChecklistActions.resizeIframe
@@ -42,16 +41,7 @@ function ChecklistGroupInternal() {
                     )}
                     {!isNew && (
                         <ChecklistContext.Provider value={activeWorkItemId}>
-                            <TabBar
-                                className="checklist-tabbar"
-                                tabSize={TabSize.Compact}
-                                selectedTabId={selectedTabId}
-                                onSelectedTabChanged={onSelectedTabChanged}
-                                renderAdditionalContent={renderTabBarCommands}
-                            >
-                                <Tab name="Shared" id={ChecklistType.Shared} />
-                                <Tab name="Personal" id={ChecklistType.Personal} />
-                            </TabBar>
+                            <ChecklistGroupTabBar selectedTabId={selectedTabId} onSelectedTabChanged={onSelectedTabChanged} />
                             <div className="checklist-contents flex-column">
                                 <ChecklistError className="flex-noshrink" />
                                 <ChecklistItemsProvider checklistType={selectedTabId}>
@@ -94,10 +84,6 @@ function ChecklistGroupInternal() {
             )}
         </WorkItemFormListener>
     );
-}
-
-function renderTabBarCommands() {
-    return <ChecklistCommandBar />;
 }
 
 export function ChecklistGroup() {
