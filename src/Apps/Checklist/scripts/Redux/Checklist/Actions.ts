@@ -2,7 +2,6 @@ import { ActionsUnion, createAction } from "Common/Redux";
 import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 
 export const ChecklistActions = {
-    resizeIframe: (delay?: number) => createAction(ChecklistActionTypes.ResizeIframe, { delay }),
     checklistLoadRequested: (idOrType: number | string) => createAction(ChecklistActionTypes.ChecklistLoadRequested, idOrType),
     beginLoadChecklist: (idOrType: number | string) => createAction(ChecklistActionTypes.BeginLoadChecklist, idOrType),
     checklistLoaded: (idOrType: number | string, groupedChecklists: IGroupedChecklists) =>
@@ -25,8 +24,6 @@ export const ChecklistActions = {
 };
 
 export const enum ChecklistActionTypes {
-    ResizeIframe = "ChecklistAction/ResizeIframe",
-
     ChecklistLoadRequested = "ChecklistAction/ChecklistLoadRequested",
     BeginLoadChecklist = "ChecklistAction/BeginLoadChecklist",
     ChecklistLoaded = "ChecklistAction/ChecklistLoaded",

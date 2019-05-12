@@ -5,36 +5,21 @@ import { ActionsOfType, RT } from "Common/Redux";
 import { getWorkItemProjectId, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
-import { all, call, delay as delayEffect, put, select, takeEvery, takeLeading } from "redux-saga/effects";
+import { all, call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
 import { ChecklistItemState, ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { fetchWorkItemChecklistAsync, fetchWorkItemDefaultChecklist, fetchWorkItemTypeChecklistAsync, updateChecklistAsync } from "./DataSources";
 import { getChecklist, getChecklistStatus } from "./Selectors";
 
 export function* checklistSaga() {
-    yield takeLeading(ChecklistActionTypes.ResizeIframe, resizeIframe);
     yield takeEvery(ChecklistActionTypes.ChecklistLoadRequested, loadChecklist);
     yield takeEvery(WorkItemFormActionTypes.WorkItemRefreshed, onWorkItemRefresh);
-    yield takeEvery(WorkItemFormActionTypes.WorkItemLoaded, onWorkItemLoaded);
     yield takeLeading(
         [ChecklistActionTypes.ChecklistItemCreateRequested, ChecklistActionTypes.ChecklistItemUpdateRequested],
         addOrUpdateChecklistItem
     );
     yield takeLeading(ChecklistActionTypes.ChecklistItemDeleteRequested, deleteChecklistItem);
     yield takeLeading(ChecklistActionTypes.ChecklistItemReorderRequested, reorderChecklistItem);
-}
-
-function* onWorkItemLoaded() {
-    yield put(ChecklistActions.resizeIframe(50));
-}
-
-function* resizeIframe(action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ResizeIframe>) {
-    const { delay } = action.payload;
-    if (delay && delay > 0) {
-        yield delayEffect(delay);
-    }
-    const bodyElement = document.getElementsByTagName("body").item(0) as HTMLBodyElement;
-    yield put(WorkItemFormActions.resize(bodyElement.offsetHeight));
 }
 
 function* loadChecklist(action: ActionsOfType<ChecklistActions, ChecklistActionTypes.ChecklistLoadRequested>) {
@@ -194,7 +179,6 @@ function* refreshChecklist(idOrType: number | string) {
         }
 
         yield put(ChecklistActions.checklistLoaded(idOrType, groupedChecklists));
-        yield put(ChecklistActions.resizeIframe());
     }
 }
 
@@ -211,8 +195,6 @@ function* updateChecklist(idOrType: number | string, newChecklist: IChecklist, c
     } catch (e) {
         yield put(ChecklistActions.checklistUpdateFailed(idOrType, e.message));
     }
-
-    yield put(ChecklistActions.resizeIframe());
 }
 
 function mergeDefaultChecklists(workItemTypeChecklist: IChecklist, workItemChecklist: IChecklist): IChecklist {
