@@ -1,3 +1,4 @@
+import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { ActionsUnion, createAction } from "Common/Redux";
 import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 
@@ -20,7 +21,10 @@ export const ChecklistActions = {
         createAction(ChecklistActionTypes.BeginUpdateChecklist, { idOrType, unsavedChecklist, checklistType }),
     checklistUpdated: (idOrType: number | string, checklist: IChecklist, checklistType: ChecklistType) =>
         createAction(ChecklistActionTypes.ChecklistUpdated, { idOrType, checklist, checklistType }),
-    checklistUpdateFailed: (idOrType: number | string, error: string) => createAction(ChecklistActionTypes.ChecklistUpdateFailed, { idOrType, error })
+    checklistUpdateFailed: (idOrType: number | string, error: string) =>
+        createAction(ChecklistActionTypes.ChecklistUpdateFailed, { idOrType, error }),
+
+    applyFilter: (filterState: IFilterState) => createAction(ChecklistActionTypes.ApplyFilter, filterState)
 };
 
 export const enum ChecklistActionTypes {
@@ -35,7 +39,9 @@ export const enum ChecklistActionTypes {
 
     BeginUpdateChecklist = "ChecklistAction/BeginUpdateChecklist",
     ChecklistUpdated = "ChecklistAction/ChecklistUpdated",
-    ChecklistUpdateFailed = "ChecklistAction/ChecklistUpdateFailed"
+    ChecklistUpdateFailed = "ChecklistAction/ChecklistUpdateFailed",
+
+    ApplyFilter = "ChecklistAction/ApplyFilter"
 }
 
 export type ChecklistActions = ActionsUnion<typeof ChecklistActions>;

@@ -66,6 +66,12 @@ export function checklistReducer(state: IChecklistState | undefined, action: Che
 
                 break;
             }
+
+            case ChecklistActionTypes.ApplyFilter: {
+                const filterState = action.payload;
+                draft.filterState = filterState;
+                break;
+            }
         }
     });
 }
