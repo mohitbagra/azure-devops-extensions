@@ -13,8 +13,8 @@ function WorkItemRelationTypePickerInternal(props: IPicklistPickerSharedProps<Wo
         { ...props, placeholder: placeholder || "Select a work item relation type" },
         relationTypes,
         (relationType: WorkItemRelationType) => ({
-            key: relationType.referenceName,
-            name: relationType.name
+            id: relationType.referenceName,
+            text: relationType.name
         })
     );
 }

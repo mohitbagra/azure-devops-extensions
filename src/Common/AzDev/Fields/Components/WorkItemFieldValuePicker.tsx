@@ -44,7 +44,7 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
             onChange(value);
         }
     };
-    const convertToComboOption = (av: any) => ({ key: av.toString(), name: av.toString() });
+    const convertToComboOption = (av: any) => ({ id: av.toString(), text: av.toString() });
 
     if (!field || !workItemTypeField) {
         return <Spinner size={SpinnerSize.large} />;

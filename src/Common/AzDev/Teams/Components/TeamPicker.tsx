@@ -10,8 +10,8 @@ function TeamPickerInternal(props: IPicklistPickerSharedProps<WebApiTeam>) {
     const { teams } = useTeams();
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a team" }, teams, (team: WebApiTeam) => ({
-        key: team.id,
-        name: team.name
+        id: team.id,
+        text: team.name
     }));
 }
 

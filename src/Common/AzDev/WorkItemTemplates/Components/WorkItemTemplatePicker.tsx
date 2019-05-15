@@ -14,8 +14,8 @@ function WorkItemTemplatePickerInternal(props: IWorkItemTemplatePickerProps) {
     const { templates } = useTeamTemplates(teamId);
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a template" }, templates, (template: WorkItemTemplateReference) => ({
-        key: template.id,
-        name: template.name
+        id: template.id,
+        text: template.name
     }));
 }
 

@@ -10,8 +10,8 @@ function WorkItemTypePickerInternal(props: IPicklistPickerSharedProps<WorkItemTy
     const { workItemTypes } = useWorkItemTypes();
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a work item type" }, workItemTypes, (wit: WorkItemType) => ({
-        key: wit.name,
-        name: wit.name
+        id: wit.name,
+        text: wit.name
     }));
 }
 

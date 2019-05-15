@@ -1,20 +1,19 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
+import { ListSelection } from "azure-devops-ui/Components/List/ListSelection";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { ObservableValue } from "azure-devops-ui/Core/Observable";
+import { DropdownFilterBarItem } from "azure-devops-ui/Dropdown";
 import { FilterBar } from "azure-devops-ui/FilterBar";
 import { HeaderCommandBarWithFilter } from "azure-devops-ui/HeaderCommandBar";
-import { IPickListItem, PickListFilterBarItem } from "azure-devops-ui/PickList";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
 import { KeywordFilterBarItem } from "azure-devops-ui/TextFilterBarItem";
 import { Filter, FILTER_CHANGE_EVENT } from "azure-devops-ui/Utilities/Filter";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { navigateToBugBashItemsBoard, navigateToBugBashItemsCharts, navigateToBugBashItemsList } from "BugBashPro/Shared/NavHelpers";
-import { TeamView } from "Common/AzDev/Teams/Components/TeamView";
 import { useTeams } from "Common/AzDev/Teams/Hooks/useTeams";
 import { LoadStatus } from "Common/Contracts";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
-import { SelectionMode } from "office-ui-fabric-react/lib/utilities/selection/interfaces";
 import * as React from "react";
 import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewContext, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
 import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
@@ -132,12 +131,12 @@ export function BugBashViewTabsWithFilter(props: IBugBashViewTabsWithFilterProps
                     <KeywordFilterBarItem filterItemKey={BugBashItemFieldNames.Title} placeholder="Filter by title" />
                     {viewMode !== BugBashViewMode.Accepted &&
                         viewMode !== BugBashViewMode.All &&
-                        getPickListFilterBarItem("Team", BugBashItemFieldNames.TeamId, filterData, teamsMap)}
-                    {getPickListFilterBarItem("Created By", BugBashItemFieldNames.CreatedBy, filterData)}
-                    {viewMode === BugBashViewMode.Rejected && getPickListFilterBarItem("Rejected By", BugBashItemFieldNames.RejectedBy, filterData)}
-                    {viewMode === BugBashViewMode.Accepted && getPickListFilterBarItem("State", WorkItemFieldNames.State, filterData)}
-                    {viewMode === BugBashViewMode.Accepted && getPickListFilterBarItem("Assigned To", WorkItemFieldNames.AssignedTo, filterData)}
-                    {viewMode === BugBashViewMode.Accepted && getPickListFilterBarItem("Area Path", WorkItemFieldNames.AreaPath, filterData)}
+                        getDropdownFilterBarItem("Team", BugBashItemFieldNames.TeamId, filterData, teamsMap)}
+                    {getDropdownFilterBarItem("Created By", BugBashItemFieldNames.CreatedBy, filterData)}
+                    {viewMode === BugBashViewMode.Rejected && getDropdownFilterBarItem("Rejected By", BugBashItemFieldNames.RejectedBy, filterData)}
+                    {viewMode === BugBashViewMode.Accepted && getDropdownFilterBarItem("State", WorkItemFieldNames.State, filterData)}
+                    {viewMode === BugBashViewMode.Accepted && getDropdownFilterBarItem("Assigned To", WorkItemFieldNames.AssignedTo, filterData)}
+                    {viewMode === BugBashViewMode.Accepted && getDropdownFilterBarItem("Area Path", WorkItemFieldNames.AreaPath, filterData)}
                 </FilterBar>
             </ConditionalChildren>
         </>
@@ -154,7 +153,7 @@ function onTabSelect(newTabId: string, bugBashId: string) {
     }
 }
 
-function getPickListFilterBarItem(
+function getDropdownFilterBarItem(
     placeholder: string,
     filterItemKey: BugBashItemFieldNames | WorkItemFieldNames,
     filterData: BugBashItemsFilterData,
@@ -164,61 +163,53 @@ function getPickListFilterBarItem(
         return null;
     }
     return (
-        <PickListFilterBarItem
+        <DropdownFilterBarItem
             key={filterItemKey}
             filterItemKey={filterItemKey}
-            selectionMode={SelectionMode.multiple}
-            getPickListItems={getPicklistItems(filterItemKey, filterData)}
-            getListItem={getListItem(filterItemKey, teamsMap)}
-            onRenderItemText={filterItemKey === BugBashItemFieldNames.TeamId ? onRenderTeam : undefined}
+            selection={new ListSelection(true)}
+            items={getDropdownItems(filterItemKey, filterData, teamsMap)}
             placeholder={placeholder}
             noItemsText="No items"
-            showSelectAll={false}
-            isSearchable={true}
-            searchTextPlaceholder="Search"
-            minItemsForSearchBox={8}
+            showFilterBox={true}
+            filterPlaceholderText="Search"
+            // onRenderItemText={filterItemKey === BugBashItemFieldNames.TeamId ? onRenderTeam : undefined}
         />
     );
 }
 
-function getPicklistItems(key: BugBashItemFieldNames | WorkItemFieldNames, filterData: BugBashItemsFilterData) {
-    return () => {
-        if (!filterData) {
-            return [];
-        }
-        return Object.keys(filterData[key]);
-    };
-}
-
-function getListItem(key: BugBashItemFieldNames | WorkItemFieldNames, teamsMap?: { [idOrName: string]: WebApiTeam }): (v: string) => IPickListItem {
-    return (value: string) => {
+function getDropdownItems(
+    key: BugBashItemFieldNames | WorkItemFieldNames,
+    filterData: BugBashItemsFilterData,
+    teamsMap?: { [idOrName: string]: WebApiTeam }
+) {
+    if (!filterData) {
+        return [];
+    }
+    const itemKeys = Object.keys(filterData[key]);
+    return itemKeys.map(value => {
         const keyType = BugBashItemKeyTypes[key];
 
         if (keyType === "identityRef") {
             const identity = parseUniquefiedIdentityName(value);
             return {
-                name: identity!.displayName,
-                key: value
+                text: identity!.displayName,
+                id: value
             };
         } else if (key === WorkItemFieldNames.AreaPath) {
             return {
-                name: value.substr(value.lastIndexOf("\\") + 1),
-                key: value
+                text: value.substr(value.lastIndexOf("\\") + 1),
+                id: value
             };
         } else if (key === BugBashItemFieldNames.TeamId) {
             return {
-                name: teamsMap && teamsMap[value.toLowerCase()] ? teamsMap[value.toLowerCase()].name : value,
-                key: value
+                text: teamsMap && teamsMap[value.toLowerCase()] ? teamsMap[value.toLowerCase()].name : value,
+                id: value
             };
         } else {
             return {
-                name: value,
-                key: value
+                text: value,
+                id: value
             };
         }
-    };
-}
-
-function onRenderTeam(item: IPickListItem): JSX.Element {
-    return <TeamView teamId={item.key} />;
+    });
 }

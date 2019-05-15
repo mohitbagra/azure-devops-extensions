@@ -1,14 +1,5 @@
 @import "_CommonStyles.scss";
 
-.picklist-picker-dropdown {
-    .vss-PickList--searchTextContainer {
-        i,
-        input {
-            color: $primary-text;
-        }
-    }
-}
-
 .empty-value-item {
     color: $secondary-text;
 }

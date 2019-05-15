@@ -10,8 +10,8 @@ function GitRepoPickerInternal(props: IPicklistPickerSharedProps<GitRepository>)
     const { gitRepos } = useGitRepos();
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a git repo" }, gitRepos, (repo: GitRepository) => ({
-        key: repo.id,
-        name: repo.name
+        id: repo.id,
+        text: repo.name
     }));
 }
 

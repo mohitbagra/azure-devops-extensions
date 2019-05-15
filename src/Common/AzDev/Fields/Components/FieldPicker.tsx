@@ -27,8 +27,8 @@ function FieldPickerInternal(props: IFieldPickerProps) {
     }
 
     return picklistRenderer({ ...props, placeholder: placeholder || "Select a work item field" }, comboFields, (field: WorkItemField) => ({
-        key: field.referenceName,
-        name: field.name
+        id: field.referenceName,
+        text: field.name
     }));
 }
 
