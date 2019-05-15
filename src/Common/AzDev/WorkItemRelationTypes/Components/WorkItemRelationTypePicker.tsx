@@ -1,15 +1,15 @@
 import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
+import { dropdownRenderer, IDropdownPickerSharedProps } from "Common/Components/Pickers/DropdownPicker";
 import * as React from "react";
 import { useWorkItemRelationTypes } from "../Hooks/useWorkItemRelationTypes";
 import { getWorkItemRelationTypeModule } from "../Redux/Module";
 
-function WorkItemRelationTypePickerInternal(props: IPicklistPickerSharedProps<WorkItemRelationType>) {
+function WorkItemRelationTypePickerInternal(props: IDropdownPickerSharedProps<WorkItemRelationType>) {
     const { placeholder } = props;
     const { relationTypes } = useWorkItemRelationTypes();
 
-    return picklistRenderer(
+    return dropdownRenderer(
         { ...props, placeholder: placeholder || "Select a work item relation type" },
         relationTypes,
         (relationType: WorkItemRelationType) => ({
@@ -19,7 +19,7 @@ function WorkItemRelationTypePickerInternal(props: IPicklistPickerSharedProps<Wo
     );
 }
 
-export function WorkItemRelationTypePicker(props: IPicklistPickerSharedProps<WorkItemRelationType>) {
+export function WorkItemRelationTypePicker(props: IDropdownPickerSharedProps<WorkItemRelationType>) {
     return (
         <DynamicModuleLoader modules={[getWorkItemRelationTypeModule()]}>
             <WorkItemRelationTypePickerInternal {...props} />

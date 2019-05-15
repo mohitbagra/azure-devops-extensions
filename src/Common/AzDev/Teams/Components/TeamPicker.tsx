@@ -1,21 +1,21 @@
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
+import { dropdownRenderer, IDropdownPickerSharedProps } from "Common/Components/Pickers/DropdownPicker";
 import * as React from "react";
 import { useTeams } from "../Hooks/useTeams";
 import { getTeamModule } from "../Redux/Module";
 
-function TeamPickerInternal(props: IPicklistPickerSharedProps<WebApiTeam>) {
+function TeamPickerInternal(props: IDropdownPickerSharedProps<WebApiTeam>) {
     const { placeholder } = props;
     const { teams } = useTeams();
 
-    return picklistRenderer({ ...props, placeholder: placeholder || "Select a team" }, teams, (team: WebApiTeam) => ({
+    return dropdownRenderer({ ...props, placeholder: placeholder || "Select a team" }, teams, (team: WebApiTeam) => ({
         id: team.id,
         text: team.name
     }));
 }
 
-export function TeamPicker(props: IPicklistPickerSharedProps<WebApiTeam>) {
+export function TeamPicker(props: IDropdownPickerSharedProps<WebApiTeam>) {
     return (
         <DynamicModuleLoader modules={[getTeamModule()]}>
             <TeamPickerInternal {...props} />

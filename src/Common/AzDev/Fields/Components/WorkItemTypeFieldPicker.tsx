@@ -1,14 +1,14 @@
 import { FieldType, WorkItemField } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { IPicklistPickerSharedProps, picklistRenderer } from "Common/Components/Pickers/PicklistPicker";
+import { dropdownRenderer, IDropdownPickerSharedProps } from "Common/Components/Pickers/DropdownPicker";
 import { contains } from "Common/Utilities/Array";
 import * as React from "react";
 import { useFields } from "../Hooks/useFields";
 import { useWorkItemTypeFields } from "../Hooks/useWorkItemTypeFields";
 import { getFieldModule } from "../Redux/Module";
 
-interface IWorkItemTypeFieldPickerProps extends IPicklistPickerSharedProps<WorkItemField> {
+interface IWorkItemTypeFieldPickerProps extends IDropdownPickerSharedProps<WorkItemField> {
     workItemTypeName: string;
     allowedFieldTypes?: FieldType[];
     excludeFieldRefNames?: string[];
@@ -31,7 +31,7 @@ function WorkItemTypeFieldPickerInternal(props: IWorkItemTypeFieldPickerProps) {
         });
     }
 
-    return picklistRenderer({ ...props, placeholder: placeholder || "Select a work item field" }, comboFields, (field: WorkItemField) => ({
+    return dropdownRenderer({ ...props, placeholder: placeholder || "Select a work item field" }, comboFields, (field: WorkItemField) => ({
         id: field.referenceName,
         text: field.name
     }));

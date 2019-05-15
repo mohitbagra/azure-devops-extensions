@@ -1,4 +1,4 @@
-import "./PicklistPicker.scss";
+import "./DropdownPicker.scss";
 
 import { IListBoxItem } from "azure-devops-ui/Components/ListBox/ListBox.Props";
 import { ITableColumn } from "azure-devops-ui/Components/Table/Table.Props";
@@ -10,7 +10,7 @@ import { useControlledState } from "Common/Hooks/useControlledState";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import * as React from "react";
 
-export interface IPicklistPickerSharedProps<T> extends ILabelledComponentProps {
+export interface IDropdownPickerSharedProps<T> extends ILabelledComponentProps {
     disabled?: boolean;
     placeholder?: string;
     selectedOption?: T;
@@ -18,13 +18,13 @@ export interface IPicklistPickerSharedProps<T> extends ILabelledComponentProps {
     onChange?(option?: T, value?: string): void;
 }
 
-export interface IPicklistPickerProps<T> extends IPicklistPickerSharedProps<T> {
+export interface IDropdownPickerProps<T> extends IDropdownPickerSharedProps<T> {
     options: T[];
     limitedToAllowedOptions?: boolean;
-    getPicklistItem(option: T): IListBoxItem;
+    getDropdownItem(option: T): IListBoxItem;
 }
 
-function resolveOptions<T>(options: T[], getPicklistItem: (option: T) => IListBoxItem, required?: boolean) {
+function resolveOptions<T>(options: T[], getDropdownItem: (option: T) => IListBoxItem, required?: boolean) {
     const keyToOptionMap: { [key: string]: T } = {};
     const nameToOptionMap: { [name: string]: T } = {};
     const comboOptions: IListBoxItem[] = [];
@@ -33,7 +33,7 @@ function resolveOptions<T>(options: T[], getPicklistItem: (option: T) => IListBo
         comboOptions.push({ id: "", text: "<Empty>" });
     }
     for (const option of options) {
-        const { id, text } = getPicklistItem(option);
+        const { id, text } = getDropdownItem(option);
         keyToOptionMap[id.toLowerCase()] = option;
         nameToOptionMap[text!.toLowerCase()] = option;
 
@@ -46,10 +46,10 @@ function resolveOptions<T>(options: T[], getPicklistItem: (option: T) => IListBo
     return { comboOptions, keyToOptionMap, nameToOptionMap };
 }
 
-function getTextValue<T>(option: T | undefined, value: string | undefined, getPicklistItem: (option: T) => IListBoxItem): string {
+function getTextValue<T>(option: T | undefined, value: string | undefined, getDropdownItem: (option: T) => IListBoxItem): string {
     let v = value;
     if (option) {
-        v = getPicklistItem(option).text;
+        v = getDropdownItem(option).text;
     }
     return v || "";
 }
@@ -75,7 +75,7 @@ function resolveValueToOption<T>(
     }
 }
 
-export function PicklistPicker<T>(props: IPicklistPickerProps<T>) {
+export function DropdownPicker<T>(props: IDropdownPickerProps<T>) {
     const {
         className,
         label,
@@ -87,12 +87,12 @@ export function PicklistPicker<T>(props: IPicklistPickerProps<T>) {
         options,
         onChange,
         limitedToAllowedOptions,
-        getPicklistItem,
+        getDropdownItem,
         selectedOption: prop_selectedOption,
         selectedValue: prop_selectedValue
     } = props;
 
-    const { comboOptions, keyToOptionMap, nameToOptionMap } = React.useMemo(() => resolveOptions(options, getPicklistItem, required), [
+    const { comboOptions, keyToOptionMap, nameToOptionMap } = React.useMemo(() => resolveOptions(options, getDropdownItem, required), [
         options,
         required
     ]);
@@ -119,7 +119,7 @@ export function PicklistPicker<T>(props: IPicklistPickerProps<T>) {
         return undefined;
     };
 
-    const onPicklistSelectionChange = (_event: React.SyntheticEvent<HTMLElement, Event>, item: IListBoxItem) => {
+    const onItemSelect = (_event: React.SyntheticEvent<HTMLElement, Event>, item: IListBoxItem) => {
         let option: T | undefined;
         if (item) {
             option = keyToOptionMap && keyToOptionMap[item.id.toString().toLowerCase()];
@@ -138,26 +138,24 @@ export function PicklistPicker<T>(props: IPicklistPickerProps<T>) {
         }
     };
 
-    const textValue = getTextValue(selectedOption, selectedValue, getPicklistItem);
+    const textValue = getTextValue(selectedOption, selectedValue, getDropdownItem);
 
     return (
-        <LabelledComponent className={css("picklist-picker", className)} label={label} info={info} getErrorMessage={getError} required={required}>
-            <>
-                <Dropdown
-                    items={comboOptions}
-                    onSelect={onPicklistSelectionChange}
-                    placeholder={placeholder || "Select a value"}
-                    showFilterBox={true}
-                    filterPlaceholderText="Search"
-                    renderItem={onRenderItemText}
-                    renderCallout={props => (
-                        <DropdownCallout {...props} focusOnMount={false} lightDismiss={true} excludeTabStop={true} excludeFocusZone={true} />
-                    )}
-                    renderExpandable={expandableProps => {
-                        return <DropdownExpandableTextField {...expandableProps} disabled={disabled} editable={false} value={textValue} />;
-                    }}
-                />
-            </>
+        <LabelledComponent className={css("dropdown-picker", className)} label={label} info={info} getErrorMessage={getError} required={required}>
+            <Dropdown
+                items={comboOptions}
+                onSelect={onItemSelect}
+                placeholder={placeholder || "Select a value"}
+                showFilterBox={true}
+                filterPlaceholderText="Search"
+                renderItem={onRenderItemText}
+                renderCallout={props => (
+                    <DropdownCallout {...props} focusOnMount={false} lightDismiss={true} excludeTabStop={true} excludeFocusZone={true} />
+                )}
+                renderExpandable={expandableProps => {
+                    return <DropdownExpandableTextField {...expandableProps} disabled={disabled} editable={false} value={textValue} />;
+                }}
+            />
         </LabelledComponent>
     );
 }
@@ -170,20 +168,20 @@ function onRenderItemText(_rowIndex: number, _columnIndex: number, _tableColumn:
     }
 }
 
-export function picklistRenderer<T>(
-    props: IPicklistPickerSharedProps<T>,
+export function dropdownRenderer<T>(
+    props: IDropdownPickerSharedProps<T>,
     data: T[] | undefined,
-    getPicklistItem: (option: T) => IListBoxItem
+    getDropdownItem: (option: T) => IListBoxItem
 ): JSX.Element {
     const newProps = {
         ...props,
-        getPicklistItem,
+        getDropdownItem: getDropdownItem,
         options: data || [],
         limitedToAllowedOptions: data != null,
         disabled: data == null ? true : props.disabled,
         selectedOption: data == null ? undefined : props.selectedOption,
         selectedValue: data == null ? undefined : props.selectedValue
-    } as IPicklistPickerProps<T>;
+    } as IDropdownPickerProps<T>;
 
-    return <PicklistPicker {...newProps} />;
+    return <DropdownPicker {...newProps} />;
 }

@@ -10,7 +10,7 @@ import { WorkItemTagPicker } from "Common/AzDev/WorkItemTags/Components";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { DateTimePickerDropdown } from "Common/Components/Pickers/DateTimePickerDropdown";
-import { PicklistPicker } from "Common/Components/Pickers/PicklistPicker";
+import { DropdownPicker } from "Common/Components/Pickers/DropdownPicker";
 import { RichEditor } from "Common/Components/RichEditor";
 import { TextField } from "Common/Components/TextField";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
@@ -139,7 +139,7 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
         default:
             if (workItemTypeField.allowedValues && workItemTypeField.allowedValues.length > 0) {
                 return (
-                    <PicklistPicker
+                    <DropdownPicker
                         options={workItemTypeField.allowedValues}
                         selectedValue={value as string}
                         className={cssClassName}
@@ -149,7 +149,7 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
                         disabled={disabled}
                         getErrorMessage={getErrorMessage}
                         onChange={onComboValueChanged}
-                        getPicklistItem={convertToComboOption}
+                        getDropdownItem={convertToComboOption}
                     />
                 );
             } else {
