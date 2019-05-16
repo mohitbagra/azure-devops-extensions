@@ -26,15 +26,16 @@ interface IChecklistGroupTabBarProps {
 const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested,
     toggleWordWrap: ChecklistSettingsActions.toggleWordWrap,
-    toggleHideCompletedItems: ChecklistSettingsActions.toggleHideCompletedItems
+    toggleHideCompletedItems: ChecklistSettingsActions.toggleHideCompletedItems,
+    toggleShowLabels: ChecklistSettingsActions.toggleShowLabels
 };
 
 export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
     const { selectedTabId, onSelectedTabChanged } = props;
     const idOrType = React.useContext(ChecklistContext);
     const status = useChecklistStatus(idOrType);
-    const { loadChecklist, toggleWordWrap, toggleHideCompletedItems } = useActionCreators(Actions);
-    const { wordWrap, hideCompletedItems } = useChecklistSettings();
+    const { loadChecklist, toggleWordWrap, toggleHideCompletedItems, toggleShowLabels } = useActionCreators(Actions);
+    const { wordWrap, hideCompletedItems, showLabels } = useChecklistSettings();
     const disabled = status === LoadStatus.Loading || status === LoadStatus.NotLoaded || status === LoadStatus.Updating;
 
     const filterRef = React.useRef<Filter>(
@@ -111,6 +112,14 @@ export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
                                     onActivate: () => {
                                         toggleHideCompletedItems();
                                     }
+                                },
+                                {
+                                    id: "show-labels",
+                                    text: "Show item labels",
+                                    iconProps: showLabels ? { iconName: "CheckMark" } : undefined,
+                                    onActivate: () => {
+                                        toggleShowLabels();
+                                    }
                                 }
                             ]
                         }
@@ -118,7 +127,7 @@ export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
                 ]}
             />
         ),
-        [idOrType, hideCompletedItems, wordWrap, disabled]
+        [idOrType, hideCompletedItems, wordWrap, showLabels, disabled]
     );
 
     return (

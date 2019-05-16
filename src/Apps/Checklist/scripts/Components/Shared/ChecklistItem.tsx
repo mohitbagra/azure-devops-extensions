@@ -2,6 +2,7 @@ import "./ChecklistItem.scss";
 
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { Pill, PillSize, PillVariant } from "azure-devops-ui/Pill";
+import { PillGroup, PillGroupOverflow } from "azure-devops-ui/PillGroup";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
@@ -44,16 +45,6 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const isCompleted = checklistItem.state === ChecklistItemState.Completed;
     const disabled = status !== LoadStatus.Ready;
     const isDragDisabled = disableDrag || disabled;
-
-    const onItemClick = React.useCallback(() => {
-        if (!disabled && canUpdateItemState) {
-            updateChecklistItem(
-                idOrType,
-                { ...checklistItem, state: isCompleted ? ChecklistItemState.New : ChecklistItemState.Completed },
-                checklistType
-            );
-        }
-    }, [canUpdateItemState, idOrType, disabled, isCompleted, checklistItem, checklistType]);
 
     const onCheckboxChange = React.useCallback(
         (e: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean) => {
@@ -135,12 +126,7 @@ export function ChecklistItem(props: IChecklistItemProps) {
                             )}
 
                         <Tooltip overflowOnly={true} text={checklistItem.text}>
-                            <div
-                                className={css("checklist-item-text flex-grow", !wordWrap && "text-ellipsis")}
-                                onClick={canUpdateItemState ? onItemClick : undefined}
-                            >
-                                {checklistItem.text}
-                            </div>
+                            <div className={css("checklist-item-text flex-grow", !wordWrap && "text-ellipsis")}>{checklistItem.text}</div>
                         </Tooltip>
 
                         <AsyncComponent loader={contextMenuLoader} loadingComponent={emptyRenderer}>
@@ -160,5 +146,17 @@ export function ChecklistItem(props: IChecklistItemProps) {
                 </div>
             )}
         </Draggable>
+    );
+}
+
+export function renderLabels(labels: string[]) {
+    return (
+        <PillGroup className="flex-noshrink checklist-item-labels" overflow={PillGroupOverflow.fade}>
+            {(labels || []).map((label, index) => (
+                <Pill key={index} size={PillSize.compact}>
+                    {label}
+                </Pill>
+            ))}
+        </PillGroup>
     );
 }

@@ -6,7 +6,8 @@ import { IChecklistSettingsState } from "./Contracts";
 const defaultState: IChecklistSettingsState = {
     initialized: false,
     wordWrap: false,
-    hideCompletedItems: false
+    hideCompletedItems: false,
+    showLabels: false
 };
 
 export function checklistSettingsReducer(state: IChecklistSettingsState | undefined, action: ChecklistSettingsActions): IChecklistSettingsState {
@@ -16,8 +17,10 @@ export function checklistSettingsReducer(state: IChecklistSettingsState | undefi
                 if (!draft.initialized) {
                     const wordWrapLocalData = readLocalSetting("checklist_wordWrap", "0");
                     const hideCompletedItemsLocalData = readLocalSetting("checklist_hideCompletedItems", "0");
+                    const showLabelsLocalData = readLocalSetting("checklist_showLabels", "0");
                     draft.wordWrap = wordWrapLocalData === "0" ? false : true;
                     draft.hideCompletedItems = hideCompletedItemsLocalData === "0" ? false : true;
+                    draft.showLabels = showLabelsLocalData === "0" ? false : true;
                     draft.initialized = true;
                 }
                 break;
@@ -35,6 +38,14 @@ export function checklistSettingsReducer(state: IChecklistSettingsState | undefi
                 if (draft.initialized) {
                     writeLocalSetting("checklist_hideCompletedItems", draft.hideCompletedItems ? "0" : "1");
                     draft.hideCompletedItems = !draft.hideCompletedItems;
+                }
+                break;
+            }
+
+            case ChecklistSettingsActionTypes.ToggleShowLabels: {
+                if (draft.initialized) {
+                    writeLocalSetting("checklist_showLabels", draft.showLabels ? "0" : "1");
+                    draft.showLabels = !draft.showLabels;
                 }
                 break;
             }

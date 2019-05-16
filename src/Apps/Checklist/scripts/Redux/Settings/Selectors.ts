@@ -19,3 +19,8 @@ export const isHideCompletedItemsOn = createSelector(
     getChecklistSettingsState,
     state => !!(state && state.hideCompletedItems)
 );
+
+export const isShowLabelsOn = createSelector(
+    getChecklistSettingsState,
+    state => !!(state && state.showLabels)
+);

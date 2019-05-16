@@ -43,9 +43,12 @@
         }
 
         .checklist-item-text {
-            cursor: pointer;
             margin: 0 5px;
-            @include UserSelectNone();
+        }
+
+        .checklist-item-labels {
+            margin-top: 5;
+            margin-left: 20px;
         }
     }
 

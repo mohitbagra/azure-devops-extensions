@@ -6,4 +6,5 @@ export interface IChecklistSettingsState {
     initialized: boolean;
     wordWrap: boolean;
     hideCompletedItems: boolean;
+    showLabels: boolean;
 }
