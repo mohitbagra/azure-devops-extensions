@@ -40,9 +40,10 @@ export function ChecklistItem(props: IChecklistItemProps) {
     const idOrType = React.useContext(ChecklistContext);
     const { updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
-    const { wordWrap, hideCompletedItems } = useChecklistSettings();
+    const { wordWrap, hideCompletedItems, showLabels } = useChecklistSettings();
+    const { id, text, required, state, labels } = checklistItem;
 
-    const isCompleted = checklistItem.state === ChecklistItemState.Completed;
+    const isCompleted = state === ChecklistItemState.Completed;
     const disabled = status !== LoadStatus.Ready;
     const isDragDisabled = disableDrag || disabled;
 
@@ -66,8 +67,8 @@ export function ChecklistItem(props: IChecklistItemProps) {
 
     return (
         <Draggable
-            draggableId={`item_${checklistItem.id}`}
-            key={`item_${checklistItem.id}`}
+            draggableId={`item_${id}`}
+            key={`item_${id}`}
             type={`checklistItems_${checklistType}`}
             index={index}
             isDragDisabled={isDragDisabled}
@@ -90,58 +91,59 @@ export function ChecklistItem(props: IChecklistItemProps) {
                             <div className="gripper" />
                         </div>
                     )}
-                    <div className="checklist-item scroll-hidden flex-row flex-center flex-grow">
-                        {canUpdateItemState && (
-                            <Checkbox
-                                className="flex-noshrink"
-                                tooltipProps={
-                                    isCompleted && checklistItem.completedBy && checklistItem.completedDate
-                                        ? {
-                                              text: `Completed by ${checklistItem.completedBy.displayName} at ${format(
-                                                  checklistItem.completedDate,
-                                                  "MMMM DD, YYYY, hh:mm A"
-                                              )}`
-                                          }
-                                        : undefined
-                                }
-                                disabled={disabled}
-                                checked={isCompleted}
-                                onChange={onCheckboxChange}
-                            />
-                        )}
+                    <div className="checklist-item scroll-hidden flex-column flex-grow">
+                        <div className="checklist-item-details scroll-hidden flex-row flex-center flex-grow">
+                            {canUpdateItemState && (
+                                <Checkbox
+                                    className="flex-noshrink"
+                                    tooltipProps={
+                                        isCompleted && checklistItem.completedBy && checklistItem.completedDate
+                                            ? {
+                                                  text: `Completed by ${checklistItem.completedBy.displayName} at ${format(
+                                                      checklistItem.completedDate,
+                                                      "MMMM DD, YYYY, hh:mm A"
+                                                  )}`
+                                              }
+                                            : undefined
+                                    }
+                                    disabled={disabled}
+                                    checked={isCompleted}
+                                    onChange={onCheckboxChange}
+                                />
+                            )}
 
-                        {checklistItem.required && <div className="required-item flex-noshrink">*</div>}
+                            {required && <div className="required-item flex-noshrink">*</div>}
 
-                        {checklistItem.state &&
-                            checklistItem.state !== ChecklistItemState.Completed &&
-                            checklistItem.state !== ChecklistItemState.New && (
+                            {state && state !== ChecklistItemState.Completed && state !== ChecklistItemState.New && (
                                 <Pill
                                     className="checklist-item-state flex-noshrink"
                                     size={PillSize.compact}
                                     variant={PillVariant.colored}
-                                    color={ChecklistItemStates[checklistItem.state].color}
+                                    color={ChecklistItemStates[state].color}
                                 >
-                                    {checklistItem.state}
+                                    {state}
                                 </Pill>
                             )}
 
-                        <Tooltip overflowOnly={true} text={checklistItem.text}>
-                            <div className={css("checklist-item-text flex-grow", !wordWrap && "text-ellipsis")}>{checklistItem.text}</div>
-                        </Tooltip>
+                            <Tooltip overflowOnly={true} text={text}>
+                                <div className={css("checklist-item-text flex-grow", !wordWrap && "text-ellipsis")}>{text}</div>
+                            </Tooltip>
 
-                        <AsyncComponent loader={contextMenuLoader} loadingComponent={emptyRenderer}>
-                            {(m: typeof ChecklistItemContextMenu_Async) => {
-                                const contextMenuProps = {
-                                    checklistItem,
-                                    checklistType,
-                                    canEditItem,
-                                    canDeleteItem,
-                                    canUpdateItemState,
-                                    className: "flex-noshrink"
-                                };
-                                return <m.ChecklistItemContextMenu {...contextMenuProps} />;
-                            }}
-                        </AsyncComponent>
+                            <AsyncComponent loader={contextMenuLoader} loadingComponent={emptyRenderer}>
+                                {(m: typeof ChecklistItemContextMenu_Async) => {
+                                    const contextMenuProps = {
+                                        checklistItem,
+                                        checklistType,
+                                        canEditItem,
+                                        canDeleteItem,
+                                        canUpdateItemState,
+                                        className: "flex-noshrink"
+                                    };
+                                    return <m.ChecklistItemContextMenu {...contextMenuProps} />;
+                                }}
+                            </AsyncComponent>
+                        </div>
+                        {showLabels && labels && labels.length > 0 && renderLabels(labels)}
                     </div>
                 </div>
             )}
