@@ -137,8 +137,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
     };
     const onStartTimeChange = (value: Date) => updateDraft({ ...draftBugBash, startTime: value || undefined });
     const onEndTimeChange = (value: Date) => updateDraft({ ...draftBugBash, endTime: value || undefined });
-    const onAutoAcceptChange = (_event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, checked: boolean) =>
-        updateDraft({ ...draftBugBash, autoAccept: checked });
+    const onAutoAcceptChange = (_: unknown, checked: boolean) => updateDraft({ ...draftBugBash, autoAccept: checked });
     const onWorkItemTypeChange = (option: WorkItemType, value?: string) =>
         updateDraft({ ...draftBugBash, workItemType: option ? option.name : value || "", itemDescriptionField: "" });
     const onDescriptionFieldChange = (option: WorkItemField, value?: string) =>

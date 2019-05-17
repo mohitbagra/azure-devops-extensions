@@ -86,7 +86,7 @@ function getColumns(
             width: -50,
             isSorted: sortColumn === BugBashFieldNames.Title,
             isSortedDescending: isSortedDescending,
-            renderCell: (_rowIndex: number, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
+            renderCell: (_: unknown, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
                 return (
                     <SimpleTableCell
                         contentClassName="bolt-table-cell-content-with-link"
@@ -113,7 +113,7 @@ function getColumns(
             width: -25,
             isSorted: sortColumn === BugBashFieldNames.StartTime,
             isSortedDescending: isSortedDescending,
-            renderCell: (_rowIndex: number, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
+            renderCell: (_: unknown, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
                 const startTime = bugBash.startTime;
                 const label = startTime ? format(startTime, "MMMM DD, YYYY, hh:mm A") : "N/A";
                 return (
@@ -135,7 +135,7 @@ function getColumns(
             width: -25,
             isSorted: sortColumn === BugBashFieldNames.EndTime,
             isSortedDescending: isSortedDescending,
-            renderCell: (_rowIndex: number, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
+            renderCell: (_: unknown, columnIndex: number, tableColumn: ITableColumn<IBugBash>, bugBash: IBugBash) => {
                 const endTime = bugBash.endTime;
                 const label = endTime ? format(endTime, "MMMM DD, YYYY, hh:mm A") : "N/A";
                 return (

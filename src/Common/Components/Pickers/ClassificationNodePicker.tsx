@@ -55,7 +55,7 @@ export function ClassificationNodePicker(_props: IClassificationNodePickerProps 
     // let combobox: IComboBox;
 
     // const comboBoxComponentRef = (component: IComboBox) => (combobox = component);
-    // const onNodeSelect = (_ev: React.MouseEvent, node: IClassificationNode) => {
+    // const onNodeSelect = (_: unknown, node: IClassificationNode) => {
     //     combobox.dismissMenu();
     //     const nodePath = node.path;
     //     setValue(nodePath);

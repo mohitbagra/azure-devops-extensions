@@ -331,7 +331,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
         }
     };
 
-    private readonly _updateViewState = (_existingViewState: EditorViewState, content: string, isInitializing: boolean): void => {
+    private readonly _updateViewState = (_: unknown, content: string, isInitializing: boolean): void => {
         this._throttledOnContentChanged(content, isInitializing);
     };
 
@@ -339,7 +339,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
         return !!(this._leanRoosterContentDiv && this._leanRoosterContentDiv.contains(element));
     };
 
-    private readonly _focusOutShellOnFocus = (_ev: React.FocusEvent<HTMLElement>): void => {
+    private readonly _focusOutShellOnFocus = (_: unknown): void => {
         if (this._commandBarRef.current) {
             this._commandBarPlugin.registerRoosterCommandBar(this._commandBarRef.current); // re-register command b/c we're changing mode on blur
         }

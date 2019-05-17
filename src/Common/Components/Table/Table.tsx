@@ -21,7 +21,7 @@ function mapColumns<T>(columns: ITableColumn<T>[]): VSSUI_ITableColumn<T>[] {
             },
             onSize: !column.resizable
                 ? undefined
-                : (_event: MouseEvent, index: number, width: number) => {
+                : (_: unknown, index: number, width: number) => {
                       (tableColumns[index].width as ObservableValue<number>).value = width;
                   }
         };

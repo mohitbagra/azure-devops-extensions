@@ -48,7 +48,7 @@ function ChecklistGroupInternal() {
 
     return (
         <WorkItemFormListener>
-            {(activeWorkItemId: number, isNew: boolean, _isReadOnly: boolean) => (
+            {(activeWorkItemId: number, isNew: boolean) => (
                 <Page className="checklist-form-group">
                     {isNew && (
                         <MessageCard className="checklist-message" severity={MessageCardSeverity.Info}>

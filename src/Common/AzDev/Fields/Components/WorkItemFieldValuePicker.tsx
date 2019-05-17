@@ -30,7 +30,7 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
     const { field } = useField(fieldRefName);
     const { field: workItemTypeField } = useWorkItemTypeField(workItemTypeName, fieldRefName);
 
-    const onCheckboxChanged = (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) => {
+    const onCheckboxChanged = (_: unknown, checked?: boolean) => {
         onFieldValueChanged(checked ? "1" : "0");
     };
     const onComboValueChanged = (option: string, value: string) => {

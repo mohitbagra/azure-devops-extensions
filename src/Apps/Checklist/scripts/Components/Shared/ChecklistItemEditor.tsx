@@ -95,7 +95,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     );
 
     const onRequiredChanged = React.useCallback(
-        (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, required: boolean) => {
+        (_: unknown, required: boolean) => {
             if (!disabled) {
                 updateDraftChecklistItem({ ...draftChecklistItem, required });
             }

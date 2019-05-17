@@ -23,7 +23,7 @@ function BugBashItemsChartsInternal(props: IBugBashItemProviderParams) {
     const { userSettingsMap } = useUserSettings();
     const { teamsMap } = useTeams();
     const { viewMode } = useBugBashViewMode();
-    const toggleGroupByTeam = React.useCallback((_e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, checked: boolean) => {
+    const toggleGroupByTeam = React.useCallback((_: unknown, checked: boolean) => {
         setGroupedByTeam(checked);
     }, []);
 

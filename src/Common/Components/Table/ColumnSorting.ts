@@ -1,6 +1,4 @@
-import {
-    ITable, ITableColumn, ITableProps, SortOrder
-} from "azure-devops-ui/Components/Table/Table.Props";
+import { ITable, ITableColumn, ITableProps, SortOrder } from "azure-devops-ui/Components/Table/Table.Props";
 import { cellFromEvent } from "azure-devops-ui/List";
 import { KeyCode } from "azure-devops-ui/Util";
 import { IBehavior } from "azure-devops-ui/Utilities/Behavior";
@@ -21,7 +19,7 @@ export class ColumnSorting<T> implements IBehavior<Partial<ITableProps<T>>, Part
         this.onSort = onSort;
     }
 
-    public initialize = (props: Readonly<ITableProps<T>>, _table: ITable<T>, eventDispatch: IEventDispatch): void => {
+    public initialize = (props: Readonly<ITableProps<T>>, _: unknown, eventDispatch: IEventDispatch): void => {
         this.props = props;
 
         eventDispatch.addEventListener("click", this.onClick);

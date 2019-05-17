@@ -148,7 +148,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
     const onTitleChange = (value: string) => {
         throttledOnDraftChanged({ ...draftBugBashItem, title: value });
     };
-    const onRejectChange = (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) =>
+    const onRejectChange = (_: unknown, checked?: boolean) =>
         updateDraft({ ...draftBugBashItem, rejected: checked, rejectReason: "", rejectedBy: checked ? getCurrentUser() : undefined });
     const onRejectReasonChange = (value: string) => {
         throttledOnDraftChanged({ ...draftBugBashItem, rejectReason: value });

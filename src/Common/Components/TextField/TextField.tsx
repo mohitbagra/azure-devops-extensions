@@ -25,7 +25,7 @@ export function TextField(props: ITextFieldProps) {
     const { className, onChange, label, info, getErrorMessage, required, value: prop_value } = props;
     const [value, setValue] = useControlledState(prop_value);
 
-    const onTextChanged = (_ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string) => {
+    const onTextChanged = (_: unknown, newValue: string) => {
         if (value !== newValue) {
             setValue(newValue);
             if (onChange) {

@@ -119,7 +119,7 @@ export function DropdownPicker<T>(props: IDropdownPickerProps<T>) {
         return undefined;
     };
 
-    const onItemSelect = (_event: React.SyntheticEvent<HTMLElement, Event>, item: IListBoxItem) => {
+    const onItemSelect = (_: unknown, item: IListBoxItem) => {
         let option: T | undefined;
         if (item) {
             option = keyToOptionMap && keyToOptionMap[item.id.toString().toLowerCase()];

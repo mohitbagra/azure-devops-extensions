@@ -79,7 +79,7 @@ export function BugBashItemsTable(props: IBugBashItemProviderParams) {
         return columns;
     }, [viewMode, workItemsMap, sortColumn, isSortedDescending]);
 
-    const onRowActivate = React.useCallback((_event: React.SyntheticEvent<HTMLElement>, tableRow: ITableRow<IBugBashItem>) => {
+    const onRowActivate = React.useCallback((_: unknown, tableRow: ITableRow<IBugBashItem>) => {
         onEditBugBashItem(tableRow.data.id!);
     }, []);
 
@@ -133,7 +133,7 @@ export function getColumns(
             column.isSorted = true;
             column.isSortedDescending = isSortedDescending;
         }
-        column.renderCell = (_rowIndex: number, columnIndex: number, tableColumn: ITableColumn<IBugBashItem>, bugBashItem: IBugBashItem) => {
+        column.renderCell = (_: unknown, columnIndex: number, tableColumn: ITableColumn<IBugBashItem>, bugBashItem: IBugBashItem) => {
             return onRenderBugBashItemCell(
                 columnIndex,
                 tableColumn,
