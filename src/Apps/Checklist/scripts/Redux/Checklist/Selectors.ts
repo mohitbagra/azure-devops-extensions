@@ -1,6 +1,7 @@
+import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
-import { ChecklistType, IChecklist } from "../../Interfaces";
+import { ChecklistType, IChecklist, IChecklistItem } from "../../Interfaces";
 import { IChecklistAwareState, IChecklistState, IChecklistStateModel } from "./Contracts";
 
 export function getChecklistState(state: IChecklistAwareState): IChecklistState | undefined {
@@ -9,6 +10,10 @@ export function getChecklistState(state: IChecklistAwareState): IChecklistState 
 
 export function getChecklistsMap(state: IChecklistAwareState): { [idOrType: string]: IChecklistStateModel } | undefined {
     return state.checklistState && state.checklistState.checklistsMap;
+}
+
+export function getChecklistsFilter(state: IChecklistAwareState): IFilterState | undefined {
+    return state.checklistState && state.checklistState.filterState;
 }
 
 export function getChecklistStateModel(state: IChecklistAwareState, idOrType: number | string): IChecklistStateModel | undefined {
@@ -40,6 +45,28 @@ export const getChecklists = createSelector(
                   sharedChecklist: undefined,
                   witDefaultChecklist: undefined
               }
+);
+
+export const getFilteredChecklists = createSelector(
+    [getChecklists, (state: IChecklistAwareState, _: number | string) => getChecklistsFilter(state)],
+    (checklists, filter) => {
+        const { personalChecklist, sharedChecklist, witDefaultChecklist } = checklists;
+        if (!filter) {
+            return checklists;
+        }
+
+        return {
+            personalChecklist: personalChecklist
+                ? { ...personalChecklist, checklistItems: personalChecklist.checklistItems.filter(i => matchesFilter(i, filter)) }
+                : undefined,
+            sharedChecklist: sharedChecklist
+                ? { ...sharedChecklist, checklistItems: sharedChecklist.checklistItems.filter(i => matchesFilter(i, filter)) }
+                : undefined,
+            witDefaultChecklist: witDefaultChecklist
+                ? { ...witDefaultChecklist, checklistItems: witDefaultChecklist.checklistItems.filter(i => matchesFilter(i, filter)) }
+                : undefined
+        };
+    }
 );
 
 export const getSuggestedLabels = createSelector(
@@ -97,4 +124,20 @@ export function getChecklist(state: IChecklistAwareState, idOrType: number | str
         }
     }
     return undefined;
+}
+
+function matchesFilter(checklistItem: IChecklistItem, filter: IFilterState): boolean {
+    const labels: string[] | undefined = filter.labels && filter.labels.value;
+
+    // if filter has no labels, then match
+    if (!labels || labels.length === 0) {
+        return true;
+    }
+
+    // if filter has labels, but item has no labels, then no match
+    if (!checklistItem.labels || checklistItem.labels.length === 0) {
+        return false;
+    }
+
+    return checklistItem.labels.some(l => labels.indexOf(l) !== -1);
 }

@@ -1,10 +1,11 @@
 import { getExtensionContext } from "azure-devops-extension-sdk";
-import { KeywordFilterBarItem } from "azure-devops-ui/Components/TextFilterBarItem/KeywordFilterBarItem";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { ObservableValue } from "azure-devops-ui/Core/Observable";
+import { DropdownFilterBarItem } from "azure-devops-ui/Dropdown";
 import { FilterBar } from "azure-devops-ui/FilterBar";
 import { HeaderCommandBarWithFilter } from "azure-devops-ui/HeaderCommandBar";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
+import { DropdownMultiSelection } from "azure-devops-ui/Utilities/DropdownSelection";
 import { Filter, FILTER_CHANGE_EVENT } from "azure-devops-ui/Utilities/Filter";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -12,6 +13,7 @@ import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { getContributionHubUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
+import { useChecklistLabels } from "../../Hooks/useChecklistLabels";
 import { useChecklistSettings } from "../../Hooks/useChecklistSettings";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistType } from "../../Interfaces";
@@ -27,14 +29,16 @@ const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested,
     toggleWordWrap: ChecklistSettingsActions.toggleWordWrap,
     toggleHideCompletedItems: ChecklistSettingsActions.toggleHideCompletedItems,
-    toggleShowLabels: ChecklistSettingsActions.toggleShowLabels
+    toggleShowLabels: ChecklistSettingsActions.toggleShowLabels,
+    applyFilter: ChecklistActions.applyFilter
 };
 
 export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
     const { selectedTabId, onSelectedTabChanged } = props;
     const idOrType = React.useContext(ChecklistContext);
     const status = useChecklistStatus(idOrType);
-    const { loadChecklist, toggleWordWrap, toggleHideCompletedItems, toggleShowLabels } = useActionCreators(Actions);
+    const { loadChecklist, toggleWordWrap, toggleHideCompletedItems, toggleShowLabels, applyFilter } = useActionCreators(Actions);
+    const availableLabels = useChecklistLabels();
     const { wordWrap, hideCompletedItems, showLabels } = useChecklistSettings();
     const disabled = status === LoadStatus.Loading || status === LoadStatus.NotLoaded || status === LoadStatus.Updating;
 
@@ -44,8 +48,10 @@ export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
         })
     );
     const filterToggledRef = React.useRef(new ObservableValue<boolean>(false));
+    const listSelection = React.useRef(new DropdownMultiSelection());
+
     const onFilterChange = React.useCallback(() => {
-        // setFilter(filterRef.current.getState());
+        applyFilter(filterRef.current.getState());
     }, []);
 
     React.useEffect(() => {
@@ -144,7 +150,15 @@ export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
             </TabBar>
             <ConditionalChildren renderChildren={filterToggledRef.current}>
                 <FilterBar filter={filterRef.current} onDismissClicked={onFilterBarDismissClicked}>
-                    <KeywordFilterBarItem filterItemKey="text" placeholder="Filter by title" />
+                    <DropdownFilterBarItem
+                        filterItemKey="labels"
+                        items={availableLabels.map(label => ({ id: label.toLowerCase(), text: label }))}
+                        selection={listSelection.current}
+                        noItemsText="No items"
+                        showFilterBox={true}
+                        filterPlaceholderText="Search"
+                        placeholder="Filter by labels"
+                    />
                 </FilterBar>
             </ConditionalChildren>
         </>

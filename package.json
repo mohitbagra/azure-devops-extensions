@@ -38,7 +38,7 @@
     "dependencies": {
         "azure-devops-extension-api": "1.150.3",
         "azure-devops-extension-sdk": "2.0.7",
-        "azure-devops-ui": "1.152.0",
+        "azure-devops-ui": "1.152.2",
         "date-fns": "1.30.1",
         "es6-promise": "4.2.6",
         "immer": "3.1.2",
@@ -50,7 +50,7 @@
         "react-dom": "16.8.6",
         "react-redux": "7.0.3",
         "react-beautiful-dnd": "11.0.3",
-        "recharts": "1.6.0",
+        "recharts": "1.6.1",
         "redux": "4.0.1",
         "redux-dynamic-modules": "3.5.0",
         "redux-dynamic-modules-saga": "3.5.0",

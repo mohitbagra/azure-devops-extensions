@@ -5,13 +5,13 @@ import { useCallback, useEffect } from "react";
 import { IGroupedChecklists } from "../Interfaces";
 import { ChecklistActions } from "../Redux/Checklist/Actions";
 import { IChecklistAwareState } from "../Redux/Checklist/Contracts";
-import { getChecklists, getChecklistStatus } from "../Redux/Checklist/Selectors";
+import { getChecklistStatus, getFilteredChecklists } from "../Redux/Checklist/Selectors";
 
 export function useChecklists(idOrType: number | string): IGroupedChecklists {
     const mapState = useCallback(
         (state: IChecklistAwareState) => {
             return {
-                checklists: getChecklists(state, idOrType),
+                checklists: getFilteredChecklists(state, idOrType),
                 status: getChecklistStatus(state, idOrType)
             };
         },
