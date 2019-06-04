@@ -56,7 +56,7 @@ export function reduceReducers<S = any, A extends Action = Action>(initialState:
     };
 }
 
-export const Context: React.Context<IModuleStore<any> | null> = createContext(null);
+export const Context: React.Context<IModuleStore<any> | null> = createContext<IModuleStore<any> | null>(null);
 export const ReduxHooksStoreProvider = Context.Provider;
 
 export type RT<T extends (...args: any[]) => any> = ReturnType<T> extends Promise<infer U> ? U : ReturnType<T>;
