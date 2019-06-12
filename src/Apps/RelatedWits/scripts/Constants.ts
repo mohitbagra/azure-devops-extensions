@@ -1,4 +1,5 @@
 import { FieldType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { createContext } from "react";
 
 export const StorageKey = "rwf";
 export const UserScope = { scopeType: "User" };
@@ -42,3 +43,5 @@ export const ExcludedFields = [
     "System.Watermark",
     "Microsoft.VSTS.Build.IntegrationBuild"
 ];
+
+export const RelatedWitsContext = createContext<number>(-1);

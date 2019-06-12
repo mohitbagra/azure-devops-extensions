@@ -1,6 +1,10 @@
-import { all, call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
+import { delay, takeEvery } from "redux-saga/effects";
 import { RelatedWorkItemActions } from "./Actions";
 
-export function* checklistSaga() {
-    yield takeEvery(RelatedWorkItemActions.beginLoad, loadChecklist);
+export function* relatedWitsSaga() {
+    yield takeEvery(RelatedWorkItemActions.beginLoad, loadRelatedWits);
+}
+
+function* loadRelatedWits() {
+    yield delay(500);
 }

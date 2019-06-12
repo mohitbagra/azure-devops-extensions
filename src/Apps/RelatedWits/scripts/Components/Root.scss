@@ -1,11 +1,66 @@
 @import "_CommonStyles.scss";
 
-.checklist-message {
-    margin: 5px;
+body {
+    margin: 0;
+    padding: 0;
+}
 
-    &.compact {
-        > div {
-            padding: 10px;
+#ext-container {
+    .related-wits-message {
+        margin-top: 10px;
+    }
+
+    .page-container {
+        height: 100%;
+
+        .related-wits-hub {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .related-wits-header {
+                flex-shrink: 0;
+                padding: 10px 15px;
+            }
+
+            .contents {
+                flex: 1;
+                overflow: hidden;
+
+                .grid-container {
+                    overflow: auto;
+                    height: 100%;
+                    position: relative;
+
+                    .work-item-grid {
+                        overflow-x: initial;
+                        overflow-y: initial;
+
+                        & > div[role="grid"] > div[role="presentation"]:first-child {
+                            position: sticky;
+                            top: 0px;
+                            z-index: 1;
+                        }
+
+                        .info-label {
+                            align-items: center;
+
+                            .info-icon {
+                                padding-top: 0;
+                                vertical-align: top;
+                            }
+
+                            &.linked-cell .info-label-text {
+                                color: green;
+                            }
+
+                            &.unlinked-cell .info-label-text {
+                                color: red;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
