@@ -14,6 +14,6 @@ export const enum WorkItemFieldNames {
 }
 
 export interface ISortState {
-    sortKey: WorkItemFieldNames;
+    sortKey: string;
     isSortedDescending: boolean;
 }

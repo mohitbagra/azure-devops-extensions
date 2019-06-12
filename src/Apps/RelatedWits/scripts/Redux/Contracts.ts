@@ -1,5 +1,6 @@
-import { WorkItem, WorkItemField, WorkItemRelation, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItem, WorkItemField, WorkItemRelation, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
+import { ISortState } from "../Interfaces";
 
 export interface IRelatedWitsAwareState {
     settingsState: ISettingsState;
@@ -34,17 +35,6 @@ export interface IActiveWorkItemState {
     relationTypes?: WorkItemRelationType[];
     sortableFields?: WorkItemField[];
     queryableFields?: WorkItemField[];
-}
-
-export interface ISettings {
-    fields: string[];
-    sortByField: string;
-    top?: number;
-}
-
-export interface ISortState {
-    sortKey: string;
-    isSortedDescending: boolean;
 }
 
 export const defaultSettingsState: ISettingsState = {

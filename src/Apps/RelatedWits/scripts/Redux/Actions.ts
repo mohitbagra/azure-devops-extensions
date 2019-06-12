@@ -1,47 +1,61 @@
+import { WorkItem } from "azure-devops-extension-api/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { ActionsUnion, createAction } from "Common/Redux";
-import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../Interfaces";
+import { ISettings, ISortState } from "../Interfaces";
+import { IActiveWorkItemState } from "./Contracts";
 
-export const ChecklistActions = {
-    checklistLoadRequested: (idOrType: number | string) => createAction(ChecklistActionTypes.ChecklistLoadRequested, idOrType),
-    beginLoadChecklist: (idOrType: number | string) => createAction(ChecklistActionTypes.BeginLoadChecklist, idOrType),
-    checklistLoaded: (idOrType: number | string, groupedChecklists: IGroupedChecklists) =>
-        createAction(ChecklistActionTypes.ChecklistLoaded, { idOrType, groupedChecklists }),
-
-    checklistItemCreateRequested: (idOrType: number | string, checklistItem: IChecklistItem, checklistType: ChecklistType) =>
-        createAction(ChecklistActionTypes.ChecklistItemCreateRequested, { idOrType, checklistItem, checklistType }),
-    checklistItemUpdateRequested: (idOrType: number | string, checklistItem: IChecklistItem, checklistType: ChecklistType) =>
-        createAction(ChecklistActionTypes.ChecklistItemUpdateRequested, { idOrType, checklistItem, checklistType }),
-    checklistItemDeleteRequested: (idOrType: number | string, checklistItemId: string, checklistType: ChecklistType) =>
-        createAction(ChecklistActionTypes.ChecklistItemDeleteRequested, { idOrType, checklistItemId, checklistType }),
-    checklistItemReorderRequested: (idOrType: number | string, checklistItemId: string, checklistType: ChecklistType, newIndex: number) =>
-        createAction(ChecklistActionTypes.ChecklistItemReorderRequested, { idOrType, checklistItemId, checklistType, newIndex }),
-
-    beginUpdateChecklist: (idOrType: number | string, unsavedChecklist: IChecklist, checklistType: ChecklistType) =>
-        createAction(ChecklistActionTypes.BeginUpdateChecklist, { idOrType, unsavedChecklist, checklistType }),
-    checklistUpdated: (idOrType: number | string, checklist: IChecklist, checklistType: ChecklistType) =>
-        createAction(ChecklistActionTypes.ChecklistUpdated, { idOrType, checklist, checklistType }),
-    checklistUpdateFailed: (idOrType: number | string, error: string) =>
-        createAction(ChecklistActionTypes.ChecklistUpdateFailed, { idOrType, error }),
-
-    applyFilter: (filterState: IFilterState) => createAction(ChecklistActionTypes.ApplyFilter, filterState)
+export const RelatedWorkItemActions = {
+    beginLoad: () => createAction(RelatedWorkItemActionTypes.BeginLoad),
+    loadSucceeded: (workItems: WorkItem[]) => createAction(RelatedWorkItemActionTypes.LoadSucceeded, workItems),
+    loadFailed: (error: string) => createAction(RelatedWorkItemActionTypes.LoadFailed, error),
+    applyFilter: (filterState: IFilterState) => createAction(RelatedWorkItemActionTypes.ApplyFilter, filterState),
+    applySort: (sortState: ISortState) => createAction(RelatedWorkItemActionTypes.ApplySort, sortState),
+    clearSortAndFilter: () => createAction(RelatedWorkItemActionTypes.ClearSortAndFilter),
+    clean: () => createAction(RelatedWorkItemActionTypes.Clean)
 };
 
-export const enum ChecklistActionTypes {
-    ChecklistLoadRequested = "ChecklistAction/ChecklistLoadRequested",
-    BeginLoadChecklist = "ChecklistAction/BeginLoadChecklist",
-    ChecklistLoaded = "ChecklistAction/ChecklistLoaded",
+export const RelatedWorkItemSettingsActions = {
+    beginLoad: () => createAction(RelatedWorkItemSettingsActionTypes.BeginLoad),
+    loadSucceeded: (settings: ISettings) => createAction(RelatedWorkItemSettingsActionTypes.LoadSucceeded, settings),
+    openPanel: () => createAction(RelatedWorkItemSettingsActionTypes.OpenPanel),
+    closePanel: () => createAction(RelatedWorkItemSettingsActionTypes.ClosePanel),
+    updateSettings: (settings: ISettings) => createAction(RelatedWorkItemSettingsActionTypes.UpdateSettings, settings)
+};
 
-    ChecklistItemCreateRequested = "ChecklistAction/ChecklistItemCreateRequested",
-    ChecklistItemUpdateRequested = "ChecklistAction/ChecklistItemUpdateRequested",
-    ChecklistItemDeleteRequested = "ChecklistAction/ChecklistItemDeleteRequested",
-    ChecklistItemReorderRequested = "ChecklistAction/ChecklistItemReorderRequested",
+export const ActiveWorkItemActions = {
+    setActiveWorkItem: (activeWorkItem: IActiveWorkItemState) => createAction(ActiveWorkItemActionTypes.SetActiveWorkItem, activeWorkItem),
+    workItemUnloaded: () => createAction(ActiveWorkItemActionTypes.WorkItemUnloaded)
+};
 
-    BeginUpdateChecklist = "ChecklistAction/BeginUpdateChecklist",
-    ChecklistUpdated = "ChecklistAction/ChecklistUpdated",
-    ChecklistUpdateFailed = "ChecklistAction/ChecklistUpdateFailed",
-
-    ApplyFilter = "ChecklistAction/ApplyFilter"
+export const enum RelatedWorkItemActionTypes {
+    BeginLoad = "RelatedWorkItem/BeginLoad",
+    LoadRequested = "RelatedWorkItem/LoadRequested",
+    LoadSucceeded = "RelatedWorkItem/LoadSucceeded",
+    LoadFailed = "RelatedWorkItem/LoadFailed",
+    ApplyFilter = "RelatedWorkItem/ApplyFilter",
+    ApplySort = "RelatedWorkItem/ApplySort",
+    ClearSortAndFilter = "RelatedWorkItem/ClearSortAndFilter",
+    Clean = "RelatedWorkItem/Clean"
 }
 
-export type ChecklistActions = ActionsUnion<typeof ChecklistActions>;
+export const enum RelatedWorkItemSettingsActionTypes {
+    BeginLoad = "RelatedWorkItemSettings/BeginLoad",
+    LoadRequested = "RelatedWorkItemSettings/LoadRequested",
+    LoadSucceeded = "RelatedWorkItemSettings/LoadSucceeded",
+    OpenPanel = "RelatedWorkItemSettings/OpenPanel",
+    ClosePanel = "RelatedWorkItemSettings/ClosePanel",
+    UpdateSettings = "RelatedWorkItemSettings/UpdateSettings",
+    SaveSettings = "RelatedWorkItemSettings/SaveSettings"
+}
+
+export const enum ActiveWorkItemActionTypes {
+    SetActiveWorkItem = "ActiveWorkItem/SetActiveWorkItem",
+    WorkItemLoaded = "ActiveWorkItem/WorkItemLoaded",
+    WorkItemUnloaded = "ActiveWorkItem/WorkItemUnloaded",
+    WorkItemSaved = "ActiveWorkItem/WorkItemSaved",
+    WorkItemRefreshed = "ActiveWorkItem/WorkItemRefreshed"
+}
+
+export type ActiveWorkItemActions = ActionsUnion<typeof ActiveWorkItemActions>;
+export type RelatedWorkItemActions = ActionsUnion<typeof RelatedWorkItemActions>;
+export type RelatedWorkItemSettingsActions = ActionsUnion<typeof RelatedWorkItemSettingsActions>;

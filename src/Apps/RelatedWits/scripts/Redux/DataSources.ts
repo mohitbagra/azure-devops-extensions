@@ -1,76 +1,53 @@
-import { addOrUpdateDocument, readDocument } from "Common/ServiceWrappers/ExtensionDataManager";
-import { memoizePromise } from "Common/Utilities/Memoize";
-import { isNullOrWhiteSpace } from "Common/Utilities/String";
+import { getClient } from "azure-devops-extension-api/Common/Client";
+import { WorkItem, WorkItemErrorPolicy, WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking";
+import { readSetting, writeSetting } from "Common/ServiceWrappers/ExtensionDataManager";
+import { hashCode } from "Common/Utilities/String";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
-import { ChecklistItemState, ChecklistType, IChecklist } from "../Interfaces";
+import { DEFAULT_FIELDS_TO_RETRIEVE, DEFAULT_FIELDS_TO_SEEK, DEFAULT_RESULT_SIZE, DEFAULT_SETTINGS, DEFAULT_SORT_BY_FIELD } from "../Constants";
+import { ISettings } from "../Interfaces";
 
-export const fetchWorkItemChecklistAsync = memoizePromise(
-    async (workItemId: number, personal: boolean): Promise<IChecklist> => {
-        const key = workItemId.toString();
-        const checklist = await readDocument<IChecklist>("CheckListItems", key, { id: key, checklistItems: [] }, personal);
-        preprocessChecklist(checklist);
-        return checklist as IChecklist;
-    },
-    (workItemId: number, personal: boolean) => `fetchWorkItemChecklistAsync_${workItemId}_${personal ? 1 : 0}`
-);
-
-export const fetchWorkItemDefaultChecklist = memoizePromise(
-    async (workItemId: number): Promise<IChecklist> => {
-        const key = workItemId.toString();
-        const checklist = await readDocument<IChecklist>("DefaultCheckList", key, { id: key, checklistItems: [] }, false);
-        preprocessChecklist(checklist);
-        return checklist as IChecklist;
-    },
-    (workItemId: number) => `fetchWorkItemDefaultChecklist_${workItemId}`
-);
-
-export const fetchWorkItemTypeChecklistAsync = memoizePromise(
-    async (workItemType: string, projectId?: string): Promise<IChecklist> => {
-        let resolvedProjectId = projectId;
-        if (!resolvedProjectId) {
-            resolvedProjectId = await getCurrentProjectId();
-        }
-        const checklist = await readDocument<IChecklist>(`dcwit_${resolvedProjectId}`, workItemType, { id: workItemType, checklistItems: [] }, false);
-        preprocessChecklist(checklist);
-        return checklist as IChecklist;
-    },
-    (workItemType: string, projectId?: string) => `fetchWorkItemTypeChecklistAsync_${workItemType}_${projectId || ""}`
-);
-
-export const updateChecklistAsync = memoizePromise(
-    async (checklist: IChecklist, checklistType: ChecklistType, isWorkItemTypeChecklist: boolean) => {
-        let collectionKey: string;
-        let currentProjectId: string;
-        if (checklistType === ChecklistType.WitDefault) {
-            currentProjectId = await getCurrentProjectId();
-            collectionKey = isWorkItemTypeChecklist ? `dcwit_${currentProjectId}` : "DefaultCheckList";
-        } else {
-            collectionKey = "CheckListItems";
-        }
-
-        try {
-            const updatedChecklist = await addOrUpdateDocument<IChecklist>(collectionKey, checklist, checklistType === ChecklistType.Personal);
-            preprocessChecklist(updatedChecklist);
-            return updatedChecklist;
-        } catch (e) {
-            throw new Error(
-                "The checklist has been modified by someone else. Please refresh refresh the checklist to get the latest Checklist data."
-            );
-        }
-    },
-    (checklist: IChecklist) => `updateChecklistAsync_${checklist.id}`
-);
-
-function preprocessChecklist(checklist: IChecklist | undefined) {
-    if (checklist && checklist.checklistItems) {
-        for (const checklistItem of checklist.checklistItems) {
-            if (isNullOrWhiteSpace(checklistItem.state)) {
-                if ((checklistItem as any)["checked"]) {
-                    checklistItem.state = ChecklistItemState.Completed;
-                } else {
-                    checklistItem.state = ChecklistItemState.New;
-                }
-            }
-        }
+export async function fetchWorkItems(project: string, wiql: string, top: number): Promise<WorkItem[]> {
+    const witClient = await getClient(WorkItemTrackingRestClient);
+    const queryResult = await witClient.queryByWiql({ query: wiql }, project, undefined, false, top);
+    const projectId = await getCurrentProjectId();
+    if (queryResult.workItems && queryResult.workItems.length > 0) {
+        return witClient.getWorkItems(
+            queryResult.workItems.map(w => w.id),
+            projectId,
+            DEFAULT_FIELDS_TO_RETRIEVE,
+            undefined,
+            undefined,
+            WorkItemErrorPolicy.Omit
+        );
+    } else {
+        return [];
     }
+}
+
+export async function fetchSettings(project: string, workItemTypeName: string): Promise<ISettings> {
+    const key = `${project}_${workItemTypeName}`.toLowerCase();
+    const suffix = hashCode(key).toString();
+    const storageKey = `rwf_${suffix}`;
+    let settings = await readSetting<ISettings>(storageKey, DEFAULT_SETTINGS, true);
+    if (!settings) {
+        settings = DEFAULT_SETTINGS;
+    }
+    if (settings.top == null || settings.top <= 0) {
+        settings.top = DEFAULT_RESULT_SIZE;
+    }
+    if (settings.sortByField == null) {
+        settings.sortByField = DEFAULT_SORT_BY_FIELD;
+    }
+    if (settings.fields == null) {
+        settings.fields = DEFAULT_FIELDS_TO_SEEK;
+    }
+
+    return settings;
+}
+
+export async function saveSettings(project: string, workItemTypeName: string, settings: ISettings): Promise<ISettings> {
+    const key = `${project}_${workItemTypeName}`.toLowerCase();
+    const suffix = hashCode(key).toString();
+    const storageKey = `rwf_${suffix}`;
+    return writeSetting<ISettings>(storageKey, settings, true);
 }
