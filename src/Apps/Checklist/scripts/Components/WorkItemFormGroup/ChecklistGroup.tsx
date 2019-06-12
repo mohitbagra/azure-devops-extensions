@@ -3,9 +3,8 @@ import "./ChecklistGroup.scss";
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { Page } from "azure-devops-ui/Page";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
-import { WorkItemFormActions } from "Common/AzDev/WorkItemForm/Redux/Actions";
+import { useAutoResize } from "Common/AzDev/WorkItemForm/Hooks/useAutoResize";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as React from "react";
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
@@ -17,34 +16,14 @@ import { ChecklistItemsProvider } from "../Shared/ChecklistItemsProvider";
 import { ChecklistView } from "../Shared/ChecklistView";
 import { ChecklistGroupTabBar } from "./ChecklistGroupTabBar";
 
-const Actions = {
-    resizeIframe: WorkItemFormActions.resize
-};
-
 function ChecklistGroupInternal() {
     const [selectedTabId, setSelectedTabId] = React.useState(ChecklistType.Shared);
-    const { resizeIframe } = useActionCreators(Actions);
 
     const onSelectedTabChanged = React.useCallback((selectedTab: ChecklistType) => {
         setSelectedTabId(selectedTab);
     }, []);
 
-    React.useEffect(() => {
-        const bodyElement = document.getElementsByTagName("body").item(0) as HTMLBodyElement;
-        let height = bodyElement.offsetHeight;
-        const interval = setInterval(() => {
-            const newHeight = bodyElement.offsetHeight;
-            if (Math.abs(newHeight - height) > 10) {
-                console.log(`hright: ${height}; newheight: ${newHeight}`);
-                height = newHeight;
-                resizeIframe(newHeight);
-            }
-        }, 50);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
+    useAutoResize();
 
     return (
         <WorkItemFormListener>

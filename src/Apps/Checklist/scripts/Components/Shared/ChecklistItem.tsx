@@ -1,7 +1,7 @@
 import "./ChecklistItem.scss";
 
 import { Checkbox } from "azure-devops-ui/Checkbox";
-import { Icon } from 'azure-devops-ui/Icon';
+import { Icon } from "azure-devops-ui/Icon";
 import { Pill, PillSize, PillVariant } from "azure-devops-ui/Pill";
 import { PillGroup, PillGroupOverflow } from "azure-devops-ui/PillGroup";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
@@ -100,11 +100,11 @@ export function ChecklistItem(props: IChecklistItemProps) {
                                     tooltipProps={
                                         isCompleted && checklistItem.completedBy && checklistItem.completedDate
                                             ? {
-                                                text: `Completed by ${checklistItem.completedBy.displayName} at ${format(
-                                                    checklistItem.completedDate,
-                                                    "MMMM DD, YYYY, hh:mm A"
-                                                )}`
-                                            }
+                                                  text: `Completed by ${checklistItem.completedBy.displayName} at ${format(
+                                                      checklistItem.completedDate,
+                                                      "MMMM DD, YYYY, hh:mm A"
+                                                  )}`
+                                              }
                                             : undefined
                                     }
                                     disabled={disabled}

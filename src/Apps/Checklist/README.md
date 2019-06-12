@@ -1,7 +1,7 @@
 # Work Item checklist
 
 A work item form group extension that lets user enter TODO list items for an individual workitem. These list items are stored in the extension's data storage and not as a field value or any other work item. These items are not bound to any work item field.
-Users can add, remove any checklist item and mark them as checked or unchecked. This extension shows 2 types of checklists - "Personal" and "Shared". Personal checklist is private to each user. Shared list is shared with the whole account for a workitem. The items are stored per workitem, so each workitem would have its own checklist.
+Users can add, remove any checklist item and mark them as checked or unchecked. This extension shows 2 types of checklists - "Personal" and "Shared". Personal checklist is private to each user. Shared list is shared with all the users in the organization. The items are stored per workitem, so each workitem would have its own checklist.
 
 ![Group](images/checklist.png)
 
@@ -9,12 +9,23 @@ Users can also add certain default checklist items for a work item type by going
 
 ![Group](images/default.png)
 
-These default checklist items would show up for all the workitems of that work item type in the current project. The state of these default items would still be maintained at each work item's level. For eg. In the screenshot above, "Unit tests done" and "FUnctional tests done" are 2 default checklist items which would show up in each "checklsit" work item. But if a user checks "Unit tests done", it would only be checked for that particular work item.
+These default checklist items would show up for all the workitems of that work item type in the current project. The state of these default items would still be maintained at each work item's level. For eg. In the screenshot above, "Unit tests done" and "Functional tests done" are 2 default checklist items which would show up in each "Bug" work item. But if a user checks "Unit tests done", it would only be checked for that particular work item.
 Default items are not sortable or removable from work item form. Users can do that via tha settings hub.
 
 # Changelog
 
 <a name="changelog" id="changelog"></a>
+**(06/12/2019) Version 3.2.1:**
+
+-   Added Dark theme support
+-   Added support for adding labels to each checklist item.
+-   Added a filter bar to filter checklist items by labels.
+-   Show information like who completed a checklist item and when in a tooltip over the checkbox of a completed item.
+-   Added a bunch of user scoped settings:
+    1. Toggle Word Wrap: Enabling this will wrap a long checklist item text in multiple lines.
+    2. Hide completed items: Enabling this will hide completed checklist items.
+    3. Show labels: Enabling it will show labels below each checklist item.
+
 **(05/06/18) Version 3.0:**
 
 -   Added support for adding default checklist items for a work item type.

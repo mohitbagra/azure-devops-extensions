@@ -3,9 +3,9 @@ import "./ChecklistItemEditor.scss";
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { IMenuItem, MenuButton } from "azure-devops-ui/Menu";
+import { TextField } from "azure-devops-ui/TextField";
 import { css, KeyCode } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
-import { TextField } from "Common/Components/TextField";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
@@ -40,6 +40,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     const idOrType = React.useContext(ChecklistContext);
     const { createChecklistItem, updateChecklistItem } = useActionCreators(Actions);
     const status = useChecklistStatus(idOrType);
+    const textFieldRef = React.useRef<TextField>(null);
 
     const [draftChecklistItem, updateDraftChecklistItem] = React.useState<IChecklistItem>(
         checklistItem ? { ...checklistItem } : { ...newChecklistItem }
@@ -75,6 +76,9 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                     e.preventDefault();
                     e.stopPropagation();
                     onSave();
+                    if (textFieldRef.current) {
+                        textFieldRef.current.focus();
+                    }
                 } else if (e.keyCode === KeyCode.escape) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -86,7 +90,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
     );
 
     const onTextChanged = React.useCallback(
-        (text: string) => {
+        (_: unknown, text: string) => {
             if (!disabled) {
                 updateDraftChecklistItem({ ...draftChecklistItem, text });
             }
@@ -126,10 +130,11 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
             <div className="checklist-item-input">
                 <TextField
                     inputId="checklist-item-text"
+                    ref={textFieldRef}
                     placeholder="Add new item"
                     maxLength={128}
                     onKeyUp={onInputKeyUp}
-                    disabled={disabled}
+                    readOnly={disabled}
                     value={draftChecklistItem.text}
                     onChange={onTextChanged}
                 />
