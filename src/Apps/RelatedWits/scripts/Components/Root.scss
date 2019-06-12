@@ -1,0 +1,21 @@
+@import "_CommonStyles.scss";
+
+.checklist-message {
+    margin: 5px;
+
+    &.compact {
+        > div {
+            padding: 10px;
+        }
+    }
+}
+
+.communication-foreground {
+    color: $communication-foreground;
+}
+
+.error-text {
+    color: $error-text;
+}
+
+@include scrollbars(11px, 2px);
