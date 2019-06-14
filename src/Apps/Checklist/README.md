@@ -1,5 +1,11 @@
 # Work Item checklist
 
+```
+IMPORTANT: Due to a bug in Azure Devops service, this extension may cause the browser page to crash, when a work item dialog is opened from backlogs or sprints page.
+I am working with Azure Devops team to get this fixed soon. ETA is early next week. Till then, please disable the extension.
+Sorry for causing inconvenience.
+```
+
 A work item form group extension that lets user enter TODO list items for an individual workitem. These list items are stored in the extension's data storage and not as a field value or any other work item. These items are not bound to any work item field.
 Users can add, remove any checklist item and mark them as checked or unchecked. This extension shows 2 types of checklists - "Personal" and "Shared". Personal checklist is private to each user. Shared list is shared with all the users in the organization. The items are stored per workitem, so each workitem would have its own checklist.
 
