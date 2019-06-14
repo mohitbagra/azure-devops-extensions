@@ -1,6 +1,7 @@
 import { WorkItem, WorkItemField, WorkItemRelation, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
-import { ISortState } from "../Interfaces";
+import { LoadStatus } from "Common/Contracts";
+import { ISettings, ISortState } from "../Interfaces";
 
 export interface IRelatedWitsAwareState {
     settingsState: ISettingsState;
@@ -9,23 +10,25 @@ export interface IRelatedWitsAwareState {
 }
 
 export interface ISettingsState {
-    loading: boolean;
+    status: LoadStatus;
     isPanelOpen?: boolean;
-    settings?: IChangeableSettings;
+    settings?: ISettings;
 }
 
 export interface IRelatedWorkItemsState {
-    loading: boolean;
-    error?: string;
-    workItems?: WorkItem[];
-    filteredItems?: WorkItem[];
+    relatedWorkItems: { [workItemId: number]: IRelatedWorkItemsStateModel };
     filterState?: IFilterState;
     sortState?: ISortState;
-    propertyMap?: { [key: string]: { [key: string]: number } };
+}
+
+export interface IRelatedWorkItemsStateModel {
+    workItemId: number;
+    status: LoadStatus;
+    error?: string;
+    workItems?: WorkItem[];
 }
 
 export interface IActiveWorkItemState {
-    loaded: boolean;
     id?: number;
     rev?: number;
     isNew?: boolean;
@@ -38,24 +41,11 @@ export interface IActiveWorkItemState {
 }
 
 export const defaultSettingsState: ISettingsState = {
-    loading: false
+    status: LoadStatus.NotLoaded
 };
 
 export const defaultRelatedWorkItemsState: IRelatedWorkItemsState = {
-    loading: false
+    relatedWorkItems: {}
 };
 
-export const defaultActiveWorkItemState: IActiveWorkItemState = {
-    loaded: false
-};
-
-export interface IChangeableValue<T> {
-    originalValue: T;
-    value: T;
-}
-
-export interface IChangeableSettings {
-    fields: IChangeableValue<string[]>;
-    sortByField: IChangeableValue<string>;
-    top: IChangeableValue<number>;
-}
+export const defaultActiveWorkItemState: IActiveWorkItemState = {};

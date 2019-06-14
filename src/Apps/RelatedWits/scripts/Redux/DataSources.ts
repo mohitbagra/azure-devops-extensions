@@ -8,8 +8,8 @@ import { ISettings } from "../Interfaces";
 
 export async function fetchWorkItems(project: string, wiql: string, top: number): Promise<WorkItem[]> {
     const witClient = await getClient(WorkItemTrackingRestClient);
-    const queryResult = await witClient.queryByWiql({ query: wiql }, project, undefined, false, top);
     const projectId = await getCurrentProjectId();
+    const queryResult = await witClient.queryByWiql({ query: wiql }, project, undefined, false, top);
     if (queryResult.workItems && queryResult.workItems.length > 0) {
         return witClient.getWorkItems(
             queryResult.workItems.map(w => w.id),

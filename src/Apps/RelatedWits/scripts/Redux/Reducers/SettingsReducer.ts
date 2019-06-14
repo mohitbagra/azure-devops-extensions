@@ -1,3 +1,4 @@
+import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
 import { RelatedWorkItemSettingsActions, RelatedWorkItemSettingsActionTypes } from "../Actions";
 import { defaultSettingsState, ISettingsState } from "../Contracts";
@@ -6,18 +7,18 @@ export function settingsReducer(state: ISettingsState | undefined, action: Relat
     return produce(state || defaultSettingsState, draft => {
         switch (action.type) {
             case RelatedWorkItemSettingsActionTypes.BeginLoad: {
-                draft.loading = true;
+                draft.status = LoadStatus.Loading;
                 break;
             }
 
             case RelatedWorkItemSettingsActionTypes.LoadSucceeded: {
                 const { fields, top, sortByField } = action.payload;
                 draft.settings = {
-                    fields: { originalValue: fields, value: fields },
-                    sortByField: { originalValue: sortByField, value: sortByField },
-                    top: { originalValue: top!, value: top! }
+                    fields,
+                    sortByField,
+                    top
                 };
-                draft.loading = false;
+                draft.status = LoadStatus.Ready;
                 break;
             }
 
@@ -28,20 +29,15 @@ export function settingsReducer(state: ISettingsState | undefined, action: Relat
 
             case RelatedWorkItemSettingsActionTypes.ClosePanel: {
                 draft.isPanelOpen = false;
-                if (draft.settings) {
-                    draft.settings.fields.value = draft.settings.fields.originalValue;
-                    draft.settings.sortByField.value = draft.settings.sortByField.originalValue;
-                    draft.settings.top.value = draft.settings.top.originalValue;
-                }
                 break;
             }
 
             case RelatedWorkItemSettingsActionTypes.UpdateSettings: {
                 const settings = action.payload;
                 if (draft.settings) {
-                    draft.settings.fields.value = settings.fields;
-                    draft.settings.sortByField.value = settings.sortByField;
-                    draft.settings.top.value = settings.top!;
+                    draft.settings.fields = settings.fields;
+                    draft.settings.sortByField = settings.sortByField;
+                    draft.settings.top = settings.top;
                 }
             }
         }

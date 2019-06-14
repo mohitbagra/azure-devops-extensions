@@ -5,16 +5,17 @@ import { ISettings, ISortState } from "../Interfaces";
 import { IActiveWorkItemState } from "./Contracts";
 
 export const RelatedWorkItemActions = {
-    beginLoad: () => createAction(RelatedWorkItemActionTypes.BeginLoad),
-    loadSucceeded: (workItems: WorkItem[]) => createAction(RelatedWorkItemActionTypes.LoadSucceeded, workItems),
-    loadFailed: (error: string) => createAction(RelatedWorkItemActionTypes.LoadFailed, error),
+    loadRequested: (workItemId: number) => createAction(RelatedWorkItemActionTypes.LoadRequested, workItemId),
+    beginLoad: (workItemId: number) => createAction(RelatedWorkItemActionTypes.BeginLoad, workItemId),
+    loadSucceeded: (workItemId: number, workItems: WorkItem[]) => createAction(RelatedWorkItemActionTypes.LoadSucceeded, { workItemId, workItems }),
+    loadFailed: (workItemId: number, error: string) => createAction(RelatedWorkItemActionTypes.LoadFailed, { workItemId, error }),
     applyFilter: (filterState: IFilterState) => createAction(RelatedWorkItemActionTypes.ApplyFilter, filterState),
     applySort: (sortState: ISortState) => createAction(RelatedWorkItemActionTypes.ApplySort, sortState),
-    clearSortAndFilter: () => createAction(RelatedWorkItemActionTypes.ClearSortAndFilter),
-    clean: () => createAction(RelatedWorkItemActionTypes.Clean)
+    clearSortAndFilter: () => createAction(RelatedWorkItemActionTypes.ClearSortAndFilter)
 };
 
 export const RelatedWorkItemSettingsActions = {
+    loadRequested: () => createAction(RelatedWorkItemSettingsActionTypes.LoadRequested),
     beginLoad: () => createAction(RelatedWorkItemSettingsActionTypes.BeginLoad),
     loadSucceeded: (settings: ISettings) => createAction(RelatedWorkItemSettingsActionTypes.LoadSucceeded, settings),
     openPanel: () => createAction(RelatedWorkItemSettingsActionTypes.OpenPanel),
@@ -23,37 +24,31 @@ export const RelatedWorkItemSettingsActions = {
 };
 
 export const ActiveWorkItemActions = {
-    setActiveWorkItem: (activeWorkItem: IActiveWorkItemState) => createAction(ActiveWorkItemActionTypes.SetActiveWorkItem, activeWorkItem),
-    workItemUnloaded: () => createAction(ActiveWorkItemActionTypes.WorkItemUnloaded)
+    setActiveWorkItem: (activeWorkItem: IActiveWorkItemState) => createAction(ActiveWorkItemActionTypes.SetActiveWorkItem, activeWorkItem)
 };
 
 export const enum RelatedWorkItemActionTypes {
-    BeginLoad = "RelatedWorkItem/BeginLoad",
     LoadRequested = "RelatedWorkItem/LoadRequested",
+    BeginLoad = "RelatedWorkItem/BeginLoad",
     LoadSucceeded = "RelatedWorkItem/LoadSucceeded",
     LoadFailed = "RelatedWorkItem/LoadFailed",
     ApplyFilter = "RelatedWorkItem/ApplyFilter",
     ApplySort = "RelatedWorkItem/ApplySort",
-    ClearSortAndFilter = "RelatedWorkItem/ClearSortAndFilter",
-    Clean = "RelatedWorkItem/Clean"
+    ClearSortAndFilter = "RelatedWorkItem/ClearSortAndFilter"
 }
 
 export const enum RelatedWorkItemSettingsActionTypes {
-    BeginLoad = "RelatedWorkItemSettings/BeginLoad",
     LoadRequested = "RelatedWorkItemSettings/LoadRequested",
+    BeginLoad = "RelatedWorkItemSettings/BeginLoad",
     LoadSucceeded = "RelatedWorkItemSettings/LoadSucceeded",
     OpenPanel = "RelatedWorkItemSettings/OpenPanel",
     ClosePanel = "RelatedWorkItemSettings/ClosePanel",
-    UpdateSettings = "RelatedWorkItemSettings/UpdateSettings",
-    SaveSettings = "RelatedWorkItemSettings/SaveSettings"
+    UpdateSettingsRequested = "RelatedWorkItemSettings/UpdateSettingsRequested",
+    UpdateSettings = "RelatedWorkItemSettings/UpdateSettings"
 }
 
 export const enum ActiveWorkItemActionTypes {
-    SetActiveWorkItem = "ActiveWorkItem/SetActiveWorkItem",
-    WorkItemLoaded = "ActiveWorkItem/WorkItemLoaded",
-    WorkItemUnloaded = "ActiveWorkItem/WorkItemUnloaded",
-    WorkItemSaved = "ActiveWorkItem/WorkItemSaved",
-    WorkItemRefreshed = "ActiveWorkItem/WorkItemRefreshed"
+    SetActiveWorkItem = "ActiveWorkItem/SetActiveWorkItem"
 }
 
 export type ActiveWorkItemActions = ActionsUnion<typeof ActiveWorkItemActions>;
