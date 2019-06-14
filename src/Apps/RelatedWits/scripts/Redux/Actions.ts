@@ -15,7 +15,6 @@ export const RelatedWorkItemActions = {
 };
 
 export const RelatedWorkItemSettingsActions = {
-    loadRequested: () => createAction(RelatedWorkItemSettingsActionTypes.LoadRequested),
     beginLoad: () => createAction(RelatedWorkItemSettingsActionTypes.BeginLoad),
     loadSucceeded: (settings: ISettings) => createAction(RelatedWorkItemSettingsActionTypes.LoadSucceeded, settings),
     openPanel: () => createAction(RelatedWorkItemSettingsActionTypes.OpenPanel),

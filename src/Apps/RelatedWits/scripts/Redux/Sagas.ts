@@ -1,5 +1,4 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
-import { fetchBugBashDetailsAsync } from "BugBashPro/Shared/Redux/BugBashDetails/DataSource";
 import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkItemForm/Redux/Actions";
 import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
@@ -8,10 +7,12 @@ import { getWorkItemFormService } from "Common/ServiceWrappers/WorkItemFormServi
 import { contains } from "Common/Utilities/Array";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { ExcludedFields, QueryableFieldTypes, SortableFieldTypes } from "../Constants";
-import { fieldNameComparer } from "../Helpers";
-import { ActiveWorkItemActions, RelatedWorkItemActions, RelatedWorkItemActionTypes } from "./Actions";
+import { createQuery, fieldNameComparer } from "../Helpers";
+import { ISettings } from "../Interfaces";
+import { ActiveWorkItemActions, RelatedWorkItemActions, RelatedWorkItemActionTypes, RelatedWorkItemSettingsActions } from "./Actions";
 import { IActiveWorkItemState } from "./Contracts";
-import { getRelatedWitsStatus } from "./Selectors";
+import { fetchSettings, fetchWorkItems } from "./DataSources";
+import { getRelatedWitsStatus, getSettings, getSettingsStatus } from "./Selectors";
 
 export function* relatedWitsSaga() {
     yield takeEvery(
@@ -37,17 +38,32 @@ function* onWorkItemChanged(
 function* requestLoad(action: ActionsOfType<RelatedWorkItemActions, RelatedWorkItemActionTypes.LoadRequested>) {
     const workItemId = action.payload;
     const status: RT<typeof getRelatedWitsStatus> = yield select(getRelatedWitsStatus, workItemId);
-    const activeWorkItem = yield call(getActiveWorkItem);
+    const activeWorkItem: IActiveWorkItemState = yield call(getActiveWorkItem);
     yield put(ActiveWorkItemActions.setActiveWorkItem(activeWorkItem));
+    yield call(loadSettings, activeWorkItem.project!, activeWorkItem.workItemTypeName!);
+
+    const settings: ISettings = yield select(getSettings);
 
     if (status !== LoadStatus.Loading) {
         yield put(RelatedWorkItemActions.beginLoad(workItemId));
         try {
-            const workItems: RT<typeof fetchBugBashDetailsAsync> = yield call(fetchBugBashDetailsAsync, bugBashId);
+            const wiql: string = yield call(createQuery, activeWorkItem.project!, settings.fields, settings.sortByField);
+            const workItems: RT<typeof fetchWorkItems> = yield call(fetchWorkItems, activeWorkItem.project!, wiql, settings.top);
             yield put(RelatedWorkItemActions.loadSucceeded(workItemId, workItems));
         } catch (e) {
             yield put(RelatedWorkItemActions.loadFailed(workItemId, e.message));
         }
+    }
+}
+
+function* loadSettings(project: string, workItemTypeName: string) {
+    const status: RT<typeof getRelatedWitsStatus> = yield select(getSettingsStatus);
+    const settings: RT<typeof getSettings> = yield select(getSettings);
+
+    if (!settings && status === LoadStatus.NotLoaded) {
+        yield put(RelatedWorkItemSettingsActions.beginLoad());
+        const settings: RT<typeof fetchSettings> = yield call(fetchSettings, project, workItemTypeName);
+        yield put(RelatedWorkItemSettingsActions.loadSucceeded(settings));
     }
 }
 

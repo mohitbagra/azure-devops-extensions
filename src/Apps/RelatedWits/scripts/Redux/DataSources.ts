@@ -6,7 +6,7 @@ import { getCurrentProjectId } from "Common/Utilities/WebContext";
 import { DEFAULT_FIELDS_TO_RETRIEVE, DEFAULT_FIELDS_TO_SEEK, DEFAULT_RESULT_SIZE, DEFAULT_SETTINGS, DEFAULT_SORT_BY_FIELD } from "../Constants";
 import { ISettings } from "../Interfaces";
 
-export async function fetchWorkItems(project: string, wiql: string, top: number): Promise<WorkItem[]> {
+export async function fetchWorkItems(project: string, wiql: string, top: number | undefined): Promise<WorkItem[]> {
     const witClient = await getClient(WorkItemTrackingRestClient);
     const projectId = await getCurrentProjectId();
     const queryResult = await witClient.queryByWiql({ query: wiql }, project, undefined, false, top);
