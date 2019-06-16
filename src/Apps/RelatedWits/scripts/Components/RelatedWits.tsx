@@ -9,6 +9,7 @@ import { HeaderCommandBarWithFilter } from "azure-devops-ui/HeaderCommandBar";
 import { Page } from "azure-devops-ui/Page";
 import { KeywordFilterBarItem } from "azure-devops-ui/TextFilterBarItem";
 import { Filter } from "azure-devops-ui/Utilities/Filter";
+import { ZeroData } from "azure-devops-ui/ZeroData";
 import { Loading } from "Common/Components/Loading";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -98,7 +99,10 @@ export function RelatedWits() {
             </div>
             <Card className="flex-grow bolt-card-no-vertical-padding flex-column related-wits-page-card" contentProps={{ contentPadding: false }}>
                 {isLoading && <Loading />}
-                {!isLoading && <RelatedWorkItemsTable workItems={workItems!} />}
+                {!isLoading && workItems && workItems.length === 0 && (
+                    <ZeroData className="flex-grow" imagePath="../images/nodata.png" imageAltText="" primaryText="No results found" />
+                )}
+                {!isLoading && workItems && workItems.length > 0 && <RelatedWorkItemsTable workItems={workItems} />}
             </Card>
         </Page>
     );
