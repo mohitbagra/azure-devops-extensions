@@ -31,7 +31,7 @@ export const getSortColumn = createSelector(
 
 export const isSortedDescending = createSelector(
     getSortState,
-    state => state && state.isSortedDescending
+    state => !!(state && state.isSortedDescending)
 );
 
 export const getRelatedWorkItemsStateModel = (state: IRelatedWitsAwareState, workItemId: number) => {
