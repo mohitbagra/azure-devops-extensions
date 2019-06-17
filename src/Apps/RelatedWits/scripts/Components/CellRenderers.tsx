@@ -14,7 +14,7 @@ export function onRenderWorkItemCell(
     workItem: WorkItem,
     onTitleClick?: (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => void
 ): JSX.Element {
-    const isLink = false;
+    let isLink = false;
     let innerElement: JSX.Element | null = null;
 
     if (key === CoreFieldRefNames.Id) {
@@ -24,10 +24,12 @@ export function onRenderWorkItemCell(
             </Tooltip>
         );
     } else if (key === CoreFieldRefNames.Title) {
+        isLink = true;
         innerElement = (
             <WorkItemTitleView
                 linkClassName="bolt-table-link"
                 workItemId={workItem.id}
+                hideId={true}
                 title={workItem.fields[key] as string}
                 workItemTypeName={workItem.fields[CoreFieldRefNames.WorkItemType]}
                 onClick={onTitleClick}

@@ -1,21 +1,13 @@
+import { IdentityRef } from "azure-devops-extension-api/WebApi/WebApi";
 import { WorkItem, WorkItemField } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { caseInsensitiveContains, equals, localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { CoreFieldRefNames } from "Common/Constants";
 import { getWorkItemFormService } from "Common/ServiceWrappers/WorkItemFormServices";
-import { defaultDateComparer } from "Common/Utilities/Date";
-import { isNullOrEmpty } from "Common/Utilities/String";
-import { DEFAULT_FIELDS_TO_RETRIEVE, ExcludedFields } from "./Constants";
+import { getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
+import { isNullOrWhiteSpace } from "Common/Utilities/String";
+import { DEFAULT_FIELDS_TO_RETRIEVE, ExcludedFields, KeyTypes } from "./Constants";
 import { ISortState } from "./Interfaces";
-
-const KeyTypes: { [key: string]: string } = {
-    [CoreFieldRefNames.AreaPath]: "string",
-    [CoreFieldRefNames.AssignedTo]: "string",
-    [CoreFieldRefNames.Title]: "string",
-    [CoreFieldRefNames.State]: "string",
-    [CoreFieldRefNames.WorkItemType]: "string",
-    [CoreFieldRefNames.Id]: "number"
-};
 
 export function fieldNameComparer(a: WorkItemField, b: WorkItemField): number {
     const aUpper = a.name.toUpperCase();
@@ -53,48 +45,43 @@ export function workItemMatchesFilter(workItem: WorkItem, filterState?: IFilterS
         return true;
     }
 
+    let returnValue = true;
+
     // filter by keyword : title (all items) and reject reason
-    const keyword = filterState.keyword && filterState.keyword.value;
-    if (!isNullOrEmpty(keyword)) {
-        const title = workItem.fields[CoreFieldRefNames.Title];
-        if (!caseInsensitiveContains(title, keyword)) {
-            return false;
-        }
+    const keyword: string | undefined = filterState.keyword && filterState.keyword.value;
+    if (!isNullOrWhiteSpace(keyword)) {
+        const title: string = workItem.fields[CoreFieldRefNames.Title];
+        returnValue = returnValue && caseInsensitiveContains(title, keyword || "");
     }
 
     // filter by work item state
     const states: string[] = filterState[CoreFieldRefNames.State] && filterState[CoreFieldRefNames.State]!.value;
     if (states && states.length > 0) {
-        if (states.filter(v => equals(v, workItem.fields[CoreFieldRefNames.State], true)).length === 0) {
-            return false;
-        }
+        returnValue = returnValue && states.filter(v => equals(v, workItem.fields[CoreFieldRefNames.State], true)).length > 0;
     }
 
     // filter by work item assigned to
-    const assignedTos: string[] = filterState[CoreFieldRefNames.AssignedTo] && filterState[CoreFieldRefNames.AssignedTo]!.value;
+    const assignedTos: string[] | undefined = filterState[CoreFieldRefNames.AssignedTo] && filterState[CoreFieldRefNames.AssignedTo]!.value;
     if (assignedTos && assignedTos.length > 0) {
-        if (assignedTos.filter(v => equals(v, workItem.fields[CoreFieldRefNames.AssignedTo] || "Unassigned", true)).length === 0) {
-            return false;
-        }
+        returnValue =
+            returnValue &&
+            assignedTos.filter(v => equals(v, getDistinctNameFromIdentityRef(workItem.fields[CoreFieldRefNames.AssignedTo]) || "Unassigned", true))
+                .length > 0;
     }
 
     // filter by work item area path
     const areaPaths: string[] = filterState[CoreFieldRefNames.AreaPath] && filterState[CoreFieldRefNames.AreaPath]!.value;
     if (areaPaths && areaPaths.length > 0) {
-        if (areaPaths.filter(v => equals(v, workItem.fields[CoreFieldRefNames.AreaPath], true)).length === 0) {
-            return false;
-        }
+        returnValue = returnValue && areaPaths.filter(v => equals(v, workItem.fields[CoreFieldRefNames.AreaPath], true)).length > 0;
     }
 
     // filter by work item area path
     const workItemTypes: string[] = filterState[CoreFieldRefNames.WorkItemType] && filterState[CoreFieldRefNames.WorkItemType]!.value;
     if (workItemTypes && workItemTypes.length > 0) {
-        if (workItemTypes.filter(v => equals(v, workItem.fields[CoreFieldRefNames.WorkItemType], true)).length === 0) {
-            return false;
-        }
+        returnValue = returnValue && workItemTypes.filter(v => equals(v, workItem.fields[CoreFieldRefNames.WorkItemType], true)).length > 0;
     }
 
-    return true;
+    return returnValue;
 }
 
 export function workItemComparer(workItem1: WorkItem, workItem2: WorkItem, sortState: ISortState): number {
@@ -102,8 +89,8 @@ export function workItemComparer(workItem1: WorkItem, workItem2: WorkItem, sortS
     const isSortedDescending = sortState.isSortedDescending;
     let compareValue = 0;
 
-    const v1: string | Date | number | boolean = sortKey === CoreFieldRefNames.Id ? workItem1.id : workItem1.fields[sortKey];
-    const v2: string | Date | number | boolean = sortKey === CoreFieldRefNames.Id ? workItem2.id : workItem2.fields[sortKey];
+    const v1: string | IdentityRef | number = sortKey === CoreFieldRefNames.Id ? workItem1.id : workItem1.fields[sortKey];
+    const v2: string | IdentityRef | number = sortKey === CoreFieldRefNames.Id ? workItem2.id : workItem2.fields[sortKey];
 
     if (v1 == null && v2 == null) {
         compareValue = 0;
@@ -113,12 +100,8 @@ export function workItemComparer(workItem1: WorkItem, workItem2: WorkItem, sortS
         compareValue = 1;
     } else if (KeyTypes[sortKey] === "string") {
         compareValue = localeIgnoreCaseComparer(v1 as string, v2 as string);
-    } else if (KeyTypes[sortKey] === "date") {
-        compareValue = defaultDateComparer(v1 as Date, v2 as Date);
-    } else if (KeyTypes[sortKey] === "boolean") {
-        const b1 = !v1 ? "False" : "True";
-        const b2 = !v2 ? "False" : "True";
-        compareValue = localeIgnoreCaseComparer(b1, b2);
+    } else if (KeyTypes[sortKey] === "identityRef") {
+        compareValue = localeIgnoreCaseComparer((v1 as IdentityRef).displayName, (v2 as IdentityRef).displayName);
     } else if (KeyTypes[sortKey] === "number") {
         compareValue = v1 > v2 ? 1 : -1;
     }

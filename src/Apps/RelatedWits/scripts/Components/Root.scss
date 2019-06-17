@@ -8,6 +8,7 @@ body {
 #ext-container {
     padding: 0;
     margin: 0;
+    background-color: $neutral-2;
 
     .related-wits-message {
         margin: 10px;
@@ -32,7 +33,7 @@ body {
 
         .related-wits-page-card {
             margin: 5px;
-            background-color: $neutral-2;
+            background-color: $backgroundColor;
             color: $textColor;
         }
     }

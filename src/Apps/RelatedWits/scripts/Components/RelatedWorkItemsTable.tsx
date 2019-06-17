@@ -90,6 +90,8 @@ function getColumn(
         minWidth: widths.min,
         maxWidth: widths.max,
         width: widths.width,
+        readonly: true,
+        resizable: true,
         isSorted: sortColumn === key,
         isSortedDescending: isSortedDescending,
         renderCell: (_: unknown, columnIndex: number, tableColumn: ITableColumn<WorkItem>, workItem: WorkItem) => {

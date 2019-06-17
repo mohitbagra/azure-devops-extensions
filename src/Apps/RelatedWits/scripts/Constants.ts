@@ -1,4 +1,5 @@
 import { FieldType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { CoreFieldRefNames } from "Common/Constants";
 import { createContext } from "react";
 
 export const StorageKey = "rwf";
@@ -45,3 +46,11 @@ export const ExcludedFields = [
 ];
 
 export const RelatedWitsContext = createContext<number>(-1);
+
+export const KeyTypes: { [key: string]: string } = {
+    [CoreFieldRefNames.AreaPath]: "string",
+    [CoreFieldRefNames.AssignedTo]: "identityRef",
+    [CoreFieldRefNames.Title]: "string",
+    [CoreFieldRefNames.State]: "string",
+    [CoreFieldRefNames.Id]: "number"
+};

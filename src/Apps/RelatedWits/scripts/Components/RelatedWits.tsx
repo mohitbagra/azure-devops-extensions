@@ -1,6 +1,8 @@
 import "./Root.scss";
 
 import { Card } from "azure-devops-ui/Card";
+import { DropdownFilterBarItem } from "azure-devops-ui/Components/Dropdown/DropdownFilterBarItem";
+import { ListSelection } from "azure-devops-ui/Components/List/ListSelection";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { ObservableValue } from "azure-devops-ui/Core/Observable";
 import { FilterBar } from "azure-devops-ui/FilterBar";
@@ -8,22 +10,25 @@ import { CustomHeader, HeaderTitle, HeaderTitleArea, HeaderTitleRow, TitleSize }
 import { HeaderCommandBarWithFilter } from "azure-devops-ui/HeaderCommandBar";
 import { Page } from "azure-devops-ui/Page";
 import { KeywordFilterBarItem } from "azure-devops-ui/TextFilterBarItem";
-import { Filter } from "azure-devops-ui/Utilities/Filter";
+import { Filter, FILTER_CHANGE_EVENT } from "azure-devops-ui/Utilities/Filter";
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { Loading } from "Common/Components/Loading";
+import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
+import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { isNullOrEmpty } from "Common/Utilities/String";
 import * as React from "react";
-import { RelatedWitsContext } from "../Constants";
+import { KeyTypes, RelatedWitsContext } from "../Constants";
 import { RelatedWorkItemActions, RelatedWorkItemSettingsActions } from "../Redux/Actions";
 import { IRelatedWitsAwareState } from "../Redux/Contracts";
-import { getRelatedWits, getRelatedWitsError, getRelatedWitsStatus } from "../Redux/Selectors";
+import { getFilteredRelatedWits, getRelatedWitsError, getRelatedWitsFilterData, getRelatedWitsStatus } from "../Redux/Selectors";
 import { RelatedWorkItemsTable } from "./RelatedWorkItemsTable";
 
 const Actions = {
     loadRequested: RelatedWorkItemActions.loadRequested,
+    applyFilter: RelatedWorkItemActions.applyFilter,
     openPanel: RelatedWorkItemSettingsActions.openPanel
 };
 
@@ -42,15 +47,27 @@ export function RelatedWits() {
     const mapState = React.useCallback(
         (state: IRelatedWitsAwareState) => {
             return {
-                workItems: getRelatedWits(state, workItemId),
+                workItems: getFilteredRelatedWits(state, workItemId),
                 status: getRelatedWitsStatus(state, workItemId),
-                error: getRelatedWitsError(state, workItemId)
+                error: getRelatedWitsError(state, workItemId),
+                filterData: getRelatedWitsFilterData(state, workItemId)
             };
         },
         [workItemId]
     );
-    const { workItems, status, error } = useMappedState(mapState);
-    const { loadRequested, openPanel } = useActionCreators(Actions);
+    const { workItems, status, error, filterData } = useMappedState(mapState);
+    const { loadRequested, openPanel, applyFilter } = useActionCreators(Actions);
+
+    const onFilterChange = React.useCallback(() => {
+        applyFilter(filterRef.current.getState());
+    }, []);
+
+    React.useEffect(() => {
+        filterRef.current.subscribe(onFilterChange, FILTER_CHANGE_EVENT);
+        return () => {
+            filterRef.current.unsubscribe(onFilterChange, FILTER_CHANGE_EVENT);
+        };
+    }, []);
 
     const isLoading = status === LoadStatus.NotLoaded || status === LoadStatus.Loading || !workItems;
 
@@ -94,6 +111,10 @@ export function RelatedWits() {
                 <ConditionalChildren renderChildren={filterToggledRef.current}>
                     <FilterBar filter={filterRef.current} className="related-wits-filter" onDismissClicked={onFilterBarDismissClicked}>
                         <KeywordFilterBarItem filterItemKey={"keyword"} />
+                        {getDropdownFilterBarItem("Work Item Type", CoreFieldRefNames.WorkItemType, filterData)}
+                        {getDropdownFilterBarItem("State", CoreFieldRefNames.State, filterData)}
+                        {getDropdownFilterBarItem("Assigned To", CoreFieldRefNames.AssignedTo, filterData)}
+                        {getDropdownFilterBarItem("Area path", CoreFieldRefNames.AreaPath, filterData)}
                     </FilterBar>
                 </ConditionalChildren>
             </div>
@@ -106,4 +127,54 @@ export function RelatedWits() {
             </Card>
         </Page>
     );
+}
+
+function getDropdownFilterBarItem(
+    placeholder: string,
+    filterItemKey: string,
+    filterData: { [key: string]: { [subkey: string]: number } }
+): JSX.Element | null {
+    if (!filterData[filterItemKey]) {
+        return null;
+    }
+    return (
+        <DropdownFilterBarItem
+            key={filterItemKey}
+            filterItemKey={filterItemKey}
+            selection={new ListSelection(true)}
+            items={getDropdownItems(filterItemKey, filterData)}
+            placeholder={placeholder}
+            noItemsText="No items"
+            showFilterBox={true}
+            filterPlaceholderText="Search"
+        />
+    );
+}
+
+function getDropdownItems(key: string, filterData: { [key: string]: { [subkey: string]: number } }) {
+    if (!filterData) {
+        return [];
+    }
+    const itemKeys = Object.keys(filterData[key]);
+    return itemKeys.map(value => {
+        const keyType = KeyTypes[key];
+
+        if (keyType === "identityRef") {
+            const identity = parseUniquefiedIdentityName(value);
+            return {
+                text: identity!.displayName,
+                id: value
+            };
+        } else if (key === CoreFieldRefNames.AreaPath) {
+            return {
+                text: value.substr(value.lastIndexOf("\\") + 1),
+                id: value
+            };
+        } else {
+            return {
+                text: value,
+                id: value
+            };
+        }
+    });
 }

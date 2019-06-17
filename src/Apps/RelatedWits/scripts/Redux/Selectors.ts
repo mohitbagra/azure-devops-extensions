@@ -1,5 +1,8 @@
+import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
+import { getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
 import { createSelector } from "reselect";
+import { applyFilterAndSort } from "../Helpers";
 import { IActiveWorkItemState, IRelatedWitsAwareState, IRelatedWorkItemsState, ISettingsState } from "./Contracts";
 
 export function getRelatedWitsState(state: IRelatedWitsAwareState): IRelatedWorkItemsState {
@@ -46,6 +49,48 @@ export const getRelatedWorkItemsStateModel = (state: IRelatedWitsAwareState, wor
 export const getRelatedWits = createSelector(
     getRelatedWorkItemsStateModel,
     state => state && state.workItems
+);
+
+export const getRelatedWitsFilterData = createSelector(
+    getRelatedWits,
+    workItems => {
+        const propertyMap: { [key: string]: { [subkey: string]: number } } = {
+            [CoreFieldRefNames.AreaPath]: {},
+            [CoreFieldRefNames.WorkItemType]: {},
+            [CoreFieldRefNames.AssignedTo]: {},
+            [CoreFieldRefNames.State]: {}
+        };
+
+        if (!workItems) {
+            return propertyMap;
+        }
+
+        for (const workItem of workItems) {
+            const areaPath = workItem.fields[CoreFieldRefNames.AreaPath];
+            const workItemType = workItem.fields[CoreFieldRefNames.WorkItemType];
+            const assignedTo = getDistinctNameFromIdentityRef(workItem.fields[CoreFieldRefNames.AssignedTo]) || "Unassigned";
+            const state = workItem.fields[CoreFieldRefNames.State];
+
+            propertyMap[CoreFieldRefNames.WorkItemType][workItemType] = (propertyMap[CoreFieldRefNames.WorkItemType][workItemType] || 0) + 1;
+            propertyMap[CoreFieldRefNames.AreaPath][areaPath] = (propertyMap[CoreFieldRefNames.AreaPath][areaPath] || 0) + 1;
+            propertyMap[CoreFieldRefNames.State][state] = (propertyMap[CoreFieldRefNames.State][state] || 0) + 1;
+            propertyMap[CoreFieldRefNames.AssignedTo][assignedTo] = (propertyMap[CoreFieldRefNames.AssignedTo][assignedTo] || 0) + 1;
+        }
+
+        return propertyMap;
+    }
+);
+
+export const getFilteredRelatedWits = createSelector(
+    [
+        getRelatedWits,
+        (state: IRelatedWitsAwareState, _: number) => getFilterState(state),
+        (state: IRelatedWitsAwareState, _: number) => getSortColumn(state),
+        (state: IRelatedWitsAwareState, _: number) => isSortedDescending(state)
+    ],
+    (workItems, filterState, sortKey, isSortedDescending) => {
+        return applyFilterAndSort(workItems, filterState, sortKey ? { sortKey, isSortedDescending } : undefined);
+    }
 );
 
 export const getRelatedWitsStatus = createSelector(
