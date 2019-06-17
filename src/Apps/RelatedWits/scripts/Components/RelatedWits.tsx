@@ -12,7 +12,9 @@ import { Page } from "azure-devops-ui/Page";
 import { KeywordFilterBarItem } from "azure-devops-ui/TextFilterBarItem";
 import { Filter, FILTER_CHANGE_EVENT } from "azure-devops-ui/Utilities/Filter";
 import { ZeroData } from "azure-devops-ui/ZeroData";
+import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { Loading } from "Common/Components/Loading";
+import { emptyRenderer } from "Common/Components/Renderers";
 import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
@@ -23,14 +25,18 @@ import * as React from "react";
 import { KeyTypes, RelatedWitsContext } from "../Constants";
 import { RelatedWorkItemActions, RelatedWorkItemSettingsActions } from "../Redux/Actions";
 import { IRelatedWitsAwareState } from "../Redux/Contracts";
-import { getFilteredRelatedWits, getRelatedWitsError, getRelatedWitsFilterData, getRelatedWitsStatus } from "../Redux/Selectors";
+import { getFilteredRelatedWits, getRelatedWitsError, getRelatedWitsFilterData, getRelatedWitsStatus, isPanelOpen } from "../Redux/Selectors";
 import { RelatedWorkItemsTable } from "./RelatedWorkItemsTable";
+import * as SettingsPanel_Async from "./SettingsPanel";
 
 const Actions = {
     loadRequested: RelatedWorkItemActions.loadRequested,
     applyFilter: RelatedWorkItemActions.applyFilter,
-    openPanel: RelatedWorkItemSettingsActions.openPanel
+    openPanel: RelatedWorkItemSettingsActions.openPanel,
+    closePanel: RelatedWorkItemSettingsActions.closePanel
 };
+
+const settingsPanelLoader = async () => import("./SettingsPanel");
 
 export function RelatedWits() {
     const workItemId = React.useContext(RelatedWitsContext);
@@ -50,13 +56,14 @@ export function RelatedWits() {
                 workItems: getFilteredRelatedWits(state, workItemId),
                 status: getRelatedWitsStatus(state, workItemId),
                 error: getRelatedWitsError(state, workItemId),
-                filterData: getRelatedWitsFilterData(state, workItemId)
+                filterData: getRelatedWitsFilterData(state, workItemId),
+                panelOpen: isPanelOpen(state)
             };
         },
         [workItemId]
     );
-    const { workItems, status, error, filterData } = useMappedState(mapState);
-    const { loadRequested, openPanel, applyFilter } = useActionCreators(Actions);
+    const { workItems, status, error, filterData, panelOpen } = useMappedState(mapState);
+    const { loadRequested, openPanel, applyFilter, closePanel } = useActionCreators(Actions);
 
     const onFilterChange = React.useCallback(() => {
         applyFilter(filterRef.current.getState());
@@ -73,6 +80,11 @@ export function RelatedWits() {
 
     return (
         <Page className="related-wits-page flex-column flex-grow">
+            {panelOpen && (
+                <AsyncComponent loader={settingsPanelLoader} loadingComponent={emptyRenderer}>
+                    {(m: typeof SettingsPanel_Async) => <m.SettingsPanel onDismiss={closePanel} />}
+                </AsyncComponent>
+            )}
             <div className="page-header flex-noshrink">
                 <CustomHeader className="related-wits-header">
                     <HeaderTitleArea>
@@ -110,7 +122,7 @@ export function RelatedWits() {
                 </CustomHeader>
                 <ConditionalChildren renderChildren={filterToggledRef.current}>
                     <FilterBar filter={filterRef.current} className="related-wits-filter" onDismissClicked={onFilterBarDismissClicked}>
-                        <KeywordFilterBarItem filterItemKey={"keyword"} />
+                        <KeywordFilterBarItem filterItemKey={"keyword"} placeholder="Filter by title" />
                         {getDropdownFilterBarItem("Work Item Type", CoreFieldRefNames.WorkItemType, filterData)}
                         {getDropdownFilterBarItem("State", CoreFieldRefNames.State, filterData)}
                         {getDropdownFilterBarItem("Assigned To", CoreFieldRefNames.AssignedTo, filterData)}
