@@ -66,7 +66,7 @@ export function BoardCard(props: IBoardCardProps) {
                                     hideTitle={true}
                                 />
                             </div>
-                            <div className="board-card-control fontWeightSemiBold">
+                            <div className="board-card-control font-weight-semibold">
                                 <AsyncLinkComponent
                                     key={acceptedWorkItem!.id}
                                     getHrefAsync={getWorkItemUrlPromise(acceptedWorkItem!.id)}
@@ -78,7 +78,7 @@ export function BoardCard(props: IBoardCardProps) {
                     )}
 
                     {!isAccepted && (
-                        <div className="board-card-control fontWeightSemiBold">
+                        <div className="board-card-control font-weight-semibold">
                             <AsyncLinkComponent
                                 key={bugBashItem.id}
                                 getHrefAsync={getBugBashItemUrlPromise(bugBashItem.bugBashId, bugBashItem.id!)}

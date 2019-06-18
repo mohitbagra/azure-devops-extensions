@@ -34,8 +34,8 @@ function renderComment(item: IBugBashItemComment): JSX.Element {
             </div>
             <div className="flex-column flex-grow comment-content">
                 <div className="flex-noshrink flex-row">
-                    <span className="comment-created-by fontSize fontWeightSemiBold">{createdBy.displayName}</span>
-                    <span className="comment-created-date fontSizeS">commented {ago(createdDate)}</span>
+                    <span className="comment-created-by font-size font-weight-semibold">{createdBy.displayName}</span>
+                    <span className="comment-created-date font-size-s">commented {ago(createdDate)}</span>
                 </div>
                 <div className="flex-grow comment-text" dangerouslySetInnerHTML={{ __html: content }} />
             </div>

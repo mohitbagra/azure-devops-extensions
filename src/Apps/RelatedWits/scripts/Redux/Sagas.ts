@@ -1,11 +1,10 @@
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkItemForm/Redux/Actions";
-import { CoreFieldRefNames } from "Common/Constants";
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
-import { getWorkItemFormService } from "Common/ServiceWrappers/WorkItemFormServices";
+import { getWorkItemFormService, getWorkItemProjectName, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
 import { contains } from "Common/Utilities/Array";
-import { call, put, select, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { ExcludedFields, QueryableFieldTypes, SortableFieldTypes } from "../Constants";
 import { createQuery, fieldNameComparer } from "../Helpers";
 import { ISettings } from "../Interfaces";
@@ -40,15 +39,17 @@ function* requestLoad(action: ActionsOfType<RelatedWorkItemActions, RelatedWorkI
     const status: RT<typeof getRelatedWitsStatus> = yield select(getRelatedWitsStatus, workItemId);
     const activeWorkItem: IActiveWorkItemState = yield call(getActiveWorkItem);
     yield put(ActiveWorkItemActions.setActiveWorkItem(activeWorkItem));
-    yield call(loadSettings, activeWorkItem.project!, activeWorkItem.workItemTypeName!);
+
+    const [project, workItemTypeName] = yield all([call(getWorkItemProjectName), call(getWorkItemTypeName)]);
+    yield call(loadSettings, project, workItemTypeName);
 
     const settings: ISettings = yield select(getSettings);
 
     if (status !== LoadStatus.Loading) {
         yield put(RelatedWorkItemActions.beginLoad(workItemId));
         try {
-            const wiql: string = yield call(createQuery, activeWorkItem.project!, settings.fields, settings.sortByField);
-            const workItems: RT<typeof fetchWorkItems> = yield call(fetchWorkItems, activeWorkItem.project!, wiql, settings.top);
+            const wiql: string = yield call(createQuery, project, settings.fields, settings.sortByField);
+            const workItems: RT<typeof fetchWorkItems> = yield call(fetchWorkItems, project, wiql, settings.top);
             yield put(RelatedWorkItemActions.loadSucceeded(workItemId, workItems));
         } catch (e) {
             yield put(RelatedWorkItemActions.loadFailed(workItemId, e.message));
@@ -69,18 +70,12 @@ function* loadSettings(project: string, workItemTypeName: string) {
 
 async function getActiveWorkItem(): Promise<IActiveWorkItemState> {
     const formService = await getWorkItemFormService();
-    const [isNew, id, rev, links, relationTypes, fields, fieldValues] = await Promise.all([
-        formService.isNew(),
-        formService.getId(),
-        formService.getRevision(),
+    const [links, relationTypes, fields] = await Promise.all([
         formService.getWorkItemRelations(),
         formService.getWorkItemRelationTypes(),
-        formService.getFields(),
-        formService.getFieldValues([CoreFieldRefNames.TeamProject, CoreFieldRefNames.WorkItemType])
+        formService.getFields()
     ]);
 
-    const project = fieldValues[CoreFieldRefNames.TeamProject] as string;
-    const workItemTypeName = fieldValues[CoreFieldRefNames.WorkItemType] as string;
     const sortableFields = fields
         .filter(
             field => SortableFieldTypes.indexOf(field.type) !== -1 && !contains(ExcludedFields, field.referenceName, (f1, f2) => equals(f1, f2, true))
@@ -94,11 +89,6 @@ async function getActiveWorkItem(): Promise<IActiveWorkItemState> {
     );
 
     return {
-        id: id,
-        rev: rev,
-        project: project,
-        workItemTypeName: workItemTypeName,
-        isNew: isNew,
         links: links,
         relationTypes: relationTypes,
         queryableFields: queryableFields,

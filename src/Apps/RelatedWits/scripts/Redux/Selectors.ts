@@ -118,16 +118,6 @@ export const isPanelOpen = createSelector(
     state => !!state.isPanelOpen
 );
 
-export const hasActiveWorkItem = createSelector(
-    getActiveWorkItemState,
-    state => state.id != null && state.id > 0
-);
-
-export const isActiveWorkItemNew = createSelector(
-    getActiveWorkItemState,
-    state => state.isNew
-);
-
 export const getQueryableFields = createSelector(
     getActiveWorkItemState,
     state => state.queryableFields
@@ -138,32 +128,18 @@ export const getSortableFields = createSelector(
     state => state.sortableFields
 );
 
-export const getActiveWorkItemRevision = createSelector(
+export const getActiveWorkItemRelationsMap = createSelector(
     getActiveWorkItemState,
-    state => state.rev
-);
-
-export const getActiveWorkItemLinks = createSelector(
-    getActiveWorkItemState,
-    state => state.links
+    state =>
+        state.links
+            ? state.links.reduce<{ [key: string]: boolean }>((obj, relation) => {
+                  obj[`${relation.url}_${relation.rel}`] = true;
+                  return obj;
+              }, {})
+            : {}
 );
 
 export const getActiveWorkItemRelationTypes = createSelector(
     getActiveWorkItemState,
-    state => state.relationTypes
-);
-
-export const getActiveWorkItemProject = createSelector(
-    getActiveWorkItemState,
-    state => state.project
-);
-
-export const getActiveWorkItemWorkItemTypeName = createSelector(
-    getActiveWorkItemState,
-    state => state.workItemTypeName
-);
-
-export const getActiveWorkItemId = createSelector(
-    getActiveWorkItemState,
-    state => state.id
+    state => state.relationTypes || []
 );

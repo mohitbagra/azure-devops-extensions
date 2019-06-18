@@ -30,10 +30,10 @@ module.exports = {
                     chunks: "all",
                     priority: 8
                 },
-                ui: {
-                    test: /[\\/]node_modules[\\/](azure-devops-ui)[\\/]/,
-                    name: "ui",
+                commons: {
+                    name: "commons",
                     chunks: "all",
+                    minChunks: 3,
                     priority: 7
                 }
             }

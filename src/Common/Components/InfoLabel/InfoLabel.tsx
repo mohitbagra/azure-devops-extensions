@@ -19,7 +19,7 @@ export function InfoLabel(props: IInfoLabelProps) {
             {info && (
                 <Tooltip text={info}>
                     {Icon({
-                        className: "info-icon fontSize",
+                        className: "info-icon font-size",
                         iconName: "Info"
                     })}
                 </Tooltip>

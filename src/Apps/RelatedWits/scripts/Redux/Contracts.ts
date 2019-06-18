@@ -29,11 +29,6 @@ export interface IRelatedWorkItemsStateModel {
 }
 
 export interface IActiveWorkItemState {
-    id?: number;
-    rev?: number;
-    isNew?: boolean;
-    project?: string;
-    workItemTypeName?: string;
     links?: WorkItemRelation[];
     relationTypes?: WorkItemRelationType[];
     sortableFields?: WorkItemField[];

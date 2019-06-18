@@ -38,7 +38,7 @@ export function UserSettingEditor() {
 
     return (
         <>
-            <div className="section-header fontSizeL fontWeightHeavy">{Resources.UserSettingsHeader}</div>
+            <div className="section-header font-size-l font-weight-heavy">{Resources.UserSettingsHeader}</div>
             <TeamPicker
                 label={Resources.AssociatedTeamLabel}
                 info={Resources.AssociatedTeamLabel_Info}

@@ -14,7 +14,7 @@ export function InputError(props: IInputErrorProps) {
     return (
         <div className={css("input-error flex-row flex-center", className)}>
             <Icon className="error-icon" iconName="Error" />
-            <span className="error-text flex-grow fontSize">{error}</span>
+            <span className="error-text flex-grow font-size">{error}</span>
         </div>
     );
 }

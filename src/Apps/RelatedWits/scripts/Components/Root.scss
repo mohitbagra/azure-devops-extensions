@@ -35,6 +35,16 @@ body {
             margin: 5px;
             background-color: $backgroundColor;
             color: $textColor;
+
+            .info-label {
+                &.linked-cell .info-label-text {
+                    color: $status-success-foreground;
+                }
+
+                &.unlinked-cell .info-label-text {
+                    color: $status-error-foreground;
+                }
+            }
         }
     }
 }
