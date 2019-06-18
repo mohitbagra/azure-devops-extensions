@@ -16,13 +16,14 @@ module.exports = {
                 sdk: {
                     test: /[\\/]node_modules[\\/](azure-devops-extension-sdk)[\\/]/,
                     name: "sdk",
-                    chunks: "all"
+                    chunks: "all",
+                    priority: 10
                 },
                 react: {
                     test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                     name: "react",
                     chunks: "all",
-                    priority: 10
+                    priority: 9
                 },
                 redux: {
                     test: /[\\/]node_modules[\\/](redux|react-redux|redux-saga|reselect|immer|redux-dynamic-modules|redux-dynamic-modules-saga)[\\/]/,
@@ -30,10 +31,11 @@ module.exports = {
                     chunks: "all",
                     priority: 8
                 },
-                commons: {
-                    name: "commons",
-                    chunks: "all",
-                    minChunks: 3,
+
+                ui: {
+                    test: /[\\/]node_modules[\\/](azure-devops-ui)[\\/]/,
+                    name: "ui",
+                    chunks: "initial",
                     priority: 7
                 }
             }

@@ -17,7 +17,8 @@ interface IRelatedWorkItemsTableProps {
 }
 
 const Actions = {
-    applySort: RelatedWorkItemActions.applySort
+    applySort: RelatedWorkItemActions.applySort,
+    openRelatedWorkItem: RelatedWorkItemActions.openRelatedWorkItem
 };
 
 const mapState = (state: IRelatedWitsAwareState) => {
@@ -32,9 +33,9 @@ const mapState = (state: IRelatedWitsAwareState) => {
 export function RelatedWorkItemsTable(props: IRelatedWorkItemsTableProps) {
     const { workItems } = props;
     const { sortColumn, isSortedDescending, relationsMap, relationTypes } = useMappedState(mapState);
-    const { applySort } = useActionCreators(Actions);
+    const { applySort, openRelatedWorkItem } = useActionCreators(Actions);
 
-    const columns = React.useMemo(() => getColumns(relationsMap, relationTypes, sortColumn, isSortedDescending), [
+    const columns = React.useMemo(() => getColumns(relationsMap, relationTypes, sortColumn, isSortedDescending, openRelatedWorkItem), [
         sortColumn,
         isSortedDescending,
         relationsMap,
@@ -67,7 +68,8 @@ function getColumns(
     relationsMap: { [key: string]: boolean },
     relationTypes: WorkItemRelationType[],
     sortColumn: string | undefined,
-    isSortedDescending: boolean
+    isSortedDescending: boolean,
+    openRelatedWorkItem: (workItemId: number) => void
 ): ITableColumn<WorkItem>[] {
     return [
         {
@@ -109,7 +111,7 @@ function getColumns(
             }
         },
         getColumn(CoreFieldRefNames.Id, "ID", { min: 80, max: 80, width: 80 }, sortColumn, isSortedDescending),
-        getColumn(CoreFieldRefNames.Title, "Title", { min: 300, max: 1500, width: -40 }, sortColumn, isSortedDescending),
+        getColumn(CoreFieldRefNames.Title, "Title", { min: 300, max: 1500, width: -40 }, sortColumn, isSortedDescending, openRelatedWorkItem),
         getColumn(CoreFieldRefNames.State, "State", { min: 150, max: 500, width: -20 }, sortColumn, isSortedDescending),
         getColumn(CoreFieldRefNames.AssignedTo, "Assigned to", { min: 150, max: 500, width: -20 }, sortColumn, isSortedDescending),
         getColumn(CoreFieldRefNames.AreaPath, "Area Path", { min: 150, max: 500, width: -20 }, sortColumn, isSortedDescending),
@@ -133,7 +135,8 @@ function getColumn(
     name: string,
     widths: { width: number; min: number; max: number },
     sortColumn: string | undefined,
-    isSortedDescending: boolean
+    isSortedDescending: boolean,
+    openRelatedWorkItem?: (workItemId: number) => void
 ) {
     return {
         id: key,
@@ -146,7 +149,20 @@ function getColumn(
         isSorted: sortColumn === key,
         isSortedDescending: isSortedDescending,
         renderCell: (_: unknown, columnIndex: number, tableColumn: ITableColumn<WorkItem>, workItem: WorkItem) => {
-            return onRenderWorkItemCell(columnIndex, tableColumn, key, workItem);
+            return onRenderWorkItemCell(
+                columnIndex,
+                tableColumn,
+                key,
+                workItem,
+                openRelatedWorkItem
+                    ? (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
+                          if (!e.ctrlKey) {
+                              e.preventDefault();
+                              openRelatedWorkItem(workItem.id);
+                          }
+                      }
+                    : undefined
+            );
         }
     };
 }

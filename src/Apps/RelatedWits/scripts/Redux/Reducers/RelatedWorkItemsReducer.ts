@@ -54,6 +54,21 @@ export function relatedWorkItemsReducer(state: IRelatedWorkItemsState | undefine
                 draft.sortState = undefined;
                 break;
             }
+
+            case RelatedWorkItemActionTypes.UpdateRelatedWorkItem: {
+                const relatedWorkItem = action.payload;
+                for (const id of Object.keys(draft.relatedWorkItems)) {
+                    const wis = draft.relatedWorkItems[parseInt(id)];
+                    if (wis && wis.workItems) {
+                        const index = wis.workItems.findIndex(w => w.id === relatedWorkItem.id);
+                        if (index > -1) {
+                            wis.workItems[index] = relatedWorkItem;
+                        }
+                    }
+                }
+
+                break;
+            }
         }
     });
 }

@@ -3,6 +3,7 @@ import { WorkItemFormActions, WorkItemFormActionTypes } from "Common/AzDev/WorkI
 import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
 import { getWorkItemFormService, getWorkItemProjectName, getWorkItemTypeName } from "Common/ServiceWrappers/WorkItemFormServices";
+import { openWorkItem } from "Common/ServiceWrappers/WorkItemNavigationService";
 import { contains } from "Common/Utilities/Array";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { ExcludedFields, QueryableFieldTypes, SortableFieldTypes } from "../Constants";
@@ -20,6 +21,13 @@ export function* relatedWitsSaga() {
     );
 
     yield takeEvery(RelatedWorkItemActionTypes.LoadRequested, requestLoad);
+    yield takeEvery(RelatedWorkItemActionTypes.OpenRelatedWorkItem, openWorkItemDialog);
+}
+
+function* openWorkItemDialog(action: ActionsOfType<RelatedWorkItemActions, RelatedWorkItemActionTypes.OpenRelatedWorkItem>) {
+    const workItemId = action.payload;
+    const editedWorkItem: RT<typeof openWorkItem> = yield call(openWorkItem, workItemId);
+    yield put(RelatedWorkItemActions.updateRelatedWorkItem(editedWorkItem));
 }
 
 function* onWorkItemChanged(
