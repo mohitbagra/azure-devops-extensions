@@ -1,7 +1,6 @@
 import "./DropdownPicker.scss";
 
 import { IListBoxItem } from "azure-devops-ui/Components/ListBox/ListBox.Props";
-import { ITableColumn } from "azure-devops-ui/Components/Table/Table.Props";
 import { Dropdown, DropdownCallout, DropdownExpandableTextField } from "azure-devops-ui/Dropdown";
 import { css } from "azure-devops-ui/Util";
 import { ILabelledComponentProps } from "Common/Components/Contracts";
@@ -30,7 +29,7 @@ function resolveOptions<T>(options: T[], getDropdownItem: (option: T) => IListBo
     const comboOptions: IListBoxItem[] = [];
 
     if (!required) {
-        comboOptions.push({ id: "", text: "<Empty>" });
+        comboOptions.push({ id: "", text: "<Empty>", className: "empty-value-item" });
     }
     for (const option of options) {
         const { id, text } = getDropdownItem(option);
@@ -148,7 +147,6 @@ export function DropdownPicker<T>(props: IDropdownPickerProps<T>) {
                 placeholder={placeholder || "Select a value"}
                 showFilterBox={true}
                 filterPlaceholderText="Search"
-                renderItem={onRenderItemText}
                 renderCallout={props => (
                     <DropdownCallout {...props} focusOnMount={false} lightDismiss={true} excludeTabStop={true} excludeFocusZone={true} />
                 )}
@@ -158,14 +156,6 @@ export function DropdownPicker<T>(props: IDropdownPickerProps<T>) {
             />
         </LabelledComponent>
     );
-}
-
-function onRenderItemText(_rowIndex: number, _columnIndex: number, _tableColumn: ITableColumn<IListBoxItem>, item: IListBoxItem): JSX.Element {
-    if (item.id) {
-        return <>{item.text}</>;
-    } else {
-        return <span className="empty-value-item">{item.text}</span>;
-    }
 }
 
 export function dropdownRenderer<T>(

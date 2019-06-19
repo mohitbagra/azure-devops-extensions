@@ -31,13 +31,14 @@ export function SettingsPanel(props: ISettingsPanelProps) {
             <div className="settings-panel flex-column flex-grow">
                 <div className="settings-controls flex-column">
                     <div className="settings-control-container">
-                        <TextField info="Maximum number of work items to retrieve" label="Max count" />
+                        <TextField info="Maximum number of work items to retrieve" label="Max count" required={true} />
                     </div>
 
                     <div className="settings-control-container">
                         <DropdownPicker
                             label="Sort by"
                             info="Select a field which will be used to sort the results"
+                            required={true}
                             className="sort-field-dropdown"
                             options={sortFields || []}
                             getDropdownItem={(f: WorkItemField) => {
@@ -52,6 +53,9 @@ export function SettingsPanel(props: ISettingsPanelProps) {
                     <div className="settings-control-container">
                         <MultiValuePicker
                             className="tagpicker"
+                            required={true}
+                            addButtonText="Add fields"
+                            placeholder="Type to add a field"
                             label="Fields to seek"
                             info="Select a list of fields which will be used to seek related work items"
                             allValues={(queryFields || []).map(f => f.name)}

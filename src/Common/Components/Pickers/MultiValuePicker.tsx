@@ -1,9 +1,7 @@
 import "./MultiValuePicker.scss";
 
 import { equals } from "azure-devops-ui/Core/Util/String";
-import {
-    EditableLabelGroup, ILabelModel, LabelGroup, WrappingBehavior
-} from "azure-devops-ui/Label";
+import { EditableLabelGroup, ILabelModel, LabelGroup, WrappingBehavior } from "azure-devops-ui/Label";
 import { css } from "azure-devops-ui/Util";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
 import { LabelledComponent } from "Common/Components/LabelledComponent";
@@ -14,10 +12,11 @@ import * as React from "react";
 
 export interface IMultiValuePickerProps extends ILabelledComponentProps, IInputComponentProps<string[]> {
     allValues?: string[];
+    addButtonText?: string;
 }
 
 export function MultiValuePicker(props: IMultiValuePickerProps) {
-    const { allValues, label, info, placeholder, disabled, className, required, getErrorMessage, onChange, value: prop_value } = props;
+    const { allValues, addButtonText, label, info, placeholder, disabled, className, required, getErrorMessage, onChange, value: prop_value } = props;
     const [value, setValue] = useControlledState(prop_value);
     const onValuesChanged = (newValue: string[]) => {
         setValue(newValue);
@@ -51,6 +50,7 @@ export function MultiValuePicker(props: IMultiValuePickerProps) {
                 {!disabled && (
                     <EditableLabelGroup
                         labelProps={(value || []).map(getTag)}
+                        addButtonText={addButtonText}
                         watermark={placeholder}
                         disableColorPicker={true}
                         enableHoverStyles={true}
