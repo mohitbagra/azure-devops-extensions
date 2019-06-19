@@ -1,4 +1,4 @@
-import { WorkItem, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
+import { WorkItem, WorkItemRelation, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ListSelection } from "azure-devops-ui/Components/List/ListSelection";
 import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
 import { InfoLabel } from "Common/Components/InfoLabel";
@@ -8,6 +8,7 @@ import { CoreFieldRefNames } from "Common/Constants";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
+import { getWorkItemFormService } from "Common/ServiceWrappers/WorkItemFormServices";
 import { getQueryUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 import { RelatedWorkItemActions } from "../Redux/Actions";
@@ -41,7 +42,7 @@ export function RelatedWorkItemsTable(props: IRelatedWorkItemsTableProps) {
 
     const columns = React.useMemo(
         () => getColumns(workItems, selectionRef.current, relationsMap, relationTypes, sortColumn, isSortedDescending, openRelatedWorkItem),
-        [sortColumn, isSortedDescending, relationsMap, relationTypes]
+        [workItems, sortColumn, isSortedDescending, relationsMap, relationTypes]
     );
 
     const sortingBehavior = React.useMemo(
@@ -118,9 +119,9 @@ function getColumns(
         getColumn(CoreFieldRefNames.State, "State", { min: 150, max: 500, width: -20 }, sortColumn, isSortedDescending),
         getColumn(CoreFieldRefNames.AssignedTo, "Assigned to", { min: 150, max: 500, width: -20 }, sortColumn, isSortedDescending),
         getColumn(CoreFieldRefNames.AreaPath, "Area Path", { min: 150, max: 500, width: -20 }, sortColumn, isSortedDescending),
-        new ColumnMore((_workItem: WorkItem) => {
+        new ColumnMore(() => {
             return {
-                id: "sub-menu",
+                id: "context-menu",
                 items: [
                     {
                         id: "open",
@@ -134,6 +135,46 @@ function getColumns(
                                 selectedWorkItemIds.push(...workItems.slice(beginIndex, endIndex + 1).map(w => w.id));
                             }
                             navigateToQueries(selectedWorkItemIds);
+                        }
+                    },
+                    {
+                        id: "add-link",
+                        text: "Add Link",
+                        iconProps: { iconName: "Link", className: "communication-foreground" },
+                        subMenuProps: {
+                            id: "add-link-sub-menu",
+                            onActivate: async item => {
+                                const relationRefName = item.id;
+                                const workItemFormService = await getWorkItemFormService();
+                                const selectedWorkItems: WorkItem[] = [];
+                                const ranges = selection.value;
+                                for (const range of ranges) {
+                                    const { endIndex, beginIndex } = range;
+                                    selectedWorkItems.push(...workItems.slice(beginIndex, endIndex + 1));
+                                }
+
+                                const workItemRelations = selectedWorkItems
+                                    .filter(wi => !relationsMap[`${wi.url}_${relationRefName}`])
+                                    .map(w => {
+                                        return {
+                                            rel: relationRefName,
+                                            attributes: {
+                                                isLocked: false
+                                            },
+                                            url: w.url
+                                        } as WorkItemRelation;
+                                    });
+
+                                if (workItemRelations) {
+                                    workItemFormService.addWorkItemRelations(workItemRelations);
+                                }
+                            },
+                            items: relationTypes
+                                .filter(r => r.name != null && r.name.trim() !== "")
+                                .map(rt => ({
+                                    id: rt.referenceName,
+                                    text: rt.name
+                                }))
                         }
                     }
                 ]
