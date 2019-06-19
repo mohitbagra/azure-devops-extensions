@@ -1,11 +1,14 @@
 import { WorkItem, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
-import { ColumnMore, ITableColumn as VSSUI_ITableColumn, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
+import { ListSelection } from "azure-devops-ui/Components/List/ListSelection";
+import { ColumnMore, ColumnSelect, ITableColumn as VSSUI_ITableColumn, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
 import { InfoLabel } from "Common/Components/InfoLabel";
 import { ITableColumn, Table } from "Common/Components/Table";
 import { ColumnSorting } from "Common/Components/Table/ColumnSorting";
 import { CoreFieldRefNames } from "Common/Constants";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
+import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
+import { getQueryUrlAsync } from "Common/Utilities/UrlHelper";
 import * as React from "react";
 import { RelatedWorkItemActions } from "../Redux/Actions";
 import { IRelatedWitsAwareState } from "../Redux/Contracts";
@@ -34,13 +37,13 @@ export function RelatedWorkItemsTable(props: IRelatedWorkItemsTableProps) {
     const { workItems } = props;
     const { sortColumn, isSortedDescending, relationsMap, relationTypes } = useMappedState(mapState);
     const { applySort, openRelatedWorkItem } = useActionCreators(Actions);
+    const selectionRef = React.useRef(new ListSelection(true));
 
-    const columns = React.useMemo(() => getColumns(relationsMap, relationTypes, sortColumn, isSortedDescending, openRelatedWorkItem), [
-        sortColumn,
-        isSortedDescending,
-        relationsMap,
-        relationTypes
-    ]);
+    const columns = React.useMemo(
+        () => getColumns(workItems, selectionRef.current, relationsMap, relationTypes, sortColumn, isSortedDescending, openRelatedWorkItem),
+        [sortColumn, isSortedDescending, relationsMap, relationTypes]
+    );
+
     const sortingBehavior = React.useMemo(
         () =>
             new ColumnSorting<WorkItem>((proposedColumn: VSSUI_ITableColumn<WorkItem>, proposedSortOrder: SortOrder) => {
@@ -60,11 +63,14 @@ export function RelatedWorkItemsTable(props: IRelatedWorkItemsTableProps) {
             showLines={false}
             singleClickActivation={false}
             behaviors={[sortingBehavior]}
+            selection={selectionRef.current}
         />
     );
 }
 
 function getColumns(
+    workItems: WorkItem[],
+    selection: ListSelection,
     relationsMap: { [key: string]: boolean },
     relationTypes: WorkItemRelationType[],
     sortColumn: string | undefined,
@@ -72,6 +78,7 @@ function getColumns(
     openRelatedWorkItem: (workItemId: number) => void
 ): ITableColumn<WorkItem>[] {
     return [
+        new ColumnSelect(),
         {
             id: "linked",
             name: "Linked",
@@ -95,11 +102,7 @@ function getColumns(
                     );
                 } else {
                     innerElement = (
-                        <InfoLabel
-                            label="Not linked"
-                            className="unlinked-cell"
-                            info="This workitem is not linked to the current work item. You can add a link to this workitem by right clicking on the row"
-                        />
+                        <InfoLabel label="Not linked" className="unlinked-cell" info="This workitem is not linked to the current work item." />
                     );
                 }
 
@@ -122,7 +125,16 @@ function getColumns(
                     {
                         id: "open",
                         text: "Open selected items",
-                        iconProps: { iconName: "ReplyMirrored", className: "communication-foreground" }
+                        iconProps: { iconName: "ReplyMirrored", className: "communication-foreground" },
+                        onActivate: () => {
+                            const selectedWorkItemIds: number[] = [];
+                            const ranges = selection.value;
+                            for (const range of ranges) {
+                                const { endIndex, beginIndex } = range;
+                                selectedWorkItemIds.push(...workItems.slice(beginIndex, endIndex + 1).map(w => w.id));
+                            }
+                            navigateToQueries(selectedWorkItemIds);
+                        }
                     }
                 ]
             };
@@ -165,4 +177,16 @@ function getColumn(
             );
         }
     };
+}
+
+async function navigateToQueries(workItemIds: number[]) {
+    const queryUrl = await getQueryUrlAsync(workItemIds, [
+        CoreFieldRefNames.Id,
+        CoreFieldRefNames.Title,
+        CoreFieldRefNames.State,
+        CoreFieldRefNames.AssignedTo,
+        CoreFieldRefNames.AreaPath
+    ]);
+
+    openNewWindow(queryUrl);
 }
