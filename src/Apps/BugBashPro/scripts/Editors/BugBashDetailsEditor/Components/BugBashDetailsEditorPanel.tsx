@@ -73,7 +73,7 @@ function BugBashDetailsEditorPanelInternal(props: IBugBashDetailsEditorPanelOwnP
             <CustomHeader className="bugbash-details-editor-panel--header" separator={true}>
                 <HeaderTitleArea>
                     <div className="bugbash-details-editor-panel--header-title flex-row flex-center">
-                        <div className="flex-grow fontSizeL">Bug Bash Details</div>
+                        <div className="flex-grow font-size-l">Bug Bash Details</div>
                         <PanelCloseButton className="bugbash-details-editor-panel--closeButton" onDismiss={dismissPanel} />
                     </div>
                     <ErrorMessageBox className="bugbash-details-editor-error" errorKey={BugBashDetailsEditorErrorKey} />

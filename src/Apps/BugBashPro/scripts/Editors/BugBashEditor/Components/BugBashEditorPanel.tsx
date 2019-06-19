@@ -169,7 +169,7 @@ function BugBashEditorPanelInternal(props: IBugBashEditorPanelOwnProps) {
                 <CustomHeader className="bugbash-editor-panel--header" separator={true}>
                     <HeaderTitleArea>
                         <div className="bugbash-editor-panel--header-title flex-row flex-center">
-                            <div className="flex-grow fontSizeL">{panelTitle}</div>
+                            <div className="flex-grow font-size-l">{panelTitle}</div>
                             <PanelCloseButton className="bugbash-editor-panel--closeButton" onDismiss={dismissPanel} />
                         </div>
                         <TextField

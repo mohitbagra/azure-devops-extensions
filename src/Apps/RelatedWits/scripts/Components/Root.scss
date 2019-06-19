@@ -1,0 +1,60 @@
+@import "_CommonStyles.scss";
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#ext-container {
+    padding: 0;
+    margin: 0;
+    background-color: $neutral-2;
+
+    .related-wits-message {
+        margin: 10px;
+    }
+
+    .related-wits-page {
+        padding: 10px 5px 10px 15px;
+
+        .page-header {
+            margin-bottom: 5px;
+            padding: 0;
+
+            .related-wits-header {
+                padding: 0;
+                margin: 0;
+            }
+
+            .related-wits-filter {
+                margin: 5px 0 0 0;
+            }
+        }
+
+        .related-wits-page-card {
+            margin: 5px;
+            background-color: $backgroundColor;
+            color: $textColor;
+
+            .info-label {
+                &.linked-cell .info-label-text {
+                    color: $status-success-foreground;
+                }
+
+                &.unlinked-cell .info-label-text {
+                    color: $status-error-foreground;
+                }
+            }
+        }
+    }
+}
+
+.communication-foreground {
+    color: $communication-foreground;
+}
+
+.error-text {
+    color: $error-text;
+}
+
+@include scrollbars(11px, 2px);

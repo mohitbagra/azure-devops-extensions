@@ -52,8 +52,19 @@ export class ColumnSorting<T> implements IBehavior<Partial<ITableProps<T>>, Part
 
     private processSortEvent(event: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement>) {
         const clickedCell = cellFromEvent(event);
+        let testHtmlElement = event.target as HTMLElement;
+        let actionableClick = false;
 
-        if (clickedCell.rowIndex === -1) {
+        while (!actionableClick && testHtmlElement !== clickedCell.cellElement) {
+            actionableClick = testHtmlElement.classList.contains("bolt-table-header-cell-actionable");
+            if (testHtmlElement.parentElement) {
+                testHtmlElement = testHtmlElement.parentElement;
+            } else {
+                break;
+            }
+        }
+
+        if (clickedCell.rowIndex === -1 && actionableClick) {
             const column = this.props.columns[clickedCell.cellIndex];
 
             // If the column is currently sorted ascending then we need to invert the sort.

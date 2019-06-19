@@ -176,7 +176,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
                     return [
                         <LeanRooster
                             key="rooster"
-                            className="rooster-editor propagate-keydown-event text-element flex-grow no-outline scroll-auto fontSizeM"
+                            className="rooster-editor propagate-keydown-event text-element flex-grow no-outline scroll-auto font-size-m"
                             viewState={this._viewState}
                             plugins={this._editorPlugins}
                             undo={this._undoPlugin}

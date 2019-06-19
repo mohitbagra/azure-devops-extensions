@@ -182,7 +182,7 @@ function BugBashItemEditorPanelInternal(props: IBugBashItemEditorPanelOwnProps) 
                 <CustomHeader className="bugbash-item-editor-panel--header" separator={true}>
                     <HeaderTitleArea>
                         <div className="bugbash-item-editor-panel--header-title flex-row flex-center">
-                            <div className="flex-grow fontSizeL">{panelTitle}</div>
+                            <div className="flex-grow font-size-l">{panelTitle}</div>
 
                             <ConditionalChildren renderChildren={bugBash.autoAccept}>
                                 <Status className="header-button" {...Statuses.Success} text="Auto accept on" size={StatusSize.l} animated={false} />

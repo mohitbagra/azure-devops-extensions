@@ -38,7 +38,7 @@ export function ProjectSettingEditor() {
 
     return (
         <>
-            <div className="section-header fontSizeL fontWeightHeavy">{Resources.ProjectSettingsHeader}</div>
+            <div className="section-header font-size-l font-weight-heavy">{Resources.ProjectSettingsHeader}</div>
             <GitRepoPicker
                 label={Resources.GitRepoPickerLabel}
                 info={Resources.GitRepoPickerLabel_Info}
