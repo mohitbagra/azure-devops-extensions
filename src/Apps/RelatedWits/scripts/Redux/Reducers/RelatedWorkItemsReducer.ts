@@ -49,12 +49,6 @@ export function relatedWorkItemsReducer(state: IRelatedWorkItemsState | undefine
                 break;
             }
 
-            case RelatedWorkItemActionTypes.ClearSortAndFilter: {
-                draft.filterState = undefined;
-                draft.sortState = undefined;
-                break;
-            }
-
             case RelatedWorkItemActionTypes.UpdateRelatedWorkItem: {
                 const relatedWorkItem = action.payload;
                 for (const id of Object.keys(draft.relatedWorkItems)) {

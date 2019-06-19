@@ -15,6 +15,7 @@ interface ITextFieldProps extends ILabelledComponentProps, IInputComponentProps<
     multiline?: boolean;
     prefixIconProps?: IIconProps;
     suffixIconProps?: IIconProps;
+    inputType?: "password" | "text" | "button" | "number" | undefined;
     onBlur?: () => void;
     onFocus?: (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -39,6 +40,7 @@ export function TextField(props: ITextFieldProps) {
     };
 
     const inputProps: VSSUI_TextFieldProps = {
+        inputType: props.inputType as "password" | "text" | "button" | undefined,
         autoFocus: props.autoFocus,
         inputClassName: props.inputClassName,
         maxLength: props.maxLength,

@@ -11,7 +11,6 @@ export const RelatedWorkItemActions = {
     loadFailed: (workItemId: number, error: string) => createAction(RelatedWorkItemActionTypes.LoadFailed, { workItemId, error }),
     applyFilter: (filterState: IFilterState) => createAction(RelatedWorkItemActionTypes.ApplyFilter, filterState),
     applySort: (sortState: ISortState) => createAction(RelatedWorkItemActionTypes.ApplySort, sortState),
-    clearSortAndFilter: () => createAction(RelatedWorkItemActionTypes.ClearSortAndFilter),
     openRelatedWorkItem: (workItemId: number) => createAction(RelatedWorkItemActionTypes.OpenRelatedWorkItem, workItemId),
     updateRelatedWorkItem: (workItem: WorkItem) => createAction(RelatedWorkItemActionTypes.UpdateRelatedWorkItem, workItem)
 };
@@ -35,13 +34,11 @@ export const enum RelatedWorkItemActionTypes {
     LoadFailed = "RelatedWorkItem/LoadFailed",
     ApplyFilter = "RelatedWorkItem/ApplyFilter",
     ApplySort = "RelatedWorkItem/ApplySort",
-    ClearSortAndFilter = "RelatedWorkItem/ClearSortAndFilter",
     OpenRelatedWorkItem = "RelatedWorkItem/OpenRelatedWorkItem",
     UpdateRelatedWorkItem = "RelatedWorkItem/UpdateRelatedWorkItem"
 }
 
 export const enum RelatedWorkItemSettingsActionTypes {
-    LoadRequested = "RelatedWorkItemSettings/LoadRequested",
     BeginLoad = "RelatedWorkItemSettings/BeginLoad",
     LoadSucceeded = "RelatedWorkItemSettings/LoadSucceeded",
     OpenPanel = "RelatedWorkItemSettings/OpenPanel",
