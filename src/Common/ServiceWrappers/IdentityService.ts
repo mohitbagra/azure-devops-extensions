@@ -17,6 +17,7 @@ export interface IIdentity {
     entityType: string;
     originDirectory: string;
     originId: string;
+    image?: string;
 }
 
 export interface IdentitiesGetConnectionsResponseModel {
@@ -136,65 +137,70 @@ export async function getIdentityService(): Promise<IVssIdentityService> {
 }
 
 export class PeoplePickerProvider implements IPeoplePickerProvider {
-    private identityService: Promise<IVssIdentityService>;
-
-    constructor() {
-        this.identityService = getIdentityService();
+    public async addIdentitiesToMRU(identities: IIdentity[]): Promise<boolean> {
+        const identityService = await getIdentityService();
+        return identityService.addMruIdentitiesAsync(identities);
     }
 
-    public addIdentitiesToMRU = (identities: IIdentity[]): Promise<boolean> => {
-        return this.identityService.then(identityService => {
-            return identityService.addMruIdentitiesAsync(identities);
-        });
-    };
-
-    public getEntityFromUniqueAttribute = (entityId: string): IIdentity | PromiseLike<IIdentity> => {
-        return this.identityService.then(identityService => {
+    public getEntityFromUniqueAttribute(entityId: string): IIdentity | PromiseLike<IIdentity> {
+        return getIdentityService().then(identityService => {
             return identityService.searchIdentitiesAsync(entityId, ["user"], ["ims", "source"], "uid").then(x => x[0]);
         });
-    };
+    }
 
-    public onEmptyInputFocus = (): IIdentity[] | PromiseLike<IIdentity[]> => {
-        return this.identityService.then(identityService => {
+    public onEmptyInputFocus(): IIdentity[] | PromiseLike<IIdentity[]> {
+        return getIdentityService().then(identityService => {
             return identityService.getIdentityMruAsync().then(identities => {
-                return identities;
+                return identities.map(this._identityMapper);
             });
         });
-    };
+    }
 
-    public onFilterIdentities = (filter: string, selectedItems?: IIdentity[]): Promise<IIdentity[]> | IIdentity[] => {
+    public onFilterIdentities(filter: string, selectedItems?: IIdentity[]): Promise<IIdentity[]> | IIdentity[] {
         return this._onSearchPersona(filter, selectedItems ? selectedItems : []);
-    };
+    }
 
-    public onRequestConnectionInformation = (
+    public onRequestConnectionInformation(
         entity: IIdentity,
         getDirectReports?: boolean
-    ): IdentitiesGetConnectionsResponseModel | PromiseLike<IdentitiesGetConnectionsResponseModel> => {
-        return this.identityService.then(identityService => {
+    ): IdentitiesGetConnectionsResponseModel | PromiseLike<IdentitiesGetConnectionsResponseModel> {
+        return getIdentityService().then(identityService => {
             return identityService.getConnections(entity, getDirectReports);
         });
-    };
+    }
 
-    public removeIdentitiesFromMRU = (identities: IIdentity[]): Promise<boolean> => {
-        return this.identityService.then(identityService => {
-            return identityService.removeMruIdentitiesAsync(identities);
-        });
-    };
+    public async removeIdentitiesFromMRU(identities: IIdentity[]): Promise<boolean> {
+        const identityService = await getIdentityService();
+        return identityService.removeMruIdentitiesAsync(identities);
+    }
 
-    private _onSearchPersona = (searchText: string, items: IIdentity[]): Promise<IIdentity[]> => {
+    private async _onSearchPersona(searchText: string, items: IIdentity[]): Promise<IIdentity[]> {
         const searchRequest: IdentitiesSearchRequestModel = { query: searchText };
-        return this.identityService.then(identityService => {
-            return identityService
-                .searchIdentitiesAsync(
-                    searchRequest.query,
-                    searchRequest.identityTypes,
-                    searchRequest.operationScopes,
-                    searchRequest.queryTypeHint,
-                    searchRequest.options
-                )
-                .then((identities: IIdentity[]) => {
-                    return identities.filter(identity => !items.some(selectedIdentity => selectedIdentity.entityId === identity.entityId));
-                });
-        });
+        const identityService = await getIdentityService();
+        const identities = await identityService.searchIdentitiesAsync(
+            searchRequest.query,
+            searchRequest.identityTypes,
+            searchRequest.operationScopes,
+            searchRequest.queryTypeHint,
+            searchRequest.options
+        );
+
+        return identities
+            .filter(identity => !items.some(selectedIdentity => selectedIdentity.entityId === identity.entityId))
+            .map(this._identityMapper);
+    }
+
+    private _identityMapper = (identity: IIdentity): IIdentity => {
+        return identity.image ? { ...identity, image: this._convertImage(identity.image) } : identity;
     };
+
+    private _convertImage(image: string): string {
+        if (image.startsWith("http")) {
+            return image;
+        } else if (image.startsWith("/")) {
+            return `https://dev.azure.com${image}`;
+        } else {
+            return `https://dev.azure.com/${image}`;
+        }
+    }
 }

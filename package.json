@@ -14,7 +14,7 @@
         "@types/react": "16.8.22",
         "@types/react-dom": "16.8.4",
         "@types/react-redux": "7.1.0",
-        "@types/recharts": "1.1.16",
+        "@types/recharts": "1.1.17",
         "@types/react-beautiful-dnd": "11.0.2",
         "@types/q": "1.5.1",
         "webpack": "4.35.0",
@@ -36,9 +36,9 @@
         "copy-webpack-plugin": "5.0.3"
     },
     "dependencies": {
-        "azure-devops-extension-api": "1.152.3",
+        "azure-devops-extension-api": "1.153.1",
         "azure-devops-extension-sdk": "2.0.10",
-        "azure-devops-ui": "1.153.4",
+        "azure-devops-ui": "1.153.5",
         "date-fns": "1.30.1",
         "es6-promise": "4.2.8",
         "immer": "3.1.3",
