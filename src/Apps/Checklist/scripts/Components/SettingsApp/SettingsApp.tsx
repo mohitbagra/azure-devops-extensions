@@ -21,10 +21,12 @@ function ChecklistSettingsInternal() {
         SDK.init({ applyTheme: true });
     }, []);
 
+    const securityEnabled = window.location.search.indexOf("enable_security=true") >= 0;
+
     return (
         <Page className="checklist-settings flex-row flex-start flex-grow">
             {!workItemTypes && <Loading />}
-            {workItemTypes && <ChecklistSettingsView workItemTypes={workItemTypes} />}
+            {workItemTypes && <ChecklistSettingsView workItemTypes={workItemTypes} securityEnabled={securityEnabled} />}
         </Page>
     );
 }

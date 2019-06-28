@@ -1,4 +1,5 @@
 import * as SDK from "azure-devops-extension-sdk";
+import { IIdentity, IPeoplePickerProvider } from "azure-devops-ui/Components/IdentityPickerDropdown/SharedIdentityPicker.Props";
 
 let identityService: IVssIdentityService;
 
@@ -10,14 +11,6 @@ export const enum IdentityServiceIds {
      * Provides a way to search for identities.
      */
     IdentityService = "ms.vss-features.identity-service"
-}
-
-export interface IIdentity {
-    entityId: string;
-    entityType: string;
-    originDirectory: string;
-    originId: string;
-    image?: string;
 }
 
 export interface IdentitiesGetConnectionsResponseModel {
@@ -91,43 +84,6 @@ export interface IVssIdentityService {
     getConnections(identity: IIdentity, getDirectReports?: boolean): Promise<IdentitiesGetConnectionsResponseModel>;
 }
 
-export interface IPeoplePickerProvider {
-    /**
-     * Add identities to the MRU
-     * @returns A promise that returns true if successful false otherwise
-     */
-    addIdentitiesToMRU?: (identities: IIdentity[]) => Promise<boolean>;
-
-    /**
-     * Request Entity information given an entityId
-     */
-    getEntityFromUniqueAttribute: (entityId: string) => IIdentity | PromiseLike<IIdentity>;
-
-    /**
-     * If no input is in the search box when clicked, provide a set of identities to show (used for MRU)
-     */
-    onEmptyInputFocus?: () => IIdentity[] | PromiseLike<IIdentity[]> | null;
-
-    /**
-     * Given a list of currently selected items and a filter string, return a list of suggestions to put in the suggestion list
-     */
-    onFilterIdentities: (filter: string, selectedItems?: IIdentity[]) => IIdentity[] | PromiseLike<IIdentity[]> | null;
-
-    /**
-     * Request connection information about a given Entity.
-     */
-    onRequestConnectionInformation: (
-        entity: IIdentity,
-        getDirectReports?: boolean
-    ) => IdentitiesGetConnectionsResponseModel | PromiseLike<IdentitiesGetConnectionsResponseModel>;
-
-    /**
-     * Remove identities from the MRU
-     * @returns A promise that returns true if successful false otherwise
-     */
-    removeIdentitiesFromMRU?: (identities: IIdentity[]) => Promise<boolean>;
-}
-
 export async function getIdentityService(): Promise<IVssIdentityService> {
     if (!identityService) {
         identityService = await SDK.getService<IVssIdentityService>(IdentityServiceIds.IdentityService);
@@ -137,6 +93,8 @@ export async function getIdentityService(): Promise<IVssIdentityService> {
 }
 
 export class PeoplePickerProvider implements IPeoplePickerProvider {
+    constructor(private _identityTypes: string[] = ["user", "group"]) {}
+
     public async addIdentitiesToMRU(identities: IIdentity[]): Promise<boolean> {
         const identityService = await getIdentityService();
         return identityService.addMruIdentitiesAsync(identities);
@@ -144,7 +102,7 @@ export class PeoplePickerProvider implements IPeoplePickerProvider {
 
     public getEntityFromUniqueAttribute(entityId: string): IIdentity | PromiseLike<IIdentity> {
         return getIdentityService().then(identityService => {
-            return identityService.searchIdentitiesAsync(entityId, ["user"], ["ims", "source"], "uid").then(x => x[0]);
+            return identityService.searchIdentitiesAsync(entityId, this._identityTypes, ["ims", "source"], "uid").then(x => x[0]);
         });
     }
 
@@ -175,15 +133,8 @@ export class PeoplePickerProvider implements IPeoplePickerProvider {
     }
 
     private async _onSearchPersona(searchText: string, items: IIdentity[]): Promise<IIdentity[]> {
-        const searchRequest: IdentitiesSearchRequestModel = { query: searchText };
         const identityService = await getIdentityService();
-        const identities = await identityService.searchIdentitiesAsync(
-            searchRequest.query,
-            searchRequest.identityTypes,
-            searchRequest.operationScopes,
-            searchRequest.queryTypeHint,
-            searchRequest.options
-        );
+        const identities = await identityService.searchIdentitiesAsync(searchText, this._identityTypes, ["ims", "source"]);
 
         return identities
             .filter(identity => !items.some(selectedIdentity => selectedIdentity.entityId === identity.entityId))

@@ -12,10 +12,11 @@ import { ChecklistSettingsHeader } from "./ChecklistSettingsHeader";
 
 interface IChecklistSettingsViewProps {
     workItemTypes: WorkItemType[];
+    securityEnabled: boolean;
 }
 
 export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
-    const { workItemTypes } = props;
+    const { workItemTypes, securityEnabled } = props;
     const [selectedWorkItemType, setSelectedWorkItemType] = React.useState(workItemTypes[0].name);
 
     const onSelectedTabChanged = React.useCallback((selectedTab: string) => {
@@ -42,7 +43,7 @@ export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
                 ))}
             </TabList>
             <div className="flex-column flex-grow">
-                <ChecklistSettingsHeader />
+                <ChecklistSettingsHeader securityEnabled={securityEnabled} />
 
                 <div className="checklist-contents flex-grow flex-column">
                     <ChecklistError className="flex-noshrink" />

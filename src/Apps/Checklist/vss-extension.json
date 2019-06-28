@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "workitem-checklist",
-    "version": "3.2.4",
+    "version": "3.2.6",
     "name": "Work item checklist",
     "description": "Manage personal or shared checklist for a workitem.",
     "icons": {
@@ -30,6 +30,17 @@
     "categories": ["Azure Boards"],
     "contributions": [
         {
+            "id": "feature-checklist-security",
+            "type": "ms.vss-web.feature",
+            "description": "Allows only a limited set of users to create/edit default work item type checklists",
+            "targets": ["ms.vss-web.managed-features", "ms.vss-web.managed-features-onprem"],
+            "properties": {
+                "name": "Checklist security",
+                "userConfigurable": false,
+                "hostConfigurable": true
+            }
+        },
+        {
             "id": "work-item-checklist-group-hub",
             "type": "ms.vss-work-web.work-item-form-group",
             "description": "Work item checklist extension",
@@ -48,9 +59,27 @@
             "includes": ["ms.vss-tfs-web.tfs-page-data-service", "ms.vss-features.extension-data-service"],
             "properties": {
                 "name": "Work item checklists",
-                "order": 100,
                 "uri": "html/settings.html"
             }
+        },
+        {
+            "id": "settings-hub-with-security",
+            "type": "ms.vss-web.property-provider",
+            "targets": [".settings-hub"],
+            "properties": {
+                "type": "static",
+                "newProperties": {
+                    "uri": "html/settings.html?enable_security=true"
+                }
+            },
+            "constraints": [
+                {
+                    "name": "Feature",
+                    "properties": {
+                        "featureId": "mohitbagra-dev.workitem-checklist.feature-checklist-security"
+                    }
+                }
+            ]
         }
     ]
 }

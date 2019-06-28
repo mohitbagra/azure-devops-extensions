@@ -1,3 +1,4 @@
+import { IHeaderCommandBarItem } from "azure-devops-ui/Components/HeaderCommandBar/HeaderCommandBar.Props";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { emptyRenderer } from "Common/Components/Renderers";
@@ -15,7 +16,13 @@ const Actions = {
     loadChecklist: ChecklistActions.checklistLoadRequested
 };
 
-export function ChecklistSettingsHeader() {
+interface IChecklistSettingsHeaderProps {
+    securityEnabled: boolean;
+}
+
+export function ChecklistSettingsHeader(props: IChecklistSettingsHeaderProps) {
+    const { securityEnabled } = props;
+
     const selectedWorkItemType = React.useContext(ChecklistContext) as string;
     const status = useChecklistStatus(selectedWorkItemType);
     const { loadChecklist } = useActionCreators(Actions);
@@ -33,6 +40,36 @@ export function ChecklistSettingsHeader() {
         setPanelOpen(true);
     }, []);
 
+    const commandBarItems = React.useMemo(() => {
+        const items: IHeaderCommandBarItem[] = [
+            {
+                important: true,
+                isPrimary: true,
+                id: "refresh",
+                text: "Refresh",
+                iconProps: {
+                    iconName: "Refresh"
+                },
+                onActivate: onRefresh,
+                disabled: status === LoadStatus.Loading || status === LoadStatus.NotLoaded || status === LoadStatus.Updating
+            }
+        ];
+
+        if (securityEnabled) {
+            items.push({
+                important: true,
+                id: "security",
+                text: "Security",
+                iconProps: {
+                    iconName: "Permissions"
+                },
+                onActivate: openPanel,
+                disabled: status === LoadStatus.Loading || status === LoadStatus.NotLoaded || status === LoadStatus.Updating
+            });
+        }
+        return items;
+    }, [securityEnabled, status, onRefresh, openPanel]);
+
     return (
         <>
             {panelOpen && (
@@ -43,29 +80,7 @@ export function ChecklistSettingsHeader() {
             <Header
                 className="checklist-settings-header"
                 title={`Default checklist items for "${selectedWorkItemType}"`}
-                commandBarItems={[
-                    {
-                        important: true,
-                        isPrimary: true,
-                        id: "refresh",
-                        text: "Refresh",
-                        iconProps: {
-                            iconName: "Refresh"
-                        },
-                        onActivate: onRefresh,
-                        disabled: status === LoadStatus.Loading || status === LoadStatus.NotLoaded || status === LoadStatus.Updating
-                    },
-                    {
-                        important: true,
-                        id: "security",
-                        text: "Security",
-                        iconProps: {
-                            iconName: "Permissions"
-                        },
-                        onActivate: openPanel,
-                        disabled: status === LoadStatus.Loading || status === LoadStatus.NotLoaded || status === LoadStatus.Updating
-                    }
-                ]}
+                commandBarItems={commandBarItems}
                 titleSize={TitleSize.Large}
             />
         </>
