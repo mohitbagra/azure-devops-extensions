@@ -47,6 +47,29 @@
                     "light": "asset://images/hublogo.png",
                     "dark": "asset://images/hublogo_dark.png"
                 }
+            },
+            "constraints": [
+                {
+                    "name": "Feature",
+                    "properties": {
+                        "featureId": "mohitbagra.bugbashpro.bugbash-feature"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "bugbash-feature",
+            "type": "ms.vss-web.feature",
+            "description": "Enable the Bug Bash Pro tool.",
+            "targets": [
+                "ms.vss-web.managed-features",
+                "ms.vss-web.managed-features-onprem"
+            ],
+            "properties": {
+                "name": "Bug Bash Pro",
+                "userConfigurable": true,
+                "hostConfigurable": true,
+                "defaultState": true
             }
         }
     ]
