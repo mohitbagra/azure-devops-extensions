@@ -1,1 +1,1 @@
-export const ChangelogMajorVersion = "4.3.1";
+export const ChangelogMajorVersion = "4.4.2";

@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "bugbashpro",
-    "version": "4.3.5",
+    "version": "4.4.2",
     "name": "Bug Bash Pro",
     "description": "Easier way to manage bug bashes",
     "icons": {
@@ -52,13 +52,13 @@
                 {
                     "name": "Feature",
                     "properties": {
-                        "featureId": "mohitbagra.bugbashpro.bugbash-feature"
+                        "featureId": "mohitbagra.bugbashpro.bugbashpro-feature"
                     }
                 }
             ]
         },
         {
-            "id": "bugbash-feature",
+            "id": "bugbashpro-feature",
             "type": "ms.vss-web.feature",
             "description": "Enable the Bug Bash Pro tool.",
             "targets": [
@@ -69,6 +69,7 @@
                 "name": "Bug Bash Pro",
                 "userConfigurable": true,
                 "hostConfigurable": true,
+                "hostScopes": [ "project", null ],
                 "defaultState": true
             }
         }

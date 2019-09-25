@@ -91,6 +91,10 @@ Users can configure 2 things here -
 
 <a name="changelog" id="changelog"></a>
 
+**(09/25/2019) Version 4.4:**
+
+-   Add user/project/account configured feature to toggle visibility of the hub.
+
 **(04/06/2019) Version 4.2:**
 
 -   Use new azure devops extension sdk & apis
