@@ -147,11 +147,20 @@ export function DropdownPicker<T>(props: IDropdownPickerProps<T>) {
                 placeholder={placeholder || "Select a value"}
                 showFilterBox={true}
                 filterPlaceholderText="Search"
-                renderCallout={props => (
+                renderCallout={(props) => (
                     <DropdownCallout {...props} focusOnMount={false} lightDismiss={true} excludeTabStop={true} excludeFocusZone={true} />
                 )}
-                renderExpandable={expandableProps => {
-                    return <DropdownExpandableTextField {...expandableProps} disabled={disabled} editable={false} value={textValue} />;
+                renderExpandable={(expandableProps) => {
+                    return (
+                        <DropdownExpandableTextField
+                            {...expandableProps}
+                            showPrefix={false}
+                            className={css(expandableProps.className, !textValue && "show-placeholder")}
+                            disabled={disabled}
+                            editable={false}
+                            value={textValue || placeholder}
+                        />
+                    );
                 }}
             />
         </LabelledComponent>

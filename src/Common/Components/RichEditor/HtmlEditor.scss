@@ -97,6 +97,19 @@ $editorMaxHeight: $roosterMaxHeight + $buttonHeight;
     }
 
     .rooster-command-bar {
+        i {
+            display: inline-block;
+            font-style: normal;
+            font-weight: normal;
+            font-family: "AzureDevOpsMDL2Assets";
+            font-size: 16px;
+            margin: 0px 4px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
         button:not(:hover):not(:active):not(:focus):not(.is-checked) {
             background: $backgroundColor;
         }

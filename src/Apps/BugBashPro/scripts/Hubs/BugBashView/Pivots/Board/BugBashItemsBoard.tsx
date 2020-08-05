@@ -13,9 +13,9 @@ export function BugBashItemsBoard(props: IBugBashItemProviderParams) {
     const { filteredBugBashItems, workItemsMap } = props;
 
     const [draggingFromColumn, setDraggingFromColumn] = React.useState("");
-    const pendingItems = filteredBugBashItems.filter(b => isBugBashItemPending(b));
-    const rejectedItems = filteredBugBashItems.filter(b => isBugBashItemRejected(b));
-    const acceptedItems = filteredBugBashItems.filter(b => isBugBashItemAccepted(b));
+    const pendingItems = filteredBugBashItems.filter((b) => isBugBashItemPending(b));
+    const rejectedItems = filteredBugBashItems.filter((b) => isBugBashItemRejected(b));
+    const acceptedItems = filteredBugBashItems.filter((b) => isBugBashItemAccepted(b));
 
     const onDragStart = React.useCallback((start: DragStart) => {
         setDraggingFromColumn(start.source.droppableId);
@@ -51,7 +51,7 @@ export function BugBashItemsBoard(props: IBugBashItemProviderParams) {
     return (
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
             <div className="board scroll-hidden flex-grow flex-column">
-                <div className="board-header depth-4 flex-noshrink flex">
+                <div className="board-header depth-4 flex-noshrink flex-row">
                     <div className="board-header-cell">
                         <div className="board-header-cell-content">Pending</div>
                     </div>
@@ -63,7 +63,7 @@ export function BugBashItemsBoard(props: IBugBashItemProviderParams) {
                     </div>
                 </div>
                 <div className="board-contents-outer flex-grow v-scroll-auto">
-                    <div className="board-contents flex">
+                    <div className="board-contents flex-row">
                         <Droppable
                             droppableId="pending"
                             key="pending"

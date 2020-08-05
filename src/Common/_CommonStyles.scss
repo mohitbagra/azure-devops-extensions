@@ -1,7 +1,14 @@
-@import "../../node_modules/azure-devops-ui/Core/platformCommon.scss";
-@import "../../node_modules/azure-devops-ui/coreStyles.scss";
+@import "../../node_modules/azure-devops-ui/Core/_platformCommon.scss";
+@import "../../node_modules/azure-devops-ui/Core/core.scss";
+@import "../../node_modules/azure-devops-ui/_coreStyles.scss";
 
 $input-border-radius: 2px;
+
+body {
+    color: $primary-text;
+    background-color: $backgroundColor;
+    font-family: $fontFamily;
+}
 
 @mixin TextOverflowEllipsis() {
     overflow: hidden;

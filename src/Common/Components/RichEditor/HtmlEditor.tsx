@@ -272,7 +272,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
             { key: keys.Unlink, order: 19 }
         ];
 
-        this._buttonOverrides.forEach(b => {
+        this._buttonOverrides.forEach((b) => {
             b.className = b.className || "html-command-button-root";
             b.buttonClassName = b.buttonClassName || buttonClassName;
         });

@@ -1,5 +1,13 @@
 @import "_CommonStyles.scss";
 
+.dropdown-picker {
+    .show-placeholder {
+        input {
+            color: $neutral-30;
+        }
+    }
+}
+
 .empty-value-item {
     color: $secondary-text;
 }
