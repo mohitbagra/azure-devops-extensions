@@ -1,5 +1,6 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { TeamTemplateActionTypes, TeamTemplatesActions, WorkItemTemplateActions, WorkItemTemplateActionTypes } from "./Actions";
 import { defaultState, IWorkItemTemplateState } from "./Contracts";
 
@@ -7,7 +8,7 @@ export function workItemTemplateReducer(
     state: IWorkItemTemplateState | undefined,
     action: TeamTemplatesActions | WorkItemTemplateActions
 ): IWorkItemTemplateState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case TeamTemplateActionTypes.BeginLoad: {
                 const teamId = action.payload;

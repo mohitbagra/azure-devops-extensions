@@ -1,5 +1,7 @@
 import "./WorkItemFieldValuePicker.scss";
 
+import * as React from "react";
+
 import { FieldType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { equals } from "azure-devops-ui/Core/Util/String";
@@ -15,7 +17,7 @@ import { RichEditor } from "Common/Components/RichEditor";
 import { TextField } from "Common/Components/TextField";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
-import * as React from "react";
+
 import { useField } from "../Hooks/useField";
 import { useWorkItemTypeField } from "../Hooks/useWorkItemTypeField";
 import { getFieldModule } from "../Redux/Module";
@@ -30,6 +32,12 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
     const { field } = useField(fieldRefName);
     const { field: workItemTypeField } = useWorkItemTypeField(workItemTypeName, fieldRefName);
 
+    const onFieldValueChanged = (value: any) => {
+        if (onChange) {
+            onChange(value);
+        }
+    };
+
     const onCheckboxChanged = (_: unknown, checked?: boolean) => {
         onFieldValueChanged(checked ? "1" : "0");
     };
@@ -39,11 +47,7 @@ function WorkItemFieldValuePickerInternal(props: IWorkItemFieldValuePickerOwnPro
     const onTagsChanged = (tags: string[]) => {
         onFieldValueChanged(tags.join(";"));
     };
-    const onFieldValueChanged = (value: any) => {
-        if (onChange) {
-            onChange(value);
-        }
-    };
+
     const convertToComboOption = (av: any) => ({ id: av.toString(), text: av.toString() });
 
     if (!field || !workItemTypeField) {

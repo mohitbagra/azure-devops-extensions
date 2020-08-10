@@ -1,6 +1,4 @@
-import {
-    CommonServiceIds, IGlobalMessageBanner, IGlobalMessagesService, IToast
-} from "azure-devops-extension-api/Common/CommonServices";
+import { CommonServiceIds, IGlobalMessageBanner, IGlobalMessagesService, IToast } from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
 
 let globalMessageService: IGlobalMessagesService;

@@ -1,10 +1,12 @@
+import * as React from "react";
+
 import { IHeaderCommandBarItem } from "azure-devops-ui/Components/HeaderCommandBar/HeaderCommandBar.Props";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
-import * as React from "react";
+
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistActions } from "../../Redux/Checklist/Actions";

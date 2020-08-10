@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { IIconProps } from "azure-devops-ui/Components/Icon/Icon.Props";
 import { ITextFieldProps as VSSUI_TextFieldProps, TextField as VSSUI_TextField } from "azure-devops-ui/TextField";
 import { css } from "azure-devops-ui/Util";
@@ -5,7 +7,6 @@ import { IInputComponentProps, ILabelledComponentProps } from "Common/Components
 import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { isNullOrEmpty } from "Common/Utilities/String";
-import * as React from "react";
 
 interface ITextFieldProps extends ILabelledComponentProps, IInputComponentProps<string> {
     inputId?: string;

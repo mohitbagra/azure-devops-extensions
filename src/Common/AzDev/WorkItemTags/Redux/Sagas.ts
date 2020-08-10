@@ -2,13 +2,10 @@ import { LoadStatus } from "Common/Contracts";
 import { RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeLeading } from "redux-saga/effects";
+
 import { TagActions, TagActionTypes } from "./Actions";
 import { fetchTags } from "./DataSource";
 import { getTagsStatus } from "./Selectors";
-
-export function* tagsSaga(): SagaIterator {
-    yield takeLeading(TagActionTypes.LoadRequested, loadTags);
-}
 
 function* loadTags(): SagaIterator {
     const status: RT<typeof getTagsStatus> = yield select(getTagsStatus);
@@ -21,4 +18,8 @@ function* loadTags(): SagaIterator {
             yield put(TagActions.loadFailed(error.message || error));
         }
     }
+}
+
+export function* tagsSaga(): SagaIterator {
+    yield takeLeading(TagActionTypes.LoadRequested, loadTags);
 }

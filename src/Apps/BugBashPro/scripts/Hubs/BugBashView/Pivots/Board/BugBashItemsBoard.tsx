@@ -1,12 +1,14 @@
 import "./BugBashItemsBoard.scss";
 
+import * as React from "react";
+
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { css } from "azure-devops-ui/Util";
 import { IBugBashItemProviderParams } from "BugBashPro/Hubs/BugBashView/Interfaces";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
 import { isBugBashItemAccepted, isBugBashItemPending, isBugBashItemRejected } from "BugBashPro/Shared/Helpers";
-import * as React from "react";
 import { DragDropContext, DragStart, Droppable, DropResult } from "react-beautiful-dnd";
+
 import { BoardCard } from "./BoardCard";
 
 export function BugBashItemsBoard(props: IBugBashItemProviderParams) {
@@ -29,10 +31,10 @@ export function BugBashItemsBoard(props: IBugBashItemProviderParams) {
             if (sourceId !== targetId) {
                 const bugBashItemId = draggableId.replace("card_", "");
                 console.log(bugBashItemId);
-                if (targetId === "pending") {
-                } else if (targetId === "rejected") {
-                } else {
-                }
+                // if (targetId === "pending") {
+                // } else if (targetId === "rejected") {
+                // } else {
+                // }
             }
         }
     }, []);

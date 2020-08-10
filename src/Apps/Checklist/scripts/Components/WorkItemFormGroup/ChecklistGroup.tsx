@@ -1,11 +1,13 @@
 import "./ChecklistGroup.scss";
 
+import * as React from "react";
+
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { Page } from "azure-devops-ui/Page";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { useAutoResize } from "Common/AzDev/WorkItemForm/Hooks/useAutoResize";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import * as React from "react";
+
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
 import { getChecklistModule } from "../../Redux/Checklist/Module";

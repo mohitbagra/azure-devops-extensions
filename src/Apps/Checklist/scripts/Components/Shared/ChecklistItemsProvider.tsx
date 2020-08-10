@@ -1,6 +1,8 @@
+import * as React from "react";
+
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { Loading } from "Common/Components/Loading";
-import * as React from "react";
+
 import { ChecklistContext } from "../../Constants";
 import { useChecklists } from "../../Hooks/useChecklists";
 import { ChecklistType, IChecklistItem } from "../../Interfaces";

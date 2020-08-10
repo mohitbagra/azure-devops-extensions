@@ -5,6 +5,7 @@ import { IWorkItemTemplateAwareState } from "Common/AzDev/WorkItemTemplates/Redu
 import { IWorkItemTypeAwareState } from "Common/AzDev/WorkItemTypes/Redux/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { createSelector } from "reselect";
+
 import { isBugBashDirty, isBugBashValid } from "../Helpers";
 import { IBugBashEditorAwareState, IBugBashEditorState } from "./Contracts";
 

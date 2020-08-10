@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { IBaseProps } from "Common/Components/Contracts";
 import { MultiValuePicker } from "Common/Components/Pickers/MultiValuePicker";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import * as React from "react";
+
 import { IChecklistAwareState } from "../../Redux/Checklist/Contracts";
 import { getSuggestedLabels } from "../../Redux/Checklist/Selectors";
 

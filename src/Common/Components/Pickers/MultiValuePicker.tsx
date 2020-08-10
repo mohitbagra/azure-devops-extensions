@@ -1,5 +1,7 @@
 import "./MultiValuePicker.scss";
 
+import * as React from "react";
+
 import { equals } from "azure-devops-ui/Core/Util/String";
 import { EditableLabelGroup, ILabelModel, LabelGroup, WrappingBehavior } from "azure-devops-ui/Label";
 import { css } from "azure-devops-ui/Util";
@@ -8,11 +10,32 @@ import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { contains, findIndex } from "Common/Utilities/Array";
 import { ignoreCaseEquals, isNullOrWhiteSpace } from "Common/Utilities/String";
-import * as React from "react";
 
 export interface IMultiValuePickerProps extends ILabelledComponentProps, IInputComponentProps<string[]> {
     allValues?: string[];
     addButtonText?: string;
+}
+
+const getTag = (value: string): ILabelModel => ({
+    content: value
+});
+
+function getSuggestions(allValues: string[], selectedValues: string[]) {
+    return (filterText: string): ILabelModel[] => {
+        if (isNullOrWhiteSpace(filterText) || !allValues) {
+            return [];
+        }
+
+        return allValues
+            .filter(
+                (value) =>
+                    value.toLowerCase().indexOf(filterText.toLowerCase()) === 0 &&
+                    findIndex(selectedValues, (selectedValue: string) => equals(selectedValue, value, true)) === -1
+            )
+            .map((value) => {
+                return { content: value };
+            });
+    };
 }
 
 export function MultiValuePicker(props: IMultiValuePickerProps) {
@@ -34,7 +57,7 @@ export function MultiValuePicker(props: IMultiValuePickerProps) {
     const onLabelRemove = (labelModel: ILabelModel) => {
         const arr = value || [];
         const valueToRemove = labelModel.content;
-        onValuesChanged(arr.filter(v => v.toLowerCase() !== valueToRemove.toLowerCase()));
+        onValuesChanged(arr.filter((v) => v.toLowerCase() !== valueToRemove.toLowerCase()));
     };
     const getError = () => {
         const errorMessageFromProp = getErrorMessage && getErrorMessage();
@@ -63,26 +86,4 @@ export function MultiValuePicker(props: IMultiValuePickerProps) {
             </>
         </LabelledComponent>
     );
-}
-
-const getTag = (value: string): ILabelModel => ({
-    content: value
-});
-
-function getSuggestions(allValues: string[], selectedValues: string[]) {
-    return (filterText: string): ILabelModel[] => {
-        if (isNullOrWhiteSpace(filterText) || !allValues) {
-            return [];
-        }
-
-        return allValues
-            .filter(
-                value =>
-                    value.toLowerCase().indexOf(filterText.toLowerCase()) === 0 &&
-                    findIndex(selectedValues, (selectedValue: string) => equals(selectedValue, value, true)) === -1
-            )
-            .map(value => {
-                return { content: value };
-            });
-    };
 }

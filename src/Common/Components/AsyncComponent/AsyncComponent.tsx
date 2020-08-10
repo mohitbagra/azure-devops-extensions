@@ -1,7 +1,8 @@
+import * as React from "react";
+
 import { DelayedRender } from "Common/Components/DelayedRender";
 import { InputError } from "Common/Components/InputError";
 import { Loading } from "Common/Components/Loading";
-import * as React from "react";
 
 interface IAsyncComponentProps<T> {
     loader: () => Promise<T>;
@@ -16,6 +17,18 @@ interface IResolvedData<T> {
     data?: T;
 }
 
+function renderLoading(): JSX.Element {
+    return (
+        <DelayedRender delay={200}>
+            <Loading />
+        </DelayedRender>
+    );
+}
+
+function renderError(error: string): JSX.Element {
+    return <InputError error={error} />;
+}
+
 export function AsyncComponent<T>(props: IAsyncComponentProps<T>) {
     const { children, loader, loadingComponent = renderLoading, errorComponent = renderError } = props;
     const [resolvedData, setResolvedData] = React.useState<IResolvedData<T>>({ loading: true });
@@ -24,12 +37,12 @@ export function AsyncComponent<T>(props: IAsyncComponentProps<T>) {
         const promise = loader();
         let disposed = false;
         promise.then(
-            data => {
+            (data) => {
                 if (!disposed) {
                     setResolvedData({ loading: false, data: data });
                 }
             },
-            err => {
+            (err) => {
                 if (!disposed) {
                     setResolvedData({ loading: false, error: err.message || err });
                 }
@@ -50,16 +63,4 @@ export function AsyncComponent<T>(props: IAsyncComponentProps<T>) {
     } else {
         return null;
     }
-}
-
-function renderLoading(): JSX.Element {
-    return (
-        <DelayedRender delay={200}>
-            <Loading />
-        </DelayedRender>
-    );
-}
-
-function renderError(error: string): JSX.Element {
-    return <InputError error={error} />;
 }

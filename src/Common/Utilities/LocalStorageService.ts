@@ -1,5 +1,12 @@
 import { getExtensionContext } from "azure-devops-extension-sdk";
+
 import { getCurrentUser } from "./Identity";
+
+function _getScopedKey(key: string): string {
+    const userId = getCurrentUser().id;
+    const extensionId = getExtensionContext().extensionId;
+    return `${extensionId}_${userId}_${key}`;
+}
 
 export function writeLocalSetting(key: string, value: string) {
     const scopedKey = _getScopedKey(key);
@@ -35,10 +42,4 @@ export function removeLocalSetting(key: string) {
             // eat up
         }
     }
-}
-
-function _getScopedKey(key: string): string {
-    const userId = getCurrentUser().id;
-    const extensionId = getExtensionContext().extensionId;
-    return `${extensionId}_${userId}_${key}`;
 }

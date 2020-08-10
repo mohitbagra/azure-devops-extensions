@@ -14,6 +14,7 @@ import {
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
+
 import { BugBashItemFieldNames, BugBashItemKeyTypes, WorkItemFieldNames } from "./Constants";
 import { BugBashItemsFilterData, BugBashViewMode } from "./Redux/Contracts";
 
@@ -35,14 +36,14 @@ export function getFilteredBugBashItems(
         return undefined;
     }
 
-    const bugBashItemsWithWorkItems: IBugBashItemWithWorkItem[] = allBugBashItems.map(b => ({
+    const bugBashItemsWithWorkItems: IBugBashItemWithWorkItem[] = allBugBashItems.map((b) => ({
         bugBashItem: b,
         workItem: resolvedWorkItems && b.workItemId ? resolvedWorkItems[b.workItemId] : undefined,
         team: teamsMap ? teamsMap[b.teamId] : undefined
     }));
 
     const filteredItems = applyFilterAndSort(bugBashItemsWithWorkItems, filterState, sortState, matcher, comparer);
-    const bugBashItems = filteredItems.map(b => b.bugBashItem);
+    const bugBashItems = filteredItems.map((b) => b.bugBashItem);
 
     switch (viewMode) {
         case BugBashViewMode.Pending: {
@@ -78,25 +79,25 @@ function matcher(item: IBugBashItemWithWorkItem, filter: IFilterState): boolean 
     // filter by teamIds: only for non accepted items
     const teamIds: string[] | undefined = filter[BugBashItemFieldNames.TeamId] && filter[BugBashItemFieldNames.TeamId]!.value;
     if (teamIds && teamIds.length > 0 && !workItem) {
-        returnValue = returnValue && teamIds.filter(v => equals(v, bugBashItem.teamId, true)).length > 0;
+        returnValue = returnValue && teamIds.filter((v) => equals(v, bugBashItem.teamId, true)).length > 0;
     }
 
     // filter by item created by
     const createdBys: string[] | undefined = filter[BugBashItemFieldNames.CreatedBy] && filter[BugBashItemFieldNames.CreatedBy]!.value;
     if (createdBys && createdBys.length > 0) {
-        returnValue = returnValue && createdBys.filter(v => equals(v, getDistinctNameFromIdentityRef(bugBashItem.createdBy), true)).length > 0;
+        returnValue = returnValue && createdBys.filter((v) => equals(v, getDistinctNameFromIdentityRef(bugBashItem.createdBy), true)).length > 0;
     }
 
     // filter by rejected by: only for rejected items
     const rejectedBys: string[] | undefined = filter[BugBashItemFieldNames.RejectedBy] && filter[BugBashItemFieldNames.RejectedBy]!.value;
     if (rejectedBys && rejectedBys.length > 0 && isBugBashItemRejected(bugBashItem)) {
-        returnValue = returnValue && rejectedBys.filter(v => equals(v, getDistinctNameFromIdentityRef(bugBashItem.rejectedBy!), true)).length > 0;
+        returnValue = returnValue && rejectedBys.filter((v) => equals(v, getDistinctNameFromIdentityRef(bugBashItem.rejectedBy!), true)).length > 0;
     }
 
     // filter by work item state
     const states: string[] | undefined = filter[WorkItemFieldNames.State] && filter[WorkItemFieldNames.State]!.value;
     if (states && states.length > 0 && workItem) {
-        returnValue = returnValue && states.filter(v => equals(v, workItem.fields[WorkItemFieldNames.State], true)).length > 0;
+        returnValue = returnValue && states.filter((v) => equals(v, workItem.fields[WorkItemFieldNames.State], true)).length > 0;
     }
 
     // filter by work item assigned to
@@ -104,14 +105,14 @@ function matcher(item: IBugBashItemWithWorkItem, filter: IFilterState): boolean 
     if (assignedTos && assignedTos.length > 0 && workItem) {
         returnValue =
             returnValue &&
-            assignedTos.filter(v => equals(v, getDistinctNameFromIdentityRef(workItem.fields[WorkItemFieldNames.AssignedTo]) || "Unassigned", true))
+            assignedTos.filter((v) => equals(v, getDistinctNameFromIdentityRef(workItem.fields[WorkItemFieldNames.AssignedTo]) || "Unassigned", true))
                 .length > 0;
     }
 
     // filter by work item area path
     const areaPaths: string[] = filter[WorkItemFieldNames.AreaPath] && filter[WorkItemFieldNames.AreaPath]!.value;
     if (areaPaths && areaPaths.length > 0 && workItem) {
-        returnValue = returnValue && areaPaths.filter(v => equals(v, workItem.fields[WorkItemFieldNames.AreaPath], true)).length > 0;
+        returnValue = returnValue && areaPaths.filter((v) => equals(v, workItem.fields[WorkItemFieldNames.AreaPath], true)).length > 0;
     }
 
     return returnValue;

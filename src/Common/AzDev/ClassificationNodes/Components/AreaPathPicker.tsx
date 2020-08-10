@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { css } from "azure-devops-ui/Util";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import {
@@ -5,7 +7,7 @@ import {
     IClassificationNodePickerProps,
     IClassificationNodePickerSharedProps
 } from "Common/Components/Pickers/ClassificationNodePicker";
-import * as React from "react";
+
 import { useAreaPaths } from "../Hooks/useAreaPaths";
 import { getClassificationNodeModule } from "../Redux/Module";
 

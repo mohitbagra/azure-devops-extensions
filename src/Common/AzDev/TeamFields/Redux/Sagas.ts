@@ -2,13 +2,10 @@ import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
+
 import { TeamFieldActions, TeamFieldActionTypes } from "./Actions";
 import { fetchTeamFieldValues } from "./DataSource";
 import { getTeamFieldValuesStatus } from "./Selectors";
-
-export function* teamFieldsSaga(): SagaIterator {
-    yield takeEvery(TeamFieldActionTypes.LoadRequested, loadTeamFields);
-}
 
 function* loadTeamFields(action: ActionsOfType<TeamFieldActions, TeamFieldActionTypes.LoadRequested>): SagaIterator {
     const teamId = action.payload;
@@ -22,4 +19,8 @@ function* loadTeamFields(action: ActionsOfType<TeamFieldActions, TeamFieldAction
             yield put(TeamFieldActions.loadFailed(teamId, error.message || error));
         }
     }
+}
+
+export function* teamFieldsSaga(): SagaIterator {
+    yield takeEvery(TeamFieldActionTypes.LoadRequested, loadTeamFields);
 }

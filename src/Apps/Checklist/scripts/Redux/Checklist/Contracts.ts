@@ -1,5 +1,6 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { LoadStatus } from "Common/Contracts";
+
 import { IGroupedChecklists } from "../../Interfaces";
 
 export interface IChecklistAwareState {

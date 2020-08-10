@@ -9,7 +9,7 @@ export const fetchBugBashesAsync = memoizePromise(
     async (): Promise<IBugBash[]> => {
         let bugBashModels = await readDocuments<IBugBash>(getCollectionKey(), false);
         const projectId = await getCurrentProjectId();
-        bugBashModels = bugBashModels.filter(b => equals(projectId, b.projectId, true));
+        bugBashModels = bugBashModels.filter((b) => equals(projectId, b.projectId, true));
 
         for (const bugBashModel of bugBashModels) {
             preProcessBugBash(bugBashModel);

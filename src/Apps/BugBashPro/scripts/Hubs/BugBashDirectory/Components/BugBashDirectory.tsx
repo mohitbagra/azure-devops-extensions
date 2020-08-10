@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Card } from "azure-devops-ui/Card";
 import { Page } from "azure-devops-ui/Page";
 import { TabContent } from "azure-devops-ui/Tabs";
@@ -6,7 +8,7 @@ import { getBugBashesModule } from "BugBashPro/Shared/Redux/BugBashes/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
 import { getKeyValuePairModule } from "Common/Notifications/Redux/Module";
-import * as React from "react";
+
 import { DirectoryPageErrorKey } from "../Constants";
 import { getBugBashDirectoryModule } from "../Redux/Module";
 import { BugBashDirectoryHeader } from "./BugBashDirectoryHeader";

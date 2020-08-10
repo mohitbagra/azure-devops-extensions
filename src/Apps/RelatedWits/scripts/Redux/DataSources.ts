@@ -3,6 +3,7 @@ import { WorkItem, WorkItemErrorPolicy, WorkItemTrackingRestClient } from "azure
 import { readSetting, writeSetting } from "Common/ServiceWrappers/ExtensionDataManager";
 import { hashCode } from "Common/Utilities/String";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
+
 import { DEFAULT_FIELDS_TO_RETRIEVE, DEFAULT_FIELDS_TO_SEEK, DEFAULT_RESULT_SIZE, DEFAULT_SETTINGS, DEFAULT_SORT_BY_FIELD } from "../Constants";
 import { ISettings } from "../Interfaces";
 
@@ -12,7 +13,7 @@ export async function fetchWorkItems(project: string, wiql: string, top: number 
     const queryResult = await witClient.queryByWiql({ query: wiql }, project, undefined, false, top);
     if (queryResult.workItems && queryResult.workItems.length > 0) {
         return witClient.getWorkItems(
-            queryResult.workItems.map(w => w.id),
+            queryResult.workItems.map((w) => w.id),
             projectId,
             DEFAULT_FIELDS_TO_RETRIEVE,
             undefined,

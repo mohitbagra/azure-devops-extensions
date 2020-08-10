@@ -1,6 +1,12 @@
+lib
+bin
+build
+out
 dist
 node_modules
+.env
+.tmp
 .sass-cache
 .vscode/*.db
 .vscode/*.db-wal
-npm-debug.log
+**/*.log

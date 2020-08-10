@@ -2,13 +2,10 @@ import { LoadStatus } from "Common/Contracts";
 import { RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeLeading } from "redux-saga/effects";
+
 import { TeamActions, TeamActionTypes } from "./Actions";
 import { fetchTeams } from "./DataSource";
 import { getTeamsStatus } from "./Selectors";
-
-export function* teamsSaga(): SagaIterator {
-    yield takeLeading(TeamActionTypes.LoadRequested, loadTeams);
-}
 
 function* loadTeams(): SagaIterator {
     const status: RT<typeof getTeamsStatus> = yield select(getTeamsStatus);
@@ -22,4 +19,8 @@ function* loadTeams(): SagaIterator {
             yield put(TeamActions.loadFailed(error.message || error));
         }
     }
+}
+
+export function* teamsSaga(): SagaIterator {
+    yield takeLeading(TeamActionTypes.LoadRequested, loadTeams);
 }

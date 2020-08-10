@@ -1,10 +1,19 @@
+import { useCallback, useEffect } from "react";
+
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
+
 import { WorkItemTypeStateActions } from "../Redux/Actions";
 import { IWorkItemTypeStateAwareState } from "../Redux/Contracts";
 import { getWorkItemTypeStateColor, getWorkItemTypeStatesStatus } from "../Redux/Selectors";
+
+interface IUseWorkItemTypeStateMappedState {
+    color: string | undefined;
+    status: LoadStatus;
+}
+
+const Actions = { loadWorkItemTypeStates: WorkItemTypeStateActions.loadRequested };
 
 export function useWorkItemTypeStateColor(workItemTypeName: string, stateName: string): string | undefined {
     const mapState = useCallback(
@@ -27,10 +36,3 @@ export function useWorkItemTypeStateColor(workItemTypeName: string, stateName: s
 
     return color;
 }
-
-interface IUseWorkItemTypeStateMappedState {
-    color: string | undefined;
-    status: LoadStatus;
-}
-
-const Actions = { loadWorkItemTypeStates: WorkItemTypeStateActions.loadRequested };

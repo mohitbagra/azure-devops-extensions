@@ -1,11 +1,12 @@
 import { LoadStatus } from "Common/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
+
 import { CommentActions, CommentActionTypes } from "./Actions";
 import { defaultState, ICommentsState } from "./Contracts";
 
 export function commentsReducer(state: ICommentsState | undefined, action: CommentActions): ICommentsState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case CommentActionTypes.BeginLoadComments: {
                 const bugBashItemId = action.payload;

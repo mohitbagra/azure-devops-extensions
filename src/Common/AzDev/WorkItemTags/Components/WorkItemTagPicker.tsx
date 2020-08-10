@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { css } from "azure-devops-ui/Util";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { IMultiValuePickerProps, MultiValuePicker } from "Common/Components/Pickers/MultiValuePicker";
-import * as React from "react";
+
 import { useTags } from "../Hooks/useTags";
 import { getTagModule } from "../Redux/Module";
 

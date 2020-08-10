@@ -1,5 +1,7 @@
 import "./Root.scss";
 
+import * as React from "react";
+
 import { Card } from "azure-devops-ui/Card";
 import { DropdownFilterBarItem } from "azure-devops-ui/Components/Dropdown/DropdownFilterBarItem";
 import { ListSelection } from "azure-devops-ui/Components/List/ListSelection";
@@ -21,7 +23,7 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { isNullOrEmpty } from "Common/Utilities/String";
-import * as React from "react";
+
 import { KeyTypes, RelatedWitsContext } from "../Constants";
 import { RelatedWorkItemActions, RelatedWorkItemSettingsActions } from "../Redux/Actions";
 import { IRelatedWitsAwareState } from "../Redux/Contracts";
@@ -37,6 +39,56 @@ const Actions = {
 };
 
 const settingsPanelLoader = async () => import("./SettingsPanel");
+
+function getDropdownItems(key: string, filterData: { [key: string]: { [subkey: string]: number } }) {
+    if (!filterData) {
+        return [];
+    }
+    const itemKeys = Object.keys(filterData[key]);
+    return itemKeys.map((value) => {
+        const keyType = KeyTypes[key];
+
+        if (keyType === "identityRef") {
+            const identity = parseUniquefiedIdentityName(value);
+            return {
+                text: identity!.displayName,
+                id: value
+            };
+        } else if (key === CoreFieldRefNames.AreaPath) {
+            return {
+                text: value.substr(value.lastIndexOf("\\") + 1),
+                id: value
+            };
+        } else {
+            return {
+                text: value,
+                id: value
+            };
+        }
+    });
+}
+
+function getDropdownFilterBarItem(
+    placeholder: string,
+    filterItemKey: string,
+    filterData: { [key: string]: { [subkey: string]: number } }
+): JSX.Element | null {
+    if (!filterData[filterItemKey]) {
+        return null;
+    }
+    return (
+        <DropdownFilterBarItem
+            key={filterItemKey}
+            filterItemKey={filterItemKey}
+            selection={new ListSelection(true)}
+            items={getDropdownItems(filterItemKey, filterData)}
+            placeholder={placeholder}
+            noItemsText="No items"
+            showFilterBox={true}
+            filterPlaceholderText="Search"
+        />
+    );
+}
 
 export function RelatedWits() {
     const workItemId = React.useContext(RelatedWitsContext);
@@ -139,54 +191,4 @@ export function RelatedWits() {
             </Card>
         </Page>
     );
-}
-
-function getDropdownFilterBarItem(
-    placeholder: string,
-    filterItemKey: string,
-    filterData: { [key: string]: { [subkey: string]: number } }
-): JSX.Element | null {
-    if (!filterData[filterItemKey]) {
-        return null;
-    }
-    return (
-        <DropdownFilterBarItem
-            key={filterItemKey}
-            filterItemKey={filterItemKey}
-            selection={new ListSelection(true)}
-            items={getDropdownItems(filterItemKey, filterData)}
-            placeholder={placeholder}
-            noItemsText="No items"
-            showFilterBox={true}
-            filterPlaceholderText="Search"
-        />
-    );
-}
-
-function getDropdownItems(key: string, filterData: { [key: string]: { [subkey: string]: number } }) {
-    if (!filterData) {
-        return [];
-    }
-    const itemKeys = Object.keys(filterData[key]);
-    return itemKeys.map(value => {
-        const keyType = KeyTypes[key];
-
-        if (keyType === "identityRef") {
-            const identity = parseUniquefiedIdentityName(value);
-            return {
-                text: identity!.displayName,
-                id: value
-            };
-        } else if (key === CoreFieldRefNames.AreaPath) {
-            return {
-                text: value.substr(value.lastIndexOf("\\") + 1),
-                id: value
-            };
-        } else {
-            return {
-                text: value,
-                id: value
-            };
-        }
-    });
 }

@@ -1,6 +1,7 @@
 import { WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
+
 import { IWorkItemRelationTypeAwareState, IWorkItemRelationTypeState } from "./Contracts";
 
 export function getWorkItemRelationTypeState(state: IWorkItemRelationTypeAwareState): IWorkItemRelationTypeState | undefined {

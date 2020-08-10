@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
     IWorkItemChangedArgs,
     IWorkItemFieldChangedArgs,
@@ -8,7 +10,7 @@ import * as SDK from "azure-devops-extension-sdk";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import * as React from "react";
+
 import { WorkItemFormActions } from "../Redux/Actions";
 import { IWorkItemFormAwareState } from "../Redux/Contracts";
 import { getWorkItemFormModule } from "../Redux/Module";

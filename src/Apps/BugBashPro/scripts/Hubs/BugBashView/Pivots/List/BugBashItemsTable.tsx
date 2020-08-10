@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IMenuItem } from "azure-devops-ui/Components/Menu/Menu.Props";
 import { ListSelection } from "azure-devops-ui/List";
@@ -19,7 +21,7 @@ import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { getQueryUrlAsync } from "Common/Utilities/UrlHelper";
-import * as React from "react";
+
 import { onRenderBugBashItemCell } from "./BugBashItemCellRenderers";
 
 const Actions = {
@@ -181,7 +183,7 @@ function getContextMenuItems(
                     const ranges = selection.value;
                     for (const range of ranges) {
                         const { endIndex, beginIndex } = range;
-                        selectedWorkItemIds.push(...bugBashItems.slice(beginIndex, endIndex + 1).map(b => b.workItemId!));
+                        selectedWorkItemIds.push(...bugBashItems.slice(beginIndex, endIndex + 1).map((b) => b.workItemId!));
                     }
                     navigateToQueries(selectedWorkItemIds);
                 },

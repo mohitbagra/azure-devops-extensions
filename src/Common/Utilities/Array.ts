@@ -1,3 +1,17 @@
+function defaultComparer<T>(a: T, b: T): number {
+    if (a === b) {
+        return 0;
+    } else if (a > b) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+function defaultComparison<T>(a: T, b: T): boolean {
+    return a === b;
+}
+
 export function first<T>(array: T[], predicate?: (value: T) => boolean): T | null {
     if (!array || array.length === 0) {
         return null;
@@ -21,19 +35,6 @@ export function findIndex<T>(array: T[], predicate: (param: T) => boolean): numb
     return -1;
 }
 
-export function union<T>(arrayA: T[], arrayB: T[], comparer?: (a: T, b: T) => number): T[] {
-    let result: T[];
-
-    if (!arrayB || arrayB.length === 0) {
-        return arrayA;
-    }
-
-    result = arrayA.concat(arrayB);
-    uniqueSort(result, comparer);
-
-    return result;
-}
-
 export function uniqueSort<T>(array: T[], comparer?: (a: T, b: T) => number): T[] {
     const innerComparer = comparer || defaultComparer;
 
@@ -50,42 +51,20 @@ export function uniqueSort<T>(array: T[], comparer?: (a: T, b: T) => number): T[
     return array;
 }
 
-export function unique<T>(array: T[], comparer?: (a: T, b: T) => number): T[] {
-    const result = array.slice(0);
+export function union<T>(arrayA: T[], arrayB: T[], comparer?: (a: T, b: T) => number): T[] {
+    if (!arrayB || arrayB.length === 0) {
+        return arrayA;
+    }
+
+    const result = arrayA.concat(arrayB);
     uniqueSort(result, comparer);
 
     return result;
 }
 
-export function removeWhere<T>(array: T[], predicate: (element: T) => boolean, count?: number, startAt: number = 0) {
-    const indexesToRemove: number[] = [];
-    for (let i = startAt; i < array.length; ++i) {
-        if (predicate(array[i])) {
-            indexesToRemove.push(i);
-            if (indexesToRemove.length === count) {
-                break;
-            }
-        }
-    }
-    removeAllIndexes(array, indexesToRemove);
-}
-
-export function removeAtIndex<T>(array: T[], index: number): boolean {
-    return removeAllIndexes(array, [index]);
-}
-
-export function subtract<T>(arrayA: T[], arrayB: T[], comparer: (s: T, t: T) => boolean): T[] {
-    const result: T[] = [];
-
-    if (!arrayA || arrayA.length === 0 || !arrayB || arrayB.length === 0) {
-        return arrayA;
-    }
-
-    for (const val of arrayA) {
-        if (!contains(arrayB, val, comparer)) {
-            result.push(val);
-        }
-    }
+export function unique<T>(array: T[], comparer?: (a: T, b: T) => number): T[] {
+    const result = array.slice(0);
+    uniqueSort(result, comparer);
 
     return result;
 }
@@ -119,7 +98,40 @@ export function contains<T>(array: T[], value: T, comparer: (s: T, t: T) => bool
     return false;
 }
 
-export function arrayEquals<T>(source: T[], target: T[], comparer?: (s: T, t: T) => boolean, sorted: boolean = false): boolean {
+export function removeWhere<T>(array: T[], predicate: (element: T) => boolean, count?: number, startAt = 0) {
+    const indexesToRemove: number[] = [];
+    for (let i = startAt; i < array.length; ++i) {
+        if (predicate(array[i])) {
+            indexesToRemove.push(i);
+            if (indexesToRemove.length === count) {
+                break;
+            }
+        }
+    }
+    removeAllIndexes(array, indexesToRemove);
+}
+
+export function removeAtIndex<T>(array: T[], index: number): boolean {
+    return removeAllIndexes(array, [index]);
+}
+
+export function subtract<T>(arrayA: T[], arrayB: T[], comparer: (s: T, t: T) => boolean): T[] {
+    const result: T[] = [];
+
+    if (!arrayA || arrayA.length === 0 || !arrayB || arrayB.length === 0) {
+        return arrayA;
+    }
+
+    for (const val of arrayA) {
+        if (!contains(arrayB, val, comparer)) {
+            result.push(val);
+        }
+    }
+
+    return result;
+}
+
+export function arrayEquals<T>(source: T[], target: T[], comparer?: (s: T, t: T) => boolean, sorted = false): boolean {
     if (!source && !target) {
         return true;
     }
@@ -165,18 +177,4 @@ export function toDictionary<TArray, TValue>(
     });
 
     return lookup;
-}
-
-function defaultComparer<T>(a: T, b: T): number {
-    if (a === b) {
-        return 0;
-    } else if (a > b) {
-        return 1;
-    } else {
-        return -1;
-    }
-}
-
-function defaultComparison<T>(a: T, b: T): boolean {
-    return a === b;
 }

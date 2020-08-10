@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Icon } from "azure-devops-ui/Icon";
 import { ITableColumn, SimpleTableCell } from "azure-devops-ui/Table";
@@ -14,7 +16,6 @@ import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkCo
 import { IdentityView } from "Common/Components/IdentityView";
 import { CoreFieldRefNames } from "Common/Constants";
 import * as format from "date-fns/format";
-import * as React from "react";
 
 export function onRenderBugBashItemCell(
     columnIndex: number,

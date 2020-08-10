@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { WorkItemType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Tab, TabList, TabSize } from "azure-devops-ui/Tabs";
 import { WorkItemTypeIcon } from "Common/AzDev/WorkItemTypes/Components/WorkItemTypeIcon";
-import * as React from "react";
+
 import { ChecklistContext } from "../../Constants";
 import { ChecklistType } from "../../Interfaces";
 import { ChecklistError } from "../Shared/ChecklistError";
@@ -31,7 +33,7 @@ export function ChecklistSettingsView(props: IChecklistSettingsViewProps) {
                 selectedTabId={selectedWorkItemType}
                 onSelectedTabChanged={onSelectedTabChanged}
             >
-                {workItemTypes.map(w => (
+                {workItemTypes.map((w) => (
                     <Tab
                         key={w.name}
                         name={w.name}

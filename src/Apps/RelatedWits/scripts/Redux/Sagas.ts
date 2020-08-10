@@ -6,6 +6,7 @@ import { getWorkItemFormService, getWorkItemProjectName, getWorkItemTypeName } f
 import { openWorkItem } from "Common/ServiceWrappers/WorkItemNavigationService";
 import { contains } from "Common/Utilities/Array";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
+
 import { ExcludedFields, QueryableFieldTypes, SortableFieldTypes } from "../Constants";
 import { createQuery, fieldNameComparer } from "../Helpers";
 import { ISettings } from "../Interfaces";
@@ -13,16 +14,6 @@ import { ActiveWorkItemActions, RelatedWorkItemActions, RelatedWorkItemActionTyp
 import { IActiveWorkItemState } from "./Contracts";
 import { fetchSettings, fetchWorkItems } from "./DataSources";
 import { getRelatedWitsStatus, getSettings, getSettingsStatus } from "./Selectors";
-
-export function* relatedWitsSaga() {
-    yield takeEvery(
-        [WorkItemFormActionTypes.WorkItemLoaded, WorkItemFormActionTypes.WorkItemRefreshed, WorkItemFormActionTypes.WorkItemSaved],
-        onWorkItemChanged
-    );
-
-    yield takeEvery(RelatedWorkItemActionTypes.LoadRequested, requestLoad);
-    yield takeEvery(RelatedWorkItemActionTypes.OpenRelatedWorkItem, openWorkItemDialog);
-}
 
 function* openWorkItemDialog(action: ActionsOfType<RelatedWorkItemActions, RelatedWorkItemActionTypes.OpenRelatedWorkItem>) {
     const workItemId = action.payload;
@@ -86,12 +77,13 @@ async function getActiveWorkItem(): Promise<IActiveWorkItemState> {
 
     const sortableFields = fields
         .filter(
-            field => SortableFieldTypes.indexOf(field.type) !== -1 && !contains(ExcludedFields, field.referenceName, (f1, f2) => equals(f1, f2, true))
+            (field) =>
+                SortableFieldTypes.indexOf(field.type) !== -1 && !contains(ExcludedFields, field.referenceName, (f1, f2) => equals(f1, f2, true))
         )
         .sort(fieldNameComparer);
 
     const queryableFields = fields.filter(
-        field =>
+        (field) =>
             (QueryableFieldTypes.indexOf(field.type) !== -1 || equals(field.referenceName, "System.Tags", true)) &&
             !contains(ExcludedFields, field.referenceName, (f1, f2) => equals(f1, f2, true))
     );
@@ -102,4 +94,14 @@ async function getActiveWorkItem(): Promise<IActiveWorkItemState> {
         queryableFields: queryableFields,
         sortableFields: sortableFields
     };
+}
+
+export function* relatedWitsSaga() {
+    yield takeEvery(
+        [WorkItemFormActionTypes.WorkItemLoaded, WorkItemFormActionTypes.WorkItemRefreshed, WorkItemFormActionTypes.WorkItemSaved],
+        onWorkItemChanged
+    );
+
+    yield takeEvery(RelatedWorkItemActionTypes.LoadRequested, requestLoad);
+    yield takeEvery(RelatedWorkItemActionTypes.OpenRelatedWorkItem, openWorkItemDialog);
 }

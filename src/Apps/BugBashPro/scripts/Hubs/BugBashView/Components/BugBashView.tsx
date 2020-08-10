@@ -1,5 +1,7 @@
 import "./BugBashView.scss";
 
+import * as React from "react";
+
 import { Card } from "azure-devops-ui/Card";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { Page } from "azure-devops-ui/Page";
@@ -20,7 +22,7 @@ import { Loading } from "Common/Components/Loading";
 import { LoadStatus } from "Common/Contracts";
 import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox";
 import { getKeyValuePairModule } from "Common/Notifications/Redux/Module";
-import * as React from "react";
+
 import { BugBashViewContext, BugBashViewPageErrorKey } from "../Constants";
 import { IBugBashItemProviderParams } from "../Interfaces";
 import { getBugBashViewModule } from "../Redux/Module";

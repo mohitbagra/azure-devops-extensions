@@ -1,6 +1,7 @@
+import { useContext, useEffect, useRef, useState } from "react";
+
 import { Context } from "Common/Redux";
 import { shallowEqual } from "Common/Utilities/shallowEqual";
-import { useContext, useEffect, useRef, useState } from "react";
 
 /**
  * Your passed in mapState function should be memoized with useCallback to avoid

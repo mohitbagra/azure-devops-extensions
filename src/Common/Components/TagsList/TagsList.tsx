@@ -1,9 +1,10 @@
 import "./TagsList.scss";
 
+import * as React from "react";
+
 import { LabelGroup } from "azure-devops-ui/Components/LabelGroup/LabelGroup";
 import { WrappingBehavior } from "azure-devops-ui/Label";
 import { css } from "azure-devops-ui/Util";
-import * as React from "react";
 
 interface ITagsListProps {
     className?: string;
@@ -16,7 +17,7 @@ export function TagsList(props: ITagsListProps) {
 
     return (
         <div className={css("tags-list", className)}>
-            <LabelGroup labelProps={tags.map(tag => ({ content: tag }))} wrappingBehavior={wrappingBehavior} fadeOutOverflow={true} />
+            <LabelGroup labelProps={tags.map((tag) => ({ content: tag }))} wrappingBehavior={wrappingBehavior} fadeOutOverflow={true} />
         </div>
     );
 }

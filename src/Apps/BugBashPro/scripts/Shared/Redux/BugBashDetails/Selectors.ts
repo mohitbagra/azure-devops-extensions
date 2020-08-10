@@ -1,6 +1,7 @@
 import { LoadStatus } from "Common/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { createSelector } from "reselect";
+
 import { IBugBashDetailsAwareState, IBugBashDetailsState, IBugBashDetailsStateModel } from "./Contracts";
 
 export function getBugBashDetailsState(state: IBugBashDetailsAwareState): IBugBashDetailsState | undefined {
@@ -12,17 +13,8 @@ export function getBugBashDetailsStateModel(state: IBugBashDetailsAwareState, bu
     return detailsState && detailsState.detailsMap && detailsState.detailsMap[resolveNullableMapKey(bugBashId)];
 }
 
-export const getBugBashDetails = createSelector(
-    getBugBashDetailsStateModel,
-    state => state && state.details
-);
+export const getBugBashDetails = createSelector(getBugBashDetailsStateModel, (state) => state && state.details);
 
-export const getBugBashDetailsStatus = createSelector(
-    getBugBashDetailsStateModel,
-    state => (state && state.status) || LoadStatus.NotLoaded
-);
+export const getBugBashDetailsStatus = createSelector(getBugBashDetailsStateModel, (state) => (state && state.status) || LoadStatus.NotLoaded);
 
-export const getBugBashDetailsError = createSelector(
-    getBugBashDetailsStateModel,
-    state => state && state.error
-);
+export const getBugBashDetailsError = createSelector(getBugBashDetailsStateModel, (state) => state && state.error);

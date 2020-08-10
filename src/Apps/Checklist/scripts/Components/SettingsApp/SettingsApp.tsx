@@ -1,5 +1,8 @@
 import "./SettingsApp.scss";
 
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+
 import * as SDK from "azure-devops-extension-sdk";
 import { Page } from "azure-devops-ui/Page";
 import { useWorkItemTypes } from "Common/AzDev/WorkItemTypes/Hooks/useWorkItemTypes";
@@ -7,10 +10,9 @@ import { getWorkItemTypeModule } from "Common/AzDev/WorkItemTypes/Redux/Module";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { ReduxHooksStoreProvider } from "Common/Redux";
-import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { createStore } from "redux-dynamic-modules";
 import { getSagaExtension } from "redux-dynamic-modules-saga";
+
 import { getChecklistModule } from "../../Redux/Checklist/Module";
 import { ChecklistSettingsView } from "./ChecklistSettingsView";
 

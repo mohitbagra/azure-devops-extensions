@@ -1,5 +1,7 @@
-import { useMappedState } from "Common/Hooks/useMappedState";
 import { useCallback } from "react";
+
+import { useMappedState } from "Common/Hooks/useMappedState";
+
 import { IChecklistAwareState } from "../Redux/Checklist/Contracts";
 import { getChecklistError } from "../Redux/Checklist/Selectors";
 

@@ -1,10 +1,12 @@
 import "./WorkItemStateView.scss";
 
+import * as React from "react";
+
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import * as React from "react";
+
 import { useWorkItemTypeStateColor } from "../Hooks/useWorkItemTypeStateColor";
 import { getWorkItemTypeStateModule } from "../Redux/Module";
 

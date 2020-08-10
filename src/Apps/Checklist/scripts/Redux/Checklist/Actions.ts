@@ -1,5 +1,6 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { ActionsUnion, createAction } from "Common/Redux";
+
 import { ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 
 export const ChecklistActions = {

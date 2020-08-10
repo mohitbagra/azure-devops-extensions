@@ -2,6 +2,7 @@ import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTr
 import { LoadStatus } from "Common/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { createSelector } from "reselect";
+
 import { IBugBashItemsAwareState, IBugBashItemsState, IBugBashItemStateModel } from "./Contracts";
 
 export function getBugBashItemsState(state: IBugBashItemsAwareState): IBugBashItemsState | undefined {
@@ -18,36 +19,18 @@ export function getResolvedWorkItem(state: IBugBashItemsAwareState, id: number):
     return bugBashItemState && bugBashItemState.resolvedWorkItemsMap && bugBashItemState.resolvedWorkItemsMap[id];
 }
 
-export const getAllBugBashItems = createSelector(
-    getBugBashItemsState,
-    state => state && state.bugBashItems
-);
+export const getAllBugBashItems = createSelector(getBugBashItemsState, (state) => state && state.bugBashItems);
 
-export const getResolvedWorkItemsMap = createSelector(
-    getBugBashItemsState,
-    state => state && state.resolvedWorkItemsMap
-);
+export const getResolvedWorkItemsMap = createSelector(getBugBashItemsState, (state) => state && state.resolvedWorkItemsMap);
 
-export const getBugBashItemsStatus = createSelector(
-    getBugBashItemsState,
-    state => (state && state.status) || LoadStatus.NotLoaded
-);
+export const getBugBashItemsStatus = createSelector(getBugBashItemsState, (state) => (state && state.status) || LoadStatus.NotLoaded);
 
-export const getBugBashItem = createSelector(
-    getBugBashItemStateModel,
-    bugBashItemStateModel => {
-        return bugBashItemStateModel && bugBashItemStateModel.bugBashItem;
-    }
-);
+export const getBugBashItem = createSelector(getBugBashItemStateModel, (bugBashItemStateModel) => {
+    return bugBashItemStateModel && bugBashItemStateModel.bugBashItem;
+});
 
-export const getBugBashItemError = createSelector(
-    getBugBashItemStateModel,
-    bugBashItemStateModel => {
-        return bugBashItemStateModel && bugBashItemStateModel.error;
-    }
-);
+export const getBugBashItemError = createSelector(getBugBashItemStateModel, (bugBashItemStateModel) => {
+    return bugBashItemStateModel && bugBashItemStateModel.error;
+});
 
-export const getBugBashItemStatus = createSelector(
-    getBugBashItemStateModel,
-    state => (state && state.status) || LoadStatus.NotLoaded
-);
+export const getBugBashItemStatus = createSelector(getBugBashItemStateModel, (state) => (state && state.status) || LoadStatus.NotLoaded);

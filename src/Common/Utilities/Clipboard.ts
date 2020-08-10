@@ -2,41 +2,6 @@ export interface IClipboardOptions {
     copyAsHtml?: boolean;
 }
 
-export function copyToClipboard(data: string, options?: IClipboardOptions): boolean {
-    let dataCopied = false;
-    if (data && typeof data === "string") {
-        if (options && options.copyAsHtml) {
-            // HTML Copy
-            if (supportsNativeHtmlCopy()) {
-                try {
-                    dataCopied = nativeCopy(data, true);
-                } catch {
-                    // eat up
-                }
-            }
-        } else {
-            // Plain text copy
-            if (supportsNativeCopy()) {
-                try {
-                    dataCopied = nativeCopy(data, false);
-                } catch {
-                    // eat up
-                }
-            }
-        }
-    }
-
-    return dataCopied;
-}
-
-export function supportsNativeCopy(): boolean {
-    return document.queryCommandSupported("copy") || (window as any).clipboardData !== undefined;
-}
-
-export function supportsNativeHtmlCopy(): boolean {
-    return (document.body as any).createTextRange !== undefined || (document.queryCommandSupported("copy") && document.createRange !== undefined);
-}
-
 function nativeCopy(data: string, copyAsHtml: boolean): boolean {
     let success = false;
 
@@ -95,4 +60,39 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
     }
 
     return success;
+}
+
+export function supportsNativeCopy(): boolean {
+    return document.queryCommandSupported("copy") || (window as any).clipboardData !== undefined;
+}
+
+export function supportsNativeHtmlCopy(): boolean {
+    return (document.body as any).createTextRange !== undefined || (document.queryCommandSupported("copy") && document.createRange !== undefined);
+}
+
+export function copyToClipboard(data: string, options?: IClipboardOptions): boolean {
+    let dataCopied = false;
+    if (data && typeof data === "string") {
+        if (options && options.copyAsHtml) {
+            // HTML Copy
+            if (supportsNativeHtmlCopy()) {
+                try {
+                    dataCopied = nativeCopy(data, true);
+                } catch {
+                    // eat up
+                }
+            }
+        } else {
+            // Plain text copy
+            if (supportsNativeCopy()) {
+                try {
+                    dataCopied = nativeCopy(data, false);
+                } catch {
+                    // eat up
+                }
+            }
+        }
+    }
+
+    return dataCopied;
 }

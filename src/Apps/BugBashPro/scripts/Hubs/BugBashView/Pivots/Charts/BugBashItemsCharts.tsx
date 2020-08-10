@@ -1,5 +1,7 @@
 import "./BugBashItemCharts.scss";
 
+import * as React from "react";
+
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { useBugBashViewMode } from "BugBashPro/Hubs/BugBashView/Hooks/useBugBashViewMode";
@@ -14,7 +16,6 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { Loading } from "Common/Components/Loading";
 import { CoreFieldRefNames } from "Common/Constants";
 import { getDistinctNameFromIdentityRef, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
-import * as React from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 function BugBashItemsChartsInternal(props: IBugBashItemProviderParams) {

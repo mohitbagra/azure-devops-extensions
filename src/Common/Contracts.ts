@@ -1,4 +1,3 @@
-
 export interface IChangeableValue<T> {
     originalValue: T;
     draftValue: T;

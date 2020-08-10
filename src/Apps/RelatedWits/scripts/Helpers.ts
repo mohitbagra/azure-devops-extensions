@@ -6,38 +6,9 @@ import { CoreFieldRefNames } from "Common/Constants";
 import { getWorkItemFormService } from "Common/ServiceWrappers/WorkItemFormServices";
 import { getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
+
 import { DEFAULT_FIELDS_TO_RETRIEVE, ExcludedFields, KeyTypes } from "./Constants";
 import { ISortState } from "./Interfaces";
-
-export function fieldNameComparer(a: WorkItemField, b: WorkItemField): number {
-    const aUpper = a.name.toUpperCase();
-    const bUpper = b.name.toUpperCase();
-
-    if (aUpper < bUpper) {
-        return -1;
-    }
-    if (aUpper > bUpper) {
-        return 1;
-    }
-    return 0;
-}
-
-export function applyFilterAndSort(workItems: WorkItem[] | undefined, filterState?: IFilterState, sortState?: ISortState): WorkItem[] | undefined {
-    if (!workItems) {
-        return undefined;
-    }
-
-    let filteredItems = [...workItems];
-    if (filterState) {
-        filteredItems = filteredItems.filter(w => workItemMatchesFilter(w, filterState));
-    }
-
-    if (sortState) {
-        filteredItems.sort((w1, w2) => workItemComparer(w1, w2, sortState));
-    }
-
-    return filteredItems;
-}
 
 // tslint:disable-next-line:cyclomatic-complexity
 export function workItemMatchesFilter(workItem: WorkItem, filterState?: IFilterState): boolean {
@@ -57,7 +28,7 @@ export function workItemMatchesFilter(workItem: WorkItem, filterState?: IFilterS
     // filter by work item state
     const states: string[] = filterState[CoreFieldRefNames.State] && filterState[CoreFieldRefNames.State]!.value;
     if (states && states.length > 0) {
-        returnValue = returnValue && states.filter(v => equals(v, workItem.fields[CoreFieldRefNames.State], true)).length > 0;
+        returnValue = returnValue && states.filter((v) => equals(v, workItem.fields[CoreFieldRefNames.State], true)).length > 0;
     }
 
     // filter by work item assigned to
@@ -65,20 +36,20 @@ export function workItemMatchesFilter(workItem: WorkItem, filterState?: IFilterS
     if (assignedTos && assignedTos.length > 0) {
         returnValue =
             returnValue &&
-            assignedTos.filter(v => equals(v, getDistinctNameFromIdentityRef(workItem.fields[CoreFieldRefNames.AssignedTo]) || "Unassigned", true))
+            assignedTos.filter((v) => equals(v, getDistinctNameFromIdentityRef(workItem.fields[CoreFieldRefNames.AssignedTo]) || "Unassigned", true))
                 .length > 0;
     }
 
     // filter by work item area path
     const areaPaths: string[] = filterState[CoreFieldRefNames.AreaPath] && filterState[CoreFieldRefNames.AreaPath]!.value;
     if (areaPaths && areaPaths.length > 0) {
-        returnValue = returnValue && areaPaths.filter(v => equals(v, workItem.fields[CoreFieldRefNames.AreaPath], true)).length > 0;
+        returnValue = returnValue && areaPaths.filter((v) => equals(v, workItem.fields[CoreFieldRefNames.AreaPath], true)).length > 0;
     }
 
     // filter by work item area path
     const workItemTypes: string[] = filterState[CoreFieldRefNames.WorkItemType] && filterState[CoreFieldRefNames.WorkItemType]!.value;
     if (workItemTypes && workItemTypes.length > 0) {
-        returnValue = returnValue && workItemTypes.filter(v => equals(v, workItem.fields[CoreFieldRefNames.WorkItemType], true)).length > 0;
+        returnValue = returnValue && workItemTypes.filter((v) => equals(v, workItem.fields[CoreFieldRefNames.WorkItemType], true)).length > 0;
     }
 
     return returnValue;
@@ -109,24 +80,54 @@ export function workItemComparer(workItem1: WorkItem, workItem2: WorkItem, sortS
     return isSortedDescending ? compareValue * -1 : compareValue;
 }
 
+export function fieldNameComparer(a: WorkItemField, b: WorkItemField): number {
+    const aUpper = a.name.toUpperCase();
+    const bUpper = b.name.toUpperCase();
+
+    if (aUpper < bUpper) {
+        return -1;
+    }
+    if (aUpper > bUpper) {
+        return 1;
+    }
+    return 0;
+}
+
+export function applyFilterAndSort(workItems: WorkItem[] | undefined, filterState?: IFilterState, sortState?: ISortState): WorkItem[] | undefined {
+    if (!workItems) {
+        return undefined;
+    }
+
+    let filteredItems = [...workItems];
+    if (filterState) {
+        filteredItems = filteredItems.filter((w) => workItemMatchesFilter(w, filterState));
+    }
+
+    if (sortState) {
+        filteredItems.sort((w1, w2) => workItemComparer(w1, w2, sortState));
+    }
+
+    return filteredItems;
+}
+
 export async function createQuery(project: string, fieldsToSeek: string[], sortByField: string): Promise<string> {
     const workItemFormService = await getWorkItemFormService();
     const fieldValues = await workItemFormService.getFieldValues(fieldsToSeek, true);
     const witId = await workItemFormService.getId();
 
     // Generate fields to retrieve part
-    const fieldsToRetrieveString = DEFAULT_FIELDS_TO_RETRIEVE.map(fieldRefName => `[${fieldRefName}]`).join(",");
+    const fieldsToRetrieveString = DEFAULT_FIELDS_TO_RETRIEVE.map((fieldRefName) => `[${fieldRefName}]`).join(",");
 
     // Generate fields to seek part
     const fieldsToSeekString = fieldsToSeek
-        .map(fieldRefName => {
+        .map((fieldRefName) => {
             const fieldValue = fieldValues[fieldRefName] == null ? "" : fieldValues[fieldRefName];
             if (equals(fieldRefName, "System.Tags", true)) {
                 if (fieldValue) {
                     const tagStr = fieldValue
                         .toString()
                         .split(";")
-                        .map(v => {
+                        .map((v) => {
                             return `[System.Tags] CONTAINS '${v}'`;
                         })
                         .join(" OR ");
@@ -145,7 +146,7 @@ export async function createQuery(project: string, fieldsToSeek: string[], sortB
 
             return null;
         })
-        .filter(e => e != null)
+        .filter((e) => e != null)
         .join(" AND ");
 
     const fieldsToSeekPredicate = fieldsToSeekString ? `AND ${fieldsToSeekString}` : "";

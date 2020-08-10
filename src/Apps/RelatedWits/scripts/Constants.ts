@@ -1,6 +1,7 @@
+import { createContext } from "react";
+
 import { FieldType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { CoreFieldRefNames } from "Common/Constants";
-import { createContext } from "react";
 
 export const StorageKey = "rwf";
 export const UserScope = { scopeType: "User" };

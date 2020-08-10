@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { IModule } from "redux-dynamic-modules";
+
 import { ChecklistSettingsActions } from "./Actions";
 import { IChecklistSettingsAwareState } from "./Contracts";
 import { checklistSettingsReducer } from "./Reducers";

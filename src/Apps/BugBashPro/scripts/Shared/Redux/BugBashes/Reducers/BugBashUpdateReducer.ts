@@ -2,11 +2,12 @@ import { equals } from "azure-devops-ui/Core/Util/String";
 import { LoadStatus } from "Common/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
+
 import { BugBashesActions, BugBashesActionTypes } from "../Actions";
 import { defaultBugBashesState, IBugBashesState } from "../Contracts";
 
 export function bugBashUpdateReducer(state: IBugBashesState | undefined, action: BugBashesActions): IBugBashesState {
-    return produce(state || defaultBugBashesState, draft => {
+    return produce(state || defaultBugBashesState, (draft) => {
         switch (action.type) {
             /** Bug bash create and update */
             case BugBashesActionTypes.BeginUpdateBugBash: {
@@ -37,7 +38,7 @@ export function bugBashUpdateReducer(state: IBugBashesState | undefined, action:
                 }
 
                 if (draft.bugBashes) {
-                    const index = draft.bugBashes.findIndex(b => equals(b.id!, bugBash.id!, true));
+                    const index = draft.bugBashes.findIndex((b) => equals(b.id!, bugBash.id!, true));
                     if (index !== -1) {
                         draft.bugBashes[index] = bugBash;
                     } else {
@@ -83,7 +84,7 @@ export function bugBashUpdateReducer(state: IBugBashesState | undefined, action:
                 }
 
                 if (draft.bugBashes) {
-                    draft.bugBashes = draft.bugBashes.filter(b => !equals(b.id!, bugBashId, true));
+                    draft.bugBashes = draft.bugBashes.filter((b) => !equals(b.id!, bugBashId, true));
                 } else {
                     draft.bugBashes = [];
                 }

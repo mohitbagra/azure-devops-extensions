@@ -1,11 +1,12 @@
 import { BugBashItemsActions, BugBashItemsActionTypes } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { readLocalSetting, writeLocalSetting } from "Common/Utilities/LocalStorageService";
 import { produce } from "immer";
+
 import { BugBashViewActions, BugBashViewActionTypes } from "./Actions";
 import { BugBashViewMode, defaultBugBashViewState, IBugBashViewState } from "./Contracts";
 
 export function bugBashViewReducer(state: IBugBashViewState | undefined, action: BugBashViewActions | BugBashItemsActions): IBugBashViewState {
-    return produce(state || defaultBugBashViewState, draft => {
+    return produce(state || defaultBugBashViewState, (draft) => {
         switch (action.type) {
             case BugBashViewActionTypes.Initialize: {
                 draft.viewMode = readLocalSetting("bugbashviewactionkey", BugBashViewMode.All) as BugBashViewMode;

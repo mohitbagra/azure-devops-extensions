@@ -1,11 +1,12 @@
 import { WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { FieldActions, FieldActionTypes, WorkItemTypeFieldActions, WorkItemTypeFieldActionTypes } from "./Actions";
 import { defaultFieldState, defaultWorkItemTypeFieldState, IFieldState, IWorkItemTypeFieldState } from "./Contracts";
 
 export function fieldReducer(state: IFieldState | undefined, action: FieldActions): IFieldState {
-    return produce(state || defaultFieldState, draft => {
+    return produce(state || defaultFieldState, (draft) => {
         switch (action.type) {
             case FieldActionTypes.BeginLoad: {
                 draft.status = LoadStatus.Loading;
@@ -39,7 +40,7 @@ export function fieldReducer(state: IFieldState | undefined, action: FieldAction
 }
 
 export function workItemTypeFieldReducer(state: IWorkItemTypeFieldState | undefined, action: WorkItemTypeFieldActions): IWorkItemTypeFieldState {
-    return produce(state || defaultWorkItemTypeFieldState, draft => {
+    return produce(state || defaultWorkItemTypeFieldState, (draft) => {
         switch (action.type) {
             case WorkItemTypeFieldActionTypes.BeginLoad: {
                 const workItemTypeName = action.payload;

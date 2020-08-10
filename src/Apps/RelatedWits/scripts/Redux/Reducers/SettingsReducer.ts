@@ -1,10 +1,11 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { RelatedWorkItemSettingsActions, RelatedWorkItemSettingsActionTypes } from "../Actions";
 import { defaultSettingsState, ISettingsState } from "../Contracts";
 
 export function settingsReducer(state: ISettingsState | undefined, action: RelatedWorkItemSettingsActions): ISettingsState {
-    return produce(state || defaultSettingsState, draft => {
+    return produce(state || defaultSettingsState, (draft) => {
         switch (action.type) {
             case RelatedWorkItemSettingsActionTypes.BeginLoad: {
                 draft.status = LoadStatus.Loading;

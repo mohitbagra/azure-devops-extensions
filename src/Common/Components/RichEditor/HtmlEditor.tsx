@@ -1,8 +1,9 @@
 import "./HtmlEditor.scss";
 
+import * as React from "react";
+
 import { TimerManagement } from "azure-devops-ui/Core/TimerManagement";
 import { css } from "azure-devops-ui/Util";
-import * as React from "react";
 import {
     Browser,
     ContentChangedPlugin,
@@ -30,6 +31,7 @@ import {
     TableResize,
     UndoWithImagePlugin
 } from "roosterjs-react";
+
 import { Resources } from "./Resources";
 import { CommandBarLocaleStrings, SearchForEmoji } from "./Strings";
 
@@ -110,6 +112,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
         );
     }
 
+    // eslint-disable-next-line react/no-deprecated
     public componentWillReceiveProps(newProps: IHtmlEditorProps): void {
         const { htmlContent } = newProps;
         // If the module is not loaded, just set the state, we will sanitize when the module has been loaded
@@ -288,7 +291,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
         this._undoPlugin = new UndoWithImagePlugin(this._imageManager);
         this._imageResizePlugin = new ImageResize(undefined, undefined, undefined, undefined, ExcludePlaceholderSelector);
 
-        const supportInsertImage: boolean = !!uploadImage;
+        const supportInsertImage = !!uploadImage;
         this._editorPlugins = [
             new ContentChangedPlugin(this._throttledOnContentChanged),
             this._imageResizePlugin,
@@ -298,7 +301,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
         ];
     }
 
-    private _tryUpdateState(newContent: string, isInitializing: boolean = false): boolean {
+    private _tryUpdateState(newContent: string, isInitializing = false): boolean {
         const newContent1 = this._isEmpty(newContent) ? "" : newContent;
         const viewState = this._viewState;
         if (newContent1 !== viewState.content) {
@@ -325,7 +328,7 @@ export class HtmlEditor extends React.PureComponent<IHtmlEditorProps> {
         return isNodeEmpty(tempNode);
     }
 
-    private readonly _handleContentChanged = (content: string, isInitializing: boolean = false): void => {
+    private readonly _handleContentChanged = (content: string, isInitializing = false): void => {
         if (this._tryUpdateState(content, isInitializing) && this.props.onChange) {
             this.props.onChange(content);
         }

@@ -1,9 +1,19 @@
+import { useCallback, useEffect } from "react";
+
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
+
 import { KeyValuePairActions } from "../Redux/Actions";
 import { IKeyValuePairAwareState } from "../Redux/Contracts";
 import { getKeyValue } from "../Redux/Selectors";
+
+const Actions = {
+    dismissEntry: KeyValuePairActions.dismissEntry
+};
+
+interface IUseKeyValuePairMappedState<T> {
+    value: T | undefined;
+}
 
 export function useKeyValuePair<T>(key: string): { value: T | undefined; dismissEntry: () => void } {
     const mapState = useCallback(
@@ -27,11 +37,3 @@ export function useKeyValuePair<T>(key: string): { value: T | undefined; dismiss
 
     return { value, dismissEntry: onDismiss };
 }
-
-interface IUseKeyValuePairMappedState<T> {
-    value: T | undefined;
-}
-
-const Actions = {
-    dismissEntry: KeyValuePairActions.dismissEntry
-};

@@ -1,23 +1,12 @@
+import { useEffect } from "react";
+
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
+
 import { IterationPathActions } from "../Redux/Actions";
 import { IClassificationNodeAwareState, IClassificationNodeState } from "../Redux/Contracts";
 import { getIterationPathError, getIterationPathNodeMapById, getIterationPathRootNode, getIterationPathStatus } from "../Redux/Selectors";
-
-export function useIterationPaths(): IClassificationNodeState {
-    const { rootNode, nodeMapById, nodeMapByPath, error, status } = useMappedState(mapState);
-    const { loadIterationPaths } = useActionCreators(Actions);
-
-    useEffect(() => {
-        if (status === LoadStatus.NotLoaded) {
-            loadIterationPaths();
-        }
-    }, []);
-
-    return { rootNode, nodeMapById, nodeMapByPath, error, status };
-}
 
 function mapState(state: IClassificationNodeAwareState): IClassificationNodeState {
     return {
@@ -32,3 +21,16 @@ function mapState(state: IClassificationNodeAwareState): IClassificationNodeStat
 const Actions = {
     loadIterationPaths: IterationPathActions.loadRequested
 };
+
+export function useIterationPaths(): IClassificationNodeState {
+    const { rootNode, nodeMapById, nodeMapByPath, error, status } = useMappedState(mapState);
+    const { loadIterationPaths } = useActionCreators(Actions);
+
+    useEffect(() => {
+        if (status === LoadStatus.NotLoaded) {
+            loadIterationPaths();
+        }
+    }, []);
+
+    return { rootNode, nodeMapById, nodeMapByPath, error, status };
+}

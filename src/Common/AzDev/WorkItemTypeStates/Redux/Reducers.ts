@@ -1,11 +1,12 @@
 import { LoadStatus } from "Common/Contracts";
 import { toDictionary } from "Common/Utilities/Array";
 import { produce } from "immer";
+
 import { WorkItemTypeStateActions, WorkItemTypeStateActionTypes } from "./Actions";
 import { defaultState, IWorkItemTypeStateState } from "./Contracts";
 
 export function workItemTypeStateReducer(state: IWorkItemTypeStateState | undefined, action: WorkItemTypeStateActions): IWorkItemTypeStateState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case WorkItemTypeStateActionTypes.BeginLoad: {
                 const workItemTypeName = action.payload;
@@ -28,7 +29,11 @@ export function workItemTypeStateReducer(state: IWorkItemTypeStateState | undefi
                 draft.statesMap[workItemTypeName.toLowerCase()] = {
                     status: LoadStatus.Ready,
                     workItemTypeName: workItemTypeName,
-                    stateColors: toDictionary(stateColors, s => s.name.toLowerCase(), s => s.color)
+                    stateColors: toDictionary(
+                        stateColors,
+                        (s) => s.name.toLowerCase(),
+                        (s) => s.color
+                    )
                 };
             }
         }

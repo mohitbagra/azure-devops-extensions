@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { GitRepository } from "azure-devops-extension-api/Git/Git";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { dropdownRenderer, IDropdownPickerSharedProps } from "Common/Components/Pickers/DropdownPicker";
-import * as React from "react";
+
 import { useGitRepos } from "../Hooks/useGitRepos";
 import { getGitRepoModule } from "../Redux/Module";
 

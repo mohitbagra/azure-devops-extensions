@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { ColumnMore, ITableColumn as VSSUI_ITableColumn, ITableRow, SimpleTableCell, SortOrder } from "azure-devops-ui/Table";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { ZeroData } from "azure-devops-ui/ZeroData";
@@ -15,7 +17,7 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import * as format from "date-fns/format";
-import * as React from "react";
+
 import { BugBashFieldNames } from "../Constants";
 import { useBugBashesSort } from "../Hooks/useBugBashesSort";
 import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";

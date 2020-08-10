@@ -1,23 +1,12 @@
+import { useEffect } from "react";
+
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
+
 import { TeamActions } from "../Redux/Actions";
 import { ITeamAwareState, ITeamState } from "../Redux/Contracts";
 import { getTeams, getTeamsError, getTeamsMap, getTeamsStatus } from "../Redux/Selectors";
-
-export function useTeams(): ITeamState {
-    const { teams, teamsMap, status, error } = useMappedState(mapState);
-    const { loadTeams } = useActionCreators(Actions);
-
-    useEffect(() => {
-        if (status === LoadStatus.NotLoaded) {
-            loadTeams();
-        }
-    }, []);
-
-    return { teams, teamsMap, status, error };
-}
 
 function mapState(state: ITeamAwareState): ITeamState {
     return {
@@ -31,3 +20,16 @@ function mapState(state: ITeamAwareState): ITeamState {
 const Actions = {
     loadTeams: TeamActions.loadRequested
 };
+
+export function useTeams(): ITeamState {
+    const { teams, teamsMap, status, error } = useMappedState(mapState);
+    const { loadTeams } = useActionCreators(Actions);
+
+    useEffect(() => {
+        if (status === LoadStatus.NotLoaded) {
+            loadTeams();
+        }
+    }, []);
+
+    return { teams, teamsMap, status, error };
+}

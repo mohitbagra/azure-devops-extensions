@@ -1,11 +1,23 @@
+import { useCallback, useEffect } from "react";
+
 import { WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
+
 import { WorkItemTypeFieldActions } from "../Redux/Actions";
 import { IFieldAwareState } from "../Redux/Contracts";
 import { getWorkItemTypeField, getWorkItemTypeFieldsError, getWorkItemTypeFieldsStatus } from "../Redux/Selectors";
+
+interface IUseWorkItemTypeFieldMappedState {
+    status: LoadStatus;
+    field: WorkItemTypeFieldWithReferences | undefined;
+    error: string | undefined;
+}
+
+const Actions = {
+    loadWorkItemTypeFields: WorkItemTypeFieldActions.loadRequested
+};
 
 export function useWorkItemTypeField(workItemTypeName: string, fieldNameOrRefName: string): IUseWorkItemTypeFieldMappedState {
     const mapState = useCallback(
@@ -29,13 +41,3 @@ export function useWorkItemTypeField(workItemTypeName: string, fieldNameOrRefNam
 
     return { field, status, error };
 }
-
-interface IUseWorkItemTypeFieldMappedState {
-    status: LoadStatus;
-    field: WorkItemTypeFieldWithReferences | undefined;
-    error: string | undefined;
-}
-
-const Actions = {
-    loadWorkItemTypeFields: WorkItemTypeFieldActions.loadRequested
-};

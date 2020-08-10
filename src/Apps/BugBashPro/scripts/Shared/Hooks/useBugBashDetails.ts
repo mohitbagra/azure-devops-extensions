@@ -1,3 +1,5 @@
+import { useCallback, useEffect } from "react";
+
 import { ILongText } from "BugBashPro/Shared/Contracts";
 import { BugBashDetailActions } from "BugBashPro/Shared/Redux/BugBashDetails/Actions";
 import { IBugBashDetailsAwareState } from "BugBashPro/Shared/Redux/BugBashDetails/Contracts";
@@ -5,7 +7,6 @@ import { getBugBashDetails, getBugBashDetailsError, getBugBashDetailsStatus } fr
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
 
 export function useBugBashDetails(bugBashId: string): IUseBugBashDetailsMappedState {
     const mapState = useCallback(

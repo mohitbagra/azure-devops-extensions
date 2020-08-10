@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { Button } from "azure-devops-ui/Button";
 import { equals } from "azure-devops-ui/Core/Util/String";
@@ -9,7 +11,6 @@ import { TeamPicker } from "Common/AzDev/Teams/Components/TeamPicker";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useControlledState } from "Common/Hooks/useControlledState";
-import * as React from "react";
 
 const Actions = {
     updateUserSetting: UserSettingActions.userSettingUpdateRequested

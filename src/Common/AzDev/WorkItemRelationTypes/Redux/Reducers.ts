@@ -1,5 +1,6 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { WorkItemRelationTypeActions, WorkItemRelationTypeActionTypes } from "./Actions";
 import { defaultState, IWorkItemRelationTypeState } from "./Contracts";
 
@@ -7,7 +8,7 @@ export function workItemRelationTypeReducer(
     state: IWorkItemRelationTypeState | undefined,
     action: WorkItemRelationTypeActions
 ): IWorkItemRelationTypeState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case WorkItemRelationTypeActionTypes.BeginLoad: {
                 draft.status = LoadStatus.Loading;

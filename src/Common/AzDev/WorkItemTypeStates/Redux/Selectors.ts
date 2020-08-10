@@ -1,5 +1,6 @@
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
+
 import { IWorkItemTypeStateAwareState, IWorkItemTypeStateColors, IWorkItemTypeStateState } from "./Contracts";
 
 export function getWorkItemTypeStateState(state: IWorkItemTypeStateAwareState): IWorkItemTypeStateState | undefined {

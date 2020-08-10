@@ -1,6 +1,8 @@
+import * as React from "react";
+
 import { Link } from "azure-devops-ui/Link";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
-import * as React from "react";
+
 import { AsyncComponent } from "./AsyncComponent";
 
 interface IAsyncLinkComponentProps {

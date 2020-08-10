@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { ListSelection } from "azure-devops-ui/Components/List/ListSelection";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
@@ -14,7 +16,7 @@ import { navigateToBugBashItemsBoard, navigateToBugBashItemsCharts, navigateToBu
 import { useTeams } from "Common/AzDev/Teams/Hooks/useTeams";
 import { LoadStatus } from "Common/Contracts";
 import { parseUniquefiedIdentityName } from "Common/Utilities/Identity";
-import * as React from "react";
+
 import { BugBashItemFieldNames, BugBashItemKeyTypes, BugBashViewContext, BugBashViewPagePivotKeys, WorkItemFieldNames } from "../Constants";
 import { useBugBashItemsFilter } from "../Hooks/useBugBashItemsFilter";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
@@ -186,7 +188,7 @@ function getDropdownItems(
         return [];
     }
     const itemKeys = Object.keys(filterData[key]);
-    return itemKeys.map(value => {
+    return itemKeys.map((value) => {
         const keyType = BugBashItemKeyTypes[key];
 
         if (keyType === "identityRef") {

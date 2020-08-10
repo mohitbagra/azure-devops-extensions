@@ -1,6 +1,4 @@
-import {
-    CommonServiceIds, ILocationService, TeamFoundationHostType
-} from "azure-devops-extension-api/Common/CommonServices";
+import { CommonServiceIds, ILocationService, TeamFoundationHostType } from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
 
 let locationService: ILocationService;

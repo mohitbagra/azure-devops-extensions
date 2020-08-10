@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { IUserSetting } from "BugBashPro/Shared/Contracts";
 import { UserSettingActions } from "BugBashPro/Shared/Redux/UserSettings/Actions";
 import { IBugBashSettingsAwareState } from "BugBashPro/Shared/Redux/UserSettings/Contracts";
@@ -5,7 +7,6 @@ import { getUserSettings, getUserSettingsMap, getUserSettingsStatus } from "BugB
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
 
 export function useUserSettings(): IUseUserSettingsMappedState {
     const { userSettings, status, userSettingsMap } = useMappedState(mapState);

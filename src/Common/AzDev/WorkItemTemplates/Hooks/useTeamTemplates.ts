@@ -1,11 +1,23 @@
+import { useCallback, useEffect } from "react";
+
 import { WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
+
 import { TeamTemplatesActions } from "../Redux/Actions";
 import { IWorkItemTemplateAwareState } from "../Redux/Contracts";
 import { getTeamTemplates, getTeamTemplatesError, getTeamTemplatesStatus } from "../Redux/Selectors";
+
+interface IUseTeamTemplatesMappedState {
+    status: LoadStatus;
+    error: string | undefined;
+    templates: WorkItemTemplateReference[] | undefined;
+}
+
+const Actions = {
+    loadTeamTemplates: TeamTemplatesActions.loadRequested
+};
 
 export function useTeamTemplates(teamId: string): IUseTeamTemplatesMappedState {
     const mapState = useCallback(
@@ -30,13 +42,3 @@ export function useTeamTemplates(teamId: string): IUseTeamTemplatesMappedState {
 
     return { templates, status, error };
 }
-
-interface IUseTeamTemplatesMappedState {
-    status: LoadStatus;
-    error: string | undefined;
-    templates: WorkItemTemplateReference[] | undefined;
-}
-
-const Actions = {
-    loadTeamTemplates: TeamTemplatesActions.loadRequested
-};

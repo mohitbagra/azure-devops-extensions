@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { dropdownRenderer, IDropdownPickerSharedProps } from "Common/Components/Pickers/DropdownPicker";
-import * as React from "react";
+
 import { useTeams } from "../Hooks/useTeams";
 import { getTeamModule } from "../Redux/Module";
 

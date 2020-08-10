@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { FilterBar as VSSUI_FilterBar } from "azure-devops-ui/FilterBar";
 import { KeywordFilterBarItem } from "azure-devops-ui/TextFilterBarItem";
 import { Filter, FILTER_CHANGE_EVENT } from "azure-devops-ui/Utilities/Filter";
-import * as React from "react";
+
 import { BugBashFieldNames } from "../Constants";
 import { useBugBashesFilter } from "../Hooks/useBugBashesFilter";
 

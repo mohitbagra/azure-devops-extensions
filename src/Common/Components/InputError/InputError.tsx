@@ -1,8 +1,10 @@
 import "./InputError.scss";
 
+import * as React from "react";
+
 import { Icon } from "azure-devops-ui/Icon";
 import { css } from "azure-devops-ui/Util";
-import * as React from "react";
+
 import { IBaseProps } from "../Contracts";
 
 interface IInputErrorProps extends IBaseProps {

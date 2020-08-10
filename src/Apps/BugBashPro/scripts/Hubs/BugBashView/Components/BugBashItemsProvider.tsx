@@ -1,9 +1,11 @@
+import * as React from "react";
+
 import { ZeroData } from "azure-devops-ui/ZeroData";
 import { Resources } from "BugBashPro/Resources";
 import { AppView } from "BugBashPro/Shared/Constants";
 import { Loading } from "Common/Components/Loading";
 import { LoadStatus } from "Common/Contracts";
-import * as React from "react";
+
 import { BugBashViewContext } from "../Constants";
 import { useBugBashViewMode } from "../Hooks/useBugBashViewMode";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";

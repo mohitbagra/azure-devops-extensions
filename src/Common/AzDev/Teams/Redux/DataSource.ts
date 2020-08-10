@@ -4,15 +4,6 @@ import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
 
-export const fetchTeams = memoizePromise(
-    async () => {
-        const teams = await getTeams();
-        teams.sort((a: WebApiTeam, b: WebApiTeam) => localeIgnoreCaseComparer(a.name, b.name));
-        return teams;
-    },
-    () => "teams"
-);
-
 async function getTeams(): Promise<WebApiTeam[]> {
     const teams: WebApiTeam[] = [];
     const top = 300;
@@ -33,3 +24,12 @@ async function getTeams(): Promise<WebApiTeam[]> {
     await getTeamDelegate(0);
     return teams;
 }
+
+export const fetchTeams = memoizePromise(
+    async () => {
+        const teams = await getTeams();
+        teams.sort((a: WebApiTeam, b: WebApiTeam) => localeIgnoreCaseComparer(a.name, b.name));
+        return teams;
+    },
+    () => "teams"
+);

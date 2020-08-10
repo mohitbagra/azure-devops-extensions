@@ -1,3 +1,5 @@
+import { useCallback, useEffect } from "react";
+
 import { IBugBashItemComment } from "BugBashPro/Shared/Contracts";
 import { CommentActions } from "BugBashPro/Shared/Redux/Comments/Actions";
 import { ICommentsAwareState } from "BugBashPro/Shared/Redux/Comments/Contracts";
@@ -5,7 +7,6 @@ import { getComments, getCommentsStatus } from "BugBashPro/Shared/Redux/Comments
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
 
 export function useComments(bugBashItemId: string): IUseCommentsMappedState {
     const mapState = useCallback(

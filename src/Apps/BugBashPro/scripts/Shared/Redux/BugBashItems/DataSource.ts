@@ -110,7 +110,7 @@ export async function getWorkItemsAsync(ids: number[]): Promise<WorkItem[]> {
         CoreFieldRefNames.AreaPath
     ];
 
-    const promises = idsToFetch.map(async witIds =>
+    const promises = idsToFetch.map(async (witIds) =>
         client.getWorkItems(witIds, project, fieldsToLoad, undefined, undefined, WorkItemErrorPolicy.Omit)
     );
     const workItemArrays: WorkItem[][] = await Promise.all(promises);

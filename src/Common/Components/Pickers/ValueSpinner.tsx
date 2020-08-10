@@ -1,8 +1,9 @@
 import "./ValueSpinner.scss";
 
+import * as React from "react";
+
 import { Button } from "azure-devops-ui/Button";
 import { useControlledState } from "Common/Hooks/useControlledState";
-import * as React from "react";
 
 export class NumericValueRange implements IValueRange<number> {
     constructor(

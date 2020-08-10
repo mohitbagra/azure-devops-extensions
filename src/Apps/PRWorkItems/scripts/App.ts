@@ -1,10 +1,6 @@
 import { getClient } from "azure-devops-extension-api/Common/Client";
-import {
-    JsonPatchDocument, JsonPatchOperation, Operation
-} from "azure-devops-extension-api/WebApi/WebApi";
-import {
-    WorkItemTrackingRestClient, WorkItemType
-} from "azure-devops-extension-api/WorkItemTracking";
+import { JsonPatchDocument, JsonPatchOperation, Operation } from "azure-devops-extension-api/WebApi/WebApi";
+import { WorkItemTrackingRestClient, WorkItemType } from "azure-devops-extension-api/WorkItemTracking";
 import * as SDK from "azure-devops-extension-sdk";
 import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { reloadPage } from "Common/ServiceWrappers/HostNavigationService";
@@ -30,28 +26,6 @@ interface IContributedMenuItem {
     ariaLabel?: string;
 }
 
-SDK.register("pr-workitems-menu", () => {
-    return {
-        getMenuItems: (actionContext: any) => {
-            if (actionContext && actionContext.pullRequest && actionContext.pullRequest.artifactId) {
-                const deferred = Q.defer<IContributedMenuItem[]>();
-                getChildItems(actionContext.pullRequest.artifactId).then(items => deferred.resolve(items));
-
-                return [
-                    {
-                        text: "Link to a new workitem",
-                        title: "Create a new workitem and link to this Pull request",
-                        icon: "images/logo.png",
-                        childItems: deferred.promise
-                    }
-                ];
-            }
-        }
-    };
-});
-
-SDK.init();
-
 let workItemTypes: WorkItemType[];
 
 async function getChildItems(artifactId: string): Promise<IContributedMenuItem[]> {
@@ -63,7 +37,7 @@ async function getChildItems(artifactId: string): Promise<IContributedMenuItem[]
         workItemTypes.sort((a: WorkItemType, b: WorkItemType) => localeIgnoreCaseComparer(a.name, b.name));
     }
 
-    return workItemTypes.map(w => ({
+    return workItemTypes.map((w) => ({
         text: w.name,
         title: w.name,
         action: async () => {
@@ -93,3 +67,25 @@ async function getChildItems(artifactId: string): Promise<IContributedMenuItem[]
         }
     }));
 }
+
+SDK.register("pr-workitems-menu", () => {
+    return {
+        getMenuItems: (actionContext: any) => {
+            if (actionContext && actionContext.pullRequest && actionContext.pullRequest.artifactId) {
+                const deferred = Q.defer<IContributedMenuItem[]>();
+                getChildItems(actionContext.pullRequest.artifactId).then((items) => deferred.resolve(items));
+
+                return [
+                    {
+                        text: "Link to a new workitem",
+                        title: "Create a new workitem and link to this Pull request",
+                        icon: "images/logo.png",
+                        childItems: deferred.promise
+                    }
+                ];
+            }
+        }
+    };
+});
+
+SDK.init();

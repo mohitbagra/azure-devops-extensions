@@ -1,10 +1,12 @@
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { WorkItemFormListener } from "Common/AzDev/WorkItemForm/Components/WorkItemFormListener";
 import { ReduxHooksStoreProvider } from "Common/Redux";
-import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { createStore } from "redux-dynamic-modules";
 import { getSagaExtension } from "redux-dynamic-modules-saga";
+
 import { RelatedWitsContext } from "../Constants";
 import { getRelatedWitsModule } from "../Redux/Module";
 import { RelatedWits } from "./RelatedWits";

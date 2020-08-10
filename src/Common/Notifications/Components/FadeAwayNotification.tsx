@@ -1,8 +1,10 @@
+import * as React from "react";
+
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { FadeAway } from "Common/Components/FadeAway";
 import { isNullOrEmpty } from "Common/Utilities/String";
-import * as React from "react";
+
 import { useKeyValuePair } from "../Hooks/useKeyValuePair";
 import { getKeyValuePairModule } from "../Redux/Module";
 

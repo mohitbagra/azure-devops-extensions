@@ -1,5 +1,9 @@
 import {
-    CommonServiceIds, IDialogOptions, IHostPageLayoutService, IMessageDialogOptions, IPanelOptions
+    CommonServiceIds,
+    IDialogOptions,
+    IHostPageLayoutService,
+    IMessageDialogOptions,
+    IPanelOptions
 } from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
 

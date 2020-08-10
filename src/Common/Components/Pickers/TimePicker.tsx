@@ -1,9 +1,11 @@
 import "./TimePicker.scss";
 
+import * as React from "react";
+
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { useControlledState } from "Common/Hooks/useControlledState";
-import * as React from "react";
+
 import { CategoryRange, NumericValueRange, ValueSpinner } from "./ValueSpinner";
 
 interface ITimePickerProps extends IBaseProps {

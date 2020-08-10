@@ -1,5 +1,6 @@
 import { format } from "azure-devops-ui/Core/Util/String";
 import { InsertLinkStringKeys, RoosterCommmandBarButtonKeys as ButtonKeys } from "roosterjs-react";
+
 import { Resources } from "./Resources";
 
 export const SearchForEmoji = Resources.SearchForEmoji;

@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ITableColumn, SimpleTableCell } from "azure-devops-ui/Table";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
@@ -5,7 +7,6 @@ import { WorkItemTitleView } from "Common/AzDev/WorkItemTitleView";
 import { WorkItemStateView } from "Common/AzDev/WorkItemTypeStates/Components";
 import { IdentityView } from "Common/Components/IdentityView";
 import { CoreFieldRefNames } from "Common/Constants";
-import * as React from "react";
 
 export function onRenderWorkItemCell(
     columnIndex: number,

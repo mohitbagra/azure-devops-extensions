@@ -1,10 +1,11 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { GitRepoActions, GitRepoActionTypes } from "./Actions";
 import { defaultState, IGitRepoState } from "./Contracts";
 
 export function gitRepoReducer(state: IGitRepoState | undefined, action: GitRepoActions): IGitRepoState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case GitRepoActionTypes.BeginLoad: {
                 draft.status = LoadStatus.Loading;

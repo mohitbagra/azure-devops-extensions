@@ -1,10 +1,11 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { RelatedWorkItemActions, RelatedWorkItemActionTypes } from "../Actions";
 import { defaultRelatedWorkItemsState, IRelatedWorkItemsState } from "../Contracts";
 
 export function relatedWorkItemsReducer(state: IRelatedWorkItemsState | undefined, action: RelatedWorkItemActions): IRelatedWorkItemsState {
-    return produce(state || defaultRelatedWorkItemsState, draft => {
+    return produce(state || defaultRelatedWorkItemsState, (draft) => {
         switch (action.type) {
             case RelatedWorkItemActionTypes.BeginLoad: {
                 const workItemId = action.payload;
@@ -54,7 +55,7 @@ export function relatedWorkItemsReducer(state: IRelatedWorkItemsState | undefine
                 for (const id of Object.keys(draft.relatedWorkItems)) {
                     const wis = draft.relatedWorkItems[parseInt(id)];
                     if (wis && wis.workItems) {
-                        const index = wis.workItems.findIndex(w => w.id === relatedWorkItem.id);
+                        const index = wis.workItems.findIndex((w) => w.id === relatedWorkItem.id);
                         if (index > -1) {
                             wis.workItems[index] = relatedWorkItem;
                         }

@@ -2,13 +2,10 @@ import { LoadStatus } from "Common/Contracts";
 import { RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeLeading } from "redux-saga/effects";
+
 import { WorkItemTypeActions, WorkItemTypeActionTypes } from "./Actions";
 import { fetchWorkItemTypes } from "./DataSource";
 import { getWorkItemTypesStatus } from "./Selectors";
-
-export function* workItemTypesSaga(): SagaIterator {
-    yield takeLeading(WorkItemTypeActionTypes.LoadRequested, loadWorkItemTypes);
-}
 
 function* loadWorkItemTypes(): SagaIterator {
     const status: RT<typeof getWorkItemTypesStatus> = yield select(getWorkItemTypesStatus);
@@ -22,4 +19,8 @@ function* loadWorkItemTypes(): SagaIterator {
             yield put(WorkItemTypeActions.loadFailed(error.message || error));
         }
     }
+}
+
+export function* workItemTypesSaga(): SagaIterator {
+    yield takeLeading(WorkItemTypeActionTypes.LoadRequested, loadWorkItemTypes);
 }

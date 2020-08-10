@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import * as DetailsEditor_Async from "BugBashPro/Editors/BugBashDetailsEditor";
 import * as BugBashEditor_Async from "BugBashPro/Editors/BugBashEditor";
 import * as BugBashItemEditor_Async from "BugBashPro/Editors/BugBashItemEditor";
@@ -7,7 +9,7 @@ import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { emptyRenderer } from "Common/Components/Renderers";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import * as React from "react";
+
 import { BugBashPortalActions } from "../Redux/Actions";
 import {
     IBugBashDetailsEditPortalProps,

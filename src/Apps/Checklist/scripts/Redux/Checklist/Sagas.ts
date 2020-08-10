@@ -6,6 +6,7 @@ import { getWorkItemProjectId, getWorkItemTypeName } from "Common/ServiceWrapper
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { all, call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
+
 import { ChecklistItemState, ChecklistType, IChecklist, IChecklistItem, IGroupedChecklists } from "../../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { fetchWorkItemChecklistAsync, fetchWorkItemDefaultChecklist, fetchWorkItemTypeChecklistAsync, updateChecklistAsync } from "./DataSources";
@@ -46,7 +47,7 @@ function* addOrUpdateChecklistItem(
             if (isNullOrWhiteSpace(checklistItem.id)) {
                 newChecklistItems = newChecklistItems.concat({ ...checklistItem, id: `${Date.now()}` });
             } else {
-                const index = newChecklistItems.findIndex(item => equals(item.id, checklistItem.id, true));
+                const index = newChecklistItems.findIndex((item) => equals(item.id, checklistItem.id, true));
                 if (index !== -1) {
                     const stateChanged = newChecklistItems[index].state !== checklistItem.state;
 
@@ -94,7 +95,7 @@ function* deleteChecklistItem(action: ActionsOfType<ChecklistActions, ChecklistA
         const checklist: RT<typeof getChecklist> = yield select(getChecklist, idOrType, checklistType);
 
         if (checklist) {
-            const newChecklistItems = checklist.checklistItems.filter(item => !equals(item.id, checklistItemId, true));
+            const newChecklistItems = checklist.checklistItems.filter((item) => !equals(item.id, checklistItemId, true));
             if (newChecklistItems.length < checklist.checklistItems.length) {
                 yield call(
                     updateChecklist,
@@ -118,7 +119,7 @@ function* reorderChecklistItem(action: ActionsOfType<ChecklistActions, Checklist
         const checklist: RT<typeof getChecklist> = yield select(getChecklist, idOrType, checklistType);
 
         if (checklist) {
-            const checklistItemIndex = checklist.checklistItems.findIndex(item => equals(item.id, checklistItemId, true));
+            const checklistItemIndex = checklist.checklistItems.findIndex((item) => equals(item.id, checklistItemId, true));
             if (checklistItemIndex !== -1) {
                 const item = checklist.checklistItems[checklistItemIndex];
                 const newChecklistItems = [...checklist.checklistItems];

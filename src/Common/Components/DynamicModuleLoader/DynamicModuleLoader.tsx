@@ -1,6 +1,8 @@
-import { Context } from "Common/Redux";
 import { useContext, useEffect, useMemo } from "react";
+
+import { Context } from "Common/Redux";
 import { IModule } from "redux-dynamic-modules";
+
 import { IParentComponentProps } from "../Contracts";
 
 interface IDynamicModuleLoaderProps extends IParentComponentProps {

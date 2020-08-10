@@ -1,10 +1,11 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { TeamActions, TeamActionTypes } from "./Actions";
 import { defaultState, ITeamState } from "./Contracts";
 
 export function teamReducer(state: ITeamState | undefined, action: TeamActions): ITeamState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case TeamActionTypes.BeginLoad: {
                 draft.status = LoadStatus.Loading;

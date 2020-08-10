@@ -1,12 +1,14 @@
 import "./IdentityView.scss";
 
+import * as React from "react";
+
 import { IdentityRef } from "azure-devops-extension-api/WebApi/WebApi";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { VssPersona, VssPersonaSize } from "azure-devops-ui/VssPersona";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { getAvatarUrlAsync, isIdentityRef, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
-import * as React from "react";
+
 import { IBaseProps } from "../Contracts";
 import { emptyRenderer } from "../Renderers";
 

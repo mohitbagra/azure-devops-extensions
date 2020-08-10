@@ -1,5 +1,7 @@
 import "./BoardCard.scss";
 
+import * as React from "react";
+
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { BugBashViewActions } from "BugBashPro/Hubs/BugBashView//Redux/Actions";
 import { IBugBashItem } from "BugBashPro/Shared/Contracts";
@@ -13,8 +15,8 @@ import { IdentityView } from "Common/Components/IdentityView";
 import { CoreFieldRefNames } from "Common/Constants";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
-import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
+
 import { BugBashViewContext } from "../../Constants";
 
 const Actions = {
@@ -48,7 +50,7 @@ export function BoardCard(props: IBoardCardProps) {
 
     return (
         <Draggable draggableId={`card_${bugBashItem.id}`} key={`card_${bugBashItem.id}`} type="board-card" index={index} isDragDisabled={isAccepted}>
-            {provided => (
+            {(provided) => (
                 <div
                     className="board-card scroll-hidden flex-column"
                     ref={provided.innerRef}

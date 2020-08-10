@@ -1,9 +1,10 @@
+import * as React from "react";
+
 import { Button } from "azure-devops-ui/Button";
 import { ContentSize } from "azure-devops-ui/Callout";
 import { IdentityPickerDropdown, IIdentity, IPeoplePickerProvider } from "azure-devops-ui/IdentityPicker";
 import { Panel } from "azure-devops-ui/Panel";
 import { PeoplePickerProvider } from "Common/ServiceWrappers/IdentityService";
-import * as React from "react";
 
 interface ISecurityPanelProps {
     adminGroup?: IIdentity;

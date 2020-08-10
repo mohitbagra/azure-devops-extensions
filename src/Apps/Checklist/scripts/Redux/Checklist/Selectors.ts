@@ -1,6 +1,7 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
+
 import { ChecklistType, IChecklist, IChecklistItem } from "../../Interfaces";
 import { IChecklistAwareState, IChecklistState, IChecklistStateModel } from "./Contracts";
 
@@ -21,30 +22,22 @@ export function getChecklistStateModel(state: IChecklistAwareState, idOrType: nu
     return checklistState && checklistState.checklistsMap && checklistState.checklistsMap[idOrType.toString().toLowerCase()];
 }
 
-export const getChecklistStatus = createSelector(
-    getChecklistStateModel,
-    state => (state && state.status) || LoadStatus.NotLoaded
-);
+export const getChecklistStatus = createSelector(getChecklistStateModel, (state) => (state && state.status) || LoadStatus.NotLoaded);
 
-export const getChecklistError = createSelector(
-    getChecklistStateModel,
-    state => state && state.error
-);
+export const getChecklistError = createSelector(getChecklistStateModel, (state) => state && state.error);
 
-export const getChecklists = createSelector(
-    getChecklistStateModel,
-    state =>
-        state
-            ? {
-                  personalChecklist: state.personalChecklist,
-                  sharedChecklist: state.sharedChecklist,
-                  witDefaultChecklist: state.witDefaultChecklist
-              }
-            : {
-                  personalChecklist: undefined,
-                  sharedChecklist: undefined,
-                  witDefaultChecklist: undefined
-              }
+export const getChecklists = createSelector(getChecklistStateModel, (state) =>
+    state
+        ? {
+              personalChecklist: state.personalChecklist,
+              sharedChecklist: state.sharedChecklist,
+              witDefaultChecklist: state.witDefaultChecklist
+          }
+        : {
+              personalChecklist: undefined,
+              sharedChecklist: undefined,
+              witDefaultChecklist: undefined
+          }
 );
 
 export const getFilteredChecklists = createSelector(
@@ -57,56 +50,53 @@ export const getFilteredChecklists = createSelector(
 
         return {
             personalChecklist: personalChecklist
-                ? { ...personalChecklist, checklistItems: personalChecklist.checklistItems.filter(i => matchesFilter(i, filter)) }
+                ? { ...personalChecklist, checklistItems: personalChecklist.checklistItems.filter((i) => matchesFilter(i, filter)) }
                 : undefined,
             sharedChecklist: sharedChecklist
-                ? { ...sharedChecklist, checklistItems: sharedChecklist.checklistItems.filter(i => matchesFilter(i, filter)) }
+                ? { ...sharedChecklist, checklistItems: sharedChecklist.checklistItems.filter((i) => matchesFilter(i, filter)) }
                 : undefined,
             witDefaultChecklist: witDefaultChecklist
-                ? { ...witDefaultChecklist, checklistItems: witDefaultChecklist.checklistItems.filter(i => matchesFilter(i, filter)) }
+                ? { ...witDefaultChecklist, checklistItems: witDefaultChecklist.checklistItems.filter((i) => matchesFilter(i, filter)) }
                 : undefined
         };
     }
 );
 
-export const getSuggestedLabels = createSelector(
-    getChecklistsMap,
-    checklistsMap => {
-        const labels: string[] = [];
-        if (!checklistsMap) {
-            return labels;
-        }
-
-        for (const idOrType of Object.keys(checklistsMap)) {
-            const checklists = checklistsMap[idOrType];
-            const { personalChecklist, sharedChecklist, witDefaultChecklist } = checklists;
-
-            if (personalChecklist && personalChecklist.checklistItems) {
-                for (const item of personalChecklist.checklistItems) {
-                    if (item.labels) {
-                        labels.push(...item.labels);
-                    }
-                }
-            }
-            if (sharedChecklist && sharedChecklist.checklistItems) {
-                for (const item of sharedChecklist.checklistItems) {
-                    if (item.labels) {
-                        labels.push(...item.labels);
-                    }
-                }
-            }
-            if (witDefaultChecklist && witDefaultChecklist.checklistItems) {
-                for (const item of witDefaultChecklist.checklistItems) {
-                    if (item.labels) {
-                        labels.push(...item.labels);
-                    }
-                }
-            }
-        }
-
-        return Array.from(new Set(labels));
+export const getSuggestedLabels = createSelector(getChecklistsMap, (checklistsMap) => {
+    const labels: string[] = [];
+    if (!checklistsMap) {
+        return labels;
     }
-);
+
+    for (const idOrType of Object.keys(checklistsMap)) {
+        const checklists = checklistsMap[idOrType];
+        const { personalChecklist, sharedChecklist, witDefaultChecklist } = checklists;
+
+        if (personalChecklist && personalChecklist.checklistItems) {
+            for (const item of personalChecklist.checklistItems) {
+                if (item.labels) {
+                    labels.push(...item.labels);
+                }
+            }
+        }
+        if (sharedChecklist && sharedChecklist.checklistItems) {
+            for (const item of sharedChecklist.checklistItems) {
+                if (item.labels) {
+                    labels.push(...item.labels);
+                }
+            }
+        }
+        if (witDefaultChecklist && witDefaultChecklist.checklistItems) {
+            for (const item of witDefaultChecklist.checklistItems) {
+                if (item.labels) {
+                    labels.push(...item.labels);
+                }
+            }
+        }
+    }
+
+    return Array.from(new Set(labels));
+});
 
 export function getChecklist(state: IChecklistAwareState, idOrType: number | string, checklistType: ChecklistType): IChecklist | undefined {
     const checklistStateModel = getChecklistStateModel(state, idOrType);
@@ -139,5 +129,5 @@ function matchesFilter(checklistItem: IChecklistItem, filter: IFilterState): boo
         return false;
     }
 
-    return checklistItem.labels.some(l => labels.indexOf(l) !== -1);
+    return checklistItem.labels.some((l) => labels.indexOf(l) !== -1);
 }

@@ -1,5 +1,7 @@
 import "./Root.scss";
 
+import * as React from "react";
+
 import * as SDK from "azure-devops-extension-sdk";
 import * as BugBashDirectory_Async from "BugBashPro/Hubs/BugBashDirectory";
 import * as BugBashView_Async from "BugBashPro/Hubs/BugBashView";
@@ -7,7 +9,7 @@ import { AppView } from "BugBashPro/Shared/Constants";
 import { AsyncComponent } from "Common/Components/AsyncComponent";
 import { Loading } from "Common/Components/Loading";
 import { emptyRenderer } from "Common/Components/Renderers";
-import * as React from "react";
+
 import { useHashParams } from "../Hooks/useHashParams";
 import * as ChangelogMessage_Async from "./ChangelogMessage";
 

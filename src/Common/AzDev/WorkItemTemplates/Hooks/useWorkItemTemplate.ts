@@ -1,11 +1,23 @@
+import { useCallback, useEffect } from "react";
+
 import { WorkItemTemplate } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useCallback, useEffect } from "react";
+
 import { WorkItemTemplateActions } from "../Redux/Actions";
 import { IWorkItemTemplateAwareState } from "../Redux/Contracts";
 import { getTemplate, getTemplateError, getTemplateStatus } from "../Redux/Selectors";
+
+interface IUseWorkItemTemplateMappedState {
+    status: LoadStatus;
+    error: string | undefined;
+    template: WorkItemTemplate | undefined;
+}
+
+const Actions = {
+    loadTemplate: WorkItemTemplateActions.loadRequested
+};
 
 export function useWorkItemTemplate(teamId: string, templateId: string): IUseWorkItemTemplateMappedState {
     const mapState = useCallback(
@@ -30,13 +42,3 @@ export function useWorkItemTemplate(teamId: string, templateId: string): IUseWor
 
     return { template, status, error };
 }
-
-interface IUseWorkItemTemplateMappedState {
-    status: LoadStatus;
-    error: string | undefined;
-    template: WorkItemTemplate | undefined;
-}
-
-const Actions = {
-    loadTemplate: WorkItemTemplateActions.loadRequested
-};

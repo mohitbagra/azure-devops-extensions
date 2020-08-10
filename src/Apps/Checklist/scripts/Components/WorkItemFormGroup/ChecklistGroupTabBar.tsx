@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { getExtensionContext } from "azure-devops-extension-sdk";
 import { ConditionalChildren } from "azure-devops-ui/ConditionalChildren";
 import { ObservableValue } from "azure-devops-ui/Core/Observable";
@@ -11,7 +13,7 @@ import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { openNewWindow } from "Common/ServiceWrappers/HostNavigationService";
 import { getContributionHubUrlAsync } from "Common/Utilities/UrlHelper";
-import * as React from "react";
+
 import { ChecklistContext } from "../../Constants";
 import { useChecklistLabels } from "../../Hooks/useChecklistLabels";
 import { useChecklistSettings } from "../../Hooks/useChecklistSettings";
@@ -100,7 +102,7 @@ export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
                                     onActivate: () => {
                                         const { publisherId, extensionId } = getExtensionContext();
                                         const contributionId = `${publisherId}.${extensionId}.settings-hub`;
-                                        getContributionHubUrlAsync(contributionId).then(url => openNewWindow(url));
+                                        getContributionHubUrlAsync(contributionId).then((url) => openNewWindow(url));
                                     }
                                 },
                                 {
@@ -152,7 +154,7 @@ export function ChecklistGroupTabBar(props: IChecklistGroupTabBarProps) {
                 <FilterBar filter={filterRef.current} onDismissClicked={onFilterBarDismissClicked}>
                     <DropdownFilterBarItem
                         filterItemKey="labels"
-                        items={availableLabels.map(label => ({ id: label.toLowerCase(), text: label }))}
+                        items={availableLabels.map((label) => ({ id: label.toLowerCase(), text: label }))}
                         selection={listSelection.current}
                         noItemsText="No items"
                         showFilterBox={true}

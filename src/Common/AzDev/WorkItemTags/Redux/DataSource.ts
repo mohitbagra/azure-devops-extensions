@@ -3,6 +3,7 @@ import { WebApiTagDefinition } from "azure-devops-extension-api/Core/Core";
 import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
+
 import { TaggingRestClient } from "../RestClient";
 
 export const fetchTags = memoizePromise(
@@ -11,7 +12,7 @@ export const fetchTags = memoizePromise(
         const projectId = await getCurrentProjectId();
         const tags = await client.getTagDefinitions(projectId);
         tags.sort((a: WebApiTagDefinition, b: WebApiTagDefinition) => localeIgnoreCaseComparer(a.name, b.name));
-        return tags.map(t => t.name);
+        return tags.map((t) => t.name);
     },
     () => "tags"
 );

@@ -1,5 +1,7 @@
 import "./BugBashEditor.scss";
 
+import * as React from "react";
+
 import { WebApiTeam } from "azure-devops-extension-api/Core/Core";
 import { FieldType, WorkItemField, WorkItemTemplate, WorkItemType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { Button } from "azure-devops-ui/Button";
@@ -34,7 +36,7 @@ import { FadeAwayNotification } from "Common/Notifications/Components/FadeAwayNo
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
-import * as React from "react";
+
 import { BugBashEditorErrorKey, BugBashEditorNotificationKey, TitleFieldMaxLength } from "../Constants";
 import { BugBashEditorActions } from "../Redux/Actions";
 import { IBugBashEditorAwareState } from "../Redux/Contracts";

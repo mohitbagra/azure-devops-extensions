@@ -1,5 +1,7 @@
 import "./BugBashDetailsEditorPanel.scss";
 
+import * as React from "react";
+
 import { Button } from "azure-devops-ui/Button";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { equals } from "azure-devops-ui/Core/Util/String";
@@ -22,7 +24,7 @@ import { ErrorMessageBox } from "Common/Notifications/Components/ErrorMessageBox
 import { FadeAwayNotification } from "Common/Notifications/Components/FadeAwayNotification";
 import { KeyValuePairActions } from "Common/Notifications/Redux/Actions";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
-import * as React from "react";
+
 import { BugBashDetailsEditorErrorKey, BugBashDetailsEditorNotificationKey } from "../Constants";
 
 interface IBugBashDetailsEditorPanelOwnProps {

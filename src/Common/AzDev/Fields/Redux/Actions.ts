@@ -1,6 +1,13 @@
 import { WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { ActionsUnion, createAction } from "Common/Redux";
 
+export const enum FieldActionTypes {
+    LoadRequested = "Fields/LoadRequested",
+    BeginLoad = "Fields/BeginLoad",
+    LoadSucceeded = "Fields/LoadSucceeded",
+    LoadFailed = "Fields/LoadFailed"
+}
+
 export const FieldActions = {
     loadRequested: () => createAction(FieldActionTypes.LoadRequested),
     beginLoad: () => createAction(FieldActionTypes.BeginLoad),
@@ -8,11 +15,11 @@ export const FieldActions = {
     loadFailed: (error: string) => createAction(FieldActionTypes.LoadFailed, error)
 };
 
-export const enum FieldActionTypes {
-    LoadRequested = "Fields/LoadRequested",
-    BeginLoad = "Fields/BeginLoad",
-    LoadSucceeded = "Fields/LoadSucceeded",
-    LoadFailed = "Fields/LoadFailed"
+export const enum WorkItemTypeFieldActionTypes {
+    LoadRequested = "WorkItemTypeFields/LoadRequested",
+    BeginLoad = "WorkItemTypeFields/BeginLoad",
+    LoadSucceeded = "WorkItemTypeFields/LoadSucceeded",
+    LoadFailed = "WorkItemTypeFields/LoadFailed"
 }
 
 export const WorkItemTypeFieldActions = {
@@ -22,13 +29,6 @@ export const WorkItemTypeFieldActions = {
         createAction(WorkItemTypeFieldActionTypes.LoadSucceeded, { workItemTypeName, fields }),
     loadFailed: (workItemTypeName: string, error: string) => createAction(WorkItemTypeFieldActionTypes.LoadFailed, { workItemTypeName, error })
 };
-
-export const enum WorkItemTypeFieldActionTypes {
-    LoadRequested = "WorkItemTypeFields/LoadRequested",
-    BeginLoad = "WorkItemTypeFields/BeginLoad",
-    LoadSucceeded = "WorkItemTypeFields/LoadSucceeded",
-    LoadFailed = "WorkItemTypeFields/LoadFailed"
-}
 
 export type WorkItemTypeFieldActions = ActionsUnion<typeof WorkItemTypeFieldActions>;
 export type FieldActions = ActionsUnion<typeof FieldActions>;

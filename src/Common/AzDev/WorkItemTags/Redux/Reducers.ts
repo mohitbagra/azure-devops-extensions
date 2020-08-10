@@ -1,10 +1,11 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { TagActions, TagActionTypes } from "./Actions";
 import { defaultState, ITagState } from "./Contracts";
 
 export function tagReducer(state: ITagState | undefined, action: TagActions): ITagState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case TagActionTypes.BeginLoad: {
                 draft.status = LoadStatus.Loading;

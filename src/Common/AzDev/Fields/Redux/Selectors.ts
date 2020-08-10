@@ -1,6 +1,7 @@
 import { WorkItemField, WorkItemTypeFieldWithReferences } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { LoadStatus } from "Common/Contracts";
 import { createSelector } from "reselect";
+
 import { IFieldAwareState, IFieldState, IWorkItemTypeFields, IWorkItemTypeFieldState } from "./Contracts";
 
 function getFieldState(state: IFieldAwareState): IFieldState | undefined {
@@ -16,25 +17,13 @@ export function getField(state: IFieldAwareState, nameOrRefName: string): WorkIt
     return fieldState && fieldState.fieldsMap && fieldState.fieldsMap[nameOrRefName.toLowerCase()];
 }
 
-export const getFields = createSelector(
-    getFieldState,
-    (state: IFieldState | undefined) => state && state.fields
-);
+export const getFields = createSelector(getFieldState, (state: IFieldState | undefined) => state && state.fields);
 
-export const getFieldsMap = createSelector(
-    getFieldState,
-    (state: IFieldState | undefined) => state && state.fieldsMap
-);
+export const getFieldsMap = createSelector(getFieldState, (state: IFieldState | undefined) => state && state.fieldsMap);
 
-export const getFieldsStatus = createSelector(
-    getFieldState,
-    (state: IFieldState | undefined) => (state && state.status) || LoadStatus.NotLoaded
-);
+export const getFieldsStatus = createSelector(getFieldState, (state: IFieldState | undefined) => (state && state.status) || LoadStatus.NotLoaded);
 
-export const getFieldsError = createSelector(
-    getFieldState,
-    (state: IFieldState | undefined) => state && state.error
-);
+export const getFieldsError = createSelector(getFieldState, (state: IFieldState | undefined) => state && state.error);
 
 function getWorkItemTypeFieldsState(state: IFieldAwareState, workItemTypeName: string): IWorkItemTypeFields | undefined {
     const fieldState = getWorkItemTypeFieldState(state);
@@ -54,10 +43,7 @@ export function getWorkItemTypeField(
     }
 }
 
-export const getWorkItemTypeFields = createSelector(
-    getWorkItemTypeFieldsState,
-    (state: IWorkItemTypeFields | undefined) => state && state.fields
-);
+export const getWorkItemTypeFields = createSelector(getWorkItemTypeFieldsState, (state: IWorkItemTypeFields | undefined) => state && state.fields);
 
 export const getWorkItemTypeFieldsMap = createSelector(
     getWorkItemTypeFieldsState,

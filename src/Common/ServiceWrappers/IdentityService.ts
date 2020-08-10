@@ -13,12 +13,14 @@ export const enum IdentityServiceIds {
     IdentityService = "ms.vss-features.identity-service"
 }
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IdentitiesGetConnectionsResponseModel {
     successors?: IIdentity[];
     managers?: IIdentity[];
     directReports?: IIdentity[];
 }
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IdentitiesSearchRequestModel {
     query: string;
     identityTypes?: string[];
@@ -101,14 +103,14 @@ export class PeoplePickerProvider implements IPeoplePickerProvider {
     }
 
     public getEntityFromUniqueAttribute(entityId: string): IIdentity | PromiseLike<IIdentity> {
-        return getIdentityService().then(identityService => {
-            return identityService.searchIdentitiesAsync(entityId, this._identityTypes, ["ims", "source"], "uid").then(x => x[0]);
+        return getIdentityService().then((identityService) => {
+            return identityService.searchIdentitiesAsync(entityId, this._identityTypes, ["ims", "source"], "uid").then((x) => x[0]);
         });
     }
 
     public onEmptyInputFocus(): IIdentity[] | PromiseLike<IIdentity[]> {
-        return getIdentityService().then(identityService => {
-            return identityService.getIdentityMruAsync().then(identities => {
+        return getIdentityService().then((identityService) => {
+            return identityService.getIdentityMruAsync().then((identities) => {
                 return identities.map(this._identityMapper);
             });
         });
@@ -122,7 +124,7 @@ export class PeoplePickerProvider implements IPeoplePickerProvider {
         entity: IIdentity,
         getDirectReports?: boolean
     ): IdentitiesGetConnectionsResponseModel | PromiseLike<IdentitiesGetConnectionsResponseModel> {
-        return getIdentityService().then(identityService => {
+        return getIdentityService().then((identityService) => {
             return identityService.getConnections(entity, getDirectReports);
         });
     }
@@ -137,7 +139,7 @@ export class PeoplePickerProvider implements IPeoplePickerProvider {
         const identities = await identityService.searchIdentitiesAsync(searchText, this._identityTypes, ["ims", "source"]);
 
         return identities
-            .filter(identity => !items.some(selectedIdentity => selectedIdentity.entityId === identity.entityId))
+            .filter((identity) => !items.some((selectedIdentity) => selectedIdentity.entityId === identity.entityId))
             .map(this._identityMapper);
     }
 

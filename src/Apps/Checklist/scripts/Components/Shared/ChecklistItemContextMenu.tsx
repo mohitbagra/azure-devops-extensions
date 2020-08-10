@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Button } from "azure-devops-ui/Button";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
 import { CustomDialog } from "azure-devops-ui/Components/Dialog/CustomDialog";
@@ -7,7 +9,7 @@ import { IBaseProps } from "Common/Components/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { confirmAction } from "Common/ServiceWrappers/HostPageLayoutService";
-import * as React from "react";
+
 import { ChecklistContext } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistType, IChecklistItem } from "../../Interfaces";

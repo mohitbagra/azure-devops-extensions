@@ -1,10 +1,12 @@
 import "./WorkItemTitleView.scss";
 
+import * as React from "react";
+
 import { css } from "azure-devops-ui/Util";
 import { AsyncLinkComponent } from "Common/Components/AsyncComponent/AsyncLinkComponent";
 import { IBaseProps } from "Common/Components/Contracts";
 import { getWorkItemUrlAsync } from "Common/Utilities/UrlHelper";
-import * as React from "react";
+
 import { WorkItemTypeIcon } from "../WorkItemTypes/Components/WorkItemTypeIcon";
 
 interface IWorkItemTitleViewProps extends IBaseProps {
@@ -15,6 +17,19 @@ interface IWorkItemTitleViewProps extends IBaseProps {
     hideId?: boolean;
     hideTitle?: boolean;
     onClick?(e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>): void;
+}
+
+function getWorkItemUrlPromise(workItemId: number): () => Promise<string> {
+    return async () => getWorkItemUrlAsync(workItemId);
+}
+
+function onLinkClick(onClick: (ev: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => void) {
+    return (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
+        if (onClick && !e.ctrlKey) {
+            e.preventDefault();
+            onClick(e);
+        }
+    };
 }
 
 export function WorkItemTitleView(props: IWorkItemTitleViewProps) {
@@ -35,17 +50,4 @@ export function WorkItemTitleView(props: IWorkItemTitleViewProps) {
             )}
         </div>
     );
-}
-
-function getWorkItemUrlPromise(workItemId: number): () => Promise<string> {
-    return async () => getWorkItemUrlAsync(workItemId);
-}
-
-function onLinkClick(onClick: (ev: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => void) {
-    return (e: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>) => {
-        if (onClick && !e.ctrlKey) {
-            e.preventDefault();
-            onClick(e);
-        }
-    };
 }

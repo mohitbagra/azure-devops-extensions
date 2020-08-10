@@ -1,7 +1,5 @@
 import { getClient } from "azure-devops-extension-api/Common/Client";
-import {
-    WorkItemRelationType, WorkItemTrackingRestClient
-} from "azure-devops-extension-api/WorkItemTracking";
+import { WorkItemRelationType, WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking";
 import { localeIgnoreCaseComparer } from "azure-devops-ui/Core/Util/String";
 import { memoizePromise } from "Common/Utilities/Memoize";
 

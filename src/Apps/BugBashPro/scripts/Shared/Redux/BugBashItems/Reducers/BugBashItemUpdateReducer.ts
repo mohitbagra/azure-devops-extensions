@@ -2,11 +2,12 @@ import { equals } from "azure-devops-ui/Core/Util/String";
 import { LoadStatus } from "Common/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
+
 import { BugBashItemsActions, BugBashItemsActionTypes } from "../Actions";
 import { defaultBugBashItemsState, IBugBashItemsState } from "../Contracts";
 
 export function bugBashItemUpdateReducer(state: IBugBashItemsState | undefined, action: BugBashItemsActions): IBugBashItemsState {
-    return produce(state || defaultBugBashItemsState, draft => {
+    return produce(state || defaultBugBashItemsState, (draft) => {
         switch (action.type) {
             /** Bug bash create and update */
             case BugBashItemsActionTypes.BeginUpdateBugBashItem: {
@@ -37,7 +38,7 @@ export function bugBashItemUpdateReducer(state: IBugBashItemsState | undefined, 
                 }
 
                 if (draft.bugBashItems) {
-                    const index = draft.bugBashItems.findIndex(b => equals(b.id!, bugBashItem.id!, true));
+                    const index = draft.bugBashItems.findIndex((b) => equals(b.id!, bugBashItem.id!, true));
                     if (index !== -1) {
                         draft.bugBashItems[index] = bugBashItem;
                     } else {
@@ -91,7 +92,7 @@ export function bugBashItemUpdateReducer(state: IBugBashItemsState | undefined, 
                 }
 
                 if (draft.bugBashItems) {
-                    draft.bugBashItems = draft.bugBashItems.filter(b => !equals(b.id!, bugBashId, true));
+                    draft.bugBashItems = draft.bugBashItems.filter((b) => !equals(b.id!, bugBashId, true));
                 } else {
                     draft.bugBashItems = [];
                 }

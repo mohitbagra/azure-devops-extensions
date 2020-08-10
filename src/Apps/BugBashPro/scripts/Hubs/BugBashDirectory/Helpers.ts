@@ -4,6 +4,7 @@ import { IBugBash, ISortState } from "BugBashPro/Shared/Contracts";
 import { applyFilterAndSort, isBugBashCompleted, isBugBashInProgress, isBugBashScheduled } from "BugBashPro/Shared/Helpers";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
+
 import { BugBashFieldNames, BugBashKeyTypes } from "./Constants";
 import { BugBashDirectoryTabId, IBugBashCounts } from "./Redux/Contracts";
 
@@ -19,9 +20,9 @@ export function getFilteredBugBashes(
 
     const currentTime = new Date();
     const filteredAllBugBashes = applyFilterAndSort(allBugBashes, filterState, undefined, matcher, comparer);
-    const pastBugBashes = filteredAllBugBashes.filter(b => isBugBashCompleted(b, currentTime));
-    const ongoingBugBashes = filteredAllBugBashes.filter(b => isBugBashInProgress(b, currentTime));
-    const upcomingBugBashes = filteredAllBugBashes.filter(b => isBugBashScheduled(b, currentTime));
+    const pastBugBashes = filteredAllBugBashes.filter((b) => isBugBashCompleted(b, currentTime));
+    const ongoingBugBashes = filteredAllBugBashes.filter((b) => isBugBashInProgress(b, currentTime));
+    const upcomingBugBashes = filteredAllBugBashes.filter((b) => isBugBashScheduled(b, currentTime));
 
     const counts: IBugBashCounts = {
         past: pastBugBashes ? pastBugBashes.length : 0,

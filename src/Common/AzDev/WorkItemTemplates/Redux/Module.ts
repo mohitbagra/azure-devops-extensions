@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { TeamTemplatesActions, WorkItemTemplateActions } from "./Actions";
 import { IWorkItemTemplateAwareState } from "./Contracts";
 import { workItemTemplateReducer } from "./Reducers";

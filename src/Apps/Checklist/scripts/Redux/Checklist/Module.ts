@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { ChecklistActions } from "./Actions";
 import { IChecklistAwareState } from "./Contracts";
 import { checklistReducer } from "./Reducers";

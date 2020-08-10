@@ -1,6 +1,7 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { IBugBashItem, ISortState } from "BugBashPro/Shared/Contracts";
 import { ActionsUnion, createAction } from "Common/Redux";
+
 import { BugBashItemsFilterData, BugBashViewMode } from "./Contracts";
 
 export const BugBashViewActions = {

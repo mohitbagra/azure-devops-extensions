@@ -1,10 +1,12 @@
+import * as React from "react";
+
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { BugBashPortalActions } from "BugBashPro/Portals/BugBashPortal/Redux/Actions";
 import { Resources } from "BugBashPro/Resources";
 import { BugBashesActions } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
-import * as React from "react";
+
 import { DirectoryPageHeaderCommands } from "../Constants";
 import { useFilteredBugBashes } from "../Hooks/useFilteredBugBashes";
 

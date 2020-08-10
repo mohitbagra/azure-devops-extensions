@@ -1,9 +1,10 @@
 import { produce } from "immer";
+
 import { BugBashPortalActions, BugBashPortalActionTypes } from "./Actions";
 import { defaultBugBashPortalState, IBugBashPortalState, PortalType } from "./Contracts";
 
 export function portalReducer(state: IBugBashPortalState | undefined, action: BugBashPortalActions): IBugBashPortalState {
-    return produce(state || defaultBugBashPortalState, draft => {
+    return produce(state || defaultBugBashPortalState, (draft) => {
         switch (action.type) {
             case BugBashPortalActionTypes.OpenBugBashPortal: {
                 const { bugBashId, readFromCache } = action.payload;

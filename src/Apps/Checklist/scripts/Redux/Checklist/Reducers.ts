@@ -1,5 +1,6 @@
 import { LoadStatus } from "Common/Contracts";
 import { produce } from "immer";
+
 import { ChecklistType, IChecklist } from "../../Interfaces";
 import { ChecklistActions, ChecklistActionTypes } from "./Actions";
 import { IChecklistState } from "./Contracts";
@@ -9,7 +10,7 @@ const defaultState: IChecklistState = {
 };
 
 export function checklistReducer(state: IChecklistState | undefined, action: ChecklistActions): IChecklistState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case ChecklistActionTypes.BeginLoadChecklist: {
                 const idOrType = action.payload;

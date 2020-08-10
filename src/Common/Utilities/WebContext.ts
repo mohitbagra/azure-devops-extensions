@@ -1,5 +1,6 @@
 import { CommonServiceIds, IProjectInfo, IProjectPageService } from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
+
 import { isNullOrWhiteSpace } from "./String";
 
 let currentProject: IProjectInfo;

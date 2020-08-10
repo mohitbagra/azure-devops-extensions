@@ -1,13 +1,10 @@
 import { ActionsOfType, RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery } from "redux-saga/effects";
+
 import { WorkItemTypeStateActions, WorkItemTypeStateActionTypes } from "./Actions";
 import { fetchWorkItemTypeStates } from "./DataSource";
 import { getWorkItemTypeStates } from "./Selectors";
-
-export function* workItemTypeStatesSaga(): SagaIterator {
-    yield takeEvery(WorkItemTypeStateActionTypes.LoadRequested, loadWorkItemTypeStates);
-}
 
 function* loadWorkItemTypeStates(action: ActionsOfType<WorkItemTypeStateActions, WorkItemTypeStateActionTypes.LoadRequested>): SagaIterator {
     const workItemTypeName = action.payload;
@@ -21,4 +18,8 @@ function* loadWorkItemTypeStates(action: ActionsOfType<WorkItemTypeStateActions,
             yield put(WorkItemTypeStateActions.loadFailed(workItemTypeName, error.message || error));
         }
     }
+}
+
+export function* workItemTypeStatesSaga(): SagaIterator {
+    yield takeEvery(WorkItemTypeStateActionTypes.LoadRequested, loadWorkItemTypeStates);
 }

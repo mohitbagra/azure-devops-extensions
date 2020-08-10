@@ -1,6 +1,8 @@
+import { useEffect } from "react";
+
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
+
 import { ChecklistSettingsActions } from "../Redux/Settings/Actions";
 import { IChecklistSettingsAwareState, IChecklistSettingsState } from "../Redux/Settings/Contracts";
 import { areSettignsInitialized, isHideCompletedItemsOn, isShowLabelsOn, isWordWrapOn } from "../Redux/Settings/Selectors";

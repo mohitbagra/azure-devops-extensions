@@ -1,6 +1,7 @@
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { readLocalSetting, writeLocalSetting } from "Common/Utilities/LocalStorageService";
 import { produce } from "immer";
+
 import { getFilteredBugBashes } from "../Helpers";
 import { BugBashDirectoryActions, BugBashDirectoryActionTypes } from "./Actions";
 import { BugBashDirectoryTabId, defaultBugBashDirectoryState, IBugBashDirectoryState } from "./Contracts";
@@ -9,7 +10,7 @@ export function bugBashDirectoryReducer(
     state: IBugBashDirectoryState | undefined,
     action: BugBashDirectoryActions | BugBashesActions
 ): IBugBashDirectoryState {
-    return produce(state || defaultBugBashDirectoryState, draft => {
+    return produce(state || defaultBugBashDirectoryState, (draft) => {
         switch (action.type) {
             case BugBashDirectoryActionTypes.Initialize: {
                 draft.selectedTabId = readLocalSetting("directorypivotkey", BugBashDirectoryTabId.Ongoing) as BugBashDirectoryTabId;

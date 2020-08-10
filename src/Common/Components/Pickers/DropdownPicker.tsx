@@ -1,5 +1,7 @@
 import "./DropdownPicker.scss";
 
+import * as React from "react";
+
 import { IListBoxItem } from "azure-devops-ui/Components/ListBox/ListBox.Props";
 import { Dropdown, DropdownCallout, DropdownExpandableTextField } from "azure-devops-ui/Dropdown";
 import { css } from "azure-devops-ui/Util";
@@ -7,7 +9,6 @@ import { ILabelledComponentProps } from "Common/Components/Contracts";
 import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { isNullOrEmpty } from "Common/Utilities/String";
-import * as React from "react";
 
 export interface IDropdownPickerSharedProps<T> extends ILabelledComponentProps {
     disabled?: boolean;

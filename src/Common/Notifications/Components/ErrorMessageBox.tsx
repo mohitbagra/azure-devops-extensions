@@ -1,9 +1,11 @@
+import * as React from "react";
+
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { isNullOrEmpty } from "Common/Utilities/String";
-import * as React from "react";
+
 import { useKeyValuePair } from "../Hooks/useKeyValuePair";
 import { getKeyValuePairModule } from "../Redux/Module";
 

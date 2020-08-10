@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { TeamFieldActions } from "./Actions";
 import { ITeamFieldAwareState } from "./Contracts";
 import { teamFieldReducer } from "./Reducers";

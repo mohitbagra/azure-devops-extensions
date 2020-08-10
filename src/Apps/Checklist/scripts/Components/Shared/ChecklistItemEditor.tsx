@@ -1,5 +1,7 @@
 import "./ChecklistItemEditor.scss";
 
+import * as React from "react";
+
 import { Button } from "azure-devops-ui/Button";
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { IMenuItem, MenuButton } from "azure-devops-ui/Menu";
@@ -9,7 +11,7 @@ import { IBaseProps } from "Common/Components/Contracts";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
-import * as React from "react";
+
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";
 import { ChecklistItemState, ChecklistType, IChecklistItem } from "../../Interfaces";
@@ -164,7 +166,7 @@ export function ChecklistItemEditor(props: IChecklistItemEditorProps) {
                             onActivate: onStateChanged,
                             menuProps: {
                                 id: "test",
-                                items: Object.keys(ChecklistItemStates).map(state => ({
+                                items: Object.keys(ChecklistItemStates).map((state) => ({
                                     id: ChecklistItemStates[state].name,
                                     text: ChecklistItemStates[state].name
                                 }))

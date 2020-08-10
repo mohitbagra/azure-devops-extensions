@@ -11,6 +11,7 @@ import { IWorkItemTypeAwareState } from "Common/AzDev/WorkItemTypes/Redux/Contra
 import { getWorkItemType } from "Common/AzDev/WorkItemTypes/Redux/Selectors";
 import { defaultDateComparer } from "Common/Utilities/Date";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
+
 import { TitleFieldMaxLength } from "./Constants";
 
 export function getNewBugBashInstance(): IBugBash {

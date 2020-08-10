@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { BugBashDetailActions } from "./Actions";
 import { IBugBashDetailsAwareState } from "./Contracts";
 import { bugBashDetailsReducer } from "./Reducers";

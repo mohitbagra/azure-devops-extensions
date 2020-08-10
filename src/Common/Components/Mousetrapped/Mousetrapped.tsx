@@ -1,6 +1,8 @@
-import * as Mousetrap from "mousetrap";
-import "mousetrap/plugins/global-bind/mousetrap-global-bind";
 import * as React from "react";
+
+import "mousetrap/plugins/global-bind/mousetrap-global-bind";
+
+import * as Mousetrap from "mousetrap";
 
 type KeyboardAction = (e: ExtendedKeyboardEvent, combo: string) => void;
 

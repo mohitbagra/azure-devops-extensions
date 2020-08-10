@@ -1,5 +1,6 @@
 import { readLocalSetting, writeLocalSetting } from "Common/Utilities/LocalStorageService";
 import { produce } from "immer";
+
 import { ChecklistSettingsActions, ChecklistSettingsActionTypes } from "./Actions";
 import { IChecklistSettingsState } from "./Contracts";
 
@@ -11,7 +12,7 @@ const defaultState: IChecklistSettingsState = {
 };
 
 export function checklistSettingsReducer(state: IChecklistSettingsState | undefined, action: ChecklistSettingsActions): IChecklistSettingsState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case ChecklistSettingsActionTypes.Initialize: {
                 if (!draft.initialized) {

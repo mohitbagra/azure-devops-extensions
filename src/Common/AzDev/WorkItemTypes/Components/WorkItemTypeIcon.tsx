@@ -1,8 +1,10 @@
+import * as React from "react";
+
 import { Image } from "azure-devops-ui/Image";
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
-import * as React from "react";
+
 import { useWorkItemType } from "../Hooks/useWorkItemType";
 import { getWorkItemTypeModule } from "../Redux/Module";
 

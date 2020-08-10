@@ -1,5 +1,7 @@
 import "./SettingsPanel.scss";
 
+import * as React from "react";
+
 import { WorkItemField } from "azure-devops-extension-api/WorkItemTracking";
 import { Button } from "azure-devops-ui/Button";
 import { ContentSize } from "azure-devops-ui/Components/Callout/Callout.Props";
@@ -10,7 +12,7 @@ import { MultiValuePicker } from "Common/Components/Pickers/MultiValuePicker";
 import { TextField } from "Common/Components/TextField";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import * as React from "react";
+
 import { IRelatedWitsAwareState } from "../Redux/Contracts";
 import { getQueryableFields, getSettings, getSortableFields } from "../Redux/Selectors";
 
@@ -91,7 +93,7 @@ export function SettingsPanel(props: ISettingsPanelProps) {
                                 placeholder="Type to add a field"
                                 label="Fields to seek"
                                 info="Select a list of fields which will be used to seek related work items"
-                                allValues={(queryFields || []).map(f => f.name)}
+                                allValues={(queryFields || []).map((f) => f.name)}
                             />
                         </div>
                     </div>

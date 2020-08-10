@@ -12,6 +12,7 @@ import { ActionsOfType, RT } from "Common/Redux";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, take, takeEvery, takeLeading } from "redux-saga/effects";
+
 import { BugBashItemsActions, BugBashItemsActionTypes } from "./Actions";
 import {
     createBugBashItemAsync,
@@ -49,10 +50,10 @@ function* loadBugBashItems(action: ActionsOfType<BugBashItemsActions, BugBashIte
         }
         const resolvedWorkItems: RT<typeof getWorkItemsAsync> = yield call(getWorkItemsAsync, workItemIdsToLoad);
         const workItemsMap: { [id: number]: WorkItem } = {};
-        resolvedWorkItems.forEach(w => {
+        resolvedWorkItems.forEach((w) => {
             workItemsMap[w.id] = w;
         });
-        bugBashItems = bugBashItems.filter(b => !b.workItemId || (b.workItemId && workItemsMap[b.workItemId] !== undefined));
+        bugBashItems = bugBashItems.filter((b) => !b.workItemId || (b.workItemId && workItemsMap[b.workItemId] !== undefined));
 
         yield put(BugBashItemsActions.bugBashItemsLoaded(bugBashItems, workItemsMap));
     }

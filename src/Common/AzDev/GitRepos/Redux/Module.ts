@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { GitRepoActions } from "./Actions";
 import { IGitRepoAwareState } from "./Contracts";
 import { gitRepoReducer } from "./Reducers";

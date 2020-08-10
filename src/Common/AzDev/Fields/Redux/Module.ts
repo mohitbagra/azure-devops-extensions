@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { FieldActions, WorkItemTypeFieldActions } from "./Actions";
 import { IFieldAwareState } from "./Contracts";
 import { fieldReducer, workItemTypeFieldReducer } from "./Reducers";

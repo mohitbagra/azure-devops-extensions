@@ -1,5 +1,6 @@
 import { setHash } from "Common/ServiceWrappers/HostNavigationService";
 import { getContributionHubUrlAsync } from "Common/Utilities/UrlHelper";
+
 import { AppView } from "./Constants";
 
 export function navigateToDirectory() {

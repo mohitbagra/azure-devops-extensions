@@ -1,5 +1,7 @@
 import "./ChecklistItem.scss";
 
+import * as React from "react";
+
 import { Checkbox } from "azure-devops-ui/Checkbox";
 import { Icon } from "azure-devops-ui/Icon";
 import { Pill, PillSize, PillVariant } from "azure-devops-ui/Pill";
@@ -12,8 +14,8 @@ import { emptyRenderer } from "Common/Components/Renderers";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import * as format from "date-fns/format";
-import * as React from "react";
 import { Draggable } from "react-beautiful-dnd";
+
 import { ChecklistContext, ChecklistItemStates } from "../../Constants";
 import { useChecklistSettings } from "../../Hooks/useChecklistSettings";
 import { useChecklistStatus } from "../../Hooks/useChecklistStatus";

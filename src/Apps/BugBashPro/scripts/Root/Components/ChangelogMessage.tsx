@@ -1,8 +1,10 @@
 import "./Root.scss";
 
+import * as React from "react";
+
 import { Link } from "azure-devops-ui/Link";
 import { MessageCard, MessageCardSeverity } from "azure-devops-ui/MessageCard";
-import * as React from "react";
+
 import { useChangeVersion } from "../Hooks/useChangeVersion";
 
 export function ChangelogMessage() {

@@ -1,9 +1,11 @@
+import * as React from "react";
+
 import { css } from "azure-devops-ui/Util";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
 import { LabelledComponent } from "Common/Components/LabelledComponent";
 import { useControlledState } from "Common/Hooks/useControlledState";
 import { isNullOrEmpty } from "Common/Utilities/String";
-import * as React from "react";
+
 import { HtmlEditor } from "./HtmlEditor";
 
 export interface IRichEditorProps extends ILabelledComponentProps, IInputComponentProps<string> {

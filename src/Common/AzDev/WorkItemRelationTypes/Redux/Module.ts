@@ -1,5 +1,6 @@
 import { ReducersMapObject } from "redux";
 import { ISagaModule } from "redux-dynamic-modules-saga";
+
 import { WorkItemRelationTypeActions } from "./Actions";
 import { IWorkItemRelationTypeAwareState } from "./Contracts";
 import { workItemRelationTypeReducer } from "./Reducers";

@@ -1,6 +1,7 @@
 import { WorkItem, WorkItemField, WorkItemRelation, WorkItemRelationType } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { LoadStatus } from "Common/Contracts";
+
 import { ISettings, ISortState } from "../Interfaces";
 
 export interface IRelatedWitsAwareState {

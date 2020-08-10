@@ -1,11 +1,13 @@
 import "./TeamView.scss";
 
+import * as React from "react";
+
 import { Tooltip } from "azure-devops-ui/TooltipEx";
 import { css } from "azure-devops-ui/Util";
 import { IBaseProps } from "Common/Components/Contracts";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { LoadStatus } from "Common/Contracts";
-import * as React from "react";
+
 import { useTeam } from "../Hooks/useTeam";
 import { getTeamModule } from "../Redux/Module";
 

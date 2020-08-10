@@ -1,4 +1,5 @@
 import { LoadStatus } from "Common/Contracts";
+
 import { ITeamFieldAwareState, ITeamFieldState, ITeamFieldValues } from "./Contracts";
 
 export function getTeamFieldState(state: ITeamFieldAwareState): ITeamFieldState | undefined {

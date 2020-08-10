@@ -1,11 +1,12 @@
 import { LoadStatus } from "Common/Contracts";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
+
 import { BugBashDetailActions, BugBashDetailActionTypes } from "./Actions";
 import { defaultState, IBugBashDetailsState } from "./Contracts";
 
 export function bugBashDetailsReducer(state: IBugBashDetailsState | undefined, action: BugBashDetailActions): IBugBashDetailsState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case BugBashDetailActionTypes.BeginLoadBugBashDetails: {
                 const bugBashId = action.payload;

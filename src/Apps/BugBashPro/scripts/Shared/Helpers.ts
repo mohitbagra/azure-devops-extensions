@@ -1,5 +1,6 @@
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { defaultDateComparer } from "Common/Utilities/Date";
+
 import { IBugBash, IBugBashItem, ISortState } from "./Contracts";
 
 export function applyFilterAndSort<T>(
@@ -11,7 +12,7 @@ export function applyFilterAndSort<T>(
 ): T[] {
     let filteredItems = [...items];
     if (filterState) {
-        filteredItems = filteredItems.filter(b => matcher(b, filterState));
+        filteredItems = filteredItems.filter((b) => matcher(b, filterState));
     }
 
     if (sortState) {

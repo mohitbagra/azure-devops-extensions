@@ -1,8 +1,28 @@
 import { CommonServiceIds, IHostNavigationService } from "azure-devops-extension-api/Common/CommonServices";
 import * as SDK from "azure-devops-extension-sdk";
+
 import { isNullOrWhiteSpace } from "../Utilities/String";
 
 let hostNavigationService: IHostNavigationService;
+
+function parseHashString(hash: string): { [key: string]: string } {
+    let transformedHash = (hash || "").trim();
+    if (!transformedHash) {
+        return {};
+    }
+
+    if (transformedHash.startsWith("#") || transformedHash.startsWith("?")) {
+        transformedHash = transformedHash.substring(1);
+    }
+
+    const params: { [key: string]: string } = {};
+    transformedHash.split("&").map((hk) => {
+        const temp = hk.split("=");
+        params[temp[0]] = temp[1] || "";
+    });
+
+    return params;
+}
 
 export async function getHostNavigationService(): Promise<IHostNavigationService> {
     if (!hostNavigationService) {
@@ -59,23 +79,4 @@ export async function setDocumentTitle(title: string) {
 export async function openNewWindow(url: string, features?: string) {
     const service = await getHostNavigationService();
     service.openNewWindow(url, features || "");
-}
-
-function parseHashString(hash: string): { [key: string]: string } {
-    let transformedHash = (hash || "").trim();
-    if (!transformedHash) {
-        return {};
-    }
-
-    if (transformedHash.startsWith("#") || transformedHash.startsWith("?")) {
-        transformedHash = transformedHash.substring(1);
-    }
-
-    const params: { [key: string]: string } = {};
-    transformedHash.split("&").map(hk => {
-        const temp = hk.split("=");
-        params[temp[0]] = temp[1] || "";
-    });
-
-    return params;
 }

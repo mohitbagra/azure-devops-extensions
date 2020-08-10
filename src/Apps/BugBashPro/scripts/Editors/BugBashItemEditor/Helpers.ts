@@ -4,6 +4,7 @@ import { ITeamAwareState } from "Common/AzDev/Teams/Redux/Contracts";
 import { getTeam } from "Common/AzDev/Teams/Redux/Selectors";
 import { getCurrentUser } from "Common/Utilities/Identity";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
+
 import { TitleFieldMaxLength } from "./Constants";
 import { IBugBashItemEditorAwareState } from "./Redux/Contracts";
 

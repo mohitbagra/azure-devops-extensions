@@ -4,6 +4,28 @@ import { isGuid, startsWith } from "azure-devops-ui/Core/Util/String";
 import { isNullOrWhiteSpace } from "Common/Utilities/String";
 import { getIdentityAvatarUrlAsync } from "Common/Utilities/UrlHelper";
 
+function getVsIdFromGroupUniqueName(str: string): string | null {
+    let leftPart: string;
+    if (isNullOrWhiteSpace(str)) {
+        return null;
+    }
+
+    let vsid = null;
+    const i = str.lastIndexOf("\\");
+    if (i === -1) {
+        leftPart = str;
+    } else {
+        leftPart = str.substr(0, i);
+    }
+
+    if (startsWith(leftPart, "id:")) {
+        const rightPart = leftPart.substr(3).trim();
+        vsid = isGuid(rightPart) ? rightPart : "";
+    }
+
+    return vsid;
+}
+
 export function isIdentityRef(value: any): value is IdentityRef {
     return !!(value && value.displayName !== undefined);
 }
@@ -88,26 +110,4 @@ export async function getAvatarUrlAsync(identityRef: IdentityRef | undefined): P
     }
     const avatarUrl = identityRef._links && identityRef._links.avatar && identityRef._links.avatar.href;
     return avatarUrl || identityRef.imageUrl || getIdentityAvatarUrlAsync(identityRef.id, identityRef.uniqueName);
-}
-
-function getVsIdFromGroupUniqueName(str: string): string | null {
-    let leftPart: string;
-    if (isNullOrWhiteSpace(str)) {
-        return null;
-    }
-
-    let vsid = null;
-    const i = str.lastIndexOf("\\");
-    if (i === -1) {
-        leftPart = str;
-    } else {
-        leftPart = str.substr(0, i);
-    }
-
-    if (startsWith(leftPart, "id:")) {
-        const rightPart = leftPart.substr(3).trim();
-        vsid = isGuid(rightPart) ? rightPart : "";
-    }
-
-    return vsid;
 }

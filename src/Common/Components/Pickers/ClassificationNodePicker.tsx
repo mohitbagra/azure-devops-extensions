@@ -1,8 +1,9 @@
 import "./ClassificationNodePicker.scss";
 
+import * as React from "react";
+
 import { IClassificationNode } from "Common/AzDev/ClassificationNodes/Redux/Contracts";
 import { IInputComponentProps, ILabelledComponentProps } from "Common/Components/Contracts";
-import * as React from "react";
 
 export type IClassificationNodePickerSharedProps = ILabelledComponentProps & IInputComponentProps<string>;
 

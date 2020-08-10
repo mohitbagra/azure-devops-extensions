@@ -1,8 +1,29 @@
 import { WorkItem } from "azure-devops-extension-api/WorkItemTracking";
 import { IFilterState } from "azure-devops-ui/Utilities/Filter";
 import { ActionsUnion, createAction } from "Common/Redux";
+
 import { ISettings, ISortState } from "../Interfaces";
 import { IActiveWorkItemState } from "./Contracts";
+
+export const enum RelatedWorkItemActionTypes {
+    LoadRequested = "RelatedWorkItem/LoadRequested",
+    BeginLoad = "RelatedWorkItem/BeginLoad",
+    LoadSucceeded = "RelatedWorkItem/LoadSucceeded",
+    LoadFailed = "RelatedWorkItem/LoadFailed",
+    ApplyFilter = "RelatedWorkItem/ApplyFilter",
+    ApplySort = "RelatedWorkItem/ApplySort",
+    OpenRelatedWorkItem = "RelatedWorkItem/OpenRelatedWorkItem",
+    UpdateRelatedWorkItem = "RelatedWorkItem/UpdateRelatedWorkItem"
+}
+
+export const enum RelatedWorkItemSettingsActionTypes {
+    BeginLoad = "RelatedWorkItemSettings/BeginLoad",
+    LoadSucceeded = "RelatedWorkItemSettings/LoadSucceeded",
+    OpenPanel = "RelatedWorkItemSettings/OpenPanel",
+    ClosePanel = "RelatedWorkItemSettings/ClosePanel",
+    UpdateSettingsRequested = "RelatedWorkItemSettings/UpdateSettingsRequested",
+    UpdateSettings = "RelatedWorkItemSettings/UpdateSettings"
+}
 
 export const RelatedWorkItemActions = {
     loadRequested: (workItemId: number) => createAction(RelatedWorkItemActionTypes.LoadRequested, workItemId),
@@ -26,26 +47,6 @@ export const RelatedWorkItemSettingsActions = {
 export const ActiveWorkItemActions = {
     setActiveWorkItem: (activeWorkItem: IActiveWorkItemState) => createAction(ActiveWorkItemActionTypes.SetActiveWorkItem, activeWorkItem)
 };
-
-export const enum RelatedWorkItemActionTypes {
-    LoadRequested = "RelatedWorkItem/LoadRequested",
-    BeginLoad = "RelatedWorkItem/BeginLoad",
-    LoadSucceeded = "RelatedWorkItem/LoadSucceeded",
-    LoadFailed = "RelatedWorkItem/LoadFailed",
-    ApplyFilter = "RelatedWorkItem/ApplyFilter",
-    ApplySort = "RelatedWorkItem/ApplySort",
-    OpenRelatedWorkItem = "RelatedWorkItem/OpenRelatedWorkItem",
-    UpdateRelatedWorkItem = "RelatedWorkItem/UpdateRelatedWorkItem"
-}
-
-export const enum RelatedWorkItemSettingsActionTypes {
-    BeginLoad = "RelatedWorkItemSettings/BeginLoad",
-    LoadSucceeded = "RelatedWorkItemSettings/LoadSucceeded",
-    OpenPanel = "RelatedWorkItemSettings/OpenPanel",
-    ClosePanel = "RelatedWorkItemSettings/ClosePanel",
-    UpdateSettingsRequested = "RelatedWorkItemSettings/UpdateSettingsRequested",
-    UpdateSettings = "RelatedWorkItemSettings/UpdateSettings"
-}
 
 export const enum ActiveWorkItemActionTypes {
     SetActiveWorkItem = "ActiveWorkItem/SetActiveWorkItem"

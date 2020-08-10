@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { getClient } from "azure-devops-extension-api/Common/Client";
 import { GitPush, GitRestClient, ItemContentType, VersionControlChangeType } from "azure-devops-extension-api/Git";
 import { useProjectSetting } from "BugBashPro/Shared/Hooks/useProjectSetting";
@@ -8,7 +10,6 @@ import { IRichEditorProps, RichEditor } from "Common/Components/RichEditor";
 import { LoadStatus } from "Common/Contracts";
 import { getProjectUrlAsync } from "Common/Utilities/UrlHelper";
 import { getCurrentProjectId } from "Common/Utilities/WebContext";
-import * as React from "react";
 
 interface IBugBashRichEditorProps extends IRichEditorProps {
     bugBashId: string;
@@ -24,7 +25,7 @@ function BugBashRichEditorInternal(props: IBugBashRichEditorProps) {
     }
 
     const uploadImage = async (file: File) => {
-        return new Promise<string>(async resolve => {
+        return new Promise<string>(async (resolve) => {
             const gitMediaRepo = projectSetting && projectSetting.gitMediaRepo;
             if (gitMediaRepo) {
                 const reader = new FileReader();
@@ -36,10 +37,7 @@ function BugBashRichEditorInternal(props: IBugBashRichEditorProps) {
                         const metaPart = imageData.substring(5, dataStartIndex - 1);
                         const dataPart = imageData.substring(dataStartIndex);
 
-                        const extension = metaPart
-                            .split(";")[0]
-                            .split("/")
-                            .pop();
+                        const extension = metaPart.split(";")[0].split("/").pop();
                         const fileName = `pastedImage_${Date.now().toString()}.${extension}`;
                         const gitPath = `BugBash_${bugBashId}/pastedImages/${fileName}`;
 

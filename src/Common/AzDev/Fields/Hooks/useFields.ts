@@ -1,23 +1,12 @@
+import { useEffect } from "react";
+
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
+
 import { FieldActions } from "../Redux/Actions";
 import { IFieldAwareState, IFieldState } from "../Redux/Contracts";
 import { getFields, getFieldsError, getFieldsMap, getFieldsStatus } from "../Redux/Selectors";
-
-export function useFields(): IFieldState {
-    const { fields, fieldsMap, status, error } = useMappedState(mapState);
-    const { loadFields } = useActionCreators(Actions);
-
-    useEffect(() => {
-        if (status === LoadStatus.NotLoaded) {
-            loadFields();
-        }
-    }, []);
-
-    return { fields, fieldsMap, status, error };
-}
 
 function mapState(state: IFieldAwareState): IFieldState {
     return {
@@ -31,3 +20,16 @@ function mapState(state: IFieldAwareState): IFieldState {
 const Actions = {
     loadFields: FieldActions.loadRequested
 };
+
+export function useFields(): IFieldState {
+    const { fields, fieldsMap, status, error } = useMappedState(mapState);
+    const { loadFields } = useActionCreators(Actions);
+
+    useEffect(() => {
+        if (status === LoadStatus.NotLoaded) {
+            loadFields();
+        }
+    }, []);
+
+    return { fields, fieldsMap, status, error };
+}

@@ -1,7 +1,9 @@
+import { useEffect } from "react";
+
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
+
 import { WorkItemRelationTypeActions } from "../Redux/Actions";
 import { IWorkItemRelationTypeAwareState, IWorkItemRelationTypeState } from "../Redux/Contracts";
 import {
@@ -10,19 +12,6 @@ import {
     getWorkItemRelationTypesMap,
     getWorkItemRelationTypesStatus
 } from "../Redux/Selectors";
-
-export function useWorkItemRelationTypes(): IWorkItemRelationTypeState {
-    const { relationTypes, relationTypesMap, status, error } = useMappedState(mapState);
-    const { loadRelationTypes } = useActionCreators(Actions);
-
-    useEffect(() => {
-        if (status === LoadStatus.NotLoaded) {
-            loadRelationTypes();
-        }
-    }, []);
-
-    return { relationTypes, relationTypesMap, status, error };
-}
 
 function mapState(state: IWorkItemRelationTypeAwareState): IWorkItemRelationTypeState {
     return {
@@ -36,3 +25,16 @@ function mapState(state: IWorkItemRelationTypeAwareState): IWorkItemRelationType
 const Actions = {
     loadRelationTypes: WorkItemRelationTypeActions.loadRequested
 };
+
+export function useWorkItemRelationTypes(): IWorkItemRelationTypeState {
+    const { relationTypes, relationTypesMap, status, error } = useMappedState(mapState);
+    const { loadRelationTypes } = useActionCreators(Actions);
+
+    useEffect(() => {
+        if (status === LoadStatus.NotLoaded) {
+            loadRelationTypes();
+        }
+    }, []);
+
+    return { relationTypes, relationTypesMap, status, error };
+}

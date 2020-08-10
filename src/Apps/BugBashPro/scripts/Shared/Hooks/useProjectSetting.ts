@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { IProjectSetting } from "BugBashPro/Shared/Contracts";
 import { ProjectSettingActions } from "BugBashPro/Shared/Redux/ProjectSettings/Actions";
 import { IBugBashSettingsAwareState } from "BugBashPro/Shared/Redux/ProjectSettings/Contracts";
@@ -5,7 +7,6 @@ import { getProjectSetting, getProjectSettingStatus } from "BugBashPro/Shared/Re
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
 import { useMappedState } from "Common/Hooks/useMappedState";
-import { useEffect } from "react";
 
 export function useProjectSetting(): IUseProjectSettingEditorMappedState {
     const { projectSetting, status } = useMappedState(mapState);

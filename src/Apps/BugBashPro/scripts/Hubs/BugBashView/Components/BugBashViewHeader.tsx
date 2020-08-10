@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Button } from "azure-devops-ui/Button";
 import { Header, TitleSize } from "azure-devops-ui/Header";
 import { IStatusProps, Status, Statuses, StatusSize } from "azure-devops-ui/Status";
@@ -9,7 +11,7 @@ import { navigateToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { BugBashItemsActions } from "BugBashPro/Shared/Redux/BugBashItems/Actions";
 import { LoadStatus } from "Common/Contracts";
 import { useActionCreators } from "Common/Hooks/useActionCreators";
-import * as React from "react";
+
 import { BugBashViewContext, BugBashViewHeaderCommands } from "../Constants";
 import { useFilteredBugBashItems } from "../Hooks/useFilteredBugBashItems";
 
@@ -94,7 +96,7 @@ function onRenderHeaderTitle(bugBash: IBugBash): JSX.Element {
             <Button className="header-breadcrumb-button" subtle={true} onClick={navigateToDirectory}>
                 Bug Bashes
             </Button>
-            <span className="seperator">></span>
+            <span className="seperator">{`>`}</span>
             <span>{bugBash.title}</span>
             <div className="bugbash-header-status flex-column justify-center">
                 <Status {...statusProps} size={StatusSize.l} animated={false} />

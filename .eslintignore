@@ -1,0 +1,7 @@
+lib
+bin
+build
+out
+dist
+node_modules
+**/*.html

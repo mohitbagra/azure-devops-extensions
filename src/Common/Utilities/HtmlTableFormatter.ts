@@ -27,10 +27,10 @@ export abstract class HtmlTableFormatter<TItem, TColumn> {
             return "<div></div>";
         }
 
-        const headerRows = this.columns.map(c => `<th style="${HtmlTableFormatter.COLUMN_STYLE}">${htmlEncode(this.getColumnName(c))}</th>`);
+        const headerRows = this.columns.map((c) => `<th style="${HtmlTableFormatter.COLUMN_STYLE}">${htmlEncode(this.getColumnName(c))}</th>`);
         const tableHeader = `<thead style="${HtmlTableFormatter.HEADER_STYLE}"><tr>${headerRows.join("")}</tr></thead>`;
         const tableRows = this.rows.map((row, rowIndex) => {
-            const rows = this.columns.map(c => `<td style="${HtmlTableFormatter.COLUMN_STYLE}">${this.getCellValue(row, c)}</td>`);
+            const rows = this.columns.map((c) => `<td style="${HtmlTableFormatter.COLUMN_STYLE}">${this.getCellValue(row, c)}</td>`);
             const rowStyle = rowIndex % 2 ? HtmlTableFormatter.ROW_ALT_BACKGROUND_COLOR : HtmlTableFormatter.ROW_BACKGROUND_COLOR;
 
             return `<tr style="${rowStyle}">${rows.join("")}</tr>`;
@@ -40,9 +40,7 @@ export abstract class HtmlTableFormatter<TItem, TColumn> {
             this.options && this.options.extendedHtml
                 ? `<div style="${HtmlTableFormatter.FONT_FAMILY + HtmlTableFormatter.FONT_SIZE}">${this.options.extendedHtml}</div>`
                 : "";
-        return `<div><table border="0" cellpadding="0" cellspacing="0" style="${
-            HtmlTableFormatter.TABLE_STYLE
-        }">${tableHeader}${tableBody}</table>${extendedSection}</div>`;
+        return `<div><table border="0" cellpadding="0" cellspacing="0" style="${HtmlTableFormatter.TABLE_STYLE}">${tableHeader}${tableBody}</table>${extendedSection}</div>`;
     }
 
     protected abstract getColumnName(column: TColumn): string;

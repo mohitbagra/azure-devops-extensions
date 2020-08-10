@@ -1,7 +1,9 @@
+import * as React from "react";
+
 import { WorkItemTemplateReference } from "azure-devops-extension-api/WorkItemTracking/WorkItemTracking";
 import { DynamicModuleLoader } from "Common/Components/DynamicModuleLoader";
 import { dropdownRenderer, IDropdownPickerSharedProps } from "Common/Components/Pickers/DropdownPicker";
-import * as React from "react";
+
 import { useTeamTemplates } from "../Hooks/useTeamTemplates";
 import { getWorkItemTemplateModule } from "../Redux/Module";
 

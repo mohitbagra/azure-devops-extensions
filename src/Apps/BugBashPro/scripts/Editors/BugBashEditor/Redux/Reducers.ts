@@ -1,6 +1,7 @@
 import { BugBashesActions, BugBashesActionTypes } from "BugBashPro/Shared/Redux/BugBashes/Actions";
 import { resolveNullableMapKey } from "Common/Utilities/String";
 import { produce } from "immer";
+
 import { BugBashEditorActions, BugBashEditorActionTypes } from "./Actions";
 import { IBugBashEditorState } from "./Contracts";
 
@@ -9,7 +10,7 @@ const defaultState: IBugBashEditorState = {
 };
 
 export function bugBashEditorReducer(state: IBugBashEditorState | undefined, action: BugBashEditorActions | BugBashesActions): IBugBashEditorState {
-    return produce(state || defaultState, draft => {
+    return produce(state || defaultState, (draft) => {
         switch (action.type) {
             case BugBashEditorActionTypes.InitializeDraft: {
                 const bugBash = action.payload;

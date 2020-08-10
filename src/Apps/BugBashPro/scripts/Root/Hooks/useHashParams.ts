@@ -1,9 +1,9 @@
+import * as React from "react";
+
 import { AppView } from "BugBashPro/Shared/Constants";
 import { switchToDirectory } from "BugBashPro/Shared/NavHelpers";
 import { attachNavigate } from "Common/ServiceWrappers/HostNavigationService";
-import { resolveNullableMapKey } from "Common/Utilities/String";
-import { isNullOrWhiteSpace } from "Common/Utilities/String";
-import * as React from "react";
+import { isNullOrWhiteSpace, resolveNullableMapKey } from "Common/Utilities/String";
 
 interface IHashParams {
     view: AppView;

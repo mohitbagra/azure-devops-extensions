@@ -2,14 +2,10 @@ import { LoadStatus } from "Common/Contracts";
 import { ActionsOfType, RT } from "Common/Redux";
 import { SagaIterator } from "redux-saga";
 import { call, put, select, takeEvery, takeLeading } from "redux-saga/effects";
+
 import { FieldActions, FieldActionTypes, WorkItemTypeFieldActions, WorkItemTypeFieldActionTypes } from "./Actions";
 import { fetchFields, fetchWorkItemTypeFields } from "./DataSource";
 import { getFieldsStatus, getWorkItemTypeFieldsStatus } from "./Selectors";
-
-export function* fieldsSaga(): SagaIterator {
-    yield takeLeading(FieldActionTypes.LoadRequested, loadFields);
-    yield takeEvery(WorkItemTypeFieldActionTypes.LoadRequested, loadWorkItemTypeFields);
-}
 
 function* loadFields(): SagaIterator {
     const status: RT<typeof getFieldsStatus> = yield select(getFieldsStatus);
@@ -36,4 +32,9 @@ function* loadWorkItemTypeFields(action: ActionsOfType<WorkItemTypeFieldActions,
             yield put(WorkItemTypeFieldActions.loadFailed(workItemTypeName, error.message || error));
         }
     }
+}
+
+export function* fieldsSaga(): SagaIterator {
+    yield takeLeading(FieldActionTypes.LoadRequested, loadFields);
+    yield takeEvery(WorkItemTypeFieldActionTypes.LoadRequested, loadWorkItemTypeFields);
 }
