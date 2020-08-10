@@ -49,7 +49,7 @@ export function BoardCard(props: IBoardCardProps) {
     );
 
     return (
-        <Draggable draggableId={`card_${bugBashItem.id}`} key={`card_${bugBashItem.id}`} type="board-card" index={index} isDragDisabled={isAccepted}>
+        <Draggable draggableId={`card_${bugBashItem.id}`} key={`card_${bugBashItem.id}`} type="board-card" index={index} isDragDisabled={true}>
             {(provided) => (
                 <div
                     className="board-card scroll-hidden flex-column"

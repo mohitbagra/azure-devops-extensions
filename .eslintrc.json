@@ -43,7 +43,6 @@
         "import/first": "error",
         "import/newline-after-import": "error",
         "import/no-duplicates": "error",
-        "no-restricted-imports": ["error", { "paths": ["office-ui-fabric-react"], "patterns": ["office-ui-fabric-react/*"] }],
 
         // stylistic rules
         "@typescript-eslint/class-name-casing": "error",
