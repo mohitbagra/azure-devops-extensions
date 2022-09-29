@@ -62,7 +62,7 @@
         "react-dom": "16.13.1",
         "react-redux": "7.1.0",
         "react-beautiful-dnd": "11.0.4",
-        "recharts": "1.6.2",
+        "recharts": "2.1.14",
         "redux": "4.0.1",
         "redux-dynamic-modules": "3.5.0",
         "redux-dynamic-modules-saga": "3.5.0",
